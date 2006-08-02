@@ -1,6 +1,7 @@
-PRG	    = cast5
+PRG	    = md5
 # cryptotest
-OBJ	    = main-cast5-test.o debug.o uart.o serial-tools.o cast5.o
+OBJ	    = main-md5-test.o debug.o uart.o serial-tools.o md5.o
+# main-cast5-test.o debug.o uart.o serial-tools.o cast5.o
 # main.o debug.o uart.o serial-tools.o sha256-asm.o xtea-asm.o arcfour-asm.o prng.o cast5.o
 MCU_TARGET     = atmega32
 OPTIMIZE       = -Os
