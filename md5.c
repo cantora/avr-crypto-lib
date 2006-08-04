@@ -13,6 +13,8 @@
  #include <stdint.h>
  #include <string.h>
  
+ #undef DEBUG
+ 
 void md5_init(md5_ctx_t *s){
 	s->counter = 0;
 	s->a[0] = 0x67452301;
@@ -39,21 +41,23 @@ uint32_t md5_I(uint32_t x, uint32_t y, uint32_t z){
 
 typedef uint32_t md5_func_t(uint32_t, uint32_t, uint32_t);
 
-#define ROTL32(x,n) ((x)<<(n) | (x)>>(32-(n)))  
+#define ROTL32(x,n) (((x)<<(n)) | ((x)>>(32-(n))))  
 
 void md5_core(uint32_t* a, uint8_t as, void* block, uint8_t k, uint8_t s, uint8_t i, uint8_t fi){
 	uint32_t t;
 	md5_func_t* funcs[]={md5_F, md5_G, md5_H, md5_I};
-	char funcc[]={'*', '-', '+', '~'};
 	as &= 0x3;
 	/* a = b + ((a + F(b,c,d) + X[k] + T[i]) <<< s). */
+#ifdef DEBUG
+	char funcc[]={'*', '-', '+', '~'};
 	uart_putstr("\r\n DBG: md5_core [");
 	uart_putc(funcc[fi]);
 	uart_hexdump(&as, 1); uart_putc(' ');
 	uart_hexdump(&k, 1); uart_putc(' ');
 	uart_hexdump(&s, 1); uart_putc(' ');
 	uart_hexdump(&i, 1); uart_putc(']');
-	t = a[as] + funcs[fi](a[(as+1)&3], a[(as+2)&3], a[(as+3)&3]) + ((uint8_t*)block)[k] + md5_T[i] ;
+#endif	
+	t = a[as] + funcs[fi](a[(as+1)&3], a[(as+2)&3], a[(as+3)&3]) + ((uint32_t*)block)[k] + md5_T[i] ;
 	a[as]=a[(as+1)&3] + ROTL32(t, s);
 }
 
@@ -61,11 +65,13 @@ void md5_nextBlock(md5_ctx_t *state, void* block){
 	uint32_t	a[4];
 	uint8_t		m,n,i=0;
 	/* this requires other mixed sboxes */
+#ifdef DEBUG
 	uart_putstr("\r\n DBG: md5_nextBlock: block:\r\n");
 	uart_hexdump(block, 16);	uart_putstr("\r\n");
 	uart_hexdump(block+16, 16);	uart_putstr("\r\n");
 	uart_hexdump(block+32, 16);	uart_putstr("\r\n");
 	uart_hexdump(block+48, 16);	uart_putstr("\r\n");
+#endif	
 	
 	a[0]=state->a[0];
 	a[1]=state->a[1];
@@ -77,10 +83,7 @@ void md5_nextBlock(md5_ctx_t *state, void* block){
 	for(m=0;m<4;++m){
 		for(n=0;n<4;++n){
 			md5_core(a, 4-n, block, m*4+n, s1t[n],i++,0);
-/*			t = a[(4-s)&3] + md5_F(a[(4-s-1)&3],a[(4-s-2)&3],a[(4-s-3)&3]) 
-				+ ((uint8_t*)block)[s+4*k] + md5_T[i++];
-			a[(4-s)&3] = a[(4-s-1)&3] + ROTL32(t, s*5+7);
-*/		}
+		}
 	}
 	/* round 2 */
 	uint8_t s2t[]={5,9,14,20};
@@ -89,14 +92,6 @@ void md5_nextBlock(md5_ctx_t *state, void* block){
 			md5_core(a, 4-n, block, (1+m*4+n*5)&0xf, s2t[n],i++,1);
 		}
 	}
-/*	for(k=0;k<4;++k){
-		for(s=0;s<4;++s){
-			t = a[(4-s)&3] + md5_G(a[(4-s-1)&3],a[(4-s-2)&3],a[(4-s-3)&3])
-				+ ((uint8_t*)block)[((1+s*5) +(k*4))&0xf] + md5_T[i++];
-			a[(4-s)&3] = a[(4-s-1)&3] + ROTL32(t, s2t[s]);
-		}
-	}
-*/
 	/* round 3 */
 	uint8_t s3t[]={4,11,16,23};
 	for(m=0;m<4;++m){
@@ -104,13 +99,6 @@ void md5_nextBlock(md5_ctx_t *state, void* block){
 			md5_core(a, 4-n, block, (5-m*4+n*3)&0xf, s3t[n],i++,2);
 		}
 	}
-/*	for(k=0;k<4;++k){
-		for(s=0;s<4;++s){
-			t = a[(4-s)&3] + md5_H(a[(4-s-1)&3],a[(4-s-2)&3],a[(4-s-3)&3])
-				+ ((uint8_t*)block)[((5+s*3)-(k*4))&0xf] + md5_T[i++];
-			a[(4-s)&3] = a[(4-s-1)&3] + ROTL32(t, s3t[s]);
-		}
-	} */
 	/* round 4 */
 	uint8_t s4t[]={6,10,15,21};
 	for(m=0;m<4;++m){
@@ -118,13 +106,6 @@ void md5_nextBlock(md5_ctx_t *state, void* block){
 			md5_core(a, 4-n, block, (0-m*4+n*7)&0xf, s4t[n],i++,3);
 		}
 	}
-/*	for(k=0;k<4;++k){
-		for(s=0;s<4;++s){
-			t = a[(4-s)&3] + md5_I(a[(4-s-1)&3],a[(4-s-2)&3],a[(4-s-3)&3]) 
-				+ ((uint8_t*)block)[((s*7)-(k*4))&0xf] + md5_T[i++];
-			a[(4-s)&3] = a[(4-s-1)&3] + ROTL32(t, s4t[s]);
-		}
-	} */
 	state->a[0] += a[0];
 	state->a[1] += a[1];
 	state->a[2] += a[2];
