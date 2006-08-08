@@ -164,7 +164,6 @@ void sha256(sha256_hash_t *dest, void* msg, uint32_t length){ /* length could be
 
 
 
-#ifdef sha256_ctx2hash_in_C
 void sha256_ctx2hash(sha256_hash_t *dest, sha256_ctx_t *state){
 #if defined LITTLE_ENDIAN
 	uint8_t i;
@@ -178,6 +177,5 @@ void sha256_ctx2hash(sha256_hash_t *dest, sha256_ctx_t *state){
 # error unsupported endian type!
 #endif
 }
-#endif
 
 

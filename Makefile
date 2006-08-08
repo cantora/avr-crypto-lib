@@ -19,7 +19,7 @@ CC	     = avr-gcc
 override CFLAGS	= -Wall -Wstrict-prototypes  $(OPTIMIZE) -mmcu=$(MCU_TARGET) 
 $(DEFS)
 override LDFLAGS       = -Wl,-Map,$(PRG).map
-override ASFLAGS = -mmcu=$(MCU_TARGET)
+override ASFLAGS	   = -mmcu=$(MCU_TARGET)
 
 OBJCOPY	= avr-objcopy
 OBJDUMP	= avr-objdump
