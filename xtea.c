@@ -1,8 +1,9 @@
-/* 
- * XTEA implemantation 
- *  copy'n'pasted from http://en.wikipedia.org/wiki/XTEA
+/** 
+ * \file	xtea.c
+ * \brief	XTEA implemantation 
+ *   copy'n'pasted from http://en.wikipedia.org/wiki/XTEA
  *   and slightly modified
- * */
+ */
  
 #include <stdint.h> 
  

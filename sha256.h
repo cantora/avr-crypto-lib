@@ -1,8 +1,9 @@
 /**
- * File:		sha256.h
- * Author:	Daniel Otte 
- * Date:		16.05.2006
- * License:	GPL
+ * \file		sha256-asm.h
+ * \author	Daniel Otte 
+ * \date		16.05.2006
+ * \par License	
+ * GPL
  * 
  */
 
@@ -18,6 +19,10 @@
 #define SHA256_HASH_BITS  256
 #define SHA256_BLOCK_BITS 512
 
+/**
+ * \brief sha256 context type
+ * 
+ */
 typedef struct {
 	uint32_t h[8];
 	uint64_t length;
@@ -26,6 +31,7 @@ typedef struct {
 typedef uint8_t sha256_hash_t[SHA256_HASH_BITS/8];
 
 void sha256_init(sha256_ctx_t *state);
+
 void sha256_nextBlock (sha256_ctx_t *state, void* block);
 void sha256_lastBlock(sha256_ctx_t *state, void* block, uint16_t length);
 

@@ -34,7 +34,7 @@
 #include "uart.h"
 #include "debug.h"
 
-#include "sha256-asm.h"
+#include "sha256.h"
 #include "xtea.h"
 #include "arcfour.h"
 #include "prng.h"

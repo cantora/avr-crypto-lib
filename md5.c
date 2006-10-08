@@ -1,9 +1,10 @@
 /* 
- * File:	md5.h
- * Author:	Daniel Otte
- * Date: 	31.07.2006
- * License: GPL
- * Description: Implementation of the MD5 hash algorithm as described in RFC 1321
+ * \file	md5.c
+ * \author	Daniel Otte
+ * \date 	31.07.2006
+ * \par License:
+ * GPL
+ * \brief Implementation of the MD5 hash algorithm as described in RFC 1321
  * 
  */
 

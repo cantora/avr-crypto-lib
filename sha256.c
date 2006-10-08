@@ -1,8 +1,13 @@
 /**
- * File:		sha256.c
- * Author:	Daniel Otte 
- * Date:		16.05.2006
- * License:	GPL
+ * \file		sha256.c
+ * \author		Daniel Otte 
+ * \date		16.05.2006
+ * 
+ * \par License:	
+ * 	GPL
+ * 
+ * \brief SHA-256 implementation.
+ * 
  * 
  */
 
@@ -19,22 +24,37 @@
 #endif
 
 
+/*************************************************************************/
+
 uint32_t sha256_init_vector[]={
 	0x6A09E667, 0xBB67AE85, 0x3C6EF372, 0xA54FF53A,
     0x510E527F, 0x9B05688C, 0x1F83D9AB, 0x5BE0CD19 };
 
+
+/*************************************************************************/
+
+/**
+ * \brief \c sh256_init initialises a sha256 context for hashing. 
+ * \c sh256_init c initialises the given sha256 context for hashing
+ * @param state pointer to a sha256 context
+ * @return none
+ */
 void sha256_init(sha256_ctx_t *state){
 	state->length=0;
 	memcpy(state->h, sha256_init_vector, 8*4);
 }
 
-/*
+/*************************************************************************/
+
+/**
  * rotate x right by n positions
  */
-
 uint32_t rotr32( uint32_t x, uint8_t n){
 	return ((x>>n) | (x<<(32-n)));
 }
+
+
+/*************************************************************************/
 
 // #define CHANGE_ENDIAN32(x) (((x)<<24) | ((x)>>24) | (((x)& 0x0000ff00)<<8) | (((x)& 0x00ff0000)>>8))
 
@@ -42,6 +62,8 @@ uint32_t change_endian32(uint32_t x){
 	return (((x)<<24) | ((x)>>24) | (((x)& 0x0000ff00)<<8) | (((x)& 0x00ff0000)>>8));
 }
 
+
+/*************************************************************************/
 
 /* sha256 functions as macros for speed and size, cause they are called only once */
 
@@ -65,6 +87,8 @@ uint32_t k[]={
 	0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
 };
 
+
+/*************************************************************************/
 
 /**
  * block must be, 512, Bit = 64, Byte, long !!!
@@ -105,11 +129,17 @@ void sha256_nextBlock (sha256_ctx_t *state, void* block){
 		state->length += 512;
 } 
 
-/*
- * length is the length of only THIS block in BITS not in bytes!
+
+/*************************************************************************/
+
+/**
+ * \brief function to process the last block being hashed
+ * @param state Pointer to the context in which this block should be processed.
+ * @param block Pointer to the message wich should be hashed.
+ * @param length is the length of only THIS block in BITS not in bytes!
  *  bits are big endian, meaning high bits come first.
  * 	if you have a message with bits at the end, the byte must be padded with zeros 
- * */
+ */
 void sha256_lastBlock(sha256_ctx_t *state, void* block, uint16_t length){
 	uint8_t lb[SHA256_BLOCK_BITS/8]; /* local block */
 	state->length += length;
@@ -145,10 +175,11 @@ void sha256_lastBlock(sha256_ctx_t *state, void* block, uint16_t length){
 }
 
 
+/*************************************************************************/
+
 /*
  * length in bits!
  */
-
 void sha256(sha256_hash_t *dest, void* msg, uint32_t length){ /* length could be choosen longer but this is for ?C */
 	sha256_ctx_t s;
 	sha256_init(&s);
@@ -163,6 +194,7 @@ void sha256(sha256_hash_t *dest, void* msg, uint32_t length){ /* length could be
 
 
 
+/*************************************************************************/
 
 void sha256_ctx2hash(sha256_hash_t *dest, sha256_ctx_t *state){
 #if defined LITTLE_ENDIAN

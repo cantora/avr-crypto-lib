@@ -1,8 +1,9 @@
 /**
- * File:		sha256-asm.h
- * Author:	Daniel Otte 
- * Date:		16.05.2006
- * License:	GPL
+ * \file		sha256-asm.h
+ * \author	Daniel Otte 
+ * \date		16.05.2006
+ * \par License	
+ * GPL
  * 
  */
 

@@ -1,16 +1,34 @@
 /**
- * File:		prng.c
- * Author:		Daniel Otte
- * Date:		17.05.2006
- * License:		GPL
- * Description:	This file contains an implementaition of a pseudo-random-number generator.
+ * \file		prng.c
+ * \author		Daniel Otte
+ * \date		17.05.2006
+ * \par License:
+ * 	GPL
+ * \brief	This file contains an implementaition of a pseudo-random-number generator.
+ * 
  * Extension 1:
  * 	rndCore is expanded to 512 bits for more security.
- **/
+ *
+ * \verbatim
+ *                      ####################################################################################
+ *                      #                                                                                  #
+ *                      #         +---------------------------+                                            #
+ *                      #         |                           |                                            #
+ *                      #         V                           |                                            #
+ *                      #      (concat)                       |                                            #
+ *  +---------------+   #    o---------o             (xor)+---------+      o---------o       o---------o   #    +--------------+
+ *  | entropy Block | -----> | sha-256 | --(offset)-<     | rndCore | ---> | sha-256 | --+-> | sha-256 | -----> | random Block |
+ *  +---------------+   #    o---------o             (xor)+---------+      o---------o   |   o---------o   #    +--------------+
+ *                      #                                 (xor) (xor)                    |                 #
+ *                      #                                   ^     ^                      |                 #
+ *                      #                                    \   /                       |                 #
+ *                      #                                   (offset)---------------------+                 #
+ *                      #                                                                                  #
+ *                      ####################################################################################
+ * \endverbatim
+ */
 
-
-/*
- * 
+ /* \verbatim
  *                      ####################################################################################
  *                      #        																	       #
  *					    #		  +---------------------------+										 	   #
@@ -26,20 +44,28 @@
  * 						#						            (offset)---------------------+				   #
  * 						#		        															       #
  *						####################################################################################
- * 
+ * \endverbatim
  */
 
 #include <stdint.h>
 #include <string.h>
 #include "sha256.h"
 
+/**
+ * \brief secret entropy pool. 
+ * This is the core of the random which is generated
+ */
+uint32_t rndCore[16]; 
 
+/*************************************************************************/
 
-
-uint32_t rndCore[16]; /* secret */
-
-/*
- * idea is: hash the message and add it via xor to rndCore
+/**
+ * \brief This function adds entropy to the central entropy pool
+ * 
+ * @param length This ist the length of the random data in BITS. 
+ * @param data This is the random data which should be added to the entropy pool
+*/
+/* idea is: hash the message and add it via xor to rndCore
  *
  * length in bits 
  * 
@@ -62,7 +88,12 @@ void addEntropy(unsigned length, void* data){
 	}
 	offset ^= 8; /* hehe */
 }
- 
+
+/*************************************************************************/
+/**
+ * \brief This function fills a given buffer with 32 random bytes
+ * @param b Pointer to buffer wich is to fill
+ */
 void getRandomBlock(uint32_t *b){
 	sha256_ctx_t s;
 	uint8_t offset=8;
@@ -79,8 +110,13 @@ void getRandomBlock(uint32_t *b){
 	sha256_lastBlock(&s, b, 256);
 	memcpy(b, s.h, 32);
 }
+
+/*************************************************************************/
  
-/* this does some simple buffering */
+/**
+ * \brief This function simply returns a random byte
+ * @return a random byte
+ */
 uint8_t getRandomByte(void){
 	static uint8_t block[32];
 	static uint8_t i=32;
