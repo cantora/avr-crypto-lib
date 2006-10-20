@@ -180,7 +180,7 @@ void sha256_lastBlock(sha256_ctx_t *state, void* block, uint16_t length){
 /*
  * length in bits!
  */
-void sha256(sha256_hash_t *dest, void* msg, uint32_t length){ /* length could be choosen longer but this is for ?C */
+void sha256(sha256_hash_t *dest, void* msg, uint32_t length){ /* length could be choosen longer but this is for µC */
 	sha256_ctx_t s;
 	sha256_init(&s);
 	while(length >= SHA256_BLOCK_BITS){

@@ -96,8 +96,8 @@ SREG = 0x3F
 ;###########################################################	
 
 .global sha256_ctx2hash
-; === sha256_lastBlock ===
-; this function does padding & Co. for calculating SHA-256 hashes
+; === sha256_ctx2hash ===
+; this function converts a state into a normal hash (bytestring)
 ;  param1: the 16-bit destination pointer
 ;	given in r25,r24 (r25 is most significant)
 ;  param2: the 16-bit pointer to sha256_ctx structure
@@ -840,13 +840,13 @@ update_state_loop:
 	add r20, r21
 	st Z+, r20	
 	clr r21
-sha256_nexBlock_fix_length:	
+sha256_nextBlock_fix_length:	
 	brcc sha256_nextBlock_epilog
 	ld r20, Z
 	adc r20, r21
 	st Z+, r20
 	dec r22
-	brne sha256_nexBlock_fix_length
+	brne sha256_nextBlock_fix_length
 	
 ; EPILOG
 sha256_nextBlock_epilog:

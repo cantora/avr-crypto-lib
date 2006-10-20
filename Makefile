@@ -1,6 +1,6 @@
-PRG	    = rc6
+PRG	    = sha1
 # cryptotest
-OBJ	    = main-rc6-test.o debug.o uart.o serial-tools.o rc6.o
+OBJ	    = main-sha1-test.o debug.o uart.o serial-tools.o sha1-asm.o
 # main-md5-test.o debug.o uart.o serial-tools.o md5.o
 # main-cast5-test.o debug.o uart.o serial-tools.o cast5.o
 # main.o debug.o uart.o serial-tools.o sha256-asm.o xtea-asm.o arcfour-asm.o prng.o cast5.o
