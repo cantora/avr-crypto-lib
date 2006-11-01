@@ -1,6 +1,7 @@
-PRG	    = sha1
+PRG	    = skipjack
 # cryptotest
-OBJ	    = main-sha1-test.o debug.o uart.o serial-tools.o sha1-asm.o
+OBJ	    = main-skipjack-test.o debug.o uart.o serial-tools.o skipjack.o
+# main-sha1-test.o debug.o uart.o serial-tools.o sha1-asm.o
 # main-md5-test.o debug.o uart.o serial-tools.o md5.o
 # main-cast5-test.o debug.o uart.o serial-tools.o cast5.o
 # main.o debug.o uart.o serial-tools.o sha256-asm.o xtea-asm.o arcfour-asm.o prng.o cast5.o
