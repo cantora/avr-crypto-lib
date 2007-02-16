@@ -79,6 +79,8 @@ void hmac_sha256(void* dest, void* key, uint16_t kl, void* msg, uint64_t ml){ /*
 	uint8_t i;
 	uint8_t buffer[SHA256_BLOCK_BITS/8];
 	
+	memset(buffer, 0, SHA256_BLOCK_BITS/8);
+	
 	/* if key is larger than a block we have to hash it*/
 	if (kl > SHA256_BLOCK_BITS){
 		sha256((void*)buffer, key, kl);
@@ -101,9 +103,9 @@ void hmac_sha256(void* dest, void* key, uint16_t kl, void* msg, uint64_t ml){ /*
 	for (i=0; i<SHA256_BLOCK_BITS/8; ++i){
 		buffer[i] ^= IPAD ^ OPAD;
 	}
-	sha265_ctx2hash(dest, &s); /* save inner hash temporary to dest */
+	sha256_ctx2hash(dest, &s); /* save inner hash temporary to dest */
 	sha256_init(&s);
 	sha256_nextBlock(&s, buffer);
 	sha256_lastBlock(&s, dest, SHA256_HASH_BITS);
-	sha265_ctx2hash(dest, &s);
+	sha256_ctx2hash(dest, &s);
 }
