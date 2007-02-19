@@ -22,7 +22,7 @@ uint64_t camellia_fl_inv(uint64_t y, uint64_t k);
 /*****************************************************************************/
 void change_endian(void* data, uint8_t length);
 
-uint64_t camellia_sigma[6]={
+uint64_t PROGMEM camellia_sigma[6]={ /* 64 byte table */
 	0xA09E667F3BCC908BLL,
 	0xB67AE8584CAA73B2LL,
 	0xC6EF372FE94F82BELL,
@@ -31,26 +31,31 @@ uint64_t camellia_sigma[6]={
 	0xB05688C2B3E6C1FDLL
 };	
 
+/* an ugly macro to load an entry form the table above */
+#define SIGMA(p) (( ((uint64_t)(pgm_read_dword((prog_uint32_t*)camellia_sigma+2*(p)+1)))<<32) + \
+				    ((uint64_t)(pgm_read_dword((prog_uint32_t*)camellia_sigma+2*(p)+0) )) )
+
+
+
 /*****************************************************************************/
 
 void camellia128_ctx_dump(camellia128_ctx_t *s){
-	uart_putstr("\r\n==State Dump==");
-	uart_putstr("\n\rKAl: "); uart_hexdump(&(s->kal), 8);
-	uart_putstr("\n\rKAr: "); uart_hexdump(&(s->kar), 8);
-	uart_putstr("\n\rKLl: "); uart_hexdump(&(s->kll), 8);
-	uart_putstr("\n\rKLr: "); uart_hexdump(&(s->klr), 8);	
+	uart_putstr_P(PSTR("\r\n==State Dump=="));
+	uart_putstr_P(PSTR("\n\rKAl: ")); uart_hexdump(&(s->kal), 8);
+	uart_putstr_P(PSTR("\n\rKAr: ")); uart_hexdump(&(s->kar), 8);
+	uart_putstr_P(PSTR("\n\rKLl: ")); uart_hexdump(&(s->kll), 8);
+	uart_putstr_P(PSTR("\n\rKLr: ")); uart_hexdump(&(s->klr), 8);	
 	return;
 }
 
 /*****************************************************************************/
-//*
-//extern prog_uint64_t camellia_sigma[6];
+/* extern prog_uint64_t camellia_sigma[6]; */
 
 void camellia128_init(camellia128_ctx_t* s, uint8_t* key){
 	uint8_t i;
-	s->kll = 0; //((uint64_t*)key)[0];
+	s->kll = 0; /* ((uint64_t*)key)[0]; */
 	
-//	/ * load the key, endian-adjusted, to kll,klr * /
+	/* load the key, endian-adjusted, to kll,klr */
 	for(i=0; i<8; ++i){
 		s->kll <<= 8;
 		s->kll |= *key++;
@@ -59,22 +64,20 @@ void camellia128_init(camellia128_ctx_t* s, uint8_t* key){
 		s->klr <<= 8;
 		s->klr |= *key++;
 	}
-	
+
 	s->kal = s->kll;
 	s->kar = s->klr;
 	
-	s->kar ^= camellia_f(s->kal, camellia_sigma[0]);
-	s->kal ^= camellia_f(s->kar, camellia_sigma[1]);
+	s->kar ^= camellia_f(s->kal, SIGMA(0));
+	s->kal ^= camellia_f(s->kar, SIGMA(1));
 	
 	s->kal ^= s->kll;
 	s->kar ^= s->klr;
 	
-	s->kar ^= camellia_f(s->kal, camellia_sigma[2]);
-	s->kal ^= camellia_f(s->kar, camellia_sigma[3]);
-//	/ ** /
-//	uart_putstr("\n\r----------------init finished--------------------");
+	s->kar ^= camellia_f(s->kal, SIGMA(2));
+	s->kal ^= camellia_f(s->kar, SIGMA(3));
 }
-//*/
+
 /*****************************************************************************/
 void camellia128_keyop(camellia128_ctx_t* s, int8_t q);
 /*****************************************************************************/
