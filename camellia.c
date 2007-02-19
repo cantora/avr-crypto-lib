@@ -146,6 +146,7 @@ void camellia128_enc(camellia128_ctx_t* s, void* block){
 	BR = BL;
 	BL = temp64;
 
+	camellia128_keyop(s,1);
 	
 	change_endian(&BL, 64/8);	
 	change_endian(&BR, 64/8);
