@@ -83,6 +83,16 @@ void testrun_sha256(void){
 	sha256((void*)block, (void*)"\x00", 0);
 	uart_hexdump(block, SHA256_HASH_BITS/8);
 	
+
+        uart_putstr("\r\nsha256(0x80, 8)= ");
+	sha256((void*)block, (void*)"\x80", 8);
+	uart_hexdump(block, SHA256_HASH_BITS/8);
+
+	uart_putstr("\r\nsha256(0x02, 8)= ");
+        sha256((void*)block, (void*)"\x02", 8);
+	uart_hexdump(block, SHA256_HASH_BITS/8);
+
+
 	uart_putstr("\r\nsha256(\"abc\", 24)= ");
 	sha256((void*)block, (void*)"abc", 24);
 	uart_hexdump(block, SHA256_HASH_BITS/8);

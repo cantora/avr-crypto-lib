@@ -1,15 +1,26 @@
-PRG	    = camellia
+PRG	    = tdes-test
 # camellia
 # cryptotest
- OBJ	    = main-camellia-test.o debug.o uart.o serial-tools.o camellia.o camellia-asm.o
-# main-skipjack-test.o debug.o uart.o serial-tools.o skipjack.o
-# main-sha1-test.o debug.o uart.o serial-tools.o sha1-asm.o
-# main-md5-test.o debug.o uart.o serial-tools.o md5.o
-# main-cast5-test.o debug.o uart.o serial-tools.o cast5.o
-# OBJ = main-rc6-test.o debug.o uart.o serial-tools.o rc6.o
-# main.o debug.o uart.o serial-tools.o sha256-asm.o xtea-asm.o arcfour-asm.o prng.o cast5.o
+CAMELLIA_OBJ	= main-camellia-test.o debug.o uart.o serial-tools.o camellia.o camellia-asm.o
+SKIPJACK_OBJ	= main-skipjack-test.o debug.o uart.o serial-tools.o skipjack.o
+SHA1_OBJ		= main-sha1-test.o debug.o uart.o serial-tools.o sha1-asm.o
+MD5_OBJ			= main-md5-test.o debug.o uart.o serial-tools.o md5.o
+CAST5_OBJ		= main-cast5-test.o debug.o uart.o serial-tools.o cast5.o
+RC6_OBJ			= main-rc6-test.o debug.o uart.o serial-tools.o rc6.o
+Multi_OBJ		= main.o debug.o uart.o serial-tools.o sha256-asm.o xtea-asm.o arcfour-asm.o prng.o cast5.o
+DES_OBJ			= main-des-test.o debug.o uart.o serial-tools.o des.o
+TDES_OBJ	    = main-tdes-test.o debug.o uart.o serial-tools.o des.o
+SEED_OBJ	    = main-seed-test.o debug.o uart.o serial-tools.o seed.o seed-asm.o
+SHABEA_OBJ	    = main-shabea-test.o debug.o uart.o serial-tools.o shabea.o sha256-asm.o
+
+OBJ = $(TDES_OBJ)
 MCU_TARGET     = atmega32
 OPTIMIZE       = -Os
+
+FLASHCMD       = avrdude -p $(MCU_TARGET) -P /dev/ttyUSB0 -c avr911 -U flash:w:$(PRG).hex
+#  -U eeprom:w:$(PRG)_eeprom.hex
+#uisp -dprog=bsd -dlpt=/dev/parport1 --upload if=$(PRG).hex
+ERASECMD       = 
 
 DEFS	   =
 LIBS	   =
@@ -20,7 +31,7 @@ CC	     = avr-gcc
 
 # Override is only needed by avr-lib build system.
 
-override CFLAGS	= -Wall -Wstrict-prototypes  $(OPTIMIZE) -mmcu=$(MCU_TARGET) 
+override CFLAGS	= -pedantic -std=c99 -Wall -Wstrict-prototypes  $(OPTIMIZE) -mmcu=$(MCU_TARGET) 
 $(DEFS)
 override LDFLAGS       = -Wl,-Map,$(PRG).map
 override ASFLAGS	   = -mmcu=$(MCU_TARGET)
@@ -39,6 +50,10 @@ clean:
 	rm -rf *.o $(PRG).elf *.eps *.png *.pdf *.bak 
 	rm -rf *.lst *.map $(EXTRA_CLEAN_FILES)
 
+flash:
+	$(ERASECMD)
+	$(FLASHCMD)
+	
 lst:  $(PRG).lst
 
 %.lst: %.elf

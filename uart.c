@@ -132,7 +132,7 @@ void uart_hexdump(void* buf, int len)
 		uart_putc(table[((*((char*)buf))>>4)&0xf]);
 		uart_putc(table[(*((char*)buf))&0xf]);
 		uart_putc(' ');
-		++buf;
+		buf=(char*)buf+1;
 	}
 }
 

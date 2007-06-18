@@ -27,11 +27,13 @@ void uart_putstr_P(PGM_P str);
 void uart_hexdump(void* buf, int len);
 
 char uart_getc(void);
-char uart_getc_nb(char *c);		// returns 1 on success
+char uart_getc_nb(char *c);		/* returns 1 on success */
 
-//get one Cariage return terminated line
-//echo charakters back on Uart
-//returns buffer with zero terminated line on success, 0 pointer otherwise
+/*
+  get one Cariage return terminated line
+  echo charakters back on Uart
+  returns buffer with zero terminated line on success, 0 pointer otherwise
+*/
 char * uart_getline_nb(void);
 
 #endif

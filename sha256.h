@@ -1,7 +1,7 @@
 /**
  * \file		sha256-asm.h
- * \author	Daniel Otte 
- * \date		16.05.2006
+ * \author		Daniel Otte 
+ * \date		2006-05-16
  * \par License	
  * GPL
  * 
@@ -36,6 +36,10 @@ void sha256_nextBlock (sha256_ctx_t *state, void* block);
 void sha256_lastBlock(sha256_ctx_t *state, void* block, uint16_t length);
 
 void sha256_ctx2hash(sha256_hash_t *dest, sha256_ctx_t *state);
+
+/*
+ * length in bits!
+ */
 void sha256(sha256_hash_t *dest, void* msg, uint32_t length);
 uint32_t change_endian32(uint32_t x);
 
