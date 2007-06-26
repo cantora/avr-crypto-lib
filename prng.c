@@ -140,12 +140,12 @@ uint8_t getRandomByte(void){
 void fillBlockRandom(void* block, unsigned length){
 	while(length>RANDOMBLOCK_SIZE){
 		getRandomBlock(block);
-		block += RANDOMBLOCK_SIZE;
+		block = (uint8_t*)block + RANDOMBLOCK_SIZE;
 		length -= RANDOMBLOCK_SIZE;
 	}
 	while(length){
 		*((uint8_t*)block) = getRandomByte();
-		++block; --length;
+		block= (uint8_t*)block +1; --length;
 	}
 }
  

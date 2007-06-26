@@ -95,7 +95,7 @@ void hmac_sha256(void* dest, void* key, uint16_t kl, void* msg, uint64_t ml){ /*
 	sha256_nextBlock(&s, buffer);
 	while (ml >= SHA256_BLOCK_BITS){
 		sha256_nextBlock(&s, msg);
-		msg += SHA256_BLOCK_BITS/8;
+		msg = (uint8_t*)msg + SHA256_BLOCK_BITS/8;
 		ml -=  SHA256_BLOCK_BITS;
 	}
 	sha256_lastBlock(&s, msg, ml);

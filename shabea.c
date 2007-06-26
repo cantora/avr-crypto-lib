@@ -20,7 +20,6 @@
 /*
  * 
  */
-static
 void memxor(uint8_t * dest, uint8_t * src, uint8_t length){
 	while(length--){
 		*dest++ ^= *src++;
@@ -47,7 +46,7 @@ void shabea128(void * block, void * key, uint16_t keysize, uint8_t enc, uint8_t 
 	for(;r!=(enc?(rounds):-1);enc?r++:r--){ /* enc: 0..(rounds-1) ; !enc: (rounds-1)..0 */
 		memcpy(tb, R, 8); /* copy right half into tb */
 		tb[8+1] = r;
-		sha256(hash, tb, 64+16+keysize);
+		sha256(&hash, tb, 64+16+keysize);
 		if(!(r==(enc?(rounds-1):0))){	
 			/* swap */
 			memxor(hash, L, 8);
