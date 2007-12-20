@@ -13,5 +13,5 @@
 #ifndef SHABEA_H_
 #define SHABEA_H_
 
-void shabea128(void * block, void * key, uint16_t keysize, uint8_t enc, uint8_t rounds);
+void shabea256(void * block, void * key, uint16_t keysize, uint8_t enc, uint8_t rounds);
 #endif /*SHABEA_H_*/

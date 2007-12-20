@@ -27,34 +27,40 @@ void memxor(uint8_t * dest, uint8_t * src, uint8_t length){
 } 
 
 /*
- * SHABEA128-16
+ * SHABEA256-n
  */ 
-#define L ((uint8_t*)block+0)
-#define R ((uint8_t*)block+8)
-void shabea128(void * block, void * key, uint16_t keysize, uint8_t enc, uint8_t rounds){
+ 
+#define BLOCKSIZE 256
+#define BLOCKSIZEB (BLOCKSIZE/8)
+#define HALFSIZEB  (BLOCKSIZEB/2)
+#define HALFSIZE (BLOCKSIZE/2)
+
+#define L ((uint8_t*)block+ 0)
+#define R ((uint8_t*)block+16)
+void shabea256(void * block, void * key, uint16_t keysize, uint8_t enc, uint8_t rounds){
 	int8_t r;		/**/
 	uint8_t *tb;	/**/
 	uint16_t kbs;	/* bytes used for the key / temporary block */
 	sha256_hash_t hash;
 	
 	r = (enc?0:(rounds-1));
-	kbs = keysize/8 + ((keysize&7)?1:0);
-	tb = malloc(8+2+kbs);
-	memcpy(tb+8+2, key, kbs);
-	tb[8+0] = 0;
+	kbs = (keysize+7)/8;
+	tb = malloc(HALFSIZEB+2+kbs);
+	memcpy(tb+HALFSIZEB+2, key, kbs); /* copy key to temporary block */
+	tb[HALFSIZEB+0] = 0;	/* set round counter high value to zero */
 	
 	for(;r!=(enc?(rounds):-1);enc?r++:r--){ /* enc: 0..(rounds-1) ; !enc: (rounds-1)..0 */
-		memcpy(tb, R, 8); /* copy right half into tb */
-		tb[8+1] = r;
-		sha256(&hash, tb, 64+16+keysize);
+		memcpy(tb, R, HALFSIZEB); /* copy right half into tb */
+		tb[HALFSIZEB+1] = r;
+		sha256(&hash, tb, HALFSIZE+16+keysize);
 		if(!(r==(enc?(rounds-1):0))){	
 			/* swap */
-			memxor(hash, L, 8);
-			memcpy(L, R, 8);
-			memcpy(R, hash, 8);
+			memxor(hash, L, HALFSIZE);
+			memcpy(L, R, HALFSIZE);
+			memcpy(R, hash, HALFSIZE);
 		} else {
 			/* no swap */
-			memxor(L, hash, 8);	
+			memxor(L, hash, HALFSIZE);	
 		}
 	}
 	free(tb);
