@@ -9,7 +9,7 @@
 
 #include <stdint.h>
 
-typedef uint8_t serpent_subkey_t[16];
+typedef uint32_t serpent_subkey_t[4];
 
 typedef struct serpent_ctx_st {
 	serpent_subkey_t k[33];
