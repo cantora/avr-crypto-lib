@@ -1,6 +1,8 @@
-PRG	    = tdes-test
+PRG        = serpent-test
+#PRG	    = tdes-test
 # camellia
 # cryptotest
+SERPENT_OBJ     = main-serpent-test.o debug.o uart.o serial-tools.o serpent.o
 CAMELLIA_OBJ	= main-camellia-test.o debug.o uart.o serial-tools.o camellia.o camellia-asm.o
 SKIPJACK_OBJ	= main-skipjack-test.o debug.o uart.o serial-tools.o skipjack.o
 SHA1_OBJ		= main-sha1-test.o debug.o uart.o serial-tools.o sha1-asm.o
@@ -13,7 +15,7 @@ TDES_OBJ	    = main-tdes-test.o debug.o uart.o serial-tools.o des.o
 SEED_OBJ	    = main-seed-test.o debug.o uart.o serial-tools.o seed.o seed-asm.o
 SHABEA_OBJ	    = main-shabea-test.o debug.o uart.o serial-tools.o shabea.o sha256-asm.o
 
-OBJ = $(TDES_OBJ)
+OBJ = $(SERPENT_OBJ)
 MCU_TARGET     = atmega32
 OPTIMIZE       = -Os
 
