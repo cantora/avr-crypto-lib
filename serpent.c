@@ -170,10 +170,18 @@ static uint32_t gen_w(uint32_t * b, uint8_t i){
 } 
 
 /* key must be 256bit (32 byte) large! */
-void serpent_genctx(void * key, serpent_ctx_t * ctx){
+void serpent_genctx(void * key, uint8_t keysize, serpent_ctx_t * ctx){
 	uint32_t buffer[8];
 	uint8_t i,j;
-	memcpy(buffer, key, 32); 
+	if(keysize){
+		/* keysize is less than 256 bit, padding needed */
+		memset(buffer, 0, 32);
+		memcpy(buffer, key, (keysize+7)/8);
+		((uint8_t*)buffer)[keysize/8] |= 1<<(keysize%8);
+	} else {
+		/* keysize is 256 bit */
+		memcpy(buffer, key, 32); 
+	}
 	for(i=0; i<33; ++i){
 		for(j=0; j<4; ++j){
 			ctx->k[i][j] = gen_w(buffer, i*4+j);

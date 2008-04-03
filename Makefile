@@ -2,7 +2,7 @@ PRG        = serpent-test
 #PRG	    = tdes-test
 # camellia
 # cryptotest
-SERPENT_OBJ     = main-serpent-test.o debug.o uart.o serial-tools.o serpent.o
+SERPENT_OBJ     = main-serpent-test.o debug.o uart.o serial-tools.o serpent.o nessie_bc_test.o
 CAMELLIA_OBJ	= main-camellia-test.o debug.o uart.o serial-tools.o camellia.o camellia-asm.o
 SKIPJACK_OBJ	= main-skipjack-test.o debug.o uart.o serial-tools.o skipjack.o
 SHA1_OBJ		= main-sha1-test.o debug.o uart.o serial-tools.o sha1-asm.o
