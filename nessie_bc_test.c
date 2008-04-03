@@ -117,7 +117,7 @@ static void print_set_vector(uint8_t set, uint16_t vector){
 	uart_putc('0'+set%10);
 	uart_putstr_P(PSTR(", vector#"));
 	uart_putc((vector<100)?' ':'0'+vector/100);
-	uart_putc((vector<100)?' ':'0'+(vector/10)%10);
+	uart_putc((vector<10 )?' ':'0'+(vector/10)%10);
 	uart_putc('0'+vector%10);
 	uart_putc(':');
 }
