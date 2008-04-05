@@ -49,9 +49,9 @@ uint32_t bigendian_sum32(uint32_t a, uint32_t b);/*{
 	changeendian32(&a);
 	return a;
 }
-
+*/
 /******************************************************************************/
-static
+/* static */
 uint32_t bigendian_sub32(uint32_t a, uint32_t b);/*{
 	changeendian32(&a);
 	changeendian32(&b);
@@ -59,7 +59,7 @@ uint32_t bigendian_sub32(uint32_t a, uint32_t b);/*{
 	changeendian32(&a);
 	return a;
 }
-
+*/
 /******************************************************************************/
 static inline
 uint64_t bigendian_rotl8_64(uint64_t a){
@@ -144,6 +144,7 @@ keypair_t getnextkeys(uint32_t *keystate, uint8_t curround){
 	keypair_t ret;
 	if (curround>15){
 		/* ERROR */
+		ret.k0 = ret.k1 = 0;
 	} else {
 	/*	ret.k0 = g_function(keystate[0] + keystate[2] - pgm_read_dword(&(seed_kc[curround])));
 		ret.k1 = g_function(keystate[1] - keystate[3] + pgm_read_dword(&(seed_kc[curround]))); */
@@ -172,6 +173,7 @@ keypair_t getprevkeys(uint32_t *keystate, uint8_t curround){
 	keypair_t ret;
 	if (curround>15){
 		/* ERROR */
+		ret.k0 = ret.k1 = 0;
 	} else {
 		if (curround & 1){
 			/* odd round (1,3,5, ..., 15) */

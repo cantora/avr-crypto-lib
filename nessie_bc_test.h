@@ -3,6 +3,11 @@
 
 #include <stdint.h>
 
+typedef void (*nessie_gen_fpt)(uint8_t*, uint16_t, void*);
+typedef void (*nessie_enc_fpt)(void*, void*);
+typedef void (*nessie_dec_fpt)(void*, void*);
+
+
 typedef struct nessie_ctx_st{
 	uint16_t keysize;
 	uint16_t blocksize_B;

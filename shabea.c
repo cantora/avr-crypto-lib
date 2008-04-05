@@ -39,13 +39,12 @@ void memxor(uint8_t * dest, uint8_t * src, uint8_t length){
 #define R ((uint8_t*)block+16)
 void shabea256(void * block, void * key, uint16_t keysize, uint8_t enc, uint8_t rounds){
 	int8_t r;		/**/
-	uint8_t *tb;	/**/
+	uint8_t tb[HALFSIZEB+2+(keysize+7)/8];	/**/
 	uint16_t kbs;	/* bytes used for the key / temporary block */
 	sha256_hash_t hash;
 	
 	r = (enc?0:(rounds-1));
 	kbs = (keysize+7)/8;
-	tb = malloc(HALFSIZEB+2+kbs);
 	memcpy(tb+HALFSIZEB+2, key, kbs); /* copy key to temporary block */
 	tb[HALFSIZEB+0] = 0;	/* set round counter high value to zero */
 	
@@ -63,7 +62,6 @@ void shabea256(void * block, void * key, uint16_t keysize, uint8_t enc, uint8_t 
 			memxor(L, hash, HALFSIZE);	
 		}
 	}
-	free(tb);
 }
 
 

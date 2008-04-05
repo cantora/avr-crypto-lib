@@ -89,7 +89,6 @@ Set 8, vector#  0:
                      encrypted=0011223344556677
 */
 void nessie_testdec(uint8_t* data, uint8_t* key){
-	uint16_t i;
 	uart_putstr("\r\n\t                key = \t"); uart_hexdump(key, 8);
 	uart_putstr("\r\n\t             cipher = \t"); uart_hexdump(data, 8);
 	des_decrypt(data,data,key);

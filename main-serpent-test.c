@@ -28,9 +28,9 @@ void testrun_serpent(void){
 	nessie_ctx.keysize     = 128;
 	nessie_ctx.name        = cipher_name;
 	nessie_ctx.ctx_size_B  = sizeof(serpent_ctx_t);
-	nessie_ctx.cipher_enc  = serpent_enc;
-	nessie_ctx.cipher_dec  = serpent_dec;
-	nessie_ctx.cipher_genctx  = serpent_genctx_dummy;
+	nessie_ctx.cipher_enc  = (nessie_enc_fpt)serpent_enc;
+	nessie_ctx.cipher_dec  = (nessie_dec_fpt)serpent_dec;
+	nessie_ctx.cipher_genctx  = (nessie_gen_fpt)serpent_genctx_dummy;
 	
 	nessie_run();
 	

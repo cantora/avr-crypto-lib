@@ -1,55 +1,82 @@
+# Makefile for the micro-crypt project
+# author: Daniel Otte
+
+BLOCK_CIPHERS  = 
+STREAM_CIPHERS = 
+HASHES         = 
+
+
+include avr-makefile.inc
+include *.mk
+
+ALGORITHMS = $(BLOCK_CIPHERS) $(STREAM_CIPHERS) $(HASHES)
+ALGORITHMS_OBJ = $(patsubst %,%_OBJ, $(ALGORITHMS))
+ALGORITHMS_OBJ_IMM = $(foreach a, $(ALGORITHMS_OBJ), $($(a)))
+ALGORITHMS_TEST_BIN = $(patsubst %,%_TEST_BIN, $(ALGORITHMS))
+ALGORITHMS_TEST_BIN_MAIN = $(foreach a, $(ALGORITHMS_TEST_BIN), $(firstword $($(a))))
+ALGORITHMS_TEST_BIN_MAIN_ELF = $(patsubst %.o, %.elf, $(ALGORITHMS_TEST_BIN_MAIN))
+ALGORITHMS_TEST_BIN_MAIN_HEX = $(patsubst %.o, %.hex, $(ALGORITHMS_TEST_BIN_MAIN))
+
+ALGORITHMS_TEST_BIN_IMM =  $(foreach a, $(ALGORITHMS_TEST_BIN), $($(a)))
+ALGORITHMS_NESSIE_TEST = $(patsubst %,%_NESSIE_TEST, $(ALGORITHMS))
+ALGORITHMS_PERFORMANCE_TEST = $(patsubst %,%_PERORMANCE_TEST, $(ALGORITHMS))
+
+
 PRG        = serpent-test
-#PRG	    = tdes-test
-# camellia
-# cryptotest
-SERPENT_OBJ     = main-serpent-test.o debug.o uart.o serial-tools.o serpent.o nessie_bc_test.o
-CAMELLIA_OBJ	= main-camellia-test.o debug.o uart.o serial-tools.o camellia.o camellia-asm.o
-SKIPJACK_OBJ	= main-skipjack-test.o debug.o uart.o serial-tools.o skipjack.o
-SHA1_OBJ		= main-sha1-test.o debug.o uart.o serial-tools.o sha1-asm.o
-MD5_OBJ			= main-md5-test.o debug.o uart.o serial-tools.o md5.o
-CAST5_OBJ		= main-cast5-test.o debug.o uart.o serial-tools.o cast5.o
-RC6_OBJ			= main-rc6-test.o debug.o uart.o serial-tools.o rc6.o
-Multi_OBJ		= main.o debug.o uart.o serial-tools.o sha256-asm.o xtea-asm.o arcfour-asm.o prng.o cast5.o
-DES_OBJ			= main-des-test.o debug.o uart.o serial-tools.o des.o
-TDES_OBJ	    = main-tdes-test.o debug.o uart.o serial-tools.o des.o
-SEED_OBJ	    = main-seed-test.o debug.o uart.o serial-tools.o seed.o seed-asm.o
-SHABEA_OBJ	    = main-shabea-test.o debug.o uart.o serial-tools.o shabea.o sha256-asm.o
 
-OBJ = $(SERPENT_OBJ)
-MCU_TARGET     = atmega32
-OPTIMIZE       = -Os
+#SHA1_OBJ		= main-sha1-test.o debug.o uart.o serial-tools.o sha1-asm.o
+#MD5_OBJ		= main-md5-test.o debug.o uart.o serial-tools.o md5.o
 
-FLASHCMD       = avrdude -p $(MCU_TARGET) -P /dev/ttyUSB0 -c avr911 -U flash:w:$(PRG).hex
-#  -U eeprom:w:$(PRG)_eeprom.hex
-#uisp -dprog=bsd -dlpt=/dev/parport1 --upload if=$(PRG).hex
-ERASECMD       = 
+#Multi_OBJ		= main.o debug.o uart.o serial-tools.o sha256-asm.o xtea-asm.o arcfour-asm.o prng.o cast5.o
+
+#OBJ = $(SERPENT_OBJ)
 
 DEFS	   =
 LIBS	   =
 
-# You should not have to change anything below here.
+define BLA_TEMPLATE2
+$(2): $(3)
+	echo $$@
+	echo $$^
+	$(CC) $(CFLAGS) $(LDFLAGS)$(patsubst %.elf,%.map,$(2)) -o \
+	$(2) \
+	$(3) \
+	$(LIBS)
+endef
 
-CC	     = avr-gcc
+$(foreach algo, $(ALGORITHMS), $(eval $(call BLA_TEMPLATE2, $(algo), $(patsubst %.o,%.elf,$(firstword $($(algo)_TEST_BIN))), $($(algo)_TEST_BIN) )))
 
-# Override is only needed by avr-lib build system.
+.PHONY: info
+info:
+	echo $(ALGORITHMS_TEST_BIN_MAIN)
+	echo $(ALGORITHMS)
+	echo $(firstword $(XTEA_TEST_BIN))
+	echo $(patsubst %.o,%.elf,$(firstword $(XTEA_TEST_BIN)))
+#	echo $(ALGORITHMS_OBJ)
+#	echo $(ALGORITHMS_OBJ_IMM)
+#	echo $(ALGORITHMS_TEST_BIN)
+#	echo $(ALGORITHMS_NESSIE_TEST)
+#	echo $(ALGORITHMS_PERFORMANCE_TEST)
 
-override CFLAGS	= -pedantic -std=c99 -Wall -Wstrict-prototypes  $(OPTIMIZE) -mmcu=$(MCU_TARGET) 
-$(DEFS)
-override LDFLAGS       = -Wl,-Map,$(PRG).map
-override ASFLAGS	   = -mmcu=$(MCU_TARGET)
+bc:	$(ALGORITHMS_OBJ)
 
-OBJCOPY	= avr-objcopy
-OBJDUMP	= avr-objdump
+tests: $(ALGORITHMS_TEST_BIN) \
+       $(ALGORITHMS_TEST_BIN_MAIN_ELF) \
+       $(ALGORITHMS_TEST_BIN_MAIN_HEX)
 
+
+$(ALGORITHMS_OBJ):  $(ALGORITHMS_OBJ_IMM)
+$(ALGORITHMS_TEST_BIN): $(ALGORITHMS_TEST_BIN_IMM)
+
+$(ALGORITHMS):  
+	
+.PHONY: all
 all: $(PRG).elf lst text eeprom
 
-$(PRG).elf: $(OBJ)
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LIBS)
 
-#rc6-test: 
-
+.PHONY: clean
 clean:
-	rm -rf *.o $(PRG).elf *.eps *.png *.pdf *.bak 
+	rm -rf *.o *.elf *.eps *.png *.pdf *.bak 
 	rm -rf *.lst *.map $(EXTRA_CLEAN_FILES)
 
 flash:
@@ -95,6 +122,11 @@ esrec: $(PRG)_eeprom.srec
 %_eeprom.bin: %.elf
 	$(OBJCOPY) -j .eeprom --change-section-lma .eeprom=0 -O binary $< $@
 
+%_size.txt: %.o
+	$(SIZE)  $< > $@
+	
+	
+	
 # Every thing below here is used by avr-libc's build system and can be ignored
 # by the casual user.
 
@@ -106,6 +138,7 @@ dox: eps png pdf
 eps: $(PRG).eps
 png: $(PRG).png
 pdf: $(PRG).pdf
+
 
 %.eps: %.fig
 	$(FIG2DEV) -L eps $< $@

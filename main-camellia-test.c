@@ -111,7 +111,7 @@ prog_uint8_t ntt_test_values_out[16] = {
 	0x67, 0x67, 0x31, 0x38, 0x54, 0x96, 0x69, 0x73, 
 	0x08, 0x57, 0x06, 0x56, 0x48, 0xea, 0xbe, 0x43
 };
-
+/* memcmp_P() is now implemented in avr-libc
 int memcmp_P(const void *s1, PGM_P s2, size_t n){
 	uint8_t b;
 	while(n--){
@@ -122,7 +122,7 @@ int memcmp_P(const void *s1, PGM_P s2, size_t n){
 	}
 	return 0;
 }
-
+*/
 void testrun_camellia(void){
 	/* we run the NESSIE test for Camellia here see 
 	 * https://www.cosic.esat.kuleuven.be/nessie/testvectors/bc/camellia/Camellia-128-128.verified.test-vectors

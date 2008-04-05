@@ -148,28 +148,28 @@ void testrun_arcfour(void){
 	 *	RC4( "Secret", "Attack at dawn" ) == "45a01f64 5fc35b38 3552544b 9bf5"
 	 **/
 	uart_putstr("\r\narcfour(\"Plaintext\", \"Key\")=");
-	arcfour_init(&s, "Key", 3);
+	arcfour_init(&s, (uint8_t*)"Key", 3);
 	b="Plaintext";
 	while (*b)
 		*b++ ^= arcfour_gen(&s);
 	uart_hexdump(b-9, 9);
 	
 	uart_putstr("\r\narcfour(\"pedia\", \"Wiki\")=");
-	arcfour_init(&s, "Wiki", 4);
+	arcfour_init(&s, (uint8_t*)"Wiki", 4);
 	b="pedia";
 	while (*b)
 		*b++ ^= arcfour_gen(&s);
 	uart_hexdump(b-5, 5);
 	
 	uart_putstr("\r\narcfour(\"Attack at dawn\", \"Secret\")=");
-	arcfour_init(&s, "Secret", 6);
+	arcfour_init(&s, (uint8_t*)"Secret", 6);
 	b="Attack at dawn";
 	while (*b)
 		*b++ ^= arcfour_gen(&s);
 	uart_hexdump(b-14, 14);
 	
 	uart_putstr("\r\narcfour(00.00.00.00.00.00.00.00, 01.23.45.67.89.AB.CD.EF)=");
-	arcfour_init(&s, "\x01\x23\x45\x67\x89\xAB\xCD\xEF", 8);
+	arcfour_init(&s, (uint8_t*)"\x01\x23\x45\x67\x89\xAB\xCD\xEF", 8);
 	int i=0;
 	uint8_t a[8];
 	memset(a, 0 , 8);
@@ -193,7 +193,7 @@ void testrun_cast5(void){
 	cast5_ctx_t s;
 	uint8_t i;
 	uart_putstr("\r\nCAST5:\r\nkey: 01 23 45 67 34 56 78 23 45 67 89 34 56 78 9A");
-	cast5_init(&s, "\x01\x23\x45\x67\x12\x34\x56\x78\x23\x45\x67\x89\x34\x56\x78\x9A", 128);
+	cast5_init(&s, (uint8_t*)"\x01\x23\x45\x67\x12\x34\x56\x78\x23\x45\x67\x89\x34\x56\x78\x9A", 128);
 	uint8_t block[] = {0x01, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF};
 	uart_putstr("\r\nplaintext: ");
 	uart_hexdump(block, 8);

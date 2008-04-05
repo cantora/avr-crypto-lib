@@ -77,8 +77,8 @@ void test_decrypt(uint8_t *block, uint8_t *key, uint8_t keylength, bool print){
 void testrun_cast5(void){
 	uint8_t block[8];
 	uint8_t key[16];
-	uint8_t *tda = "\x01\x23\x45\x67\x89\xAB\xCD\xEF",
-			*tka = "\x01\x23\x45\x67\x12\x34\x56\x78\x23\x45\x67\x89\x34\x56\x78\x9A";
+	uint8_t *tda = (uint8_t*)"\x01\x23\x45\x67\x89\xAB\xCD\xEF",
+	        *tka = (uint8_t*)"\x01\x23\x45\x67\x12\x34\x56\x78\x23\x45\x67\x89\x34\x56\x78\x9A";
 	memcpy(block, tda, 8);
 	memcpy(key, tka, 16);
 	test_encrypt(block, key, 128, true);
