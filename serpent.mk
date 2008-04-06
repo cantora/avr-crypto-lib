@@ -2,7 +2,7 @@
 ALGO_NAME := SERPENT
 
 # comment out the following line for removement of serpent from the build process
-BLOCK_CIPHERS := $(BLOCK_CIPHERS) $(ALGO_NAME)
+BLOCK_CIPHERS += $(ALGO_NAME)
 
 
 $(ALGO_NAME)_OBJ      := serpent.o

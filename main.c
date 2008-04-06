@@ -3,31 +3,6 @@
  * 
 */
 
-/* implemented:
- *  
- * xtea (C+ASM)
- * SHA256 (C+ASM)
- * ARCFOUR (C+ASM)
- * HMAC-SHA256 (C)
- * PRNG (C)
- * 
- */
-
-/* to implement:
- *  -aes
- * 	-seal (broken?) 
- *  -serpent
- *  -cast
- *  -des (???)
- * 	-twofish
- * 	-blowfish
- * 	-skipjack (???)
- * 	-idea (???)
- *  -kasumi---
- *  -camellia
- * modes: cbc, ecb, ...
- *  need Hashes, asymetrics, signatures, ...
- */
 
 #include "config.h"
 #include "serial-tools.h"
@@ -36,7 +11,6 @@
 
 #include "sha256.h"
 #include "xtea.h"
-#include "arcfour.h"
 #include "prng.h"
 #include "cast5.h"
 
@@ -139,6 +113,8 @@ void testrun_xtea(void){
 	uart_hexdump(block, 8);	
 }
 
+#if 0
+
 void testrun_arcfour(void){
 	arcfour_ctx_t s;
 	char *b;
@@ -177,6 +153,8 @@ void testrun_arcfour(void){
 		a[i++] ^= arcfour_gen(&s);
 	uart_hexdump(a, 8);	
 }
+
+#endif
 
 void testrun_prng(void){
 	uint8_t i,block[32];
@@ -238,8 +216,8 @@ restart:
 					uart_putstr("\r\n");
 				testrun_cast5();
 					uart_putstr("\r\n");
-				testrun_arcfour();
-					uart_putstr("\r\n");
+		//		testrun_arcfour();
+		//			uart_putstr("\r\n");
 				testrun_sha256();
 			goto restart;
 		}

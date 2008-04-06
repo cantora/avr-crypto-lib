@@ -1,7 +1,7 @@
 /* 
  * File:	arcfour.h
  * Author:	Daniel Otte
- * Date: 	07.06.2006
+ * Date: 	2006-06-07
  * License: GPL
  * Description: Implementation of the ARCFOUR (RC4 compatible) stream cipher algorithm.
  * 

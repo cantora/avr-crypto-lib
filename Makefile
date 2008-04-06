@@ -1,15 +1,17 @@
 # Makefile for the micro-crypt project
 # author: Daniel Otte
 
-BLOCK_CIPHERS  = 
-STREAM_CIPHERS = 
-HASHES         = 
+BLOCK_CIPHERS  := 
+STREAM_CIPHERS := 
+HASHES         :=
+MACS           :=
+PRNGS          := 
 
 
 include avr-makefile.inc
 include *.mk
 
-ALGORITHMS = $(BLOCK_CIPHERS) $(STREAM_CIPHERS) $(HASHES)
+ALGORITHMS = $(BLOCK_CIPHERS) $(STREAM_CIPHERS) $(HASHES) $(PRNGS) $(MACS)
 ALGORITHMS_OBJ = $(patsubst %,%_OBJ, $(ALGORITHMS))
 ALGORITHMS_OBJ_IMM = $(foreach a, $(ALGORITHMS_OBJ), $($(a)))
 ALGORITHMS_TEST_BIN = $(patsubst %,%_TEST_BIN, $(ALGORITHMS))
@@ -21,11 +23,7 @@ ALGORITHMS_TEST_BIN_IMM =  $(foreach a, $(ALGORITHMS_TEST_BIN), $($(a)))
 ALGORITHMS_NESSIE_TEST = $(patsubst %,%_NESSIE_TEST, $(ALGORITHMS))
 ALGORITHMS_PERFORMANCE_TEST = $(patsubst %,%_PERORMANCE_TEST, $(ALGORITHMS))
 
-
-PRG        = serpent-test
-
-#SHA1_OBJ		= main-sha1-test.o debug.o uart.o serial-tools.o sha1-asm.o
-#MD5_OBJ		= main-md5-test.o debug.o uart.o serial-tools.o md5.o
+PRG = remove_me
 
 #Multi_OBJ		= main.o debug.o uart.o serial-tools.o sha256-asm.o xtea-asm.o arcfour-asm.o prng.o cast5.o
 
@@ -48,10 +46,21 @@ $(foreach algo, $(ALGORITHMS), $(eval $(call BLA_TEMPLATE2, $(algo), $(patsubst 
 
 .PHONY: info
 info:
-	echo $(ALGORITHMS_TEST_BIN_MAIN)
-	echo $(ALGORITHMS)
-	echo $(firstword $(XTEA_TEST_BIN))
-	echo $(patsubst %.o,%.elf,$(firstword $(XTEA_TEST_BIN)))
+	@echo "infos on micro-crypt:"
+	@echo "  block ciphers:"
+	@echo "    $(BLOCK_CIPHERS)"
+	@echo "  stream ciphers:"
+	@echo "    $(STREAM_CIPHERS)"
+	@echo "  hash functions:"
+	@echo "    $(HASHES)"
+	@echo "  MAC functions:"
+	@echo "    $(MACS)"
+	@echo "  PRNG functions:"
+	@echo "    $(PRNGS)"
+#	echo $(ALGORITHMS_TEST_BIN_MAIN)
+#	echo $(ALGORITHMS)
+#	echo $(firstword $(XTEA_TEST_BIN))
+#	echo $(patsubst %.o,%.elf,$(firstword $(XTEA_TEST_BIN)))
 #	echo $(ALGORITHMS_OBJ)
 #	echo $(ALGORITHMS_OBJ_IMM)
 #	echo $(ALGORITHMS_TEST_BIN)
@@ -68,7 +77,7 @@ tests: $(ALGORITHMS_TEST_BIN) \
 $(ALGORITHMS_OBJ):  $(ALGORITHMS_OBJ_IMM)
 $(ALGORITHMS_TEST_BIN): $(ALGORITHMS_TEST_BIN_IMM)
 
-$(ALGORITHMS):  
+#$(ALGORITHMS):  
 	
 .PHONY: all
 all: $(PRG).elf lst text eeprom

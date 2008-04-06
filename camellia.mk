@@ -2,7 +2,7 @@
 ALGO_NAME := CAMELLIA
 
 # comment out the following line for removement of serpent from the build process
-BLOCK_CIPHERS := $(BLOCK_CIPHERS) $(ALGO_NAME)
+BLOCK_CIPHERS += $(ALGO_NAME)
 
 # main-camellia-test.o debug.o uart.o serial-tools.o camellia.o camellia-asm.o
 $(ALGO_NAME)_OBJ      := camellia.o camellia-asm.o
