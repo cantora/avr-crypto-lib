@@ -120,7 +120,7 @@ static void print_header(void){
 }
 
 static void print_footer(void){
-	uart_putstr_P(PSTR("\r\n\r\n\r\n\r\nEnd of test vectors"));
+	uart_putstr_P(PSTR("\r\n\r\n\r\n\r\nEnd of test vectors\r\n\r\n"));
 }
 
 static
@@ -225,6 +225,7 @@ void one_in512_hash(uint16_t pos){
 	uart_putstr_P(PSTR("*00"));
 	
 	/* now the real stuff */
+	memset(block, 0, 512/8);
 	block[pos>>3] = 0x80>>(pos&0x7);
 	nessie_hash_ctx.hash_init(ctx);
 	while(n>=nessie_hash_ctx.blocksize_B*8){
@@ -234,8 +235,6 @@ void one_in512_hash(uint16_t pos){
 	nessie_hash_ctx.hash_last(block, n, ctx);
 	nessie_hash_ctx.hash_conv(hash, ctx);
 	printitem("hash", hash, (nessie_hash_ctx.hashsize_b+7)/8);
-	
-	
 }
 
 static
@@ -255,12 +254,12 @@ void tv4_hash(void){
 		nessie_hash_ctx.hash_next(block, ctx);
 		n    -= nessie_hash_ctx.blocksize_B*8;
 	}
-	nessie_hash_ctx.hash_last(block, n*8, ctx);
+	nessie_hash_ctx.hash_last(block, n, ctx);
 	nessie_hash_ctx.hash_conv(hash, ctx);
 	printitem("hash", hash, (nessie_hash_ctx.hashsize_b+7)/8);
 	for(i=1; i<100000L; ++i){ /* this assumes BLOCKSIZE >= HASHSIZE */
 		nessie_hash_ctx.hash_init(ctx);
-		nessie_hash_ctx.hash_last(block, nessie_hash_ctx.hashsize_b, ctx);
+		nessie_hash_ctx.hash_last(hash, nessie_hash_ctx.hashsize_b, ctx);
 		nessie_hash_ctx.hash_conv(hash, ctx);
 	}
 	printitem("iterated 100000 times", hash, (nessie_hash_ctx.hashsize_b+7)/8);

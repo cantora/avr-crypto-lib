@@ -226,7 +226,7 @@ static void print_header(void){
 }
 
 static void print_footer(void){
-	uart_putstr_P(PSTR("\r\n\r\n\r\n\r\nEnd of test vectors"));
+	uart_putstr_P(PSTR("\r\n\r\n\r\n\r\nEnd of test vectors\r\n\r\n"));
 }
 
 void nessie_stream_run(void){
