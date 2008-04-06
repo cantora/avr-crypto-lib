@@ -1,5 +1,5 @@
 /*
- * arcfour (RC4 compatible) test-suit
+ * SHA-256 test-suit
  * 
 */
 
@@ -8,32 +8,36 @@
 #include "uart.h"
 #include "debug.h"
 
-#include "arcfour.h"
-#include "nessie_stream_test.h"
+#include "sha256.h"
+#include "nessie_hash_test.h"
 
 #include <stdint.h>
 #include <string.h>
 
-char* cipher_name = "Arcfour";
+char* algo_name = "SHA-256";
 
 /*****************************************************************************
  *  additional validation-functions											 *
  *****************************************************************************/
-void arcfour_genctx_dummy(uint8_t* key, uint16_t keysize, void* ctx){
-	arcfour_init(ctx, key, (keysize+7)/8);
+void sha256_next_dummy(void* buffer, void* ctx){
+	sha256_nextBlock(ctx, buffer);
 }
 
+void sha256_last_dummy(void* buffer, uint16_t size_b, void* ctx){
+	sha256_lastBlock(ctx, buffer, size_b);
+}
 
-
-void testrun_nessie_arcfour(void){
-	nessie_stream_ctx.outsize_b = 8; /* actually unused */
-	nessie_stream_ctx.keysize_b = 128; /* this is theone we have refrence vectors for */
-	nessie_stream_ctx.name = cipher_name;
-	nessie_stream_ctx.ctx_size_B = sizeof(arcfour_ctx_t);
-	nessie_stream_ctx.cipher_genctx = (nessie_stream_genctx_fpt)arcfour_genctx_dummy;
-	nessie_stream_ctx.cipher_enc = (nessie_stream_genenc_fpt)arcfour_gen;
+void testrun_nessie_sha256(void){
+	nessie_hash_ctx.hashsize_b  = 256;
+	nessie_hash_ctx.blocksize_B = 512/8;
+	nessie_hash_ctx.ctx_size_B  = sizeof(sha256_ctx_t);
+	nessie_hash_ctx.name = algo_name;
+	nessie_hash_ctx.hash_init = (nessie_hash_init_fpt)sha256_init;
+	nessie_hash_ctx.hash_next = (nessie_hash_next_fpt)sha256_next_dummy;
+	nessie_hash_ctx.hash_last = (nessie_hash_last_fpt)sha256_last_dummy;
+	nessie_hash_ctx.hash_conv = (nessie_hash_conv_fpt)sha256_ctx2hash;
 	
-	nessie_stream_run();	
+	nessie_hash_run();
 }
 
 
@@ -48,20 +52,19 @@ int main (void){
 	uart_putstr("\r\n");
 
 	uart_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
-	uart_putstr(cipher_name);
+	uart_putstr(algo_name);
 	uart_putstr_P(PSTR(")\r\nloaded and running\r\n"));
 
 restart:
 	while(1){ 
 		if (!getnextwordn(str,20))  {DEBUG_S("DBG: W1\r\n"); goto error;}
 		if (strcmp(str, "nessie")) {DEBUG_S("DBG: 1b\r\n"); goto error;}
-			testrun_nessie_arcfour();
+			testrun_nessie_sha256();
 		goto restart;		
 		continue;
 	error:
 		uart_putstr("ERROR\r\n");
 	}
-	
 	
 }
 

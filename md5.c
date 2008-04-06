@@ -120,7 +120,7 @@ void md5_lastBlock(md5_ctx_t *state, void* block, uint16_t length){
 	while (length >= 512){
 		md5_nextBlock(state, block);
 		length -= 512;
-		block += 512/8;
+		block = ((uint8_t*)block) + 512/8;
 	}
 	memset(b, 0, 64);
 	memcpy(b, block, length/8);
