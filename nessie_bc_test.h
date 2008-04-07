@@ -3,25 +3,23 @@
 
 #include <stdint.h>
 
-typedef void (*nessie_gen_fpt)(uint8_t*, uint16_t, void*);
-typedef void (*nessie_enc_fpt)(void*, void*);
-typedef void (*nessie_dec_fpt)(void*, void*);
+typedef void (*nessie_bc_gen_fpt)(uint8_t* key, uint16_t keysize_b, void* ctx);
+typedef void (*nessie_bc_enc_fpt)(void* buffer, void* ctx);
+typedef void (*nessie_bc_dec_fpt)(void* buffer, void* ctx);
 
-typedef struct nessie_ctx_st{
-	uint16_t keysize;
+typedef struct nessie_bc_ctx_st{
+	uint16_t keysize_b;
 	uint16_t blocksize_B;
 	uint16_t ctx_size_B;
 	char* name; 
-	void (*cipher_genctx)(uint8_t* key, uint16_t keysize, void* ctx);
-	void (*cipher_enc)(void* buffer, void* ctx);
-	void (*cipher_dec)(void* buffer, void* ctx);
-} nessie_ctx_t; 
+	nessie_bc_gen_fpt cipher_genctx;
+	nessie_bc_enc_fpt cipher_enc;
+	nessie_bc_dec_fpt cipher_dec;
+} nessie_bc_ctx_t; 
 
 
-extern nessie_ctx_t nessie_ctx;
+extern nessie_bc_ctx_t nessie_bc_ctx;
 
-void nessie_enc(uint8_t* key, uint8_t* pt);
-void nessie_dec(uint8_t* key, uint8_t* ct);
-void nessie_run(void);
+void nessie_bc_run(void);
 
 #endif /*NESSIE_BC_TEST_H_*/

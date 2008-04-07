@@ -34,9 +34,9 @@ LIBS	   =
 
 define BLA_TEMPLATE2
 $(2): $(3)
-	echo $$@
-	echo $$^
-	$(CC) $(CFLAGS) $(LDFLAGS)$(patsubst %.elf,%.map,$(2)) -o \
+	@echo "[gcc]: $$@"
+#	echo $$^
+	@$(CC) $(CFLAGS) $(LDFLAGS)$(patsubst %.elf,%.map,$(2)) -o \
 	$(2) \
 	$(3) \
 	$(LIBS)

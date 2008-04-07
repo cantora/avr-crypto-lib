@@ -4,7 +4,7 @@
 #include "sha256.h"
 
 #define HMAC_BITS SHA256_HASH_BITS
-#define HMAC_BYTES (HMAC_BITS/8)
+#define HMAC_BYTES ((HMAC_BITS+7)/8)
 
 typedef sha256_ctx_t hmac_sha256_ctx_t;
 

@@ -26,6 +26,7 @@ void hmac_sha256_init(hmac_sha256_ctx_t *s, void* key, uint16_t kl){
 	uint8_t buffer[SHA256_BLOCK_BITS/8];
 	uint8_t i;
 	
+	memset(buffer, 0, SHA256_BLOCK_BITS/8);
 	if (kl > SHA256_BLOCK_BITS){
 		sha256((void*)buffer, key, kl);
 	} else {
@@ -48,6 +49,7 @@ void hmac_sha256_final(hmac_sha256_ctx_t *s, void* key, uint16_t kl){
 	uint8_t i;
 	sha256_ctx_t a;
 	
+	memset(buffer, 0, SHA256_BLOCK_BITS/8);
 	if (kl > SHA256_BLOCK_BITS){
 		sha256((void*)buffer, key, kl);
 	} else {
@@ -61,7 +63,8 @@ void hmac_sha256_final(hmac_sha256_ctx_t *s, void* key, uint16_t kl){
 	sha256_init(&a);
 	sha256_nextBlock(&a, buffer); /* hash key ^ opad */
 	sha256_ctx2hash((void*)buffer, s);  /* copy hash(key ^ ipad, msg) to buffer */
-	sha256_lastBlock(s, buffer, SHA256_HASH_BITS);
+	sha256_lastBlock(&a, buffer, SHA256_HASH_BITS);
+	memcpy(s, &a, sizeof(sha256_ctx_t));
 #if defined SECURE_WIPE_BUFFER
 	memset(buffer, 0, SHA256_BLOCK_BITS/8);
 	memset(a.h, 0, 8*4);

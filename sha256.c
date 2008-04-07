@@ -185,7 +185,7 @@ void sha256(sha256_hash_t *dest, void* msg, uint32_t length){ /* length could be
 	sha256_init(&s);
 	while(length >= SHA256_BLOCK_BITS){
 		sha256_nextBlock(&s, msg);
-		msg += SHA256_BLOCK_BITS/8;
+		msg = (uint8_t*)msg + SHA256_BLOCK_BITS/8;
 		length -= SHA256_BLOCK_BITS;
 	}
 	sha256_lastBlock(&s, msg, length);

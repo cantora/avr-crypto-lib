@@ -28,16 +28,16 @@ void xtea_dec_dummy(uint8_t* buffer, void* ctx){
 	xtea_dec((uint32_t*)buffer, (uint32_t*)buffer, ctx);
 }
 
-void testrun_xtea(void){
-	nessie_ctx.blocksize_B =   8;
-	nessie_ctx.keysize     = 128;
-	nessie_ctx.name        = cipher_name;
-	nessie_ctx.ctx_size_B  = 128/8;
-	nessie_ctx.cipher_enc  = (nessie_enc_fpt)xtea_enc_dummy;
-	nessie_ctx.cipher_dec  = (nessie_dec_fpt)xtea_dec_dummy;
-	nessie_ctx.cipher_genctx  = (nessie_gen_fpt)xtea_genctx_dummy;
+void testrun_nessie_xtea(void){
+	nessie_bc_ctx.blocksize_B =   8;
+	nessie_bc_ctx.keysize_b   = 128;
+	nessie_bc_ctx.name        = cipher_name;
+	nessie_bc_ctx.ctx_size_B  = 128/8;
+	nessie_bc_ctx.cipher_enc  = (nessie_bc_enc_fpt)xtea_enc_dummy;
+	nessie_bc_ctx.cipher_dec  = (nessie_bc_dec_fpt)xtea_dec_dummy;
+	nessie_bc_ctx.cipher_genctx  = (nessie_bc_gen_fpt)xtea_genctx_dummy;
 	
-	nessie_run();	
+	nessie_bc_run();	
 }
 
 
@@ -59,7 +59,7 @@ restart:
 	while(1){ 
 		if (!getnextwordn(str,20))  {DEBUG_S("DBG: W1\r\n"); goto error;}
 		if (strcmp(str, "nessie")) {DEBUG_S("DBG: 1b\r\n"); goto error;}
-			testrun_xtea();
+			testrun_nessie_xtea();
 		goto restart;		
 		continue;
 	error:
