@@ -241,9 +241,10 @@ void nessie_bc_run(void){
 	for(i=0; i<nessie_bc_ctx.blocksize_B; ++i){
 		buffer[i]=kasumi_plain[i%sizeof(kasumi_plain)];
 	}
+	nessie_bc_enc(key, buffer);
 	/* half done ;-) */
 	/* test set 5 */
-	set=1;
+	set=5;
 	print_setheader(set);
 	for(i=0; i<nessie_bc_ctx.keysize_b; ++i){
 		print_set_vector(set, i);
@@ -291,5 +292,6 @@ void nessie_bc_run(void){
 	for(i=0; i<nessie_bc_ctx.blocksize_B; ++i){
 		buffer[i]=kasumi_plain[i%sizeof(kasumi_plain)];
 	}
+	nessie_bc_dec(key, buffer);
 	print_footer();
 }
