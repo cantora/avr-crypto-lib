@@ -10,6 +10,7 @@
 
 #include "serpent.h"
 #include "nessie_bc_test.h"
+#include "cli.h"
 
 #include <stdint.h>
 #include <string.h>
@@ -47,6 +48,8 @@ void testrun_nessie_serpent(void){
  *  main																	 *
  *****************************************************************************/
 
+typedef void(*void_fpt)(void);
+
 int main (void){
 	char  str[20];
 	DEBUG_INIT();
@@ -56,12 +59,14 @@ int main (void){
 	uart_putstr(cipher_name);
 	uart_putstr_P(PSTR(")\r\nloaded and running\r\n"));
 
-restart:
+	PGM_P    u   = PSTR("nessie\0test\0");
+	void_fpt v[] = {testrun_nessie_serpent, testrun_nessie_serpent};
+
 	while(1){ 
-		if (!getnextwordn(str,20))  {DEBUG_S("DBG: W1\r\n"); goto error;}
-		if (strcmp(str, "nessie")) {DEBUG_S("DBG: 1b\r\n"); goto error;}
-			testrun_nessie_serpent();
-		goto restart;		
+		if (!getnextwordn(str,20)){DEBUG_S("DBG: W1\r\n"); goto error;}
+		if(execcommand_d0_P(str, u, v)<0){
+			uart_putstr_P(PSTR("\r\nunknown command\r\n"));
+		}
 		continue;
 	error:
 		uart_putstr("ERROR\r\n");

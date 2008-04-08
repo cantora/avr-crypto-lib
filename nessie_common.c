@@ -146,7 +146,7 @@ void nessie_print_header(char* name,
 		uart_putstr(str);
 		uart_putstr_P(PSTR(" bits"));
 	}
-	uart_putstr_P(PSTR(" bits"));
+	uart_putstr_P(PSTR("\r\n"));
 }
 
 void nessie_print_footer(void){
