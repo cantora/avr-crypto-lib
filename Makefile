@@ -25,10 +25,6 @@ ALGORITHMS_PERFORMANCE_TEST = $(patsubst %,%_PERORMANCE_TEST, $(ALGORITHMS))
 
 PRG = remove_me
 
-#Multi_OBJ		= main.o debug.o uart.o serial-tools.o sha256-asm.o xtea-asm.o arcfour-asm.o prng.o cast5.o
-
-#OBJ = $(SERPENT_OBJ)
-
 DEFS	   =
 LIBS	   =
 
@@ -67,17 +63,53 @@ info:
 #	echo $(ALGORITHMS_NESSIE_TEST)
 #	echo $(ALGORITHMS_PERFORMANCE_TEST)
 
-bc:	$(ALGORITHMS_OBJ)
+%.o: %.c
+	@echo "[gcc]: $@"
+	@$(CC) $(CFLAGS) -c	-o $@ $<
+
+%.o: %.S
+	@echo "[as] : $@"
+	@$(CC) $(ASFLAGS) -c -o $@ $<
+
+
+.PHONY: cores
+cores: $(ALGORITHMS_OBJ)
+
+.PHONY: blockciphers
+blockciphers: $(patsubst %, %_OBJ, $(BLOCK_CIPHERS))
+
+.PHONY: streamciphers
+streamciphers: $(patsubst %, %_OBJ, $(STREAM_CIPHERS))
+
+.PHONY:  hashes
+hashes: $(patsubst %, %_OBJ, $(HASHES))
+
+.PHONY:  macs
+macs: $(patsubst %, %_OBJ, $(MACS))
+
+prngs: $(patsubst %, %_OBJ, $(PRNGS))
 
 tests: $(ALGORITHMS_TEST_BIN) \
        $(ALGORITHMS_TEST_BIN_MAIN_ELF) \
        $(ALGORITHMS_TEST_BIN_MAIN_HEX)
 
 
-$(ALGORITHMS_OBJ):  $(ALGORITHMS_OBJ_IMM)
-$(ALGORITHMS_TEST_BIN): $(ALGORITHMS_TEST_BIN_IMM)
+define OBJ_TEMPLATE
+$(1)_OBJ: $(2)
+#	@echo " ALGO: $(1)"
+#	@echo " REQ:  $(2)"
+endef
 
-#$(ALGORITHMS):  
+$(foreach algo, $(ALGORITHMS), $(eval $(call OBJ_TEMPLATE, $(algo), $($(algo)_OBJ))))
+
+
+$(BLOCK_CIPHERS_OBJ): $(patsubst %,%_OBJ, $(BLOCK_CIPHERS)) 
+$(STREAM_CIPHERS_OBJ): $(patsubst %,%_OBJ, $(STREAM_CIPHERS))
+$(HASHES_OBJ): $(patsubst %,%_OBJ, $(HASHES))
+$(PRNGS_OBJ): $(patsubst %,%_OBJ, $(PRNGS))
+$(MACS_OBJ): $(patsubst %,%_OBJ, $(MACS))
+
+$(ALGORITHMS_TEST_BIN): $(ALGORITHMS_TEST_BIN_IMM)
 	
 .PHONY: all
 all: $(PRG).elf lst text eeprom
