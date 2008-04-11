@@ -7,7 +7,8 @@ HASHES         :=
 MACS           :=
 PRNGS          := 
 
-
+# we use the gnu make standard library
+include gmsl
 include avr-makefile.inc
 include *.mk
 
@@ -23,6 +24,9 @@ ALGORITHMS_TEST_BIN_IMM =  $(foreach a, $(ALGORITHMS_TEST_BIN), $($(a)))
 ALGORITHMS_NESSIE_TEST = $(patsubst %,%_NESSIE_TEST, $(ALGORITHMS))
 ALGORITHMS_PERFORMANCE_TEST = $(patsubst %,%_PERORMANCE_TEST, $(ALGORITHMS))
 
+#ALGORITHMS_LC = #algorithm names in lowercase 
+#ALGORITHMS_LC = $(foreach a, $(ALGORITHMS), $$(lc Text))
+ALGORITHMS_LC = $(call lc,$(ALGORITHMS))
 PRG = remove_me
 
 DEFS	   =
@@ -53,6 +57,9 @@ info:
 	@echo "    $(MACS)"
 	@echo "  PRNG functions:"
 	@echo "    $(PRNGS)"
+	@echo "  LC functions:"
+	@echo "    $(ALGORITHMS_LC)"
+	
 #	echo $(ALGORITHMS_TEST_BIN_MAIN)
 #	echo $(ALGORITHMS)
 #	echo $(firstword $(XTEA_TEST_BIN))
@@ -110,6 +117,18 @@ $(PRNGS_OBJ): $(patsubst %,%_OBJ, $(PRNGS))
 $(MACS_OBJ): $(patsubst %,%_OBJ, $(MACS))
 
 $(ALGORITHMS_TEST_BIN): $(ALGORITHMS_TEST_BIN_IMM)
+
+
+define SIZE_TEMPLATE
+$(1)_size.txt: $(2)
+	@echo " ALGO: $(1)"
+	@echo " REQ:  $(2)"
+	$(SIZE) $(2) > $(1)_size.txt
+endef
+
+$(foreach algo, $(ALGORITHMS), $(eval $(call SIZE_TEMPLATE, $(call lc,$(algo)), $($(algo)_OBJ))))
+
+
 	
 .PHONY: all
 all: $(PRG).elf lst text eeprom
@@ -163,8 +182,8 @@ esrec: $(PRG)_eeprom.srec
 %_eeprom.bin: %.elf
 	$(OBJCOPY) -j .eeprom --change-section-lma .eeprom=0 -O binary $< $@
 
-%_size.txt: %.o
-	$(SIZE)  $< > $@
+#%_size.txt: %.o
+#	$(SIZE)  $< > $@
 	
 	
 	

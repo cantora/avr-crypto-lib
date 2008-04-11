@@ -23,5 +23,7 @@
 #define UART_CTS_BIT 1
 */
 
+#define ATMEGA644
+
 #endif
 

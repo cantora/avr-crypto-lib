@@ -1,14 +1,24 @@
 /*
+ * author: Daniel Otte
+ * email:  daniel.otte@rub.de
+ * license: GPLv3
  * 
  * 
- * 
- */
-
+ **/
+ 
+#include "config.h"
 #include <stdint.h>
 #include <stdlib.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include "performance_test.h"
+
+
+#ifdef ATMEGA644
+	#define TIMSK TIMSK1
+#endif
+
+
 
 uint32_t ovfcounter;
 
@@ -37,7 +47,7 @@ void startTimer(uint8_t granularity){
 	ovfcounter = 0;
 	TCCR1A = 0x00;
 	TIMSK &= 0xC3;
-	TIMSK |= _BV(2); /* enable TOIE1 */
+	TIMSK |= _BV(TOIE1); /* enable TOIE1 */
 	TCCR1B = granularity & 0x7;	/* start timer */
 }
 
