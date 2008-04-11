@@ -11,9 +11,11 @@
 #include "serpent.h"
 #include "nessie_bc_test.h"
 #include "cli.h"
+#include "performance_test.h"
 
 #include <stdint.h>
 #include <string.h>
+#include <stdlib.h>
 
 char* cipher_name = "Serpent";
 
@@ -43,7 +45,47 @@ void testrun_nessie_serpent(void){
 }
 
 
-
+void testrun_performance_serpent(void){
+	uint16_t i,c;
+	uint64_t t;
+	char str[6];
+	uint8_t key[32], data[16];
+	serpent_ctx_t ctx;
+	
+	calibrateTimer();
+	getOverhead(&c, &i);
+	uart_putstr_P(PSTR("\r\n\r\n=== benchmark ==="));
+	utoa(c, str, 10);
+	uart_putstr_P(PSTR("\r\n\tconst overhead:     "));
+	uart_putstr(str);
+	utoa(i, str, 10);
+	uart_putstr_P(PSTR("\r\n\tinterrupt overhead: "));
+	uart_putstr(str);
+	
+	memset(key,  0, 32);
+	memset(data, 0, 16);
+	
+	startTimer(1);
+	serpent_genctx(key, 0, &ctx);
+	t = stopTimer();
+	uart_putstr_P(PSTR("\r\n\tctx-gen time: "));
+	uart_hexdump(&t, 8);
+	
+	
+	startTimer(1);
+	serpent_enc(data, &ctx);
+	t = stopTimer();
+	uart_putstr_P(PSTR("\r\n\tencrypt time: "));
+	uart_hexdump(&t, 8);
+	
+	
+	startTimer(1);
+	serpent_dec(data, &ctx);
+	t = stopTimer();
+	uart_putstr_P(PSTR("\r\n\tdecrypt time: "));
+	uart_hexdump(&t, 8);
+	uart_putstr_P(PSTR("\r\n"));
+}
 /*****************************************************************************
  *  main																	 *
  *****************************************************************************/
@@ -59,8 +101,8 @@ int main (void){
 	uart_putstr(cipher_name);
 	uart_putstr_P(PSTR(")\r\nloaded and running\r\n"));
 
-	PGM_P    u   = PSTR("nessie\0test\0");
-	void_fpt v[] = {testrun_nessie_serpent, testrun_nessie_serpent};
+	PGM_P    u   = PSTR("nessie\0test\0performance\0");
+	void_fpt v[] = {testrun_nessie_serpent, testrun_nessie_serpent, testrun_performance_serpent};
 
 	while(1){ 
 		if (!getnextwordn(str,20)){DEBUG_S("DBG: W1\r\n"); goto error;}

@@ -129,7 +129,7 @@ void nessie_stream_run(void){
 	uint8_t key[(nessie_stream_ctx.keysize_b+7)/8];
 	
 	nessie_print_header(nessie_stream_ctx.name, nessie_stream_ctx.keysize_b,
-	                    0, 0, 0, 0);
+	                    0, 0, 0, nessie_stream_ctx.ivsize_b);
 	/* test set 1 */
 	set=1;
 	nessie_print_setheader(set);

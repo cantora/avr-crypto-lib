@@ -10,9 +10,12 @@
 
 #include "cast5.h"
 #include "nessie_bc_test.h"
+#include "performance_test.h"
+#include "cli.h"
 
 #include <stdint.h>
 #include <string.h>
+#include <stdlib.h>
 
 char* cipher_name = "cast-128 (cast5)";
 
@@ -149,11 +152,53 @@ void testrun_cast5(void){
 
 }
 
-
+void test_performance_cast5(void){
+	uint16_t i,c;
+	uint64_t t;
+	char str[6];
+	uint8_t key[16], data[16];
+	cast5_ctx_t ctx;
+	
+	calibrateTimer();
+	getOverhead(&c, &i);
+	uart_putstr_P(PSTR("\r\n\r\n=== benchmark ==="));
+	utoa(c, str, 10);
+	uart_putstr_P(PSTR("\r\n\tconst overhead:     "));
+	uart_putstr(str);
+	utoa(i, str, 10);
+	uart_putstr_P(PSTR("\r\n\tinterrupt overhead: "));
+	uart_putstr(str);
+	
+	memset(key,  0, 16);
+	memset(data, 0, 16);
+	
+	startTimer(1);
+	cast5_init(&ctx, key, 128);
+	t = stopTimer();
+	uart_putstr_P(PSTR("\r\n\tctx-gen time: "));
+	uart_hexdump(&t, 8);
+	
+	
+	startTimer(1);
+	cast5_enc(&ctx, data);
+	t = stopTimer();
+	uart_putstr_P(PSTR("\r\n\tencrypt time: "));
+	uart_hexdump(&t, 8);
+	
+	
+	startTimer(1);
+	cast5_dec(&ctx, data);
+	t = stopTimer();
+	uart_putstr_P(PSTR("\r\n\tdecrypt time: "));
+	uart_hexdump(&t, 8);
+	uart_putstr_P(PSTR("\r\n"));
+}
 
 /*****************************************************************************
  *  main																	 *
  *****************************************************************************/
+
+typedef void(*void_fpt)(void);
 
 int main (void){
 	char str[20];
@@ -162,17 +207,21 @@ int main (void){
 	DEBUG_INIT();
 	uart_putstr("\r\n");
 
-	uart_putstr("\r\n\r\nCrypto-VS\r\nloaded and running\r\n");
-restart:
+	uart_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
+	uart_putstr(cipher_name);
+	uart_putstr_P(PSTR(")\r\nloaded and running\r\n"));
+
+	PGM_P    u   = PSTR("nessie\0test\0performance\0");
+	void_fpt v[] = {test_nessie_cast5, test_nessie_cast5, test_performance_cast5};
+	
 	while(1){ 
-		if (!getnextwordn(str,20))  {DEBUG_S("DBG: W1\r\n"); goto error;}
-		if (strcmp(str, "nessie")) {DEBUG_S("DBG: 1b\r\n"); goto error;}
-		//	testrun_cast5();
-			test_nessie_cast5();
-		goto restart;		
+		if (!getnextwordn(str,20)){DEBUG_S("DBG: W1\r\n"); goto error;}
+		if(execcommand_d0_P(str, u, v)<0){
+			uart_putstr_P(PSTR("\r\nunknown command\r\n"));
+		}
 		continue;
 	error:
 		uart_putstr("ERROR\r\n");
-	} /* while (1) */
+	}
 }
 

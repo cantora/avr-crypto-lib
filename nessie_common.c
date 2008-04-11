@@ -141,10 +141,15 @@ void nessie_print_header(char* name,
 		uart_putstr_P(PSTR(" bits"));
 	}
 	if(ivsize_b){
-		uart_putstr_P(PSTR("\r\nIV size: "));
-		utoa(ivsize_b, str, 10);
-		uart_putstr(str);
-		uart_putstr_P(PSTR(" bits"));
+		if(ivsize_b==(uint16_t)-1){
+			uart_putstr_P(PSTR("\r\nNo initial value (IV) mode"));
+		}
+		{
+			uart_putstr_P(PSTR("\r\nIV size: "));
+			utoa(ivsize_b, str, 10);
+			uart_putstr(str);
+			uart_putstr_P(PSTR(" bits"));
+		}
 	}
 	uart_putstr_P(PSTR("\r\n"));
 }

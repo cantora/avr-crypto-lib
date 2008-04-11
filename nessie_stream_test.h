@@ -8,6 +8,7 @@ typedef uint8_t (*nessie_stream_genenc_fpt)(void* ctx);
 
 typedef struct nessie_stream_ctx_st{
 	uint16_t keysize_b;
+	uint16_t ivsize_b;
 	uint16_t outsize_b;
 	uint16_t ctx_size_B;
 	char* name; 
