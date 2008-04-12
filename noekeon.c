@@ -11,6 +11,7 @@
 #include <string.h>
 #include <avr/pgmspace.h>
 #include "noekeon.h"
+#include "uart.h"
 
 #define ROUND_NR 16
 
@@ -50,6 +51,7 @@ void pi2(uint32_t* a){
 static
 void theta(uint32_t* k, uint32_t* a){
 	uint32_t temp;
+
 	temp = a[0] ^ a[2]; temp ^= ROTR32(temp, 8) ^ ROTL32(temp, 8);
 	a[1] ^= temp;
 	a[3] ^= temp;
@@ -62,6 +64,7 @@ void theta(uint32_t* k, uint32_t* a){
 	temp = a[1] ^ a[3]; temp ^= ROTR32(temp, 8) ^ ROTL32(temp, 8);
 	a[0] ^= temp;
 	a[2] ^= temp;	
+
 }
 
 static 
@@ -139,6 +142,9 @@ void noekeon_dec(void* buffer, void* key){
 	memcpy(dkey, key, 16);
 	
 	theta((uint32_t*)nullv, (uint32_t*)dkey);
+	uart_putstr_P(PSTR("\r\nTheta: "));
+	uart_hexdump(dkey, 16);
+	
 	for(i=ROUND_NR-1; i>=0; --i){
 		rc = pgm_read_byte(rc_tab+i);
 		noekeon_round((uint32_t*)dkey, (uint32_t*)buffer, 0, rc);
