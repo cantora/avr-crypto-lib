@@ -574,61 +574,60 @@ pi:
 	mov state3_2, r24
 	mov state3_3, r25
 	ret
+
+/******************************************************************************/
 	
-;------- trash follows --------
+/*
+void noekeon_init(void* key, noekeon_ctx_t* ctx){
+	uint8_t nullv[16];
+	
+	memset(nullv, 0, 16);
+	memcpy(ctx, key, 16);
+	noekeon_enc(ctx, nullv);
+}
+*/
+.global noekeon_init
+noekeon_init:
+; === noekeon_init ===
+;
+;  param1: pointer to key (r24,r25)
+;  param2: pointer to context  (r22,r23) 
+;
+	in r30, _SFR_IO_ADDR(SPL)
+	in r31, _SFR_IO_ADDR(SPH)
+	sbiw r30, 16 
+	out  _SFR_IO_ADDR(SPH), r31
+	out  _SFR_IO_ADDR(SPL), r30
 
-
-
-	/* load state */
 	movw r26, r22
-	ldi r28, 2
-	clr r29	/* Y points at r2 aka state0_0 */
-	ldi r22, 16	
-1:	/* copy key to state */
-	ld r0, X+
-	st Y+, r0
-	dec r22
+	adiw r30, 1
+	movw r22, r30
+	/* set nullv(stack) to zero */
+	ldi r20, 16
+1:	st Z+, r1
+	dec r20
 	brne 1b
 
-	movw r26, r30
-	
+	/* copy key data to ctx */
+	movw r30, r24
+	ldi r20, 16
+1:	ld r1, Z+
+	st X+, r1
+	dec r20
+	brne 1b
 	clr r1
-	ldi r22, 16
-1:	/* set key to zero */
-	st Z+, r1
-	dec r22
-	brne 1b
-		
-	call theta
-
-	ldi r22, 16
-1:	/* write key back */	
-	ld r0, -Y
-	st -Z, r0
-	dec r22
-	brne 1b
-
-; 	movw r26, r30 /* move keypointer to X */
-;	adiw r26, 1
-	movw r30, r24 /* Z points at state */
-	push r30 /* push state pointer */
-	push r31
 	
-	;--
-	clr r29
-	ldi r28, 2
-	;--
-	ldi r22, 16
-	push r22 /* 16 is also the number of rounds and gets pushed here */
-	ldi r22, 16
-1:	/* load state */
-	ld r0, Z+
-	st Y+, r0
-	dec r22
-	brne 1b
-	/* state loaded */
+	sbiw r26, 16
+	movw r24, r26
+	call noekeon_enc
+	
+	in r30, _SFR_IO_ADDR(SPL)
+	in r31, _SFR_IO_ADDR(SPH)
+	adiw r30, 16 
+	out  _SFR_IO_ADDR(SPH), r31
+	out  _SFR_IO_ADDR(SPL), r30	
+	ret
+	
 
-
-;------- ------------- --------
 
 

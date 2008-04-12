@@ -5,11 +5,10 @@ ALGO_NAME := NOEKEON
 BLOCK_CIPHERS += $(ALGO_NAME)
 
 
-$(ALGO_NAME)_OBJ      := noekeon_asmC.o noekeon_asm.o
-#$(ALGO_NAME)_OBJ      := noekeon.o
+$(ALGO_NAME)_OBJ      := noekeon_asm.o
 $(ALGO_NAME)_TEST_BIN := main-noekeon-test.o debug.o uart.o serial-tools.o \
-                         noekeon_asmC.o noekeon_asm.o nessie_bc_test.o \
+                         noekeon_asm.o nessie_bc_test.o \
                          nessie_common.o cli.o performance_test.o
-$(ALGO_NAME)_NESSIE_TEST      := "nessie"
-$(ALGO_NAME)_PEROFRMANCE_TEST := "performance"
+$(ALGO_NAME)_NESSIE_TEST      := test nessie
+$(ALGO_NAME)_PEROFRMANCE_TEST := performance
 
