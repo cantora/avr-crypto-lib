@@ -235,7 +235,7 @@ void uart_putstr_P(PGM_P str) {
 	}
 }
 
-void uart_hexdump(void* buf, int len)
+void uart_hexdump(const void* buf, int len)
 {
 	unsigned char table[]={'0','1','2','3','4','5','6','7',
 		                   '8','9','a','b','c','d','e','f'};
