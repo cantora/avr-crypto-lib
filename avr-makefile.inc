@@ -3,8 +3,8 @@ OBJ = $(SERPENT_OBJ)
 MCU_TARGET     = atmega644
 OPTIMIZE       = -Os
 DEFS           = -D$(call uc, $(MCU_TARGET))
-FLASHCMD       = avrdude -p $(MCU_TARGET) -P /dev/ttyUSB0 -c avr911 -U flash:w:$(PRG).hex
-#  -U eeprom:w:$(PRG)_eeprom.hex
+FLASHCMD       = avrdude -p $(MCU_TARGET) -P /dev/ttyUSB0 -c avr911 -U flash:w:# no space at the end
+
 #uisp -dprog=bsd -dlpt=/dev/parport1 --upload if=$(PRG).hex
 ERASECMD       = 
 

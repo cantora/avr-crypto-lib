@@ -28,6 +28,8 @@ ALGORITHMS_LC = $(call lc,$(ALGORITHMS))
 
 PRG = remove_me
 
+#-------------------------------------------------------------------------------
+
 define BLA_TEMPLATE2
 $(2): $(3)
 	@echo "[gcc]: $$@"
@@ -39,6 +41,8 @@ $(2): $(3)
 endef
 
 $(foreach algo, $(ALGORITHMS), $(eval $(call BLA_TEMPLATE2, $(algo), $(patsubst %.o,%.elf,$(firstword $($(algo)_TEST_BIN))), $($(algo)_TEST_BIN) )))
+
+#-------------------------------------------------------------------------------
 
 .PHONY: info
 info:
@@ -100,6 +104,8 @@ tests: $(ALGORITHMS_TEST_BIN) \
 .PHONY:  stats
 stats: $(patsubst %, %_size.txt, $(ALGORITHMS_LC))
 	$(RUBY) sumsize.rb $^ > sizestats.txt
+
+#-------------------------------------------------------------------------------	
 	
 define OBJ_TEMPLATE
 $(1)_OBJ: $(2)
@@ -109,6 +115,7 @@ endef
 
 $(foreach algo, $(ALGORITHMS), $(eval $(call OBJ_TEMPLATE, $(algo), $($(algo)_OBJ))))
 
+#-------------------------------------------------------------------------------
 
 $(BLOCK_CIPHERS_OBJ): $(patsubst %,%_OBJ, $(BLOCK_CIPHERS)) 
 $(STREAM_CIPHERS_OBJ): $(patsubst %,%_OBJ, $(STREAM_CIPHERS))
@@ -118,6 +125,7 @@ $(MACS_OBJ): $(patsubst %,%_OBJ, $(MACS))
 
 $(ALGORITHMS_TEST_BIN): $(ALGORITHMS_TEST_BIN_IMM)
 
+#-------------------------------------------------------------------------------
 
 define SIZE_TEMPLATE
 $(1)_size.txt: $(2)
@@ -127,10 +135,22 @@ endef
 
 $(foreach algo, $(ALGORITHMS), $(eval $(call SIZE_TEMPLATE, $(call lc,$(algo)), $($(algo)_OBJ))))
 
+#-------------------------------------------------------------------------------
 
+define FLASH_TEMPLATE
+$(1)_FLASH: $(2)
+	@echo "[flash]: $(2)"
+	$(FLASHCMD)$(call first,$(2))
+endef
+
+$(foreach algo, $(ALGORITHMS),$(eval $(call FLASH_TEMPLATE, $(algo), \
+                $(patsubst %.o,%.hex,$(firstword $($(algo)_TEST_BIN)))) ))  
+
+#-------------------------------------------------------------------------------
 	
 .PHONY: all
-all: $(PRG).elf lst text eeprom
+all: $(foreach algo, $(ALGORITHMS), $(algo)_OBJ)
+#all: $(PRG).elf lst text eeprom
 
 
 .PHONY: clean
