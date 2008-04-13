@@ -24,13 +24,9 @@ ALGORITHMS_TEST_BIN_IMM =  $(foreach a, $(ALGORITHMS_TEST_BIN), $($(a)))
 ALGORITHMS_NESSIE_TEST = $(patsubst %,%_NESSIE_TEST, $(ALGORITHMS))
 ALGORITHMS_PERFORMANCE_TEST = $(patsubst %,%_PERORMANCE_TEST, $(ALGORITHMS))
 
-#ALGORITHMS_LC = #algorithm names in lowercase 
-#ALGORITHMS_LC = $(foreach a, $(ALGORITHMS), $$(lc Text))
 ALGORITHMS_LC = $(call lc,$(ALGORITHMS))
-PRG = remove_me
 
-DEFS	   =
-LIBS	   =
+PRG = remove_me
 
 define BLA_TEMPLATE2
 $(2): $(3)
@@ -71,11 +67,11 @@ info:
 #	echo $(ALGORITHMS_PERFORMANCE_TEST)
 
 %.o: %.c
-	@echo "[gcc]: $@"
+	@echo "[gcc]:  $@"
 	@$(CC) $(CFLAGS) -c	-o $@ $<
 
 %.o: %.S
-	@echo "[as] : $@"
+	@echo "[as] :  $@"
 	@$(CC) $(ASFLAGS) -c -o $@ $<
 
 
@@ -94,13 +90,17 @@ hashes: $(patsubst %, %_OBJ, $(HASHES))
 .PHONY:  macs
 macs: $(patsubst %, %_OBJ, $(MACS))
 
+.PHONY:  prngs
 prngs: $(patsubst %, %_OBJ, $(PRNGS))
 
 tests: $(ALGORITHMS_TEST_BIN) \
        $(ALGORITHMS_TEST_BIN_MAIN_ELF) \
        $(ALGORITHMS_TEST_BIN_MAIN_HEX)
 
-
+.PHONY:  stats
+stats: $(patsubst %, %_size.txt, $(ALGORITHMS_LC))
+	$(RUBY) sumsize.rb $^ > sizestats.txt
+	
 define OBJ_TEMPLATE
 $(1)_OBJ: $(2)
 #	@echo " ALGO: $(1)"
@@ -121,9 +121,8 @@ $(ALGORITHMS_TEST_BIN): $(ALGORITHMS_TEST_BIN_IMM)
 
 define SIZE_TEMPLATE
 $(1)_size.txt: $(2)
-	@echo " ALGO: $(1)"
-	@echo " REQ:  $(2)"
-	$(SIZE) $(2) > $(1)_size.txt
+	@echo "[size]: $(1)_size.txt"
+	@$(SIZE) $(2) > $(1)_size.txt
 endef
 
 $(foreach algo, $(ALGORITHMS), $(eval $(call SIZE_TEMPLATE, $(call lc,$(algo)), $($(algo)_OBJ))))
@@ -136,7 +135,7 @@ all: $(PRG).elf lst text eeprom
 
 .PHONY: clean
 clean:
-	rm -rf *.o *.elf *.eps *.png *.pdf *.bak 
+	rm -rf *.o *.elf *.eps *.png *.pdf *.bak *_size.txt
 	rm -rf *.lst *.map $(EXTRA_CLEAN_FILES)
 
 flash:
@@ -181,10 +180,6 @@ esrec: $(PRG)_eeprom.srec
 
 %_eeprom.bin: %.elf
 	$(OBJCOPY) -j .eeprom --change-section-lma .eeprom=0 -O binary $< $@
-
-#%_size.txt: %.o
-#	$(SIZE)  $< > $@
-	
 	
 	
 # Every thing below here is used by avr-libc's build system and can be ignored

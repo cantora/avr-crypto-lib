@@ -15,6 +15,15 @@
 
 nessie_bc_ctx_t nessie_bc_ctx;
 
+void nessie_bc_init(void){
+	memset(&nessie_bc_ctx, 0, sizeof(nessie_bc_ctx_t));	
+}
+static
+void nessie_bc_free(void* ctx){
+	if(nessie_bc_ctx.cipher_free)
+		nessie_bc_ctx.cipher_free(ctx);
+}
+
 void nessie_bc_enc(uint8_t* key, uint8_t* pt){
 	uint8_t ctx[nessie_bc_ctx.ctx_size_B];
 	uint8_t buffer[nessie_bc_ctx.blocksize_B];
@@ -43,6 +52,7 @@ void nessie_bc_enc(uint8_t* key, uint8_t* pt){
 	}
 	nessie_print_item("Iterated 1000 times", buffer, nessie_bc_ctx.blocksize_B);
 #endif
+	nessie_bc_free(ctx);
 }
 
 void nessie_bc_dec(uint8_t* key, uint8_t* ct){
@@ -58,7 +68,7 @@ void nessie_bc_dec(uint8_t* key, uint8_t* ct){
 	nessie_print_item("plain", buffer, nessie_bc_ctx.blocksize_B);
 	nessie_bc_ctx.cipher_enc(buffer, ctx);
 	nessie_print_item("encrypted", buffer, nessie_bc_ctx.blocksize_B);
-	
+	nessie_bc_free(ctx);
 }
 
 void nessie_bc_run(void){

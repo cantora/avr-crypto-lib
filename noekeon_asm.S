@@ -83,7 +83,6 @@
 	\op \p\()\d, \q\()\z
 .endm
 
-.global bigendian_rotl32
 ; === bigendian_rotl32 ===
 ; this function rotates a 32bit bigendian word n bits to the left
 ;  param1: the 32-bit value
@@ -94,7 +93,6 @@
 ;   given in r25,r24,r23,r22   
 
 bigendian_rotl32:
-	in r0, _SFR_IO_ADDR(SREG)
 	/* copy high bit of r22 to carry */
 	mov r1, r22
 2:
@@ -109,13 +107,11 @@ bigendian_rotl32:
 	brne 2b
 bigendian_rotl32_exit:
 	clr r1
-	out _SFR_IO_ADDR(SREG), r0
 	ret
 	
 	
 /******************************************************************************/
 
-.global bigendian_rotr32
 ; === bigendian_rotl32 ===
 ; this function rotates a 32bit bigendian word n bits to the right
 ;  param1: the 32-bit value
@@ -126,7 +122,6 @@ bigendian_rotl32_exit:
 ;   given in r25,r24,r23,r22   
 
 bigendian_rotr32:
-	in r0, _SFR_IO_ADDR(SREG)
 	/* copy high bit of r25 to carry */
 
 	mov r1, r25
@@ -141,7 +136,6 @@ bigendian_rotr32:
 	brne 2b
 bigendian_rotr32_exit:
 	clr r1
-	out _SFR_IO_ADDR(SREG), r0
 	ret
 
 /******************************************************************************/
@@ -457,7 +451,8 @@ round:
 	push r25
 	push r24
 pi_gamma_pi:
-	clc
+	ldi r30, lo8(bigendian_rotl32)
+	ldi r31, hi8(bigendian_rotl32)
 	call pi
 	/* pi1 done; now gamma */
 	call gamma_1
@@ -485,7 +480,8 @@ pi_gamma_pi:
 	eor state2_3, state3_3
 */
 	call gamma_1
-	sec
+	ldi r30, lo8(bigendian_rotr32)
+	ldi r31, hi8(bigendian_rotr32)
 	call pi
 	ret
 	
@@ -529,15 +525,7 @@ gamma_1:
 	eor state0_3, r1
 	ret
 	
-pi:
-	brcs 1f
-	ldi r30, lo8(bigendian_rotl32)
-	ldi r31, hi8(bigendian_rotl32)
-	rjmp 2f
-1:
-	ldi r30, lo8(bigendian_rotr32)
-	ldi r31, hi8(bigendian_rotr32)
-2:	
+pi:	
 	lsr r31
 	ror r30
 	/* a[1] <<<= 1*/

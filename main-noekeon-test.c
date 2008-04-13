@@ -152,7 +152,7 @@ void testrun_stdtest_noekeon(void){
 void testrun_performance_noekeon(void){
 	uint16_t i,c;
 	uint64_t t;
-	char str[6];
+	char str[16];
 	uint8_t key[16], data[16];
 	noekeon_ctx_t ctx;
 	
@@ -173,21 +173,27 @@ void testrun_performance_noekeon(void){
 	noekeon_init(key, &ctx);
 	t = stopTimer();
 	uart_putstr_P(PSTR("\r\n\tctx-gen time: "));
-	uart_hexdump(&t, 8);
+	ultoa((unsigned long)t, str, 10);
+	uart_putstr(str);
+//	uart_hexdump(&t, 8);
 	
 	
 	startTimer(1);
 	noekeon_enc(data, ctx);
 	t = stopTimer();
 	uart_putstr_P(PSTR("\r\n\tencrypt time: "));
-	uart_hexdump(&t, 8);
+	ultoa((unsigned long)t, str, 10);
+	uart_putstr(str);
+//	uart_hexdump(&t, 8);
 	
 	
 	startTimer(1);
 	noekeon_dec(data, ctx);
 	t = stopTimer();
 	uart_putstr_P(PSTR("\r\n\tdecrypt time: "));
-	uart_hexdump(&t, 8);
+	ultoa((unsigned long)t, str, 10);
+	uart_putstr(str);
+//	uart_hexdump(&t, 8);
 	uart_putstr_P(PSTR("\r\n"));
 }
 /*****************************************************************************
