@@ -127,7 +127,6 @@ void testrun_stdtest_noekeon(void){
 	noekeon_enc(data, &ctx);
 	testrun_stdtest_runindirect(data, key3);
 	
-	
 	uart_putstr_P(PSTR("\r\nTest vectors for block cipher Noekeon in Direct-Key Mode:\r\n"));
 	
 	memset(key,  0, 16);
@@ -174,26 +173,21 @@ void testrun_performance_noekeon(void){
 	t = stopTimer();
 	uart_putstr_P(PSTR("\r\n\tctx-gen time: "));
 	ultoa((unsigned long)t, str, 10);
-	uart_putstr(str);
-//	uart_hexdump(&t, 8);
-	
+	uart_putstr(str);	
 	
 	startTimer(1);
-	noekeon_enc(data, ctx);
+	noekeon_enc(data, &ctx);
 	t = stopTimer();
 	uart_putstr_P(PSTR("\r\n\tencrypt time: "));
 	ultoa((unsigned long)t, str, 10);
-	uart_putstr(str);
-//	uart_hexdump(&t, 8);
-	
+	uart_putstr(str);	
 	
 	startTimer(1);
-	noekeon_dec(data, ctx);
+	noekeon_dec(data, &ctx);
 	t = stopTimer();
 	uart_putstr_P(PSTR("\r\n\tdecrypt time: "));
 	ultoa((unsigned long)t, str, 10);
 	uart_putstr(str);
-//	uart_hexdump(&t, 8);
 	uart_putstr_P(PSTR("\r\n"));
 }
 /*****************************************************************************
