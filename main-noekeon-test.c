@@ -188,6 +188,7 @@ void testrun_performance_noekeon(void){
 	uart_putstr_P(PSTR("\r\n\tdecrypt time: "));
 	ultoa((unsigned long)t, str, 10);
 	uart_putstr(str);
+	
 	uart_putstr_P(PSTR("\r\n"));
 }
 /*****************************************************************************

@@ -140,7 +140,7 @@ $(foreach algo, $(ALGORITHMS), $(eval $(call SIZE_TEMPLATE, $(call lc,$(algo)), 
 define FLASH_TEMPLATE
 $(1)_FLASH: $(2)
 	@echo "[flash]: $(2)"
-	$(FLASHCMD)$(call first,$(2))
+	@$(FLASHCMD)$(call first,$(2))
 endef
 
 $(foreach algo, $(ALGORITHMS),$(eval $(call FLASH_TEMPLATE, $(algo), \
