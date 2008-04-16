@@ -176,21 +176,25 @@ void test_performance_cast5(void){
 	cast5_init(&ctx, key, 128);
 	t = stopTimer();
 	uart_putstr_P(PSTR("\r\n\tctx-gen time: "));
-	uart_hexdump(&t, 8);
+	ultoa((unsigned long)t, str, 10);
+	uart_putstr(str);
 	
 	
 	startTimer(1);
 	cast5_enc(&ctx, data);
 	t = stopTimer();
 	uart_putstr_P(PSTR("\r\n\tencrypt time: "));
-	uart_hexdump(&t, 8);
+	ultoa((unsigned long)t, str, 10);
+	uart_putstr(str);
 	
 	
 	startTimer(1);
 	cast5_dec(&ctx, data);
 	t = stopTimer();
 	uart_putstr_P(PSTR("\r\n\tdecrypt time: "));
-	uart_hexdump(&t, 8);
+	ultoa((unsigned long)t, str, 10);
+	uart_putstr(str);
+	
 	uart_putstr_P(PSTR("\r\n"));
 }
 

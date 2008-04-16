@@ -11,7 +11,9 @@
 #include "present.h"
 #include "nessie_bc_test.h"
 #include "cli.h"
+#include "performance_test.h"
 
+#include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
 
@@ -74,6 +76,49 @@ void testrun_self_present(void){
 	
 }
 
+void testrun_performance_present(void){
+	uint16_t i,c;
+	uint64_t t;
+	char str[16];
+	uint8_t key[10], data[8];
+	present_ctx_t ctx;
+	
+	calibrateTimer();
+	getOverhead(&c, &i);
+	uart_putstr_P(PSTR("\r\n\r\n=== benchmark ==="));
+	utoa(c, str, 10);
+	uart_putstr_P(PSTR("\r\n\tconst overhead:     "));
+	uart_putstr(str);
+	utoa(i, str, 10);
+	uart_putstr_P(PSTR("\r\n\tinterrupt overhead: "));
+	uart_putstr(str);
+	
+	memset(key,  0, 10);
+	memset(data, 0,  8);
+	
+	startTimer(1);
+	present_init(key, 80, &ctx);
+	t = stopTimer();
+	uart_putstr_P(PSTR("\r\n\tctx-gen time: "));
+	ultoa((unsigned long)t, str, 10);
+	uart_putstr(str);
+	
+	startTimer(1);
+	present_enc(data, &ctx);
+	t = stopTimer();
+	uart_putstr_P(PSTR("\r\n\tencrypt time: "));
+	ultoa((unsigned long)t, str, 10);
+	uart_putstr(str);
+	
+	startTimer(1);
+	present_dec(data, &ctx);
+	t = stopTimer();
+	uart_putstr_P(PSTR("\r\n\tdecrypt time: "));
+	ultoa((unsigned long)t, str, 10);
+	uart_putstr(str);
+	uart_putstr_P(PSTR("\r\n"));
+}
+
 /*****************************************************************************
  *  main																	 *
  *****************************************************************************/
@@ -89,8 +134,8 @@ int main (void){
 	uart_putstr(cipher_name);
 	uart_putstr_P(PSTR(")\r\nloaded and running\r\n"));
 
-	PGM_P    u   = PSTR("nessie\0test\0");
-	void_fpt v[] = {testrun_nessie_present, testrun_self_present};
+	PGM_P    u   = PSTR("nessie\0test\0performance\0");
+	void_fpt v[] = {testrun_nessie_present, testrun_self_present, testrun_performance_present};
 
 	while(1){ 
 		if (!getnextwordn(str,20)){DEBUG_S("DBG: W1\r\n"); goto error;}

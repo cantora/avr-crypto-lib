@@ -102,7 +102,9 @@ void cast5_init(cast5_ctx_t* s, uint8_t* key, uint8_t keylength){
 	s->shortkey = (keylength<=80);
 	/* littel endian only! */
 	memset(&(x[0]), 0 ,16); /* set x to zero */
-	memcpy(&(x[0]), key, keylength/8);
+	if(keylength > 128)
+		keylength=128;
+	memcpy(&(x[0]), key, (keylength+7)/8);
 	
 
 	/* todo: merge a and b and compress the whole stuff */

@@ -48,7 +48,7 @@ void testrun_nessie_serpent(void){
 void testrun_performance_serpent(void){
 	uint16_t i,c;
 	uint64_t t;
-	char str[6];
+	char str[16];
 	uint8_t key[32], data[16];
 	serpent_ctx_t ctx;
 	
@@ -69,21 +69,25 @@ void testrun_performance_serpent(void){
 	serpent_genctx(key, 0, &ctx);
 	t = stopTimer();
 	uart_putstr_P(PSTR("\r\n\tctx-gen time: "));
-	uart_hexdump(&t, 8);
+	ultoa((unsigned long)t, str, 10);
+	uart_putstr(str);
 	
 	
 	startTimer(1);
 	serpent_enc(data, &ctx);
 	t = stopTimer();
 	uart_putstr_P(PSTR("\r\n\tencrypt time: "));
-	uart_hexdump(&t, 8);
+	ultoa((unsigned long)t, str, 10);
+	uart_putstr(str);
 	
 	
 	startTimer(1);
 	serpent_dec(data, &ctx);
 	t = stopTimer();
 	uart_putstr_P(PSTR("\r\n\tdecrypt time: "));
-	uart_hexdump(&t, 8);
+	ultoa((unsigned long)t, str, 10);
+	uart_putstr(str);
+	
 	uart_putstr_P(PSTR("\r\n"));
 }
 /*****************************************************************************
