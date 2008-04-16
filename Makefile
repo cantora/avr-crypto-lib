@@ -57,8 +57,8 @@ info:
 	@echo "    $(MACS)"
 	@echo "  PRNG functions:"
 	@echo "    $(PRNGS)"
-	@echo "  LC functions:"
-	@echo "    $(ALGORITHMS_LC)"
+#	@echo "  LC functions:"
+#	@echo "    $(ALGORITHMS_LC)"
 	
 #	echo $(ALGORITHMS_TEST_BIN_MAIN)
 #	echo $(ALGORITHMS)
@@ -102,9 +102,13 @@ tests: $(ALGORITHMS_TEST_BIN) \
        $(ALGORITHMS_TEST_BIN_MAIN_HEX)
 
 .PHONY:  stats
-stats: $(patsubst %, %_size.txt, $(ALGORITHMS_LC))
-	$(RUBY) sumsize.rb $^ > sizestats.txt
-
+stats: $(SIZESTAT_FILE)
+#$(patsubst %, %_size.txt, $(ALGORITHMS_LC))
+	
+	
+$(SIZESTAT_FILE): $(patsubst %, %_size.txt, $(ALGORITHMS_LC))
+	$(RUBY) sumsize.rb $^ > $(SIZESTAT_FILE)
+	@cat $(SIZESTAT_FILE)	
 #-------------------------------------------------------------------------------	
 	
 define OBJ_TEMPLATE
@@ -156,7 +160,7 @@ all: $(foreach algo, $(ALGORITHMS), $(algo)_OBJ)
 .PHONY: clean
 clean:
 	rm -rf *.o *.elf *.eps *.png *.pdf *.bak *_size.txt
-	rm -rf *.lst *.map $(EXTRA_CLEAN_FILES)
+	rm -rf *.lst *.map $(EXTRA_CLEAN_FILES) $(SIZESTAT_FILE)
 
 flash:
 	$(ERASECMD)

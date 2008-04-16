@@ -19,9 +19,22 @@
 #define S(i) ((ctx->lfsr[9-((i)/8)])>>(7-((i)%8)))
 /* b0, b1, b2, ..., b78, b79 */
 #define B(i) ((ctx->nfsr[9-((i)/8)])>>(7-((i)%8)))
+#define _B(i) (((ctx->nfsr[9-((i)/8)])>>(7-((i)%8)))&1)
 
 
 uint8_t h_lut[4] PROGMEM = {0x4C, 0xB6, 0xD3, 0x26};
+
+#ifdef GRAIN_BADOPTIMISATION
+uint8_t g_lut[128] PROGMEM = {
+        0xF0, 0xA5, 0x0F, 0x5A, 0x0F, 0x5A, 0xF0, 0xA5, 0x0F, 0x5A, 0xF0, 0xA5, 0xF0, 0x5A, 0x0F, 0x0F, 
+        0xC3, 0x96, 0x3C, 0x69, 0x3C, 0x69, 0xC3, 0x96, 0x9C, 0xC9, 0x63, 0x36, 0x63, 0xC9, 0x9C, 0x9C, 
+        0x0F, 0x5A, 0x0F, 0x5A, 0xF0, 0xA5, 0xF0, 0x5A, 0xF0, 0xA5, 0xF0, 0xA5, 0x0F, 0xA5, 0x0F, 0xF0, 
+        0x3C, 0x69, 0x3C, 0x69, 0xC3, 0x96, 0xC3, 0x69, 0x63, 0x36, 0x63, 0x36, 0x9C, 0x36, 0x9C, 0x63, 
+        0x0F, 0xD2, 0xF0, 0x2D, 0xF0, 0x2D, 0x0F, 0xD2, 0xF0, 0x2D, 0x0F, 0xD2, 0x0F, 0x2D, 0xF0, 0x78, 
+        0x3C, 0xE1, 0xC3, 0x1E, 0xC3, 0x1E, 0x3C, 0xE1, 0x63, 0xBE, 0x9C, 0x41, 0x9C, 0xBE, 0x63, 0xEB, 
+        0x00, 0xDD, 0x00, 0xDD, 0xFF, 0x22, 0xFF, 0xDD, 0xFF, 0x22, 0xFF, 0x22, 0x00, 0x22, 0xF0, 0x87, 
+        0xF3, 0x2E, 0xF3, 0x2E, 0x0C, 0xD1, 0x0C, 0x2E, 0xAC, 0x71, 0xAC, 0x71, 0x53, 0x71, 0xA3, 0xD4  };
+#endif
 
 uint8_t grain_enc(grain_ctx_t* ctx){
 	uint8_t s80, s0, c1, c2;
@@ -37,22 +50,55 @@ uint8_t grain_enc(grain_ctx_t* ctx){
 		c1 = c2;
 	}
 	/* clock the NFSR */
-	uint8_t b80, a,b,d,e;
+	uint8_t b80;
+/*	778 Byte in this variant / 617 clks enc_time */
+#ifndef GRAIN_BADOPTIMISATION
+    uint8_t a,b,d,e;
 	b80 = B(62) ^ B(60) ^ B(52) ^ B(45) ^ 
 	      B(37) ^ B(33) ^ B(28) ^ B(21) ^ 
 	      B(14) ^ B( 9) ^ B( 0) ^ s0;
 	b80 ^= (a = B(63) & B(60));
 	b80 ^= (b = B(37) & B(33));
-	b80 ^= B(15) & B( 9); /* c */
+	b80 ^= B(15) & B( 9); // c 
 	b80 ^= (d = B(60) & B(52) & B(45));
 	b80 ^= (e = B(33) & B(28) & B(21));
-	b80 ^= B(63) & B(45) & B(28) & B(9); /* f */
+	b80 ^= B(63) & B(45) & B(28) & B(9); // f 
 	/* -- */
-	b80 ^= b & B(60) & B(52); /* g */
-	b80 ^= a & B(21) & B(15); /* h */
-	b80 ^= d & B(63) & B(37); /* i */
-	b80 ^= e & B(15) & B( 9); /* j */
-	b80 ^= e & B(52) & B(45) & B(37); /* k */
+	b80 ^= b & B(60) & B(52); // g 
+	b80 ^= a & B(21) & B(15); // h 
+	b80 ^= d & B(63) & B(37); // i 
+	b80 ^= e & B(15) & B( 9); // j 
+	b80 ^= e & B(52) & B(45) & B(37); // k
+#else
+	/* let's reorder the bits */
+	uint16_t x; 
+
+/*
+	x  = _B(21); x<<=1;
+	x |= _B(33); x<<=1;
+	x |= _B(9) ; x<<=1;
+	x |= _B(45); x<<=1;
+	x |= _B(52); x<<=1;
+	x |= _B(37); x<<=1;
+	x |= _B(60); x<<=1;
+	x |= _B(28); x<<=1;
+	x |= _B(15); x<<=1;
+	x |= _B(63);
+*/
+	x  = ((ctx->nfsr[8])&0x41)<<1; // B15 & B09
+	x |= ((ctx->nfsr[2])&0x09);    // B63 & B60 
+//	x |= ((ctx->nfsr[4])&0x04)<<4; // B45
+	x |= (((ctx->nfsr[5])&0x44) | 
+	      ((ctx->nfsr[3])&0x08) | 
+	      (((((ctx->nfsr[7])&0x04)<<3) |((ctx->nfsr[4])&0x04))<<2) )<<2; // B37 & B33
+//	x |= ((ctx->nfsr[3])&0x08)<<2; // B52
+	x |= ((ctx->nfsr[6])&0x08)>>1; // B28
+//	x |= ((ctx->nfsr[7])&0x04)<<7; // B21 
+
+
+	b80 = pgm_read_byte(g_lut+(x/8))>>(x%8);
+	b80 ^= s0 ^ B(62) ^ B(14) ^ B(0);
+#endif
 	c1 = b80 & 1;
 	for(i=0; i<10; ++i){
 		c2 = (ctx->nfsr[i])>>7;

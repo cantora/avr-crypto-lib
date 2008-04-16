@@ -15,6 +15,8 @@ override CFLAGS	= -pedantic -std=c99 -Wall -Wstrict-prototypes  $(OPTIMIZE) -mmc
 override LDFLAGS       = -Wl,-Map,
 override ASFLAGS	   = -mmcu=$(MCU_TARGET)
 
+SIZESTAT_FILE = sizestats.txt
+
 OBJCOPY	= avr-objcopy
 OBJDUMP	= avr-objdump
 SIZE = avr-size
