@@ -105,7 +105,7 @@ void nessie_print_header(char* name,
 	uint16_t i;
 	uart_putstr_P(PSTR("\r\n\r\n"
 	"********************************************************************************\r\n"
-	"* micro-cryt - crypto primitives for microcontrolles by Daniel Otte            *\r\n"
+	"* micro-crypt - crypto primitives for microcontrolles by Daniel Otte           *\r\n"
 	"********************************************************************************\r\n"
 	"\r\n"));
 	uart_putstr_P(PSTR("Primitive Name: "));

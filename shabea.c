@@ -2,7 +2,7 @@
  * \file	shabea.c
  * \author	Daniel Otte 
  * \date	2007-06-07
- * \brief	SHABEA - a SHA Based Encrytion Algorithm implementation
+ * \brief	SHABEA - a SHA Based Encryption Algorithm implementation
  * \par License	
  * GPL
  * 
