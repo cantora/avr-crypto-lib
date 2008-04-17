@@ -32,15 +32,15 @@ typedef uint8_t sha256_hash_t[SHA256_HASH_BITS/8];
 
 void sha256_init(sha256_ctx_t *state);
 
-void sha256_nextBlock (sha256_ctx_t *state, void* block);
-void sha256_lastBlock(sha256_ctx_t *state, void* block, uint16_t length);
+void sha256_nextBlock (sha256_ctx_t *state, const void* block);
+void sha256_lastBlock(sha256_ctx_t *state, const void* block, uint16_t length);
 
-void sha256_ctx2hash(sha256_hash_t *dest, sha256_ctx_t *state);
+void sha256_ctx2hash(sha256_hash_t *dest, const sha256_ctx_t *state);
 
 /*
  * length in bits!
  */
-void sha256(sha256_hash_t *dest, void* msg, uint32_t length);
+void sha256(sha256_hash_t *dest, const void* msg, uint32_t length);
 uint32_t change_endian32(uint32_t x);
 
 
