@@ -13,7 +13,10 @@
  * this fits for xtea.c and xtea-asm.S
  * 
  */
-
+#define XTEA_BLOCKSIZE 64
+#define XTEA_BLOCKSIZEB ((XTEA_BLOCKSIZE+7)/8)
+#define XTEA_KEYSIZE 128
+#define XTEA_KEYSIZEB ((XTEA_KEYSIZE+7)/8)
 
 
 /*
@@ -21,8 +24,8 @@
  * v:	 the block to operate on (64 bit)
  * k:	 the key for en/decryption (128 bit)
  */
-void xtea_enc(uint32_t* dest, uint32_t* v, uint32_t* k);
-void xtea_dec(uint32_t* dest, uint32_t* v, uint32_t* k);
+void xtea_enc(void* dest, const void* v, const void* k);
+void xtea_dec(void* dest, const void* v, const void* k);
 
 
 #endif /*XTEA_H_*/

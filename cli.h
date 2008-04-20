@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include <avr/pgmspace.h>
 
+typedef void(*void_fpt)(void);
+
 int16_t findstring_d0(const char* str, const char* v);
 int16_t findstring_d0_P(const char* str, PGM_P v);
 

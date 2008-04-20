@@ -644,8 +644,7 @@ sha1_nextBlock_mainloop_core:	/* ther core function; T=ROTL5(a) ....*/
 	/* wo Z-4 gerade auf kt zeigt ... */
 	movw r28, r26 /* copy X in Y */
 	adiw r30, 3*4 /* now Z points to the rigth locatin in our jump-vector-table */
-	clc
-	ror r31
+	lsr r31
 	ror r30
 		
 	icall

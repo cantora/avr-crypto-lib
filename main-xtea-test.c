@@ -10,6 +10,8 @@
 
 #include "xtea.h"
 #include "nessie_bc_test.h"
+#include "performance_test.h"
+#include "cli.h"
 
 #include <stdint.h>
 #include <string.h>
@@ -40,7 +42,28 @@ void testrun_nessie_xtea(void){
 	nessie_bc_run();	
 }
 
-
+void testrun_performance_xtea(void){
+	uint64_t t;
+	uint8_t key[16], data[8];
+	
+	calibrateTimer();
+	print_overhead();
+	
+	memset(key,  0, 16);
+	memset(data, 0,  8);
+	
+	startTimer(1);
+	xtea_enc(data, data, key);
+	t = stopTimer();
+	print_time_P(PSTR("\tencrypt time: "), t);
+	
+	startTimer(1);
+	xtea_dec(data, data, key);
+	t = stopTimer();
+	print_time_P(PSTR("\tdecrypt time: "), t);
+	
+	uart_putstr_P(PSTR("\r\n"));
+}
 
 /*****************************************************************************
  *  main																	 *
@@ -55,14 +78,16 @@ int main (void){
 	uart_putstr(cipher_name);
 	uart_putstr_P(PSTR(")\r\nloaded and running\r\n"));
 
-restart:
+	PGM_P    u   = PSTR("nessie\0test\0performance\0");
+	void_fpt v[] = {testrun_nessie_xtea, testrun_nessie_xtea, testrun_performance_xtea};
+
 	while(1){ 
-		if (!getnextwordn(str,20))  {DEBUG_S("DBG: W1\r\n"); goto error;}
-		if (strcmp(str, "nessie")) {DEBUG_S("DBG: 1b\r\n"); goto error;}
-			testrun_nessie_xtea();
-		goto restart;		
+		if (!getnextwordn(str,20)){DEBUG_S("DBG: W1\r\n"); goto error;}
+		if(execcommand_d0_P(str, u, v)<0){
+			uart_putstr_P(PSTR("\r\nunknown command\r\n"));
+		}
 		continue;
 	error:
 		uart_putstr("ERROR\r\n");
-	}	
+	}
 }

@@ -7,10 +7,13 @@
  **/
  
 #include "config.h"
+#include <string.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>
+#include <avr/pgmspace.h>
+#include "uart.h"
 #include "performance_test.h"
 
 
@@ -65,6 +68,27 @@ void getOverhead(uint16_t* constoh, uint16_t* intoh){
 	*intoh   = int_overhead; 
 }
 
+void print_time_P(PGM_P s, uint64_t t){
+	char sv[16];
+	uint8_t c;
+	uart_putstr_P(PSTR("\r\n"));
+	uart_putstr_P(s);
+	ultoa((unsigned long)t, sv, 10);
+	for(c=strlen(sv); c<11; ++c){
+		uart_putc(' ');
+	}
+	uart_putstr(sv);
+}
 
+void print_overhead(void){
+	char str[16];
+	uart_putstr_P(PSTR("\r\n\r\n=== benchmark ==="));
+	utoa(const_overhead, str, 10);
+	uart_putstr_P(PSTR("\r\n\tconst overhead:     "));
+	uart_putstr(str);
+	utoa(int_overhead, str, 10);
+	uart_putstr_P(PSTR("\r\n\tinterrupt overhead: "));
+	uart_putstr(str);
+}
 
 

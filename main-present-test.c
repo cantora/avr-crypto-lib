@@ -77,21 +77,12 @@ void testrun_self_present(void){
 }
 
 void testrun_performance_present(void){
-	uint16_t i,c;
 	uint64_t t;
-	char str[16];
 	uint8_t key[10], data[8];
 	present_ctx_t ctx;
 	
 	calibrateTimer();
-	getOverhead(&c, &i);
-	uart_putstr_P(PSTR("\r\n\r\n=== benchmark ==="));
-	utoa(c, str, 10);
-	uart_putstr_P(PSTR("\r\n\tconst overhead:     "));
-	uart_putstr(str);
-	utoa(i, str, 10);
-	uart_putstr_P(PSTR("\r\n\tinterrupt overhead: "));
-	uart_putstr(str);
+	print_overhead();
 	
 	memset(key,  0, 10);
 	memset(data, 0,  8);
@@ -99,31 +90,24 @@ void testrun_performance_present(void){
 	startTimer(1);
 	present_init(key, 80, &ctx);
 	t = stopTimer();
-	uart_putstr_P(PSTR("\r\n\tctx-gen time: "));
-	ultoa((unsigned long)t, str, 10);
-	uart_putstr(str);
+	print_time_P(PSTR("\tctx-gen time: "),t);
 	
 	startTimer(1);
 	present_enc(data, &ctx);
 	t = stopTimer();
-	uart_putstr_P(PSTR("\r\n\tencrypt time: "));
-	ultoa((unsigned long)t, str, 10);
-	uart_putstr(str);
+	print_time_P(PSTR("\tencrypt time: "), t);
 	
 	startTimer(1);
 	present_dec(data, &ctx);
 	t = stopTimer();
-	uart_putstr_P(PSTR("\r\n\tdecrypt time: "));
-	ultoa((unsigned long)t, str, 10);
-	uart_putstr(str);
+	print_time_P(PSTR("\tdecrypt time: "), t);
+	
 	uart_putstr_P(PSTR("\r\n"));
 }
 
 /*****************************************************************************
  *  main																	 *
  *****************************************************************************/
-
-typedef void(*void_fpt)(void);
 
 int main (void){
 	char  str[20];

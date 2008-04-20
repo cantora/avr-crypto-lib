@@ -213,8 +213,10 @@ uint32_t cast5_f2(uint32_t d, uint32_t m, uint8_t r){
 	return (((ia - ib) + ic) ^ id);
 #else
 	
-	return (((pgm_read_dword(&s1[((uint8_t*)&t)[IA]] ) - pgm_read_dword(&s2[((uint8_t*)&t)[IB]] )) 
-		+ pgm_read_dword(&s3[((uint8_t*)&t)[IC]] )) ^ pgm_read_dword(&s4[((uint8_t*)&t)[ID]]));
+	return (((pgm_read_dword(&s1[((uint8_t*)&t)[IA]]) 
+	        - pgm_read_dword(&s2[((uint8_t*)&t)[IB]]) ) 
+		    + pgm_read_dword(&s3[((uint8_t*)&t)[IC]]) ) 
+		    ^ pgm_read_dword(&s4[((uint8_t*)&t)[ID]]) );
 
 #endif
 }

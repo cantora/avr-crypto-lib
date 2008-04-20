@@ -26,13 +26,9 @@
 	push r17
 	push r28
 	push r29
-	in r28, _SFR_IO_ADDR(SREG)
-	push r28
 .endm
 
 .macro pop_all
-	pop r28
-	out _SFR_IO_ADDR(SREG), r28
 	pop r29
 	pop r28
 	pop r17
@@ -451,8 +447,8 @@ round:
 	push r25
 	push r24
 pi_gamma_pi:
-	ldi r30, lo8(bigendian_rotl32)
-	ldi r31, hi8(bigendian_rotl32)
+	ldi r30, pm_lo8(bigendian_rotl32)
+	ldi r31, pm_hi8(bigendian_rotl32)
 	call pi
 	/* pi1 done; now gamma */
 	call gamma_1
@@ -465,23 +461,10 @@ pi_gamma_pi:
 	op32 eor, state2, state0
 	op32 eor, state2, state1
 	op32 eor, state2, state3
-/*	
-	eor state2_0, state0_0
-	eor state2_1, state0_1
-	eor state2_2, state0_2
-	eor state2_3, state0_3
-	eor state2_0, state1_0
-	eor state2_1, state1_1
-	eor state2_2, state1_2
-	eor state2_3, state1_3
-	eor state2_0, state3_0
-	eor state2_1, state3_1
-	eor state2_2, state3_2
-	eor state2_3, state3_3
-*/
+
 	call gamma_1
-	ldi r30, lo8(bigendian_rotr32)
-	ldi r31, hi8(bigendian_rotr32)
+	ldi r30, pm_lo8(bigendian_rotr32)
+	ldi r31, pm_hi8(bigendian_rotr32)
 	call pi
 	ret
 	
@@ -526,8 +509,6 @@ gamma_1:
 	ret
 	
 pi:	
-	lsr r31
-	ror r30
 	/* a[1] <<<= 1*/
 	mov r22, state1_0
 	mov r23, state1_1
