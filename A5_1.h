@@ -35,12 +35,13 @@
 #define PARITY_LOOKUP 0x96
 
 typedef struct {
-	uint32_t r1,r2,r3; /* the three regs, 19,22,23 bit in length  */
+	/* we are wasting one byte here but this allows a much faster implementation */
+	uint8_t r1[3], r2[3], r3[3]; /* the three regs, 19,22,23 bit in length  */
 } a5_1_ctx_t;
  
 
-void		a5_1_init(a5_1_ctx_t *c, uint8_t *key, uint8_t length);
-bool		a5_1_clock(a5_1_ctx_t *c);
-uint8_t a5_1_gen(a5_	1_ctx_t *c);
+void		a5_1_init(a5_1_ctx_t *c, void* key, uint8_t keylength_b, void* iv, uint8_t ivlength_b);
+uint8_t		a5_1_clock(a5_1_ctx_t *c);
+uint8_t 	a5_1_gen(a5_1_ctx_t *c);
 
 #endif
