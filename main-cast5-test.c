@@ -202,8 +202,6 @@ void test_performance_cast5(void){
  *  main																	 *
  *****************************************************************************/
 
-typedef void(*void_fpt)(void);
-
 int main (void){
 	char str[20];
 

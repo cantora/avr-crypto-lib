@@ -32,13 +32,15 @@ void nessie_bc_enc(uint8_t* key, uint8_t* pt){
 	/* single test */
 	nessie_print_item("key", key, (nessie_bc_ctx.keysize_b+7)/8);
 	nessie_bc_ctx.cipher_genctx(key, nessie_bc_ctx.keysize_b, ctx);
+	
 	memcpy(buffer, pt, nessie_bc_ctx.blocksize_B);
 	nessie_print_item("plain", buffer, nessie_bc_ctx.blocksize_B);
 	nessie_bc_ctx.cipher_enc(buffer, ctx);
 	nessie_print_item("cipher", buffer, nessie_bc_ctx.blocksize_B);
-	nessie_bc_ctx.cipher_dec(buffer, ctx);
-	nessie_print_item("decrypted", buffer, nessie_bc_ctx.blocksize_B);
-	
+	if(nessie_bc_ctx.cipher_dec){
+		nessie_bc_ctx.cipher_dec(buffer, ctx);
+		nessie_print_item("decrypted", buffer, nessie_bc_ctx.blocksize_B);
+	}
 	/* 100 times test */
 	memcpy(buffer, pt, nessie_bc_ctx.blocksize_B);
 	for(i=0; i<100; ++i){
@@ -136,6 +138,8 @@ void nessie_bc_run(void){
 	}
 	nessie_bc_enc(key, buffer);
 	/* half done ;-) */
+	if(nessie_bc_ctx.cipher_dec==NULL)
+		return;
 	/* test set 5 */
 	set=5;
 	nessie_print_setheader(set);

@@ -3,7 +3,7 @@
  * \author	Daniel Otte
  * \date	08.10.2006
  * \par License:
- * GPL
+ * GPLv3
  * \brief SHA-1 implementation.
  * 
  */

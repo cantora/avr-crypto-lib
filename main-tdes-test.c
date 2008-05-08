@@ -87,8 +87,6 @@ void testrun_performance_tdes(void){
  *  main																	 *
  *****************************************************************************/
 
-typedef void(*void_fpt)(void);
-
 int main (void){
 	char  str[20];
 	DEBUG_INIT();

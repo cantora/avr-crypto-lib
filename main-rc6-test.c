@@ -102,8 +102,6 @@ void testrun_performance_rc6(void){
  *  main																	 *
  *****************************************************************************/
 
-typedef void(*void_fpt)(void);
-
 int main (void){
 	char  str[20];
 	DEBUG_INIT();
