@@ -1,3 +1,21 @@
+/* main-seed-test.c */
+/*
+    This file is part of the Crypto-avr-lib/microcrypt-lib.
+    Copyright (C) 2008  Daniel Otte (daniel.otte@rub.de)
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 /**
  * \file	main-seed-test.c
  * \author	Daniel Otte 
@@ -19,11 +37,11 @@
 #include <util/delay.h>
 
 /*****************************************************************************
- *  additional validation-functions											 *
+ *  additional validation-functions                                          *
  *****************************************************************************/
 
 /*****************************************************************************
- *  self tests																 *
+ *  self tests                                                               *
  *****************************************************************************/
 
 void testencrypt(uint8_t* block, uint8_t* key){
@@ -88,7 +106,7 @@ void testrun_seed(void){
 
 
 /*****************************************************************************
- *  main																	 *
+ *  main                                                                     *
  *****************************************************************************/
 
 int main (void){

@@ -10,7 +10,7 @@ ERASECMD       =
 
 CC	     = avr-gcc
 
-override CFLAGS	= -pedantic -std=c99 -Wall -Wstrict-prototypes  $(OPTIMIZE) -mmcu=$(MCU_TARGET) $(DEFS)
+override CFLAGS	= -MMD -pedantic -std=c99 -Wall -Wstrict-prototypes  $(OPTIMIZE) -mmcu=$(MCU_TARGET) $(DEFS)
 
 override LDFLAGS       = -Wl,-Map,
 override ASFLAGS	   = -mmcu=$(MCU_TARGET)

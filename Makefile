@@ -161,6 +161,8 @@ all: $(foreach algo, $(ALGORITHMS), $(algo)_OBJ)
 clean:
 	rm -rf *.o *.elf *.eps *.png *.pdf *.bak *_size.txt
 	rm -rf *.lst *.map $(EXTRA_CLEAN_FILES) $(SIZESTAT_FILE)
+xclean: clean
+	rm -rf *.d
 
 flash:
 	$(ERASECMD)
@@ -227,3 +229,10 @@ pdf: $(PRG).pdf
 
 %.png: %.fig
 	$(FIG2DEV) -L png $< $@
+
+
+DEPS := $(wildcard *.d)
+ifneq ($(DEPS),)
+include $(DEPS)
+endif
+
