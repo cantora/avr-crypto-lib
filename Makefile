@@ -10,15 +10,19 @@ PRNGS          :=
 # we use the gnu make standard library
 include gmsl
 include avr-makefile.inc
-include *.mk
+include mkfiles/*.mk
 
 ALGORITHMS = $(BLOCK_CIPHERS) $(STREAM_CIPHERS) $(HASHES) $(PRNGS) $(MACS)
 ALGORITHMS_OBJ = $(patsubst %,%_OBJ, $(ALGORITHMS))
-ALGORITHMS_OBJ_IMM = $(foreach a, $(ALGORITHMS_OBJ), $($(a)))
+define OBJinBINDIR_TEMPLATE
+$(1) = $(2)
+endef
+$(foreach a, $(ALGORITHMS_OBJ), $(eval $(call OBJinBINDIR_TEMPLATE, $(a), $(patsubst %.o,$(BIN_DIR)%.o,$($(a))))))
 ALGORITHMS_TEST_BIN = $(patsubst %,%_TEST_BIN, $(ALGORITHMS))
+$(foreach a, $(ALGORITHMS_TEST_BIN), $(eval $(call OBJinBINDIR_TEMPLATE, $(a), $(patsubst %.o,$(BIN_DIR)%.o,$($(a))))))
 ALGORITHMS_TEST_BIN_MAIN = $(foreach a, $(ALGORITHMS_TEST_BIN), $(firstword $($(a))))
-ALGORITHMS_TEST_BIN_MAIN_ELF = $(patsubst %.o, %.elf, $(ALGORITHMS_TEST_BIN_MAIN))
-ALGORITHMS_TEST_BIN_MAIN_HEX = $(patsubst %.o, %.hex, $(ALGORITHMS_TEST_BIN_MAIN))
+ALGORITHMS_TEST_BIN_MAIN_ELF = $(patsubst $(BIN_DIR)%.o, $(TESTBIN_DIR)%.elf, $(ALGORITHMS_TEST_BIN_MAIN))
+ALGORITHMS_TEST_BIN_MAIN_HEX = $(patsubst $(BIN_DIR)%.o, $(TESTBIN_DIR)%.hex, $(ALGORITHMS_TEST_BIN_MAIN))
 
 ALGORITHMS_TEST_BIN_IMM =  $(foreach a, $(ALGORITHMS_TEST_BIN), $($(a)))
 ALGORITHMS_NESSIE_TEST = $(patsubst %,%_NESSIE_TEST, $(ALGORITHMS))
@@ -26,7 +30,6 @@ ALGORITHMS_PERFORMANCE_TEST = $(patsubst %,%_PERORMANCE_TEST, $(ALGORITHMS))
 
 ALGORITHMS_LC = $(call lc,$(ALGORITHMS))
 
-PRG = remove_me
 
 #-------------------------------------------------------------------------------
 
@@ -44,7 +47,7 @@ $(2): $(3)
 	$(LIBS)
 endef
 
-$(foreach algo, $(ALGORITHMS), $(eval $(call BLA_TEMPLATE2, $(algo), $(patsubst %.o,%.elf,$(firstword $($(algo)_TEST_BIN))), $($(algo)_TEST_BIN) )))
+$(foreach algo, $(ALGORITHMS), $(eval $(call BLA_TEMPLATE2, $(algo), $(patsubst $(BIN_DIR)%.o,$(TESTBIN_DIR)%.elf,$(firstword $($(algo)_TEST_BIN))), $(patsubst %.o,%.o,$($(algo)_TEST_BIN)) )))
 
 #-------------------------------------------------------------------------------
 
@@ -61,22 +64,18 @@ info:
 	@echo "    $(MACS)"
 	@echo "  PRNG functions:"
 	@echo "    $(PRNGS)"
-#	@echo "  LC functions:"
-#	@echo "    $(ALGORITHMS_LC)"
-	
-#	echo $(ALGORITHMS_TEST_BIN_MAIN)
-#	echo $(ALGORITHMS)
-#	echo $(firstword $(XTEA_TEST_BIN))
-#	echo $(patsubst %.o,%.elf,$(firstword $(XTEA_TEST_BIN)))
-#	echo $(ALGORITHMS_OBJ)
-#	echo $(ALGORITHMS_OBJ_IMM)
-#	echo $(ALGORITHMS_TEST_BIN)
-#	echo $(ALGORITHMS_NESSIE_TEST)
-#	echo $(ALGORITHMS_PERFORMANCE_TEST)
+
+$(BIN_DIR)%.o: %.c
+	@echo "[gcc]:  $@"
+	@$(CC) $(CFLAGS)  -c -o $@ $<
+
+$(BIN_DIR)%.o: %.S
+	@echo "[as] :  $@"
+	@$(CC) $(ASFLAGS) -c -o $@ $<
 
 %.o: %.c
 	@echo "[gcc]:  $@"
-	@$(CC) $(CFLAGS) -c	-o $@ $<
+	@$(CC) $(CFLAGS)  -c -o $@ $<
 
 %.o: %.S
 	@echo "[as] :  $@"
@@ -107,7 +106,6 @@ tests: $(ALGORITHMS_TEST_BIN) \
 
 .PHONY:  stats
 stats: $(SIZESTAT_FILE)
-#$(patsubst %, %_size.txt, $(ALGORITHMS_LC))
 	
 	
 $(SIZESTAT_FILE): $(patsubst %, %_size.txt, $(ALGORITHMS_LC))
@@ -158,27 +156,19 @@ $(foreach algo, $(ALGORITHMS),$(eval $(call FLASH_TEMPLATE, $(algo), \
 
 .PHONY: clean
 clean:
-	rm -rf *.o *.elf *.eps *.png *.pdf *.bak *_size.txt
+	rm -rf $(BIN_DIR)*.o *.o $(TESTBIN_DIR)*.elf $(TESTBIN_DIR)* *.elf *.eps *.png *.pdf *.bak *_size.txt
 	rm -rf *.lst *.map $(EXTRA_CLEAN_FILES) $(SIZESTAT_FILE)
 xclean: clean
-	rm -rf *.d
+	rm -rf $(DEP_DIR)*.d
 
 flash:
 	$(ERASECMD)
 	$(FLASHCMD)
-	
-lst:  $(PRG).lst
 
 %.lst: %.elf
 	$(OBJDUMP) -h -S $< > $@
 
 # Rules for building the .text rom images
-
-text: hex bin srec
-
-hex:  $(PRG).hex
-bin:  $(PRG).bin
-srec: $(PRG).srec
 
 %.hex: %.elf
 	$(OBJCOPY) -j .text -j .data -O ihex $< $@
@@ -191,11 +181,6 @@ srec: $(PRG).srec
 
 # Rules for building the .eeprom rom images
 
-eeprom: ehex ebin esrec
-
-ehex:  $(PRG)_eeprom.hex
-ebin:  $(PRG)_eeprom.bin
-esrec: $(PRG)_eeprom.srec
 
 %_eeprom.hex: %.elf
 	$(OBJCOPY) -j .eeprom --change-section-lma .eeprom=0 -O ihex $< $@
@@ -213,12 +198,6 @@ esrec: $(PRG)_eeprom.srec
 FIG2DEV		 = fig2dev
 EXTRA_CLEAN_FILES       = *.hex *.bin *.srec
 
-dox: eps png pdf
-
-eps: $(PRG).eps
-png: $(PRG).png
-pdf: $(PRG).pdf
-
 
 %.eps: %.fig
 	$(FIG2DEV) -L eps $< $@
@@ -230,7 +209,8 @@ pdf: $(PRG).pdf
 	$(FIG2DEV) -L png $< $@
 
 
-DEPS := $(wildcard *.d)
+DEPS := $(wildcard $(DEP_DIR)*.d)
+
 ifneq ($(DEPS),)
 include $(DEPS)
 endif
