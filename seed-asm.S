@@ -22,7 +22,7 @@
  * \date	2007-06-1
  * \brief	SEED parts in assembler for AVR
  * \par License	
- * GPL
+ * GPLv3 or later
  * 
  */
 SPL = 0x3D

@@ -19,9 +19,10 @@
 /* 
  * \file	cast5.c
  * \author	Daniel Otte
- * \date 	26.07.2006
+ * \email       daniel.otte@rub.de
+ * \date 	2006-07-26
  * \par License:
- *  GPL
+ *  GPLv3 or later
  * \brief Implementation of the CAST5 (aka CAST-128) cipher algorithm as described in RFC 2144
  * 
  */

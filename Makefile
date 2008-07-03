@@ -30,6 +30,10 @@ PRG = remove_me
 
 #-------------------------------------------------------------------------------
 
+all: $(foreach algo, $(ALGORITHMS), $(algo)_OBJ)
+
+#-------------------------------------------------------------------------------
+
 define BLA_TEMPLATE2
 $(2): $(3)
 	@echo "[gcc]: $$@"
@@ -151,11 +155,6 @@ $(foreach algo, $(ALGORITHMS),$(eval $(call FLASH_TEMPLATE, $(algo), \
                 $(patsubst %.o,%.hex,$(firstword $($(algo)_TEST_BIN)))) ))  
 
 #-------------------------------------------------------------------------------
-	
-.PHONY: all
-all: $(foreach algo, $(ALGORITHMS), $(algo)_OBJ)
-#all: $(PRG).elf lst text eeprom
-
 
 .PHONY: clean
 clean:

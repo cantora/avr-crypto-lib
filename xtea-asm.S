@@ -17,9 +17,9 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 /* xtea-asm.S 
- * Author:	Daniel Otte
- * Date:		06.06.2006
- * License: GPL
+ * Author:      Daniel Otte
+ * Date:        2006-06-06
+ * License:     GPLv3 or later
  *  Implementation of XTEA for AVR
  *  include xtea.h in your C-Project to use this functions.
 */

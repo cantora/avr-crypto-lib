@@ -17,11 +17,12 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * \file		entropium.c
- * \author		Daniel Otte
- * \date		17.05.2006
+ * \file        entropium.c
+ * \author      Daniel Otte
+ * \email       daniel.otte@rub.de
+ * \date        2006-05-17
  * \par License:
- * 	GPL
+ * 	GPLv3 or later
  * \brief	This file contains an implementaition of a pseudo-random-number generator.
  * 
  * Extension 1:

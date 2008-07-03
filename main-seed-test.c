@@ -18,11 +18,12 @@
 */
 /**
  * \file	main-seed-test.c
- * \author	Daniel Otte 
+ * \author	Daniel Otte
+ * \email	daniel.otte@rub.de
  * \date	2007-06-01
  * \brief	test suit for SEED
  * \par License	
- * GPL
+ * GPLv3 or later
  * 
  */
 #include "config.h"

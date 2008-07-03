@@ -19,7 +19,7 @@
 /*
  * Author:	Daniel Otte
  *
- * License: GPL
+ * License: GPLv3 or later
 */
 ; sha-256 implementation in assembler	
 SHA256_BLOCK_BITS = 512

@@ -22,7 +22,7 @@
  * \date	2007-06-07
  * \brief	test suit for SHABEA
  * \par License	
- * GPL
+ * GPLv3 or later
  * 
  */
 #include "config.h"

@@ -20,7 +20,7 @@
  * 
  * author: Daniel Otte
  * email:  daniel.otte@rub.de
- * license: GPLv3
+ * license: GPLv3 or later
  * 
  */
 

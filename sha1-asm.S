@@ -19,7 +19,7 @@
 /*
  * Author:	Daniel Otte
  *
- * License: GPL
+ * License: GPLv3 or later
 */
 ; SHA1 implementation in assembler for AVR
 SHA1_BLOCK_BITS = 512

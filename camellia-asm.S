@@ -17,10 +17,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 /* 
- * File:	camellis-asm.S
- * Author:	Daniel Otte
- * Date: 	10.11.2006
- * License: GPL
+ * File:        camellis-asm.S
+ * Author:      Daniel Otte
+ * Date:        2006-11-10
+ * License:     GPLv3 or later
  * Description: Implementation of the camellia block cipher algorithm.
  * 
  */

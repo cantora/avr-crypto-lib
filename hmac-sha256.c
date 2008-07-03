@@ -19,9 +19,9 @@
 /**
  * 
  * implementation of HMAC as described in RFC2104
- * Author:	Daniel Otte
- * 
- * License:	GPL
+ * Author:      Daniel Otte
+ * email:       daniel.otte@rub.de
+ * License:     GPLv3 or later
  **/
 
 /* 

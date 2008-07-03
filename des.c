@@ -17,12 +17,13 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * \file	des.c
- * \author	Daniel Otte 
- * \date	2007-06-16
- * \brief	DES and EDE-DES implementation
+ * \file        des.c
+ * \author      Daniel Otte
+ * \email       daniel.otte@rub.de
+ * \date        2007-06-16
+ * \brief       DES and EDE-DES implementation
  * \par License	
- * GPL
+ * GPLv3 or later
  * 
  */
 #include "config.h"

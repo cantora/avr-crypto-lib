@@ -17,10 +17,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 /* 
- * File:		arcfour-asm.S
- * Author:	Daniel Otte
- * Date: 	07.06.2006
- * License: GPL
+ * File:        arcfour-asm.S
+ * Author:      Daniel Otte
+ * Date:        2006-07-06
+ * License:     GPLv3 or later
  * Description: Implementation of the ARCFOUR (RC4 compatible) stream cipher algorithm.
  * 
  */
