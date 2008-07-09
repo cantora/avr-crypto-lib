@@ -27,9 +27,9 @@
 typedef sha256_ctx_t hmac_sha256_ctx_t;
 
 
-void hmac_sha256_init(hmac_sha256_ctx_t *s, void* key, uint16_t kl);
-void hmac_sha256_final(hmac_sha256_ctx_t *s, void* key, uint16_t kl);
-void hmac_sha256(void* dest, void* key, uint16_t kl, void* msg, uint64_t ml);
+void hmac_sha256_init(hmac_sha256_ctx_t *s, void* key, uint16_t keylength_b);
+void hmac_sha256_final(hmac_sha256_ctx_t *s, void* key, uint16_t keylength_b);
+void hmac_sha256(void* dest, void* key, uint16_t keylength_b, void* msg, uint64_t msglength_b);
 
 
 #endif /*HMACSHA256_H_*/

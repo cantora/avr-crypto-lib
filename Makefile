@@ -150,7 +150,7 @@ $(1)_FLASH: $(2)
 endef
 
 $(foreach algo, $(ALGORITHMS),$(eval $(call FLASH_TEMPLATE, $(algo), \
-                $(patsubst %.o,%.hex,$(firstword $($(algo)_TEST_BIN)))) ))  
+                $(patsubst $(BIN_DIR)%.o,$(TESTBIN_DIR)%.hex,$(firstword $($(algo)_TEST_BIN)))) ))  
 
 #-------------------------------------------------------------------------------
 

@@ -35,7 +35,9 @@
 
 
 #define SHA256_HASH_BITS  256
+#define SHA256_HASH_BYTES (SHA256_HASH_BITS/8)
 #define SHA256_BLOCK_BITS 512
+#define SHA256_BLOCK_BYTES (SHA256_BLOCK_BITS/8)
 
 /**
  * \brief sha256 context type
@@ -46,19 +48,19 @@ typedef struct {
 	uint64_t length;
 } sha256_ctx_t;
 
-typedef uint8_t sha256_hash_t[SHA256_HASH_BITS/8];
+typedef uint8_t sha256_hash_t[SHA256_HASH_BYTES];
 
 void sha256_init(sha256_ctx_t *state);
 
 void sha256_nextBlock (sha256_ctx_t *state, const void* block);
-void sha256_lastBlock(sha256_ctx_t *state, const void* block, uint16_t length);
+void sha256_lastBlock(sha256_ctx_t *state, const void* block, uint16_t length_b);
 
 void sha256_ctx2hash(sha256_hash_t *dest, const sha256_ctx_t *state);
 
 /*
  * length in bits!
  */
-void sha256(sha256_hash_t *dest, const void* msg, uint32_t length);
+void sha256(sha256_hash_t *dest, const void* msg, uint32_t length_b);
 uint32_t change_endian32(uint32_t x);
 
 

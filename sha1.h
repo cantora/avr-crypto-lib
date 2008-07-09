@@ -19,7 +19,7 @@
 /**
  * \file	sha1.c
  * \author	Daniel Otte
- * \date	08.10.2006
+ * \date	2006-10-08
  * \par License:
  * GPL
  * \brief SHA-1 declaration.
@@ -33,7 +33,9 @@
 
 
 #define SHA1_HASH_BITS  160
+#define SHA1_HASH_BYTES (SHA1_HASH_BITS/8)
 #define SHA1_BLOCK_BITS 512
+#define SHA1_BLOCK_BYTES (SHA1_BLOCK_BITS/8)
 
 /**
  * \brief SHA-1 context type
@@ -49,12 +51,10 @@ typedef uint8_t sha1_hash_t[SHA1_HASH_BITS/8];
 void sha1_init(sha1_ctx_t *state);
 
 void sha1_nextBlock (sha1_ctx_t *state, void* block);
-void sha1_lastBlock (sha1_ctx_t *state, void* block, uint16_t length);
+void sha1_lastBlock (sha1_ctx_t *state, void* block, uint16_t length_b);
 
 void sha1_ctx2hash (sha1_hash_t *dest, sha1_ctx_t *state);
-void sha1 (sha1_hash_t *dest, void* msg, uint32_t length);
-//uint32_t change_endian32(uint32_t x);
-
+void sha1 (sha1_hash_t *dest, void* msg, uint32_t length_b);
 
 
 
