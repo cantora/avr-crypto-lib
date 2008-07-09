@@ -32,14 +32,82 @@
 #include "debug.h"
 
 #include "seed.h"
+#include "nessie_bc_test.h"
+#include "cli.h"
+#include "performance_test.h"
 
 #include <stdint.h>
 #include <string.h>
-#include <util/delay.h>
+#include <stdlib.h>
+
+char* cipher_name = "Seed";
 
 /*****************************************************************************
  *  additional validation-functions                                          *
  *****************************************************************************/
+void seed_genctx_dummy(uint8_t* key, uint16_t keysize, void* ctx){
+	seed_init(key, ctx);
+}
+
+void testrun_nessie_seed(void){
+	nessie_bc_ctx.blocksize_B =  16;
+	nessie_bc_ctx.keysize_b   = 128;
+	nessie_bc_ctx.name        = cipher_name;
+	nessie_bc_ctx.ctx_size_B  = sizeof(seed_ctx_t);
+	nessie_bc_ctx.cipher_enc  = (nessie_bc_enc_fpt)seed_encrypt;
+	nessie_bc_ctx.cipher_dec  = (nessie_bc_dec_fpt)seed_decrypt;
+	nessie_bc_ctx.cipher_genctx  = (nessie_bc_gen_fpt)seed_genctx_dummy;
+	
+	nessie_bc_run();
+	
+}
+
+
+void testrun_performance_seed(void){
+	uint16_t i,c;
+	uint64_t t;
+	char str[16];
+	uint8_t key[16], data[16];
+	seed_ctx_t ctx;
+	
+	calibrateTimer();
+	getOverhead(&c, &i);
+	uart_putstr_P(PSTR("\r\n\r\n=== benchmark ==="));
+	utoa(c, str, 10);
+	uart_putstr_P(PSTR("\r\n\tconst overhead:     "));
+	uart_putstr(str);
+	utoa(i, str, 10);
+	uart_putstr_P(PSTR("\r\n\tinterrupt overhead: "));
+	uart_putstr(str);
+	
+	memset(key,  0, 16);
+	memset(data, 0, 16);
+	
+	startTimer(1);
+	seed_init(key, &ctx);
+	t = stopTimer();
+	uart_putstr_P(PSTR("\r\n\tctx-gen time: "));
+	ultoa((unsigned long)t, str, 10);
+	uart_putstr(str);
+	
+	
+	startTimer(1);
+	seed_encrypt(data, &ctx);
+	t = stopTimer();
+	uart_putstr_P(PSTR("\r\n\tencrypt time: "));
+	ultoa((unsigned long)t, str, 10);
+	uart_putstr(str);
+	
+	
+	startTimer(1);
+	seed_decrypt(data, &ctx);
+	t = stopTimer();
+	uart_putstr_P(PSTR("\r\n\tdecrypt time: "));
+	ultoa((unsigned long)t, str, 10);
+	uart_putstr(str);
+	
+	uart_putstr_P(PSTR("\r\n"));
+}
 
 /*****************************************************************************
  *  self tests                                                               *
@@ -49,30 +117,24 @@ void testencrypt(uint8_t* block, uint8_t* key){
 	seed_ctx_t ctx;
 	uart_putstr("\r\n==testy-encrypt==\r\n key: ");
 	uart_hexdump(key,16);
-	seed_init(&ctx, key);
+	seed_init(key, &ctx);
 	uart_putstr("\r\n plain: ");
 	uart_hexdump(block,16);
-	_delay_ms(50);
-	seed_encrypt(&ctx, block);
+	seed_encrypt(block, &ctx);
 	uart_putstr("\r\n crypt: ");
 	uart_hexdump(block,16);
-//	uart_putstr("\r\n post-state: ");
-//	uart_hexdump(ctx.k,16);
 }
 
 void testdecrypt(uint8_t* block, uint8_t* key){
 	seed_ctx_t ctx;
 	uart_putstr("\r\n==testy-decrypt==\r\n key: ");
 	uart_hexdump(key,16);
-	seed_init(&ctx, key);
+	seed_init(key, &ctx);
 	uart_putstr("\r\n crypt: ");
 	uart_hexdump(block,16);
-	_delay_ms(50);
-	seed_decrypt(&ctx, block);
+	seed_decrypt(block, &ctx);
 	uart_putstr("\r\n plain: ");
 	uart_hexdump(block,16);
-//	uart_putstr("\r\n post-state: ");
-//	uart_hexdump(ctx.k,16);
 }
 
 void testrun_seed(void){
@@ -101,7 +163,6 @@ void testrun_seed(void){
 		testencrypt(datas[i],keys[i]);
 		testdecrypt(datas[i],keys[i]);	
 	}
-//	testdecrypt(data,key);	
 }
 
 
@@ -114,21 +175,23 @@ int main (void){
 	char str[20];
 
 	DEBUG_INIT();
-	uart_putstr("\r\n");
 
-	uart_putstr("\r\n\r\nCrypto-VS (seed)\r\nloaded and running\r\n");
+	uart_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
+	uart_putstr(cipher_name);
+	uart_putstr_P(PSTR(")\r\nloaded and running\r\n"));
 
-restart:
+	PGM_P    u   = PSTR("nessie\0test\0performance\0");
+	void_fpt v[] = {testrun_nessie_seed, testrun_seed, testrun_performance_seed};
+
 	while(1){ 
-		if (!getnextwordn(str,20))  {DEBUG_S("DBG: W1\r\n"); goto error;}
-		if (strcmp(str, "test")) {DEBUG_S("DBG: 1b\r\n"); goto error;}
-			testrun_seed();
-		goto restart;		
+		if (!getnextwordn(str,20)){DEBUG_S("DBG: W1\r\n"); goto error;}
+		if(execcommand_d0_P(str, u, v)<0){
+			uart_putstr_P(PSTR("\r\nunknown command\r\n"));
+		}
 		continue;
 	error:
 		uart_putstr("ERROR\r\n");
 	}
-	
 	
 }
 

@@ -27,14 +27,73 @@
 #include "debug.h"
 
 #include "skipjack.h"
+#include "nessie_bc_test.h"
+#include "cli.h"
+#include "performance_test.h"
 
 #include <stdint.h>
 #include <string.h>
+#include <stdlib.h>
 
+
+char* cipher_name = "Skipjack";
 
 /*****************************************************************************
  *  additional validation-functions											 *
  *****************************************************************************/
+void skipjack_genctx_dummy(uint8_t* key, uint16_t keysize, void* ctx){
+	memcpy(ctx, key, 10);
+}
+
+void testrun_nessie_skipjack(void){
+	nessie_bc_ctx.blocksize_B =   8;
+	nessie_bc_ctx.keysize_b   =  80;
+	nessie_bc_ctx.name        = cipher_name;
+	nessie_bc_ctx.ctx_size_B  = 10;
+	nessie_bc_ctx.cipher_enc  = (nessie_bc_enc_fpt)skipjack_enc;
+	nessie_bc_ctx.cipher_dec  = (nessie_bc_dec_fpt)skipjack_dec;
+	nessie_bc_ctx.cipher_genctx  = (nessie_bc_gen_fpt)skipjack_genctx_dummy;
+	
+	nessie_bc_run();
+}
+
+
+void testrun_performance_skipjack(void){
+	uint16_t i,c;
+	uint64_t t;
+	char str[16];
+	uint8_t key[10], data[8];
+	
+	calibrateTimer();
+	getOverhead(&c, &i);
+	uart_putstr_P(PSTR("\r\n\r\n=== benchmark ==="));
+	utoa(c, str, 10);
+	uart_putstr_P(PSTR("\r\n\tconst overhead:     "));
+	uart_putstr(str);
+	utoa(i, str, 10);
+	uart_putstr_P(PSTR("\r\n\tinterrupt overhead: "));
+	uart_putstr(str);
+	
+	memset(key,  0, 10);
+	memset(data, 0,  8);
+	
+	startTimer(1);
+	skipjack_enc(data, key);
+	t = stopTimer();
+	uart_putstr_P(PSTR("\r\n\tencrypt time: "));
+	ultoa((unsigned long)t, str, 10);
+	uart_putstr(str);
+	
+	
+	startTimer(1);
+	skipjack_dec(data, key);
+	t = stopTimer();
+	uart_putstr_P(PSTR("\r\n\tdecrypt time: "));
+	ultoa((unsigned long)t, str, 10);
+	uart_putstr(str);
+	
+	uart_putstr_P(PSTR("\r\n"));
+}
 
 /*****************************************************************************
  *  self tests																 *
@@ -82,17 +141,18 @@ int main (void){
 
 	uart_putstr("\r\n\r\nCrypto-VS (skipjack)\r\nloaded and running\r\n");
 
-restart:
+	PGM_P    u   = PSTR("nessie\0test\0performance\0");
+	void_fpt v[] = {testrun_nessie_skipjack, testrun_skipjack, testrun_performance_skipjack};
+
 	while(1){ 
-		if (!getnextwordn(str,20))  {DEBUG_S("DBG: W1\r\n"); goto error;}
-		if (strcmp(str, "test")) {DEBUG_S("DBG: 1b\r\n"); goto error;}
-			testrun_skipjack();
-		goto restart;		
+		if (!getnextwordn(str,20)){DEBUG_S("DBG: W1\r\n"); goto error;}
+		if(execcommand_d0_P(str, u, v)<0){
+			uart_putstr_P(PSTR("\r\nunknown command\r\n"));
+		}
 		continue;
 	error:
 		uart_putstr("ERROR\r\n");
 	}
-	
 	
 }
 

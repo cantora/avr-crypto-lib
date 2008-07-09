@@ -27,14 +27,37 @@
 #include "debug.h"
 
 #include "sha1.h"
+#include "nessie_hash_test.h"
 
 #include <stdint.h>
 #include <string.h>
+#include "cli.h"
 
+char* algo_name = "SHA-1";
 
 /*****************************************************************************
  *  additional validation-functions											 *
  *****************************************************************************/
+void sha1_next_dummy(void* buffer, void* ctx){
+	sha1_nextBlock(ctx, buffer);
+}
+
+void sha1_last_dummy(void* buffer, uint16_t size_b, void* ctx){
+	sha1_lastBlock(ctx, buffer, size_b);
+}
+
+void testrun_nessie_sha1(void){
+	nessie_hash_ctx.hashsize_b  = 160;
+	nessie_hash_ctx.blocksize_B = 512/8;
+	nessie_hash_ctx.ctx_size_B  = sizeof(sha1_ctx_t);
+	nessie_hash_ctx.name = algo_name;
+	nessie_hash_ctx.hash_init = (nessie_hash_init_fpt)sha1_init;
+	nessie_hash_ctx.hash_next = (nessie_hash_next_fpt)sha1_next_dummy;
+	nessie_hash_ctx.hash_last = (nessie_hash_last_fpt)sha1_last_dummy;
+	nessie_hash_ctx.hash_conv = (nessie_hash_conv_fpt)sha1_ctx2hash;
+	
+	nessie_hash_run();
+}
 
 /*****************************************************************************
  *  self tests																 *
@@ -93,17 +116,18 @@ int main (void){
 
 	uart_putstr("\r\n\r\nCrypto-VS (SHA-1)\r\nloaded and running\r\n");
 
-restart:
+	PGM_P    u   = PSTR("nessie\0test\0");
+	void_fpt v[] = {testrun_nessie_sha1, testrun_sha1};
+
 	while(1){ 
-		if (!getnextwordn(str,20))  {DEBUG_S("DBG: W1\r\n"); goto error;}
-		if (strcmp(str, "test")) {DEBUG_S("DBG: 1b\r\n"); goto error;}
-			testrun_sha1();
-		goto restart;		
+		if (!getnextwordn(str,20)){DEBUG_S("DBG: W1\r\n"); goto error;}
+		if(execcommand_d0_P(str, u, v)<0){
+			uart_putstr_P(PSTR("\r\nunknown command\r\n"));
+		}
 		continue;
 	error:
 		uart_putstr("ERROR\r\n");
 	}
-	
-	
 }
+
 

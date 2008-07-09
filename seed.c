@@ -220,7 +220,7 @@ typedef struct{
 
 /******************************************************************************/
 
-void seed_init(seed_ctx_t * ctx, uint8_t * key){
+void seed_init(uint8_t * key, seed_ctx_t * ctx){
 	memcpy(ctx->k, key, 128/8);
 }
 
@@ -229,7 +229,7 @@ void seed_init(seed_ctx_t * ctx, uint8_t * key){
 #define L (((uint64_t*)buffer)[0])
 #define R (((uint64_t*)buffer)[1])
 
-void seed_encrypt(seed_ctx_t * ctx, void * buffer){
+void seed_encrypt(void * buffer, seed_ctx_t * ctx){
 	uint8_t r;
 	keypair_t k;
 	for(r=0; r<8; ++r){
@@ -262,7 +262,7 @@ void seed_encrypt(seed_ctx_t * ctx, void * buffer){
 #define L (((uint64_t*)buffer)[0])
 #define R (((uint64_t*)buffer)[1])
 
-void seed_decrypt(seed_ctx_t * ctx, void * buffer){
+void seed_decrypt(void * buffer, seed_ctx_t * ctx){
 	int8_t r;
 	keypair_t k;
 	for(r=7; r>=0; --r){

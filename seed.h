@@ -36,8 +36,8 @@ typedef struct{
 
 /******************************************************************************/
 
-void seed_init(seed_ctx_t * ctx, uint8_t * key);
-void seed_encrypt(seed_ctx_t * ctx, void * buffer);
-void seed_decrypt(seed_ctx_t * ctx, void * buffer);
+void seed_init(uint8_t * key, seed_ctx_t * ctx);
+void seed_encrypt(void * buffer, seed_ctx_t * ctx);
+void seed_decrypt(void * buffer, seed_ctx_t * ctx);
 	
 #endif /*SEED_H_*/

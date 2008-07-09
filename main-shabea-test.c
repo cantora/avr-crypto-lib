@@ -31,14 +31,81 @@
 #include "debug.h"
 
 #include "shabea.h"
+#include "nessie_bc_test.h"
+#include "cli.h"
+#include "performance_test.h"
 
 #include <stdint.h>
 #include <string.h>
-#include <util/delay.h>
+#include <stdlib.h>
+
+char* cipher_name = "Shabea";
 
 /*****************************************************************************
  *  additional validation-functions											 *
  *****************************************************************************/
+void shabea_genctx_dummy(uint8_t* key, uint16_t keysize, void* ctx){
+	memcpy(ctx, key, keysize);
+}
+
+void shabea_enc_dummy(void* buffer, void* ctx){
+	shabea256(buffer, ctx, 256, 1, 16);
+}
+
+void shabea_dec_dummy(void* buffer, void* ctx){
+	shabea256(buffer, ctx, 256, 0, 16);
+}
+
+
+void testrun_nessie_shabea(void){
+	nessie_bc_ctx.blocksize_B =  32;
+	nessie_bc_ctx.keysize_b   = 256;
+	nessie_bc_ctx.name        = cipher_name;
+	nessie_bc_ctx.ctx_size_B  = 32;
+	nessie_bc_ctx.cipher_enc  = (nessie_bc_enc_fpt)shabea_enc_dummy;
+	nessie_bc_ctx.cipher_dec  = (nessie_bc_dec_fpt)shabea_dec_dummy;
+	nessie_bc_ctx.cipher_genctx  = (nessie_bc_gen_fpt)shabea_genctx_dummy;
+	
+	nessie_bc_run();
+}
+
+
+void testrun_performance_shabea(void){
+	uint16_t i,c;
+	uint64_t t;
+	char str[16];
+	uint8_t key[32], data[32];
+	
+	calibrateTimer();
+	getOverhead(&c, &i);
+	uart_putstr_P(PSTR("\r\n\r\n=== benchmark ==="));
+	utoa(c, str, 10);
+	uart_putstr_P(PSTR("\r\n\tconst overhead:     "));
+	uart_putstr(str);
+	utoa(i, str, 10);
+	uart_putstr_P(PSTR("\r\n\tinterrupt overhead: "));
+	uart_putstr(str);
+	
+	memset(key,  0, 32);
+	memset(data, 0, 32);
+	
+	startTimer(1);
+	shabea256(data, key, 256, 1, 16);
+	t = stopTimer();
+	uart_putstr_P(PSTR("\r\n\tencrypt time: "));
+	ultoa((unsigned long)t, str, 10);
+	uart_putstr(str);
+	
+	
+	startTimer(1);
+	shabea256(data, key, 256, 0, 16);
+	t = stopTimer();
+	uart_putstr_P(PSTR("\r\n\tdecrypt time: "));
+	ultoa((unsigned long)t, str, 10);
+	uart_putstr(str);
+	
+	uart_putstr_P(PSTR("\r\n"));
+}
 
 /*****************************************************************************
  *  self tests																 *
@@ -49,7 +116,6 @@ void testencrypt(uint8_t* block, uint8_t* key){
 	uart_hexdump(key,16);
 	uart_putstr("\r\n plain: ");
 	uart_hexdump(block,32);
-	_delay_ms(50);
 	shabea256(block,key,128,1,16);
 	uart_putstr("\r\n crypt: ");
 	uart_hexdump(block,32);
@@ -61,7 +127,6 @@ void testdecrypt(uint8_t* block, uint8_t* key){
 	uart_hexdump(key,16);
 	uart_putstr("\r\n crypt: ");
 	uart_hexdump(block,32);
-	_delay_ms(50);
 	shabea256(block,key,128,0,16);
 	uart_putstr("\r\n plain: ");
 	uart_hexdump(block,32);
@@ -101,7 +166,6 @@ void testrun_shabea(void){
 		testencrypt(datas[i],keys[i]);
 		testdecrypt(datas[i],keys[i]);	
 	}
-//	testdecrypt(data,key);	
 }
 
 
@@ -116,19 +180,22 @@ int main (void){
 	DEBUG_INIT();
 	uart_putstr("\r\n");
 
-	uart_putstr("\r\n\r\nCrypto-VS (shabea)\r\nloaded and running\r\n");
+	uart_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
+	uart_putstr(cipher_name);
+	uart_putstr_P(PSTR(")\r\nloaded and running\r\n"));
 
-restart:
+	PGM_P    u   = PSTR("nessie\0test\0performance\0");
+	void_fpt v[] = {testrun_nessie_shabea, testrun_shabea, testrun_performance_shabea};
+
 	while(1){ 
-		if (!getnextwordn(str,20))  {DEBUG_S("DBG: W1\r\n"); goto error;}
-		if (strcmp(str, "test")) {DEBUG_S("DBG: 1b\r\n"); goto error;}
-			testrun_shabea();
-		goto restart;		
+		if (!getnextwordn(str,20)){DEBUG_S("DBG: W1\r\n"); goto error;}
+		if(execcommand_d0_P(str, u, v)<0){
+			uart_putstr_P(PSTR("\r\nunknown command\r\n"));
+		}
 		continue;
 	error:
 		uart_putstr("ERROR\r\n");
 	}
-	
 	
 }
 

@@ -27,14 +27,42 @@
 #include "debug.h"
 
 #include "md5.h"
+#include "nessie_hash_test.h"
 
 #include <stdint.h>
 #include <string.h>
+#include "cli.h"
 
+char* algo_name = "MD5";
 
 /*****************************************************************************
  *  additional validation-functions											 *
  *****************************************************************************/
+void md5_next_dummy(void* buffer, void* ctx){
+	md5_nextBlock(ctx, buffer);
+}
+
+void md5_last_dummy(void* buffer, uint16_t size_b, void* ctx){
+	md5_lastBlock(ctx, buffer, size_b);
+}
+
+void md5_ctx2hash_dummy(void* buffer, void* ctx){
+	memcpy(buffer, ctx, 16);
+}
+
+
+void testrun_nessie_md5(void){
+	nessie_hash_ctx.hashsize_b  = 128;
+	nessie_hash_ctx.blocksize_B = 512/8;
+	nessie_hash_ctx.ctx_size_B  = sizeof(md5_ctx_t);
+	nessie_hash_ctx.name = algo_name;
+	nessie_hash_ctx.hash_init = (nessie_hash_init_fpt)md5_init;
+	nessie_hash_ctx.hash_next = (nessie_hash_next_fpt)md5_next_dummy;
+	nessie_hash_ctx.hash_last = (nessie_hash_last_fpt)md5_last_dummy;
+	nessie_hash_ctx.hash_conv = (nessie_hash_conv_fpt)md5_ctx2hash_dummy;
+	
+	nessie_hash_run();
+}
 
 /*****************************************************************************
  *  self tests																 *
@@ -85,15 +113,17 @@ int main (void){
 	uart_putstr("\r\n");
 
 	uart_putstr("\r\n\r\nCrypto-VS (MD5)\r\nloaded and running\r\n");
-restart:
+	PGM_P    u   = PSTR("nessie\0test\0");
+	void_fpt v[] = {testrun_nessie_md5, testrun_md5};
+
 	while(1){ 
-		if (!getnextwordn(str,20))  {DEBUG_S("DBG: W1\r\n"); goto error;}
-		if (strcmp(str, "test")) {DEBUG_S("DBG: 1b\r\n"); goto error;}
-			testrun_md5();
-		goto restart;		
+		if (!getnextwordn(str,20)){DEBUG_S("DBG: W1\r\n"); goto error;}
+		if(execcommand_d0_P(str, u, v)<0){
+			uart_putstr_P(PSTR("\r\nunknown command\r\n"));
+		}
 		continue;
 	error:
 		uart_putstr("ERROR\r\n");
-	} /* while (1) */
+	}
 }
 
