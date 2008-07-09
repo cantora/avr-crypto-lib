@@ -19,7 +19,7 @@
 /* 
  * File:	cast5.h
  * Author:	Daniel Otte
- * Date: 	26.07.2006
+ * Date: 	2006-07-26
  * License: GPL
  * Description: Implementation of the CAST5 (aka CAST-128) cipher algorithm as described in RFC 2144
  * 
@@ -48,9 +48,9 @@ typedef struct cast5_ctx_st{
 	bool		shortkey;
 } cast5_ctx_t;
 
-void cast5_init(cast5_ctx_t* s, uint8_t* key, uint8_t keylength);
-void cast5_enc(cast5_ctx_t *s, void* block);
-void cast5_dec(cast5_ctx_t *s, void* block);
+void cast5_init(uint8_t* key, uint8_t keylength_b, cast5_ctx_t* s);
+void cast5_enc(void* block, cast5_ctx_t *s);
+void cast5_dec(void* block, cast5_ctx_t *s);
 
 
 

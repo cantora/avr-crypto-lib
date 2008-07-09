@@ -64,21 +64,13 @@ void testrun_nessie_serpent(void){
 
 
 void testrun_performance_serpent(void){
-	uint16_t i,c;
 	uint64_t t;
 	char str[16];
 	uint8_t key[32], data[16];
 	serpent_ctx_t ctx;
 	
 	calibrateTimer();
-	getOverhead(&c, &i);
-	uart_putstr_P(PSTR("\r\n\r\n=== benchmark ==="));
-	utoa(c, str, 10);
-	uart_putstr_P(PSTR("\r\n\tconst overhead:     "));
-	uart_putstr(str);
-	utoa(i, str, 10);
-	uart_putstr_P(PSTR("\r\n\tinterrupt overhead: "));
-	uart_putstr(str);
+	print_overhead();
 	
 	memset(key,  0, 32);
 	memset(data, 0, 16);

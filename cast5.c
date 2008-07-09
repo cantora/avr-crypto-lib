@@ -113,17 +113,17 @@ void cast5_init_rM(uint8_t *klo, uint8_t *khi, uint8_t offset, uint8_t *src, boo
  * @param key Pointer to binary key.
  * @param keylength length of keydata in bits.
  */
-void cast5_init(cast5_ctx_t* s, uint8_t* key, uint8_t keylength){
+void cast5_init(uint8_t* key, uint8_t keylength_b, cast5_ctx_t* s){
  	 /* we migth return if the key is valid and if setup was sucessfull */
 	uint32_t x[4], z[4];
 	#define BPX ((uint8_t*)&(x[0]))
 	#define BPZ ((uint8_t*)&(z[0]))
-	s->shortkey = (keylength<=80);
+	s->shortkey = (keylength_b<=80);
 	/* littel endian only! */
 	memset(&(x[0]), 0 ,16); /* set x to zero */
-	if(keylength > 128)
-		keylength=128;
-	memcpy(&(x[0]), key, (keylength+7)/8);
+	if(keylength_b > 128)
+		keylength_b=128;
+	memcpy(&(x[0]), key, (keylength_b+7)/8);
 	
 
 	/* todo: merge a and b and compress the whole stuff */
@@ -275,7 +275,7 @@ uint32_t cast5_f3(uint32_t d, uint32_t m, uint8_t r){
  * @param s Pointer to cast5 roundkeys (context)
  * @param block Pointer to datablock
  */
-void cast5_enc(cast5_ctx_t *s, void* block){
+void cast5_enc(void* block, cast5_ctx_t *s){
 	uint32_t l,r, x, y;
 	uint8_t i;
 	cast5_f_t* f[]={cast5_f1,cast5_f2,cast5_f3};
@@ -304,7 +304,7 @@ void cast5_enc(cast5_ctx_t *s, void* block){
  * @param s Pointer to cast5 roundkeys (context)
  * @param block Pointer to datablock
  */
-void cast5_dec(cast5_ctx_t *s, void* block){
+void cast5_dec(void* block, cast5_ctx_t *s){
 	uint32_t l,r, x, y;
 	int8_t i, rounds;
 	cast5_f_t* f[]={cast5_f1,cast5_f2,cast5_f3};

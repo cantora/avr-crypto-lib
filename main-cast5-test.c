@@ -40,32 +40,15 @@ char* cipher_name = "cast-128 (cast5)";
 /*****************************************************************************
  *  additional validation-functions											 *
  *****************************************************************************/
-/*
-	void cast5_init(cast5_ctx_t* s, uint8_t* key, uint8_t keylength);
-	void cast5_enc(cast5_ctx_t *s, void* block);
-	void cast5_dec(cast5_ctx_t *s, void* block);
-*/ 
 
-void cast5_init_dummy(uint8_t* key, uint8_t keylength_b, cast5_ctx_t* ctx){
-	cast5_init(ctx, key, keylength_b);
-}
-
-void cast5_enc_dummy(void* buffer, cast5_ctx_t* ctx){
-	cast5_enc(ctx, buffer);
-}
-
-void cast5_dec_dummy(void* buffer, cast5_ctx_t* ctx){
-	cast5_dec(ctx, buffer);
-}
-
-void test_nessie_cast5(void){
+void testrun_nessie_cast5(void){
 	nessie_bc_ctx.blocksize_B =   8;
 	nessie_bc_ctx.keysize_b   = 128;
 	nessie_bc_ctx.name        = cipher_name;
 	nessie_bc_ctx.ctx_size_B  = sizeof(cast5_ctx_t);
-	nessie_bc_ctx.cipher_enc  = (nessie_bc_enc_fpt)cast5_enc_dummy;
-	nessie_bc_ctx.cipher_dec  = (nessie_bc_dec_fpt)cast5_dec_dummy;
-	nessie_bc_ctx.cipher_genctx  = (nessie_bc_gen_fpt)cast5_init_dummy;
+	nessie_bc_ctx.cipher_enc  = (nessie_bc_enc_fpt)cast5_enc;
+	nessie_bc_ctx.cipher_dec  = (nessie_bc_dec_fpt)cast5_dec;
+	nessie_bc_ctx.cipher_genctx  = (nessie_bc_gen_fpt)cast5_init;
 	
 	nessie_bc_run();
 }
@@ -100,9 +83,8 @@ void test_encrypt(uint8_t *block, uint8_t *key, uint8_t keylength, bool print){
 		uart_putstr("\r\n plaintext:\t");
 		uart_hexdump(block, 8);
 	}
-	cast5_init(&s, key, keylength);
-//	cast5_ctx_dump(&s);
-	cast5_enc(&s, block);
+	cast5_init(key, keylength, &s);
+	cast5_enc(block, &s);
 	if (print){
 		uart_putstr("\r\n ciphertext:\t");
 		uart_hexdump(block, 8);
@@ -117,9 +99,8 @@ void test_decrypt(uint8_t *block, uint8_t *key, uint8_t keylength, bool print){
 		uart_putstr("\r\n ciphertext:\t");
 		uart_hexdump(block, 8);
 	}
-	cast5_init(&s, key, keylength);
-//	cast5_ctx_dump(&s);
-	cast5_dec(&s, block);
+	cast5_init(key, keylength, &s);
+	cast5_dec(block, &s);
 	if (print){
 		uart_putstr("\r\n plaintext:\t");
 		uart_hexdump(block, 8);
@@ -170,28 +151,20 @@ void testrun_cast5(void){
 
 }
 
-void test_performance_cast5(void){
-	uint16_t i,c;
+void testrun_performance_cast5(void){
 	uint64_t t;
 	char str[6];
 	uint8_t key[16], data[16];
 	cast5_ctx_t ctx;
 	
 	calibrateTimer();
-	getOverhead(&c, &i);
-	uart_putstr_P(PSTR("\r\n\r\n=== benchmark ==="));
-	utoa(c, str, 10);
-	uart_putstr_P(PSTR("\r\n\tconst overhead:     "));
-	uart_putstr(str);
-	utoa(i, str, 10);
-	uart_putstr_P(PSTR("\r\n\tinterrupt overhead: "));
-	uart_putstr(str);
+	print_overhead();
 	
 	memset(key,  0, 16);
 	memset(data, 0, 16);
 	
 	startTimer(1);
-	cast5_init(&ctx, key, 128);
+	cast5_init(key, 128, &ctx);
 	t = stopTimer();
 	uart_putstr_P(PSTR("\r\n\tctx-gen time: "));
 	ultoa((unsigned long)t, str, 10);
@@ -199,7 +172,7 @@ void test_performance_cast5(void){
 	
 	
 	startTimer(1);
-	cast5_enc(&ctx, data);
+	cast5_enc(data, &ctx);
 	t = stopTimer();
 	uart_putstr_P(PSTR("\r\n\tencrypt time: "));
 	ultoa((unsigned long)t, str, 10);
@@ -207,7 +180,7 @@ void test_performance_cast5(void){
 	
 	
 	startTimer(1);
-	cast5_dec(&ctx, data);
+	cast5_dec(data, &ctx);
 	t = stopTimer();
 	uart_putstr_P(PSTR("\r\n\tdecrypt time: "));
 	ultoa((unsigned long)t, str, 10);
@@ -232,7 +205,7 @@ int main (void){
 	uart_putstr_P(PSTR(")\r\nloaded and running\r\n"));
 
 	PGM_P    u   = PSTR("nessie\0test\0performance\0");
-	void_fpt v[] = {test_nessie_cast5, test_nessie_cast5, test_performance_cast5};
+	void_fpt v[] = {testrun_nessie_cast5, testrun_cast5, testrun_performance_cast5};
 	
 	while(1){ 
 		if (!getnextwordn(str,20)){DEBUG_S("DBG: W1\r\n"); goto error;}

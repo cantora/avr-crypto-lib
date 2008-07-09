@@ -61,21 +61,13 @@ void testrun_nessie_rc5(void){
 
 
 void testrun_performance_rc5(void){
-	uint16_t i,c;
 	uint64_t t;
 	char str[16];
 	uint8_t key[16], data[16];
 	rc5_ctx_t ctx;
 	
 	calibrateTimer();
-	getOverhead(&c, &i);
-	uart_putstr_P(PSTR("\r\n\r\n=== benchmark ==="));
-	utoa(c, str, 10);
-	uart_putstr_P(PSTR("\r\n\tconst overhead:     "));
-	uart_putstr(str);
-	utoa(i, str, 10);
-	uart_putstr_P(PSTR("\r\n\tinterrupt overhead: "));
-	uart_putstr(str);
+	print_overhead();
 	
 	memset(key,  0, 16);
 	memset(data, 0, 16);

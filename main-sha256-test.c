@@ -28,9 +28,11 @@
 
 #include "sha256.h"
 #include "nessie_hash_test.h"
+#include "performance_test.h"
 
 #include <stdint.h>
 #include <string.h>
+#include <stdlib.h>
 #include "cli.h"
 
 char* algo_name = "SHA-256";
@@ -59,7 +61,42 @@ void testrun_nessie_sha256(void){
 	nessie_hash_run();
 }
 
-
+void testrun_performance_sha256(void){
+	uint64_t t;
+	char str[16];
+	uint8_t data[32];
+	sha256_ctx_t ctx;
+	
+	calibrateTimer();
+	print_overhead();
+	
+	memset(data, 0, 32);
+	
+	startTimer(1);
+	sha256_init(&ctx);
+	t = stopTimer();
+	uart_putstr_P(PSTR("\r\n\tctx-gen time: "));
+	ultoa((unsigned long)t, str, 10);
+	uart_putstr(str);
+	
+	
+	startTimer(1);
+	sha256_nextBlock(&ctx, data);
+	t = stopTimer();
+	uart_putstr_P(PSTR("\r\n\tone-block time: "));
+	ultoa((unsigned long)t, str, 10);
+	uart_putstr(str);
+	
+	
+	startTimer(1);
+	sha256_lastBlock(&ctx, data, 0);
+	t = stopTimer();
+	uart_putstr_P(PSTR("\r\n\tlast block time: "));
+	ultoa((unsigned long)t, str, 10);
+	uart_putstr(str);
+	
+	uart_putstr_P(PSTR("\r\n"));
+}
 
 /*****************************************************************************
  *  main																	 *
@@ -74,8 +111,8 @@ int main (void){
 	uart_putstr(algo_name);
 	uart_putstr_P(PSTR(")\r\nloaded and running\r\n"));
 
-	PGM_P    u   = PSTR("nessie\0test\0");
-	void_fpt v[] = {testrun_nessie_sha256, testrun_nessie_sha256};
+	PGM_P    u   = PSTR("nessie\0test\0performance\0");
+	void_fpt v[] = {testrun_nessie_sha256, testrun_nessie_sha256, testrun_performance_sha256};
 
 	while(1){ 
 		if (!getnextwordn(str,20)){DEBUG_S("DBG: W1\r\n"); goto error;}

@@ -28,9 +28,11 @@
 
 #include "md5.h"
 #include "nessie_hash_test.h"
+#include "performance_test.h"
 
 #include <stdint.h>
 #include <string.h>
+#include <stdlib.h>
 #include "cli.h"
 
 char* algo_name = "MD5";
@@ -100,6 +102,43 @@ void testrun_md5(void){
 }
 
 
+void testrun_performance_md5(void){
+	uint64_t t;
+	char str[16];
+	uint8_t data[32];
+	md5_ctx_t ctx;
+	
+	calibrateTimer();
+	print_overhead();
+	
+	memset(data, 0, 32);
+	
+	startTimer(1);
+	md5_init(&ctx);
+	t = stopTimer();
+	uart_putstr_P(PSTR("\r\n\tctx-gen time: "));
+	ultoa((unsigned long)t, str, 10);
+	uart_putstr(str);
+	
+	
+	startTimer(1);
+	md5_nextBlock(&ctx, data);
+	t = stopTimer();
+	uart_putstr_P(PSTR("\r\n\tone-block time: "));
+	ultoa((unsigned long)t, str, 10);
+	uart_putstr(str);
+	
+	
+	startTimer(1);
+	md5_lastBlock(&ctx, data, 0);
+	t = stopTimer();
+	uart_putstr_P(PSTR("\r\n\tlast block time: "));
+	ultoa((unsigned long)t, str, 10);
+	uart_putstr(str);
+	
+	uart_putstr_P(PSTR("\r\n"));
+}
+
 
 /*****************************************************************************
  *  main																	 *
@@ -113,8 +152,8 @@ int main (void){
 	uart_putstr("\r\n");
 
 	uart_putstr("\r\n\r\nCrypto-VS (MD5)\r\nloaded and running\r\n");
-	PGM_P    u   = PSTR("nessie\0test\0");
-	void_fpt v[] = {testrun_nessie_md5, testrun_md5};
+	PGM_P    u   = PSTR("nessie\0test\0performance\0");
+	void_fpt v[] = {testrun_nessie_md5, testrun_md5, testrun_performance_md5};
 
 	while(1){ 
 		if (!getnextwordn(str,20)){DEBUG_S("DBG: W1\r\n"); goto error;}

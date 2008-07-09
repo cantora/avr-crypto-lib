@@ -82,7 +82,7 @@ void camellia128_ctx_dump(camellia128_ctx_t *s){
 /*****************************************************************************/
 /* extern prog_uint64_t camellia_sigma[6]; */
 
-void camellia128_init(camellia128_ctx_t* s, uint8_t* key){
+void camellia128_init(uint8_t* key, camellia128_ctx_t* s){
 	uint8_t i;
 	s->kll = 0; /* ((uint64_t*)key)[0]; */
 	
@@ -134,7 +134,7 @@ void camellia_6rounds(camellia128_ctx_t* s, uint64_t* bl, uint64_t* br, uint8_t 
 /*****************************************************************************/
 
 
-void camellia128_enc(camellia128_ctx_t* s, void* block){
+void camellia128_enc(void* block, camellia128_ctx_t* s){
 
 	#define BL (((uint64_t*)block)[0])
 	#define BR (((uint64_t*)block)[1])
@@ -188,7 +188,7 @@ void camellia128_enc(camellia128_ctx_t* s, void* block){
 
 /*****************************************************************************/
 
-void camellia128_dec(camellia128_ctx_t* s, void* block){
+void camellia128_dec(void* block, camellia128_ctx_t* s){
 
 	#define BL (((uint64_t*)block)[1])
 	#define BR (((uint64_t*)block)[0])

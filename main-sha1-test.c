@@ -28,9 +28,11 @@
 
 #include "sha1.h"
 #include "nessie_hash_test.h"
+#include "performance_test.h"
 
 #include <stdint.h>
 #include <string.h>
+#include <stdlib.h>
 #include "cli.h"
 
 char* algo_name = "SHA-1";
@@ -102,6 +104,42 @@ void testrun_sha1(void){
 	uart_putstr("\r\nx");
 }
 
+void testrun_performance_sha1(void){
+	uint64_t t;
+	char str[16];
+	uint8_t data[32];
+	sha1_ctx_t ctx;
+	
+	calibrateTimer();
+	print_overhead();
+	
+	memset(data, 0, 32);
+	
+	startTimer(1);
+	sha1_init(&ctx);
+	t = stopTimer();
+	uart_putstr_P(PSTR("\r\n\tctx-gen time: "));
+	ultoa((unsigned long)t, str, 10);
+	uart_putstr(str);
+	
+	
+	startTimer(1);
+	sha1_nextBlock(&ctx, data);
+	t = stopTimer();
+	uart_putstr_P(PSTR("\r\n\tone-block time: "));
+	ultoa((unsigned long)t, str, 10);
+	uart_putstr(str);
+	
+	
+	startTimer(1);
+	sha1_lastBlock(&ctx, data, 0);
+	t = stopTimer();
+	uart_putstr_P(PSTR("\r\n\tlast block time: "));
+	ultoa((unsigned long)t, str, 10);
+	uart_putstr(str);
+	
+	uart_putstr_P(PSTR("\r\n"));
+}
 
 
 /*****************************************************************************
@@ -116,8 +154,8 @@ int main (void){
 
 	uart_putstr("\r\n\r\nCrypto-VS (SHA-1)\r\nloaded and running\r\n");
 
-	PGM_P    u   = PSTR("nessie\0test\0");
-	void_fpt v[] = {testrun_nessie_sha1, testrun_sha1};
+	PGM_P    u   = PSTR("nessie\0test\0performance\0");
+	void_fpt v[] = {testrun_nessie_sha1, testrun_sha1, testrun_performance_sha1};
 
 	while(1){ 
 		if (!getnextwordn(str,20)){DEBUG_S("DBG: W1\r\n"); goto error;}

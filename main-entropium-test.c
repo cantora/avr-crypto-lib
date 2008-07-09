@@ -62,20 +62,12 @@ void testrun_entropium(void){
 
 
 void testrun_performance_entropium(void){
-	uint16_t i,c;
 	uint64_t t;
 	char str[16];
 	uint8_t data[32];
 	
 	calibrateTimer();
-	getOverhead(&c, &i);
-	uart_putstr_P(PSTR("\r\n\r\n=== benchmark ==="));
-	utoa(c, str, 10);
-	uart_putstr_P(PSTR("\r\n\tconst overhead:     "));
-	uart_putstr(str);
-	utoa(i, str, 10);
-	uart_putstr_P(PSTR("\r\n\tinterrupt overhead: "));
-	uart_putstr(str);
+	print_overhead();
 	
 	startTimer(1);
 	entropium_addEntropy(128, data);
