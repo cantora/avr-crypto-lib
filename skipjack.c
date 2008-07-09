@@ -30,6 +30,14 @@
 #include <avr/io.h>
 #include <avr/pgmspace.h>
 
+#define SKIPJACK_CNT_BIG
+
+#ifdef SKIPJACK_CNT_BIG
+  #define SKIPJACK_CNT_SHIFT <<8
+#else
+  #define SKIPJACK_CNT_SHIFT
+#endif
+
 /*****************************************************************************/
 
 uint8_t skipjack_ftable[] PROGMEM ={ 
@@ -102,7 +110,7 @@ void skipjack_a(uint16_t* w, uint8_t k, uint8_t* key){
 	w[3] = w[2];
 	w[2] = w[1];
 	w[1] = skipjack_g(w[0],k-1,key);
-	w[0] = t ^ w[1] ^ k<<8;
+	w[0] = t ^ w[1] ^ (((uint16_t)k)SKIPJACK_CNT_SHIFT);
 }
 
 /*****************************************************************************/
@@ -113,7 +121,7 @@ void skipjack_a_inv(uint16_t* w, uint8_t k, uint8_t* key){
 	w[0] = skipjack_g_inv(w[1],k-1,key);
 	w[1] = w[2];
 	w[2] = w[3];
-	w[3] = t ^ k<<8;
+	w[3] = t ^ (((uint16_t)k)SKIPJACK_CNT_SHIFT);
 }
 
 /*****************************************************************************/
@@ -123,7 +131,7 @@ void skipjack_b(uint16_t* w, uint8_t k, uint8_t* key){
 	t = w[0];
 	w[0] = w[3];
 	w[3] = w[2];
-	w[2] = t ^ k<<8 ^ w[1];
+	w[2] = t ^ (((uint16_t)k)SKIPJACK_CNT_SHIFT) ^ w[1];
 	w[1] = skipjack_g(t,k-1,key);
 }
 
@@ -135,7 +143,7 @@ void skipjack_b_inv(uint16_t* w, uint8_t k, uint8_t* key){
 	w[2] = w[3];
 	w[3] = w[0];
 	w[0] = skipjack_g_inv(w[1],k-1,key);
-	w[1] = w[0] ^ t ^ k<<8;
+	w[1] = w[0] ^ t ^ (((uint16_t)k)SKIPJACK_CNT_SHIFT);
 }
 
 /*****************************************************************************/
