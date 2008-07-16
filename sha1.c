@@ -227,7 +227,7 @@ void sha1 (sha1_hash_t *dest, void* msg, uint32_t length){
 	while(length & (~0x0001ff)){ /* length>=512 */
 		DEBUG_S("\r\none block");
 		sha1_nextBlock(&s, msg);
-		msg += SHA1_BLOCK_BITS/8; /* increment pointer to next block */
+		msg = (uint8_t*)msg + SHA1_BLOCK_BITS/8; /* increment pointer to next block */
 		length -= SHA1_BLOCK_BITS;
 	}
 	sha1_lastBlock(&s, msg, length);

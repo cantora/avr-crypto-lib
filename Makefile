@@ -20,15 +20,19 @@ endef
 $(foreach a, $(ALGORITHMS_OBJ), $(eval $(call OBJinBINDIR_TEMPLATE, $(a), $(patsubst %.o,$(BIN_DIR)%.o,$($(a))))))
 ALGORITHMS_TEST_BIN = $(patsubst %,%_TEST_BIN, $(ALGORITHMS))
 $(foreach a, $(ALGORITHMS_TEST_BIN), $(eval $(call OBJinBINDIR_TEMPLATE, $(a), $(patsubst %.o,$(BIN_DIR)%.o,$($(a))))))
-ALGORITHMS_TEST_BIN_MAIN = $(foreach a, $(ALGORITHMS_TEST_BIN), $(firstword $($(a))))
-ALGORITHMS_TEST_BIN_MAIN_ELF = $(patsubst $(BIN_DIR)%.o, $(TESTBIN_DIR)%.elf, $(ALGORITHMS_TEST_BIN_MAIN))
-ALGORITHMS_TEST_BIN_MAIN_HEX = $(patsubst $(BIN_DIR)%.o, $(TESTBIN_DIR)%.hex, $(ALGORITHMS_TEST_BIN_MAIN))
+#ALGORITHMS_TEST_BIN_MAIN = $(foreach a, $(ALGORITHMS_TEST_BIN), $(firstword $($(a))))
+#ALGORITHMS_TEST_BIN_MAIN_ELF = $(patsubst $(BIN_DIR)%.o, $(TESTBIN_DIR)%.elf, $(ALGORITHMS_TEST_BIN_MAIN))
+#ALGORITHMS_TEST_BIN_MAIN_HEX = $(patsubst $(BIN_DIR)%.o, $(TESTBIN_DIR)%.hex, $(ALGORITHMS_TEST_BIN_MAIN))
+
 
 ALGORITHMS_TEST_BIN_IMM =  $(foreach a, $(ALGORITHMS_TEST_BIN), $($(a)))
 ALGORITHMS_NESSIE_TEST = $(patsubst %,%_NESSIE_TEST, $(ALGORITHMS))
 ALGORITHMS_PERFORMANCE_TEST = $(patsubst %,%_PERORMANCE_TEST, $(ALGORITHMS))
 
 ALGORITHMS_LC = $(call lc,$(ALGORITHMS))
+
+ALGORITHMS_TEST_TARGET_ELF = $(patsubst %, $(TESTBIN_DIR)main-%-test.elf, $(ALGORITHMS_LC))
+ALGORITHMS_TEST_TARGET_HEX = $(patsubst %, $(TESTBIN_DIR)main-%-test.hex, $(ALGORITHMS_LC))
 
 
 #-------------------------------------------------------------------------------
@@ -47,11 +51,13 @@ $(2): $(3)
 	$(LIBS)
 endef
 
-$(foreach algo, $(ALGORITHMS), $(eval $(call BLA_TEMPLATE2, $(algo), $(patsubst $(BIN_DIR)%.o,$(TESTBIN_DIR)%.elf,$(firstword $($(algo)_TEST_BIN))), $(patsubst %.o,%.o,$($(algo)_TEST_BIN)) )))
+#$(foreach algo, $(ALGORITHMS), $(eval $(call BLA_TEMPLATE2, $(algo), $(patsubst $(BIN_DIR)%.o,$(TESTBIN_DIR)%.elf,$(firstword $($(algo)_TEST_BIN))), $(patsubst %.o,%.o,$($(algo)_TEST_BIN)) )))
+$(foreach algo, $(ALGORITHMS), $(eval $(call BLA_TEMPLATE2, $(algo), $(TESTBIN_DIR)main-$(call lc,$(algo))-test.elf, $(patsubst %.o,%.o,$($(algo)_TEST_BIN)) )))
 
 #-------------------------------------------------------------------------------
+.PHONY: help
+help: info
 
-.PHONY: info
 info:
 	@echo "infos on micro-crypt:"
 	@echo "  block ciphers:"
@@ -64,6 +70,17 @@ info:
 	@echo "    $(MACS)"
 	@echo "  PRNG functions:"
 	@echo "    $(PRNGS)"
+	@echo "  ALGORITHMS_TEST_BIN:"
+	@echo "    $(ALGORITHMS_TEST_BIN)"
+	@echo "  ALGORITHMS_TEST_BIN_MAIN:"
+	@echo "    $(ALGORITHMS_TEST_BIN_MAIN)"
+	@echo "  ALGORITHMS_TEST_BIN_MAIN_ELF:"
+	@echo "    $(ALGORITHMS_TEST_BIN_MAIN_ELF)"
+	@echo "  ALGORITHMS_TEST_BIN_MAIN_HEX:"
+	@echo "    $(ALGORITHMS_TEST_BIN_MAIN_HEX)"
+	@echo "  ALGORITHMS_TEST_TARGET_ELF:"
+	@echo "    $(ALGORITHMS_TEST_TARGET_ELF)"
+	
 
 $(BIN_DIR)%.o: %.c
 	@echo "[gcc]:  $@"
@@ -101,8 +118,8 @@ macs: $(patsubst %, %_OBJ, $(MACS))
 prngs: $(patsubst %, %_OBJ, $(PRNGS))
 
 tests: $(ALGORITHMS_TEST_BIN) \
-       $(ALGORITHMS_TEST_BIN_MAIN_ELF) \
-       $(ALGORITHMS_TEST_BIN_MAIN_HEX)
+       $(ALGORITHMS_TEST_TARGET_ELF) \
+       $(ALGORITHMS_TEST_TARGET_HEX)
 
 .PHONY:  stats
 stats: $(SIZESTAT_FILE)
