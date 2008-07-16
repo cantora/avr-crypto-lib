@@ -70,14 +70,6 @@ info:
 	@echo "    $(MACS)"
 	@echo "  PRNG functions:"
 	@echo "    $(PRNGS)"
-	@echo "  ALGORITHMS_TEST_BIN:"
-	@echo "    $(ALGORITHMS_TEST_BIN)"
-	@echo "  ALGORITHMS_TEST_BIN_MAIN:"
-	@echo "    $(ALGORITHMS_TEST_BIN_MAIN)"
-	@echo "  ALGORITHMS_TEST_BIN_MAIN_ELF:"
-	@echo "    $(ALGORITHMS_TEST_BIN_MAIN_ELF)"
-	@echo "  ALGORITHMS_TEST_BIN_MAIN_HEX:"
-	@echo "    $(ALGORITHMS_TEST_BIN_MAIN_HEX)"
 	@echo "  ALGORITHMS_TEST_TARGET_ELF:"
 	@echo "    $(ALGORITHMS_TEST_TARGET_ELF)"
 	
@@ -166,8 +158,9 @@ $(1)_FLASH: $(2)
 	@$(FLASHCMD)$(call first,$(2))
 endef
 
-$(foreach algo, $(ALGORITHMS),$(eval $(call FLASH_TEMPLATE, $(algo), \
-                $(patsubst $(BIN_DIR)%.o,$(TESTBIN_DIR)%.hex,$(firstword $($(algo)_TEST_BIN)))) ))  
+#$(foreach algo, $(ALGORITHMS),$(eval $(call FLASH_TEMPLATE, $(algo), \
+#                $(patsubst $(BIN_DIR)%.o,$(TESTBIN_DIR)%.hex,$(firstword $($(algo)_TEST_BIN)))) ))  
+$(foreach algo, $(ALGORITHMS),$(eval $(call FLASH_TEMPLATE, $(algo), $(TESTBIN_DIR)main-$(call lc,$(algo))-test.hex) ))  
 
 #-------------------------------------------------------------------------------
 

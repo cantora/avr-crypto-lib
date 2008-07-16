@@ -29,7 +29,7 @@
 #include <string.h>
 #include <avr/pgmspace.h>
 #include "noekeon.h"
-#include "uart.h"
+// #include "uart.h"
 
 #define ROUND_NR 16
 
@@ -160,8 +160,8 @@ void noekeon_dec(void* buffer, void* key){
 	memcpy(dkey, key, 16);
 	
 	theta((uint32_t*)nullv, (uint32_t*)dkey);
-	uart_putstr_P(PSTR("\r\nTheta: "));
-	uart_hexdump(dkey, 16);
+//	uart_putstr_P(PSTR("\r\nTheta: "));
+//	uart_hexdump(dkey, 16);
 	
 	for(i=ROUND_NR-1; i>=0; --i){
 		rc = pgm_read_byte(rc_tab+i);
