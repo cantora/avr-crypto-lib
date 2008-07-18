@@ -158,11 +158,23 @@ $(1)_FLASH: $(2)
 	@$(FLASHCMD)$(call first,$(2))
 endef
 
-#$(foreach algo, $(ALGORITHMS),$(eval $(call FLASH_TEMPLATE, $(algo), \
-#                $(patsubst $(BIN_DIR)%.o,$(TESTBIN_DIR)%.hex,$(firstword $($(algo)_TEST_BIN)))) ))  
 $(foreach algo, $(ALGORITHMS),$(eval $(call FLASH_TEMPLATE, $(algo), $(TESTBIN_DIR)main-$(call lc,$(algo))-test.hex) ))  
 
 #-------------------------------------------------------------------------------
+
+define TESTRUN_TEMPLATE
+$(1)_TESTRUN: $(1)_FLASH
+	@echo "[test]: $(1)"
+	$(RUBY) get_test.rb  $(TESTPORT) $(TESTPORTBAUDR) 8 1 nessie $(TESTLOG_DIR)$(TESTPREFIX) $(2)
+endef
+
+$(foreach algo, $(ALGORITHMS),$(eval $(call TESTRUN_TEMPLATE, $(algo), $(call lc,$(algo)) )))
+
+ALL_TESTRUN: $(foreach algo, $(ALGORITHMS), $(algo)_TESTRUN)
+
+#-------------------------------------------------------------------------------
+
+
 
 .PHONY: clean
 clean:

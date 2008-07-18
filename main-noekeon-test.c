@@ -80,6 +80,12 @@ void testrun_nessie_noekeon_direct(void){
 	nessie_bc_run();
 }
 
+void testrun_nessie_noekeon(void){
+	testrun_nessie_noekeon_direct();
+	testrun_nessie_noekeon_indirect();
+}
+
+
 void testrun_stdtest_rundirect(void* data, void* key){
 	uart_putstr_P(PSTR("\r\n                     "));
 	uart_putstr_P(PSTR("k = "));
@@ -215,7 +221,7 @@ int main (void){
 	uart_putstr_P(PSTR(")\r\nloaded and running\r\n"));
 
 	PGM_P    u   = PSTR("nessie\0test\0direct\0indirect\0performance\0");
-	void_fpt v[] = {testrun_nessie_noekeon_direct, 
+	void_fpt v[] = {testrun_nessie_noekeon, 
 		            testrun_stdtest_noekeon,
 		            testrun_nessie_noekeon_direct, 
 		            testrun_nessie_noekeon_indirect,  

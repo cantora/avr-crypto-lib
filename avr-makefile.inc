@@ -9,7 +9,10 @@ BIN_DIR        = bin/
 TESTBIN_DIR    = test_bin/
 #uisp -dprog=bsd -dlpt=/dev/parport1 --upload if=$(PRG).hex
 ERASECMD       = 
-
+TESTPORT       = /dev/ttyUSB1
+TESTPORTBAUDR  = 9600
+TESTLOG_DIR    = testlog/
+TESTPREFIX     = nessie-
 CC	     = avr-gcc
 
 override CFLAGS	= -MMD -MF$(DEP_DIR)$(patsubst %.c,%.d,$<) -pedantic -std=c99 -Wall -Wstrict-prototypes  $(OPTIMIZE) -mmcu=$(MCU_TARGET) $(DEFS)
