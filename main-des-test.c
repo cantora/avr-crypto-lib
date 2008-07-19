@@ -57,7 +57,7 @@ void testrun_nessie_des(void){
 	nessie_bc_ctx.blocksize_B =   8;
 	nessie_bc_ctx.keysize_b   =  64;
 	nessie_bc_ctx.name        = cipher_name;
-	nessie_bc_ctx.ctx_size_B  = sizeof(8);
+	nessie_bc_ctx.ctx_size_B  = 8;
 	nessie_bc_ctx.cipher_enc  = (nessie_bc_enc_fpt)des_enc_dummy;
 	nessie_bc_ctx.cipher_dec  = (nessie_bc_dec_fpt)des_dec_dummy;
 	nessie_bc_ctx.cipher_genctx  = (nessie_bc_gen_fpt)des_init_dummy;
