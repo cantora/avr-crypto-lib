@@ -272,8 +272,8 @@ uint32_t cast5_f3(uint32_t d, uint32_t m, uint8_t r){
 
 /**
  * \brief encrypts a datablock with cast5
- * @param s Pointer to cast5 roundkeys (context)
  * @param block Pointer to datablock
+ * @param s Pointer to cast5 roundkeys (context)
  */
 void cast5_enc(void* block, cast5_ctx_t *s){
 	uint32_t l,r, x, y;
@@ -301,8 +301,8 @@ void cast5_enc(void* block, cast5_ctx_t *s){
 
 /**
  * \brief decrypts a datablock with cast5
- * @param s Pointer to cast5 roundkeys (context)
  * @param block Pointer to datablock
+ * @param s Pointer to cast5 roundkeys (context)
  */
 void cast5_dec(void* block, cast5_ctx_t *s){
 	uint32_t l,r, x, y;

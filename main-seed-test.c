@@ -54,8 +54,8 @@ void testrun_nessie_seed(void){
 	nessie_bc_ctx.keysize_b   = 128;
 	nessie_bc_ctx.name        = cipher_name;
 	nessie_bc_ctx.ctx_size_B  = sizeof(seed_ctx_t);
-	nessie_bc_ctx.cipher_enc  = (nessie_bc_enc_fpt)seed_encrypt;
-	nessie_bc_ctx.cipher_dec  = (nessie_bc_dec_fpt)seed_decrypt;
+	nessie_bc_ctx.cipher_enc  = (nessie_bc_enc_fpt)seed_enc;
+	nessie_bc_ctx.cipher_dec  = (nessie_bc_dec_fpt)seed_dec;
 	nessie_bc_ctx.cipher_genctx  = (nessie_bc_gen_fpt)seed_genctx_dummy;
 	
 	nessie_bc_run();
@@ -84,7 +84,7 @@ void testrun_performance_seed(void){
 	
 	
 	startTimer(1);
-	seed_encrypt(data, &ctx);
+	seed_enc(data, &ctx);
 	t = stopTimer();
 	uart_putstr_P(PSTR("\r\n\tencrypt time: "));
 	ultoa((unsigned long)t, str, 10);
@@ -92,7 +92,7 @@ void testrun_performance_seed(void){
 	
 	
 	startTimer(1);
-	seed_decrypt(data, &ctx);
+	seed_dec(data, &ctx);
 	t = stopTimer();
 	uart_putstr_P(PSTR("\r\n\tdecrypt time: "));
 	ultoa((unsigned long)t, str, 10);
@@ -112,7 +112,7 @@ void testencrypt(uint8_t* block, uint8_t* key){
 	seed_init(key, &ctx);
 	uart_putstr("\r\n plain: ");
 	uart_hexdump(block,16);
-	seed_encrypt(block, &ctx);
+	seed_enc(block, &ctx);
 	uart_putstr("\r\n crypt: ");
 	uart_hexdump(block,16);
 }
@@ -124,7 +124,7 @@ void testdecrypt(uint8_t* block, uint8_t* key){
 	seed_init(key, &ctx);
 	uart_putstr("\r\n crypt: ");
 	uart_hexdump(block,16);
-	seed_decrypt(block, &ctx);
+	seed_dec(block, &ctx);
 	uart_putstr("\r\n plain: ");
 	uart_hexdump(block,16);
 }

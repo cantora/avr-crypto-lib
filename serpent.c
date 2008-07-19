@@ -92,7 +92,7 @@ static uint32_t gen_w(uint32_t * b, uint8_t i){
 } 
 
 /* key must be 256bit (32 byte) large! */
-void serpent_genctx(void * key, uint8_t keysize, serpent_ctx_t * ctx){
+void serpent_init(void * key, uint8_t keysize, serpent_ctx_t * ctx){
 	uint32_t buffer[8];
 	uint8_t i,j;
 	if(keysize){

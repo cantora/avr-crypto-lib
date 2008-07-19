@@ -302,7 +302,7 @@ uint32_t des_f(uint32_t r, uint8_t* kr){
 
 /******************************************************************************/
 
-void des_encrypt(uint8_t* out, uint8_t* in, uint8_t* key){
+void des_enc(uint8_t* out, uint8_t* in, uint8_t* key){
 #define R *((uint32_t*)&(data[4]))
 #define L *((uint32_t*)&(data[0]))
 
@@ -335,7 +335,7 @@ void des_encrypt(uint8_t* out, uint8_t* in, uint8_t* key){
 
 /******************************************************************************/
 
-void des_decrypt(uint8_t* out, uint8_t* in, uint8_t* key){
+void des_dec(uint8_t* out, uint8_t* in, uint8_t* key){
 #define R *((uint32_t*)&(data[4]))
 #define L *((uint32_t*)&(data[0]))
 
@@ -371,18 +371,18 @@ void des_decrypt(uint8_t* out, uint8_t* in, uint8_t* key){
 
 /******************************************************************************/
 
-void tdes_encrypt(uint8_t* out, uint8_t* in, uint8_t* key){
-	des_encrypt(out,  in, key + 0);
-	des_decrypt(out, out, key + 8);
-	des_encrypt(out, out, key +16);
+void tdes_enc(uint8_t* out, uint8_t* in, uint8_t* key){
+	des_enc(out,  in, key + 0);
+	des_dec(out, out, key + 8);
+	des_enc(out, out, key +16);
 }
 
 /******************************************************************************/
 
-void tdes_decrypt(uint8_t* out, uint8_t* in, uint8_t* key){
-	des_decrypt(out,  in, key + 0);
-	des_encrypt(out, out, key + 8);
-	des_decrypt(out, out, key +16);
+void tdes_dec(uint8_t* out, uint8_t* in, uint8_t* key){
+	des_dec(out,  in, key + 0);
+	des_enc(out, out, key + 8);
+	des_dec(out, out, key +16);
 }
 
 /******************************************************************************/

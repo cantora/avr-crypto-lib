@@ -31,12 +31,12 @@
 #include <stdint.h>
 /* the FIPS 46-3 (1999-10-25) name for triple DES is triple data encryption algorithm so TDEA.
  * Also we only implement the three key mode  */
-#define tdea_encrypt tdes_encrypt
-#define tdea_decrypt tdes_decrypt
+#define tdea_enc tdes_enc
+#define tdea_dec tdes_dec
 
-void des_encrypt(uint8_t* out, uint8_t* in, uint8_t* key);
-void des_decrypt(uint8_t* out, uint8_t* in, uint8_t* key);
-void tdes_encrypt(uint8_t* out, uint8_t* in, uint8_t* key);
-void tdes_decrypt(uint8_t* out, uint8_t* in, uint8_t* key);
+void des_enc(uint8_t* out, uint8_t* in, uint8_t* key);
+void des_dec(uint8_t* out, uint8_t* in, uint8_t* key);
+void tdes_enc(uint8_t* out, uint8_t* in, uint8_t* key);
+void tdes_dec(uint8_t* out, uint8_t* in, uint8_t* key);
 
 #endif /*DES_H_*/

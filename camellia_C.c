@@ -356,8 +356,8 @@ void camellia128_enc(camellia128_ctx_t* s, void* block){
 	#define BR (((uint64_t*)block)[1])
 	/* endian adjustment */
 	 /*BL*/
-	 /* 	1 2 3 4 5 6 7 8
-	  *		8 7 6 5 4 3 2 1
+	 /* 1 2 3 4 5 6 7 8
+	  *	8 7 6 5 4 3 2 1
 	  */
 	 
 	uint64_t temp64;
@@ -450,8 +450,8 @@ void camellia128_dec(camellia128_ctx_t* s, void* block){
 	#define BR (((uint64_t*)block)[0])
 	/* endian adjustment */
 	 /*BL*/
-	 /* 	1 2 3 4 5 6 7 8
-	  *		8 7 6 5 4 3 2 1
+	 /* 1 2 3 4 5 6 7 8
+	  *	8 7 6 5 4 3 2 1
 	  */
 	 
 	uint64_t temp64;

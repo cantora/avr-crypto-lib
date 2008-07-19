@@ -39,7 +39,7 @@ typedef struct serpent_ctx_st {
 
 
 /* key must be 256bit (32 byte) large! */
-void serpent_genctx(void * key, uint8_t keysize, serpent_ctx_t * ctx);
+void serpent_init(void * key, uint8_t keysize, serpent_ctx_t * ctx);
 void serpent_enc(void * buffer, serpent_ctx_t * ctx);
 void serpent_dec(void * buffer, serpent_ctx_t * ctx);
 

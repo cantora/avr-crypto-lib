@@ -45,11 +45,11 @@ void tdes_init_dummy(const void* key, uint16_t keysize_b, void* ctx){
 }
 
 void tdes_enc_dummy(void* buffer, void* ctx){
-	tdes_encrypt(buffer, buffer, ctx);
+	tdes_enc(buffer, buffer, ctx);
 } 
 
 void tdes_dec_dummy(void* buffer, void* ctx){
-	tdes_decrypt(buffer, buffer, ctx);
+	tdes_dec(buffer, buffer, ctx);
 } 
 
 void testrun_nessie_tdes(void){
@@ -79,14 +79,14 @@ void testrun_performance_tdes(void){
 	memset(data, 0, 8);
 	
 	startTimer(1);
-	tdes_encrypt(data, data, key);
+	tdes_enc(data, data, key);
 	t = stopTimer();
 	uart_putstr_P(PSTR("\r\n\tencrypt time: "));
 	ultoa((unsigned long)t, str, 10);
 	uart_putstr(str);
 	
 	startTimer(1);
-	tdes_decrypt(data, data, key);
+	tdes_dec(data, data, key);
 	t = stopTimer();
 	uart_putstr_P(PSTR("\r\n\tdecrypt time: "));
 	ultoa((unsigned long)t, str, 10);

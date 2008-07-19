@@ -49,7 +49,7 @@ uint64_t PROGMEM camellia_sigma[6]={ / * 64 byte table * /
 	0xB05688C2B3E6C1FDLL
 };	
 */
-uint32_t PROGMEM camellia_sigma[12]={ /* 64 byte table */
+uint32_t PROGMEM camellia_sigma[12]={ /* 48 byte table */
          0x3BCC908BL, 0xA09E667FL,
          0x4CAA73B2L, 0xB67AE858L,
          0xE94F82BEL, 0xC6EF372FL,
@@ -130,7 +130,8 @@ void camellia128_keyop_inv(camellia128_ctx_t* s, int8_t q);
 #define KEY_ROL17		0x08
 #define KEY_ROL15		0x00
 
-void camellia_6rounds(camellia128_ctx_t* s, uint64_t* bl, uint64_t* br, uint8_t roundop, uint8_t keychoice);
+void camellia_6rounds(camellia128_ctx_t* s, uint64_t* bl, uint64_t* br, 
+                      uint8_t roundop, uint8_t keychoice);
 /*****************************************************************************/
 
 
@@ -140,7 +141,7 @@ void camellia128_enc(void* block, camellia128_ctx_t* s){
 	#define BR (((uint64_t*)block)[1])
 	/* endian adjustment */
 	 /*BL*/
-	 /* 	1 2 3 4 5 6 7 8
+	 /* 1 2 3 4 5 6 7 8
 	  *	8 7 6 5 4 3 2 1
 	  */
 	 

@@ -229,7 +229,7 @@ void seed_init(uint8_t * key, seed_ctx_t * ctx){
 #define L (((uint64_t*)buffer)[0])
 #define R (((uint64_t*)buffer)[1])
 
-void seed_encrypt(void * buffer, seed_ctx_t * ctx){
+void seed_enc(void * buffer, seed_ctx_t * ctx){
 	uint8_t r;
 	keypair_t k;
 	for(r=0; r<8; ++r){
@@ -262,7 +262,7 @@ void seed_encrypt(void * buffer, seed_ctx_t * ctx){
 #define L (((uint64_t*)buffer)[0])
 #define R (((uint64_t*)buffer)[1])
 
-void seed_decrypt(void * buffer, seed_ctx_t * ctx){
+void seed_dec(void * buffer, seed_ctx_t * ctx){
 	int8_t r;
 	keypair_t k;
 	for(r=7; r>=0; --r){

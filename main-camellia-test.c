@@ -60,7 +60,7 @@ void testrun_nessie_camellia(void){
 }
 
 
-void test_performance_cast5(void){
+void test_performance_camellia(void){
 	uint64_t t;
 	char str[6];
 	uint8_t key[16], data[16];
@@ -120,7 +120,7 @@ int main (void){
 	uart_putstr_P(PSTR(")\r\nloaded and running\r\n"));
 
 	PGM_P    u   = PSTR("nessie\0test\0performance\0");
-	void_fpt v[] = {testrun_nessie_camellia, testrun_nessie_camellia, test_performance_cast5};
+	void_fpt v[] = {testrun_nessie_camellia, testrun_nessie_camellia, test_performance_camellia};
 	
 	while(1){ 
 		if (!getnextwordn(str,20)){DEBUG_S("DBG: W1\r\n"); goto error;}

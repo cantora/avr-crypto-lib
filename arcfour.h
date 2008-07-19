@@ -21,9 +21,18 @@
  * Author:	Daniel Otte
  * Date: 	2006-06-07
  * License: GPL
- * Description: Implementation of the ARCFOUR (RC4 compatible) stream cipher algorithm.
- * 
+ * Description: Implementation of the ARCFOUR (RC4 compatible) stream cipher algorithm. 
  */
+/* 
+ * \file	arcfour.h
+ * \author	Daniel Otte
+ * \date 	2006-06-07
+ * \par License
+ *      GPL
+ * \brief   Implementation of the ARCFOUR (RC4 compatible) stream cipher algorithm. 
+ */
+ 
+ 
 #ifndef ARCFOUR_H_
 #define ARCFOUR_H_
 
@@ -34,6 +43,7 @@ typedef struct {
 	uint8_t s[256];
 } arcfour_ctx_t;
  
+
 
 void arcfour_init(arcfour_ctx_t *c, uint8_t *key, uint8_t length);
 uint8_t arcfour_gen(arcfour_ctx_t *c);

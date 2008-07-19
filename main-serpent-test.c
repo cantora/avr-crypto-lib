@@ -41,7 +41,7 @@ char* cipher_name = "Serpent";
  *  additional validation-functions											 *
  *****************************************************************************/
 void serpent_genctx_dummy(uint8_t* key, uint16_t keysize, void* ctx){
-	serpent_genctx(key, keysize&0xff, ctx);
+	serpent_init(key, keysize&0xff, ctx);
 }
 
 void testrun_nessie_serpent(void){
@@ -76,7 +76,7 @@ void testrun_performance_serpent(void){
 	memset(data, 0, 16);
 	
 	startTimer(1);
-	serpent_genctx(key, 0, &ctx);
+	serpent_init(key, 0, &ctx);
 	t = stopTimer();
 	uart_putstr_P(PSTR("\r\n\tctx-gen time: "));
 	ultoa((unsigned long)t, str, 10);
