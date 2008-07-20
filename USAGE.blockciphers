@@ -208,9 +208,9 @@ email:  daniel.otte@rub.de
  used, the ciphertext does not form the entire input block for the next 
  operation but it is shifted in the input block.
  The resulting cipher is something known as self synchonising stream cipher.
- This means tha a manipulation of a single bit in the ciphertext, will result
- in this bit flipped in th corresponding plaintext but the following block will
- be "destroyed" until the cipher "healths" itself, meaning the manipulated 
+ This means that a manipulation of a single bit in the ciphertext will result
+ in this bit flipped in the corresponding plaintext but the following blocks 
+ will be "destroyed" until the cipher "heald" itself, meaning the manipulated 
  ciphertext block gets shift out of the input block.
 
 
