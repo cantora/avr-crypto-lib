@@ -36,7 +36,7 @@ uint8_t a5_1_clock_core(a5_1_ctx_t *c, uint8_t clockoverride);
 
 
 /*
- * length is length of key in bytes!
+ * length is length of key in bits!
  */
 
 void a5_1_init(a5_1_ctx_t *c, void* key, uint8_t keylength_b, void* iv, uint8_t ivlength_b){
