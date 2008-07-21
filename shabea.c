@@ -35,14 +35,8 @@
 #include "config.h"
 #include "uart.h"
 #include "debug.h"
-/*
- * 
- */
-void memxor(uint8_t * dest, uint8_t * src, uint8_t length){
-	while(length--){
-		*dest++ ^= *src++;
-	}
-} 
+#include "memxor.h"
+
 
 /*
  * SHABEA256-n
@@ -77,7 +71,7 @@ void shabea256(void * block, void * key, uint16_t keysize_b, uint8_t enc, uint8_
 			memcpy(R, hash, HALFSIZEB);
 		} else {
 			/* no swap */
-			memxor(L, hash, HALFSIZE);	
+			memxor(L, hash, HALFSIZEB);	
 		}
 	}
 }
