@@ -17,53 +17,33 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * \file        entropium.c
- * \author      Daniel Otte
- * \email       daniel.otte@rub.de
- * \date        2006-05-17
- * \par License:
- * 	GPLv3 or later
+ * \file    entropium.c
+ * \author  Daniel Otte
+ * \email   daniel.otte@rub.de
+ * \date    2006-05-17
+ * \license	GPLv3 or later
  * \brief	This file contains an implementaition of a pseudo-random-number generator.
  * 
  * Extension 1:
  * 	rndCore is expanded to 512 bits for more security.
  *
- * \verbatim
- *                      ################################################################################################
- *                      #                                                                                              #
- *                      #         +---------------------------+                                                        #
- *                      #         |                           |                             +---+                      #
- *                      #         V                           |                             |   |                      #
- *                      #      (concat)                       |                             |   V                      #
- *  +---------------+   #    o---------o             (xor)+---------+      o---------o      | o----o     o---------o   #    +--------------+
- *  | entropy Block | -----> | sha-256 | --(offset)-<     | rndCore | ---> | sha-256 | --+--+-| +1 |---> | sha-256 | -----> | random Block |
- *  +---------------+   #    o---------o             (xor)+---------+      o---------o   |    o----o     o---------o   #    +--------------+
- *                      #                                 (xor) (xor)                    |                             #
- *                      #                                   ^     ^                      |                             #
- *                      #                                    \   /                       |                             #
- *                      #                                   (offset)---------------------+                             #
- *                      #                                                                                              #
- *                      ################################################################################################
- * \endverbatim
- */
-
- /* \verbatim
- *                      ################################################################################################
- *                      #                                                                                              #
- *                      #         +---------------------------+                                                        #
- *                      #         |                           |                             +---+                      #
- *                      #         V                           |                             |   |                      #
- *                      #      (concat)                       |                             |   V                      #
- *  +---------------+   #    o---------o             (xor)+---------+      o---------o      | o----o     o---------o   #    +--------------+
- *  | entropy Block | -----> | sha-256 | --(offset)-<     | rndCore | ---> | sha-256 | --+--+-| +1 |---> | sha-256 | -----> | random Block |
- *  +---------------+   #    o---------o             (xor)+---------+      o---------o   |    o----o     o---------o   #    +--------------+
- *                      #                                 (xor) (xor)                    |                             #
- *                      #                                   ^     ^                      |                             #
- *                      #                                    \   /                       |                             #
- *                      #                                   (offset)---------------------+                             #
- *                      #                                                                                              #
- *                      ################################################################################################
- * \endverbatim
+  \verbatim
+                       ################################################################################################
+                       #                                                                                              #
+                       #         +---------------------------+                                                        #
+                       #         |                           |                                                        #
+                       #         V                           |                                                        #
+                       #      (concat)                       |                                                        #
+   +---------------+   #    o---------o             (xor)+---------+      o---------o        o----o     o---------o   #    +--------------+
+   | entropy Block | -----> | sha-256 | --(offset)-<     | rndCore | ---> | sha-256 | --+----| +1 |---> | sha-256 | -----> | random Block |
+   +---------------+   #    o---------o             (xor)+---------+      o---------o   |    o----o     o---------o   #    +--------------+
+                       #                                 (xor) (xor)                    |                             #
+                       #                                   ^     ^                      |                             #
+                       #                                    \   /                       |                             #
+                       #                                   (offset)---------------------+                             #
+                       #                                                                                              #
+                       ################################################################################################
+  \endverbatim
  */
 
 #include <stdint.h>
@@ -79,12 +59,6 @@ uint32_t rndCore[16];
 
 /*************************************************************************/
 
-/**
- * \brief This function adds entropy to the central entropy pool
- * 
- * @param length This ist the length of the random data in BITS. 
- * @param data This is the random data which should be added to the entropy pool
-*/
 /* idea is: hash the message and add it via xor to rndCore
  *
  * length in bits 
@@ -110,10 +84,7 @@ void entropium_addEntropy(unsigned length_b, const void* data){
 }
 
 /*************************************************************************/
-/**
- * \brief This function fills a given buffer with 32 random bytes
- * @param b Pointer to buffer wich is to fill
- */
+
 void entropium_getRandomBlock(void *b){
 	sha256_ctx_t s;
 	uint8_t offset=8;
@@ -133,11 +104,7 @@ void entropium_getRandomBlock(void *b){
 }
 
 /*************************************************************************/
- 
-/**
- * \brief This function simply returns a random byte
- * @return a random byte
- */
+
 uint8_t entropium_getRandomByte(void){
 	static uint8_t block[32];
 	static uint8_t i=32;
@@ -149,13 +116,6 @@ uint8_t entropium_getRandomByte(void){
 	return block[i++];
 }
 
-/*************************************************************************/
- 
-/**
- * \brief This function fills the given bock with length random bytes
- * @return a random byte
- */
- 
 void entropium_fillBlockRandom(void* block, unsigned length_B){
 	while(length_B>ENTROPIUM_RANDOMBLOCK_SIZE){
 		entropium_getRandomBlock(block);

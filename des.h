@@ -21,22 +21,80 @@
  * \author	Daniel Otte 
  * \date	2007-06-16
  * \brief 	des and tdes declarations
- * \par License	
- * GPL
+ * \license	GPLv3 or later
  * 
  */
 #ifndef DES_H_
 #define DES_H_
 
-#include <stdint.h>
 /* the FIPS 46-3 (1999-10-25) name for triple DES is triple data encryption algorithm so TDEA.
  * Also we only implement the three key mode  */
+
+/** \def tdea_enc
+ * \brief defining an alias for void tdes_enc(void* out, const void* in, const void* key)
+ */
+
+/** \def tdea_dec
+ * \brief defining an alias for void tdes_dec(void* out, const void* in, const void* key)
+ */
+
 #define tdea_enc tdes_enc
 #define tdea_dec tdes_dec
 
-void des_enc(uint8_t* out, uint8_t* in, uint8_t* key);
-void des_dec(uint8_t* out, uint8_t* in, uint8_t* key);
-void tdes_enc(uint8_t* out, uint8_t* in, uint8_t* key);
-void tdes_dec(uint8_t* out, uint8_t* in, uint8_t* key);
+/** \fn void des_enc(void* out, const void* in, const void* key)
+ * \brief encrypt a block with DES
+ * 
+ * This function encrypts a block of 64 bits (8 bytes) with the DES algorithm.
+ * Key expansion is done automatically. The key is 64 bits long, but note that
+ * only 56 bits are used (the LSB of each byte is droped). The input and output
+ * blocks may overlap.
+ * 
+ * \param out pointer to the block (64 bit = 8 byte) where the ciphertext is written to
+ * \param in  pointer to the block (64 bit = 8 byte) where the plaintext is read from
+ * \param key pointer to the key (64 bit = 8 byte)
+ */
+void des_enc(void* out, const void* in, const void* key);
+
+/** \fn void des_dec(void* out, const void* in, const void* key)
+ * \brief decrypt a block with DES
+ * 
+ * This function decrypts a block of 64 bits (8 bytes) with the DES algorithm.
+ * Key expansion is done automatically. The key is 64 bits long, but note that
+ * only 56 bits are used (the LSB of each byte is droped). The input and output
+ * blocks may overlap.
+ * 
+ * \param out pointer to the block (64 bit = 8 byte) where the plaintext is written to
+ * \param in  pointer to the block (64 bit = 8 byte) where the ciphertext is read from
+ * \param key pointer to the key (64 bit = 8 byte)
+ */
+void des_dec(void* out, const void* in, const void* key);
+
+/** \fn void tdes_enc(void* out, const void* in, const void* key)
+ * \brief encrypt a block with Tripple-DES
+ * 
+ * This function encrypts a block of 64 bits (8 bytes) with the Tripple-DES (EDE)
+ * algorithm. Key expansion is done automatically. The key is 192 bits long, but
+ * note that only 178 bits are used (the LSB of each byte is droped). The input
+ * and output blocks may overlap.
+ * 
+ * \param out pointer to the block (64 bit = 8 byte) where the ciphertext is written to
+ * \param in  pointer to the block (64 bit = 8 byte) where the plaintext is read from
+ * \param key pointer to the key (192 bit = 24 byte)
+ */
+void tdes_enc(void* out, const void* in, const void* key);
+
+/** \fn void tdes_dec(void* out, const void* in, const void* key)
+ * \brief decrypt a block with Tripple-DES
+ * 
+ * This function decrypts a block of 64 bits (8 bytes) with the Tripple-DES (EDE)
+ * algorithm. Key expansion is done automatically. The key is 192 bits long, but
+ * note that only 178 bits are used (the LSB of each byte is droped). The input
+ * and output blocks may overlap.
+ * 
+ * \param out pointer to the block (64 bit = 8 byte) where the plaintext is written to
+ * \param in  pointer to the block (64 bit = 8 byte) where the ciphertext is read from
+ * \param key pointer to the key (192 bit = 24 byte)
+ */
+ void tdes_dec(void* out, const void* in, const void* key);
 
 #endif /*DES_H_*/

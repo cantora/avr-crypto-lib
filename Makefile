@@ -183,9 +183,9 @@ clean:
 xclean: clean
 	rm -rf $(DEP_DIR)*.d
 
-flash:
-	$(ERASECMD)
-	$(FLASHCMD)
+docu:
+	doxygen
+
 
 %.lst: %.elf
 	$(OBJDUMP) -h -S $< > $@

@@ -17,9 +17,9 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 /* 
- * File:		A5_1.h
- * Author:	Daniel Otte
- * Date: 	24.06.2006
+ * File:    A5_1.h
+ * Author:  Daniel Otte
+ * Date:    24.06.2006
  * License: GPL
  * Description: Implementation of the A5/1 stream cipher algorithm, as used in GSM.
  * ! Warning, this is weak crypto !

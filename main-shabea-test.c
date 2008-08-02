@@ -42,10 +42,10 @@
 char* cipher_name = "Shabea";
 
 /*****************************************************************************
- *  additional validation-functions											 *
+ *  additional validation-functions                                          *
  *****************************************************************************/
-void shabea_genctx_dummy(uint8_t* key, uint16_t keysize, void* ctx){
-	memcpy(ctx, key, keysize);
+void shabea_genctx_dummy(uint8_t* key, uint16_t keysize_b, void* ctx){
+	memcpy(ctx, key, (keysize_b+7)/8);
 }
 
 void shabea_enc_dummy(void* buffer, void* ctx){

@@ -20,16 +20,22 @@
  * File:	arcfour.h
  * Author:	Daniel Otte
  * Date: 	2006-06-07
- * License: GPL
+ * License: GPLv3+
  * Description: Implementation of the ARCFOUR (RC4 compatible) stream cipher algorithm. 
  */
-/* 
+ 
+/** 
  * \file	arcfour.h
  * \author	Daniel Otte
  * \date 	2006-06-07
- * \par License
- *      GPL
- * \brief   Implementation of the ARCFOUR (RC4 compatible) stream cipher algorithm. 
+ * \license GPLv3+
+ * \brief Implementation of the ARCFOUR (RC4 compatible) stream cipher algorithm. 
+ * 
+ * This header file defines the interface of the ARCFOUR cipher implementation.
+ * 
+ * This implementation aims to be compatible with the ARCFOUR description
+ * availabe at 
+ * http://www.mozilla.org/projects/security/pki/nss/draft-kaukonen-cipher-arcfour-03.txt
  */
  
  
@@ -38,14 +44,48 @@
 
 #include <stdint.h>
 
-typedef struct {
+/** \typedef arcfour_ctx_t
+ * \brief type for arcfour context
+ * 
+ * A variable of this type may contain a complete ARCFOUR context.
+ * The context is used to store the state of the cipher and gets
+ * created by the arcfour_init(arcfour_ctx_t *c, uint8_t *key, uint8_t length_B)
+ * function. The context is of the fixed size of 258 bytes
+ */
+ 
+/** \struct arcfour_ctx_st
+ * \brief base for ::arcfour_ctx_t
+ * 
+ * The struct holds the two indices and the S-Box
+ */
+typedef struct arcfour_ctx_st {
 	uint8_t i,j;
 	uint8_t s[256];
 } arcfour_ctx_t;
  
 
+/** \fn void arcfour_init(arcfour_ctx_t *ctx, void *key, uint8_t length_B)
+ * \brief setup a context with a key
+ * 
+ * This function sets up a ::arcfour_ctx_t context using
+ * the supplied key of the given length.
+ * \param ctx pointer to the context
+ * \param key pointer to the key
+ * \param length_B length of the key in bytes (between 1 and 255)
+ */
+ 
+void arcfour_init(arcfour_ctx_t *ctx, void *key, uint8_t length_B);
 
-void arcfour_init(arcfour_ctx_t *c, uint8_t *key, uint8_t length);
-uint8_t arcfour_gen(arcfour_ctx_t *c);
+/** \fn uint8_t arcfour_gen(arcfour_ctx_t *ctx)
+ * \brief generates a byte of keystream
+ * 
+ * This function generates the next byte of keystream
+ * from the supplied ::arcfour_ctx_t context which is updated acordingly
+ *  
+ * \param ctx pointer to the context
+ * \return byte of keystream
+ */
+ 
+uint8_t arcfour_gen(arcfour_ctx_t *ctx);
 
 #endif

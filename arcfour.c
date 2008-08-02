@@ -33,30 +33,29 @@
  * length is length of key in bytes!
  */
 
-void arcfour_init(arcfour_ctx_t *c, uint8_t *key, uint8_t length){
+void arcfour_init(arcfour_ctx_t *ctx, void *key, uint8_t length_B){
 	uint8_t t;
 	unsigned x,y=0;
 	for(x=0; x<= 255; ++x)
-		c->s[x]=x;
+		ctx->s[x]=x;
 	
 	for(x=0; x<= 255; ++x){
-		y += c->s[x] + key[x % length];
+		y += ctx->s[x] + ((uint8_t*)key)[x % length_B];
 		y &= 0xff;
-		t = c->s[y];
-		c->s[y] = c->s[x];
-		c->s[x] = t;
-	};
-		
-	c->i = c->j = 0;
+		t = ctx->s[y];
+		ctx->s[y] = ctx->s[x];
+		ctx->s[x] = t;
+	}	
+	ctx->i = ctx->j = 0;
 }
 
-uint8_t arcfour_gen(arcfour_ctx_t *c){
+uint8_t arcfour_gen(arcfour_ctx_t *ctx){
 	uint8_t t;
-	c->i++;
-	c->j += c->s[c->i];
-	t = c->s[c->j];
-	c->s[c->j] = c->s[c->i];
-	c->s[c->i] = t;
-	return c->s[(c->s[c->j] + c->s[c->i]) & 0xff];
+	ctx->i++;
+	ctx->j += ctx->s[ctx->i];
+	t = ctx->s[ctx->j];
+	ctx->s[ctx->j] = ctx->s[ctx->i];
+	ctx->s[ctx->i] = t;
+	return ctx->s[(ctx->s[ctx->j] + ctx->s[ctx->i]) & 0xff];
 }
 

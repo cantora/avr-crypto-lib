@@ -17,18 +17,18 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * \file        des.c
- * \author      Daniel Otte
- * \email       daniel.otte@rub.de
- * \date        2007-06-16
- * \brief       DES and EDE-DES implementation
- * \par License	
- * GPLv3 or later
+ * \file     des.c
+ * \author   Daniel Otte
+ * \email    daniel.otte@rub.de
+ * \date     2007-06-16
+ * \brief    DES and EDE-DES implementation
+ * \license	 GPLv3 or later
  * 
  */
 #include "config.h"
 #include "debug.h"
 #include "uart.h"
+#include <stdint.h>
 #include <string.h>
 #include <util/delay.h>
 #include <avr/pgmspace.h>
@@ -207,7 +207,7 @@ prog_uint8_t shiftkeyinv_permtab[] = {
 #define ROTTABLE_INV  0x3F7E
 /******************************************************************************/
 
-void permute(prog_uint8_t *ptable, uint8_t *in, uint8_t *out){
+void permute(prog_uint8_t *ptable, const uint8_t *in, uint8_t *out){
 	uint8_t ib, ob; /* in-bytes and out-bytes */
 	uint8_t byte, bit; /* counter for bit and byte */
 	ib = pgm_read_byte(&(ptable[0]));
@@ -302,15 +302,15 @@ uint32_t des_f(uint32_t r, uint8_t* kr){
 
 /******************************************************************************/
 
-void des_enc(uint8_t* out, uint8_t* in, uint8_t* key){
+void des_enc(void* out, const void* in, const void* key){
 #define R *((uint32_t*)&(data[4]))
 #define L *((uint32_t*)&(data[0]))
 
 	uint8_t data[8],kr[6],k[7];
 	uint8_t i;
 	
-	permute((prog_uint8_t*)ip_permtab, in, data);
-	permute((prog_uint8_t*)pc1_permtab, key, k);
+	permute((prog_uint8_t*)ip_permtab, (uint8_t*)in, data);
+	permute((prog_uint8_t*)pc1_permtab, (uint8_t*)key, k);
 	for(i=0; i<8; ++i){
 		shiftkey(k);
 		if(ROTTABLE&((1<<((i<<1)+0))) )
@@ -330,20 +330,20 @@ void des_enc(uint8_t* out, uint8_t* in, uint8_t* key){
 	L ^= R;
 	R ^= L;
 	
-	permute((prog_uint8_t*)inv_ip_permtab, data, out);
+	permute((prog_uint8_t*)inv_ip_permtab, data, (uint8_t*)out);
 }
 
 /******************************************************************************/
 
-void des_dec(uint8_t* out, uint8_t* in, uint8_t* key){
+void des_dec(void* out, const void* in, const uint8_t* key){
 #define R *((uint32_t*)&(data[4]))
 #define L *((uint32_t*)&(data[0]))
 
 	uint8_t data[8],kr[6],k[7];
 	int8_t i;
 	
-	permute((prog_uint8_t*)ip_permtab, in, data);
-	permute((prog_uint8_t*)pc1_permtab, key, k);
+	permute((prog_uint8_t*)ip_permtab, (uint8_t*)in, data);
+	permute((prog_uint8_t*)pc1_permtab, (uint8_t*)key, k);
 	for(i=7; i>=0; --i){
 		
 		permute((prog_uint8_t*)pc2_permtab, k, kr);
@@ -366,23 +366,23 @@ void des_dec(uint8_t* out, uint8_t* in, uint8_t* key){
 	L ^= R;
 	R ^= L;
 	
-	permute((prog_uint8_t*)inv_ip_permtab, data, out);
+	permute((prog_uint8_t*)inv_ip_permtab, data, (uint8_t*)out);
 }
 
 /******************************************************************************/
 
-void tdes_enc(uint8_t* out, uint8_t* in, uint8_t* key){
-	des_enc(out,  in, key + 0);
-	des_dec(out, out, key + 8);
-	des_enc(out, out, key +16);
+void tdes_enc(void* out, void* in, const void* key){
+	des_enc(out,  in, (uint8_t*)key + 0);
+	des_dec(out, out, (uint8_t*)key + 8);
+	des_enc(out, out, (uint8_t*)key +16);
 }
 
 /******************************************************************************/
 
-void tdes_dec(uint8_t* out, uint8_t* in, uint8_t* key){
-	des_dec(out,  in, key + 0);
-	des_enc(out, out, key + 8);
-	des_dec(out, out, key +16);
+void tdes_dec(void* out, void* in, const uint8_t* key){
+	des_dec(out,  in, (uint8_t*)key + 0);
+	des_enc(out, out, (uint8_t*)key + 8);
+	des_dec(out, out, (uint8_t*)key +16);
 }
 
 /******************************************************************************/
