@@ -16,7 +16,7 @@ TESTLOG_DIR    = testlog/
 TESTPREFIX     = nessie-
 CC	     = avr-gcc
 
-override CFLAGS	= -MMD -MF$(DEP_DIR)$(patsubst %.c,%.d,$<) -I. -pedantic -std=c99 -Wall -Wstrict-prototypes  $(OPTIMIZE) -mmcu=$(MCU_TARGET) $(DEFS)
+override CFLAGS	= -MMD -MF$(DEP_DIR)$(patsubst %.c,%.d,$(patsubst $(TESTSRC_DIR)%,%,$<)) -I. -pedantic -std=c99 -Wall -Wstrict-prototypes  $(OPTIMIZE) -mmcu=$(MCU_TARGET) $(DEFS)
 
 override LDFLAGS       = -Wl,-Map,
 override ASFLAGS	   = -mmcu=$(MCU_TARGET)
