@@ -26,18 +26,9 @@
 #include <stdint.h>
 #include <string.h> /* memset() */
 #include <avr/pgmspace.h>
+#include "memxor.h"
 #include "serpent.h"
 #include "serpent-sboxes.h"
-
-/******************************************************************************/
-
-void memxor(void * dest, void * src, uint8_t size){
-	while(size--){
-		*((uint8_t*)dest) ^= *((uint8_t*)src);
-		dest = (uint8_t*)dest +1;
-		src  = (uint8_t*)src  +1;
-	}
-}
 
 /******************************************************************************/
 
@@ -92,10 +83,10 @@ static uint32_t gen_w(uint32_t * b, uint8_t i){
 } 
 
 /* key must be 256bit (32 byte) large! */
-void serpent_init(void * key, uint8_t keysize, serpent_ctx_t * ctx){
+void serpent_init(const void* key, uint16_t keysize, serpent_ctx_t* ctx){
 	uint32_t buffer[8];
 	uint8_t i,j;
-	if(keysize){
+	if(keysize<256){
 		/* keysize is less than 256 bit, padding needed */
 		memset(buffer, 0, 32);
 		memcpy(buffer, key, (keysize+7)/8);
@@ -117,7 +108,7 @@ void serpent_init(void * key, uint8_t keysize, serpent_ctx_t * ctx){
 }
 
 
-void serpent_enc(void* buffer, serpent_ctx_t * ctx){
+void serpent_enc(void* buffer, const serpent_ctx_t* ctx){
 	uint8_t i;
 	for(i=0; i<31; ++i){
 		memxor((uint8_t*)buffer, ctx->k[i], 16);
@@ -130,7 +121,7 @@ void serpent_enc(void* buffer, serpent_ctx_t * ctx){
 	memxor((uint8_t*)buffer, ctx->k[i], 16);
 }
 
-void serpent_dec(void* buffer, serpent_ctx_t * ctx){
+void serpent_dec(void* buffer, const serpent_ctx_t* ctx){
 	int8_t i=32;
 	
 	memxor((uint8_t*)buffer, ctx->k[i], 16);

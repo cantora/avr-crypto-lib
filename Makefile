@@ -19,10 +19,7 @@ $(1) = $(2)
 endef
 $(foreach a, $(ALGORITHMS_OBJ), $(eval $(call OBJinBINDIR_TEMPLATE, $(a), $(patsubst %.o,$(BIN_DIR)%.o,$($(a))))))
 ALGORITHMS_TEST_BIN = $(patsubst %,%_TEST_BIN, $(ALGORITHMS))
-$(foreach a, $(ALGORITHMS_TEST_BIN), $(eval $(call OBJinBINDIR_TEMPLATE, $(a), $(patsubst %.o,$(BIN_DIR)%.o,$($(a))))))
-#ALGORITHMS_TEST_BIN_MAIN = $(foreach a, $(ALGORITHMS_TEST_BIN), $(firstword $($(a))))
-#ALGORITHMS_TEST_BIN_MAIN_ELF = $(patsubst $(BIN_DIR)%.o, $(TESTBIN_DIR)%.elf, $(ALGORITHMS_TEST_BIN_MAIN))
-#ALGORITHMS_TEST_BIN_MAIN_HEX = $(patsubst $(BIN_DIR)%.o, $(TESTBIN_DIR)%.hex, $(ALGORITHMS_TEST_BIN_MAIN))
+$(foreach a, $(ALGORITHMS_TEST_BIN), $(eval $(call OBJinBINDIR_TEMPLATE, $(a), $(patsubst %.o,$(TESTBIN_DIR)%.o,$($(a))))))
 
 
 ALGORITHMS_TEST_BIN_IMM =  $(foreach a, $(ALGORITHMS_TEST_BIN), $($(a)))
@@ -41,18 +38,24 @@ all: $(foreach algo, $(ALGORITHMS), $(algo)_OBJ)
 
 #-------------------------------------------------------------------------------
 
-define BLA_TEMPLATE2
-$(2): $(3)
+define MAIN_OBJ_TEMPLATE
+$(2): $(3) $(4)
 	@echo "[gcc]: $$@"
 #	echo $$^
 	@$(CC) $(CFLAGS) $(LDFLAGS)$(patsubst %.elf,%.map,$(2)) -o \
 	$(2) \
-	$(3) \
+	$(3) $(4) \
 	$(LIBS)
 endef
 
-#$(foreach algo, $(ALGORITHMS), $(eval $(call BLA_TEMPLATE2, $(algo), $(patsubst $(BIN_DIR)%.o,$(TESTBIN_DIR)%.elf,$(firstword $($(algo)_TEST_BIN))), $(patsubst %.o,%.o,$($(algo)_TEST_BIN)) )))
-$(foreach algo, $(ALGORITHMS), $(eval $(call BLA_TEMPLATE2, $(algo), $(TESTBIN_DIR)main-$(call lc,$(algo))-test.elf, $(patsubst %.o,%.o,$($(algo)_TEST_BIN)) )))
+$(foreach algo, $(ALGORITHMS), $(eval $(call MAIN_OBJ_TEMPLATE, \
+   $(algo), \
+   $(TESTBIN_DIR)main-$(call lc,$(algo))-test.elf, \
+   $(patsubst %.o,%.o,$($(algo)_TEST_BIN)), \
+   $(patsubst %.o,%.o,$($(algo)_OBJ))  )))
+
+
+
 
 #-------------------------------------------------------------------------------
 .PHONY: help
@@ -70,6 +73,8 @@ info:
 	@echo "    $(MACS)"
 	@echo "  PRNG functions:"
 	@echo "    $(PRNGS)"
+	@echo "  ALGORITHMS_TEST_BIN"
+	@echo "    $(ALGORITHMS_TEST_BIN)"
 	@echo "  ALGORITHMS_TEST_TARGET_ELF:"
 	@echo "    $(ALGORITHMS_TEST_TARGET_ELF)"
 	
@@ -81,6 +86,15 @@ $(BIN_DIR)%.o: %.c
 $(BIN_DIR)%.o: %.S
 	@echo "[as] :  $@"
 	@$(CC) $(ASFLAGS) -c -o $@ $<
+
+$(TESTBIN_DIR)%.o: $(TESTSRC_DIR)%.c
+	@echo "[gcc]:  $@"
+	@$(CC) $(CFLAGS)  -c -o $@ $<
+
+$(TESTBIN_DIR)%.o: $(TESTSRC_DIR)%.S
+	@echo "[as] :  $@"
+	@$(CC) $(ASFLAGS) -c -o $@ $<
+
 
 %.o: %.c
 	@echo "[gcc]:  $@"

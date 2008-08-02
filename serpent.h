@@ -16,10 +16,10 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-/* serpent.h
- * a bitsliced implementation of the serpent cipher for avr microcontrollers
- * author: Daniel Otte
- * license: GPLv3
+/** \file   serpent.h
+ * \author  Daniel Otte
+ * \license GPLv3
+ * \brief a implementation of the serpent cipher for avr microcontrollers
  */
 
 #ifndef SERPENT_H_
@@ -35,13 +35,13 @@ typedef struct serpent_ctx_st {
 
 #define SERPENT_KEY128 128
 #define SERPENT_KEY192 192
-#define SERPENT_KEY256   0
+#define SERPENT_KEY256 256
 
 
 /* key must be 256bit (32 byte) large! */
-void serpent_init(void * key, uint8_t keysize, serpent_ctx_t * ctx);
-void serpent_enc(void * buffer, serpent_ctx_t * ctx);
-void serpent_dec(void * buffer, serpent_ctx_t * ctx);
+void serpent_init(const void* key, uint16_t keysize, serpent_ctx_t* ctx);
+void serpent_enc(void* buffer, const serpent_ctx_t* ctx);
+void serpent_dec(void* buffer, const serpent_ctx_t* ctx);
 
 
 #endif /*SERPENT_H_*/

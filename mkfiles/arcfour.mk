@@ -6,7 +6,7 @@ STREAM_CIPHERS += $(ALGO_NAME)
 
 $(ALGO_NAME)_OBJ      := arcfour-asm.o
 $(ALGO_NAME)_TEST_BIN := main-arcfour-test.o debug.o uart.o serial-tools.o \
-                         nessie_stream_test.o nessie_common.o arcfour-asm.o
+                         nessie_stream_test.o nessie_common.o
 $(ALGO_NAME)_NESSIE_TEST      := "nessie"
 $(ALGO_NAME)_PEROFRMANCE_TEST := "performance"
 
