@@ -40,7 +40,11 @@
    
  \subsection Hashes Hashes
   A Hash function produces a fixed length output (called hash value or message
-  digest) from a variable length message input. 
+  digest) from a variable length message input. Most hash algorithms have a 
+  state which is updated by the hash core function from a block of fixed size 
+  from the message. A "lastBlock" function is used to add the last block which
+  is not required to have the fixed length. An addition function is then used
+  to transform the state into the final hash value.
   
   Implemented hash functions:
    - MD5 (md5.h)
@@ -48,10 +52,22 @@
    - SHA-256 (sha256.h)
    
  \subsection MACs Message-Authentification-Codes (MACs)
+  Message-Authentification-Codes work like hash function but take an additional
+  key. The produced output is also called MAC and is highly dependant on the
+  key. They can be thought of symmetric signatures.
+  
+  Implemented MAC functions:
    - HMAC-SHA-1 (hmac-sha1.h)
    - HMAC-SHA-256 (hmac-sha256.h)
 
  \subsection PRNGs Pseudo-Random-Number-Generators (PRNGs)
+  PRNGs produce pseudo random output determinated by the input. They aim to 
+  produce an arbitrary length of good cryptographically secure random if the
+  input has enough entropy. PRNGs differ in the way they accept input. Some
+  are seeded only once, other (like the implemented) maintain an entropy pool
+  to which input can be added at virtually any time.
+  
+  Implemented PRNGs:
    - Entropium (entropium.h)
    
 */

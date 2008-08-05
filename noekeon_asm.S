@@ -68,6 +68,18 @@
 	clr r1
 .endm
 
+push_all_func:
+	pop r31
+	pop r30
+	push_all
+	ijmp
+
+pop_all_func:
+    pop r31
+    pop r30
+    pop_all
+    ijmp
+
 .macro xchg a b
 	eor \a, \b
 	eor \b, \a
@@ -275,6 +287,7 @@ theta:
 	ret
 
 /******************************************************************************/
+#ifndef NOEKEON_NO_ENC
 ; === noekeon_enc ===
 ;
 ;  param1: pointer to buffer/state (r24,r25)
@@ -282,7 +295,7 @@ theta:
 ;
 .global noekeon_enc
 noekeon_enc:
-	push_all
+	rcall push_all_func
 	/* load state */
 	movw r26, r22
 	ldi r28, 2
@@ -312,7 +325,7 @@ noekeon_enc:
 	lpm r0, Z
 	push r0
 3:
-	call round /* pops rc2 & rc1 */
+	rcall round /* pops rc2 & rc1 */
 	pop r22
 	dec r22
 	push r22
@@ -322,7 +335,7 @@ noekeon_enc:
 
 	ldi r22, 0xD4
 	eor state0_3, r22
-	call theta
+	rcall theta
 
 	pop r31
 	pop r30
@@ -335,10 +348,13 @@ noekeon_enc:
 	dec r22
 	brne 1b
 	
-	pop_all
+	rcall pop_all_func
 	ret
+#endif
 /******************************************************************************/
 /******************************************************************************/
+#ifndef NOEKEON_NO_DEC
+
 ; === noekeon_dec ===
 ;
 ;  param1: pointer to buffer/state (r24,r25)
@@ -346,7 +362,7 @@ noekeon_enc:
 ;
 .global noekeon_dec
 noekeon_dec:
-	push_all
+	rcall push_all_func
 	/* allocate 16 bytes on the stack */
 	in r30, _SFR_IO_ADDR(SPL)
 	in r31, _SFR_IO_ADDR(SPH)
@@ -377,7 +393,7 @@ noekeon_dec:
 
 	movw r26, r30
 	sbiw r26, 16 /* set X back to begining of stack key */
-	call theta
+	rcall theta
 	
 	/* mov state to stackkey */
 	clr r29
@@ -419,7 +435,7 @@ noekeon_dec:
 	push r0
 	push r1
 3:
-	call round /* pops rc2 & rc1 */
+	rcall round /* pops rc2 & rc1 */
 	pop r22
 	dec r22
 	push r22
@@ -427,7 +443,7 @@ noekeon_dec:
 ;----
 	pop r22
 
-	call theta
+	rcall theta
 	ldi r22, 0x80
 	eor state0_3, r22
 	
@@ -450,16 +466,18 @@ write_state_back:
 	adiw r30, 16 
 	out  _SFR_IO_ADDR(SPH), r31
 	out  _SFR_IO_ADDR(SPL), r30
-	pop_all
+	rcall pop_all_func
 	ret
+#endif
 /******************************************************************************/
+	
 	
 round:	
 	pop r24
 	pop r25
 	pop r1
 	eor state0_3, r1
-	call theta
+	rcall theta
 	pop r1
 	eor state0_3, r1
 	push r25
@@ -467,9 +485,9 @@ round:
 pi_gamma_pi:
 	ldi r30, pm_lo8(bigendian_rotl32)
 	ldi r31, pm_hi8(bigendian_rotl32)
-	call pi
+	rcall pi
 	/* pi1 done; now gamma */
-	call gamma_1
+	rcall gamma_1
 	/* a[0] <-> a[3] */
 	xchg state0_0, state3_0
 	xchg state0_1, state3_1
@@ -480,10 +498,10 @@ pi_gamma_pi:
 	op32 eor, state2, state1
 	op32 eor, state2, state3
 
-	call gamma_1
+	rcall gamma_1
 	ldi r30, pm_lo8(bigendian_rotr32)
 	ldi r31, pm_hi8(bigendian_rotr32)
-	call pi
+	rcall pi
 	ret
 	
 gamma_1:
@@ -573,6 +591,9 @@ void noekeon_init(void* key, noekeon_ctx_t* ctx){
 	noekeon_enc(ctx, nullv);
 }
 */
+
+#ifndef NOEKEON_NO_INIT
+
 .global noekeon_init
 noekeon_init:
 ; === noekeon_init ===
@@ -606,7 +627,7 @@ noekeon_init:
 	
 	sbiw r26, 16
 	movw r24, r26
-	call noekeon_enc
+	rcall noekeon_enc
 	
 	in r30, _SFR_IO_ADDR(SPL)
 	in r31, _SFR_IO_ADDR(SPH)
@@ -615,6 +636,6 @@ noekeon_init:
 	out  _SFR_IO_ADDR(SPL), r30	
 	ret
 	
-
+#endif
 
 

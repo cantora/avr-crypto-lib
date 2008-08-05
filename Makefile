@@ -40,7 +40,7 @@ all: $(foreach algo, $(ALGORITHMS), $(algo)_OBJ)
 
 define MAIN_OBJ_TEMPLATE
 $(2): $(3) $(4)
-	@echo "[gcc]: $$@"
+	@echo "[ld]: $$@"
 #	echo $$^
 	@$(CC) $(CFLAGS) $(LDFLAGS)$(patsubst %.elf,%.map,$(2)) -o \
 	$(2) \
@@ -207,25 +207,31 @@ docu:
 # Rules for building the .text rom images
 
 %.hex: %.elf
-	$(OBJCOPY) -j .text -j .data -O ihex $< $@
+	@echo "[objcopy]: $@"
+	@$(OBJCOPY) -j .text -j .data -O ihex $< $@
 
 %.srec: %.elf
-	$(OBJCOPY) -j .text -j .data -O srec $< $@
+	@echo "[objcopy]: $@"
+	@$(OBJCOPY) -j .text -j .data -O srec $< $@
 
 %.bin: %.elf
-	$(OBJCOPY) -j .text -j .data -O binary $< $@
+	@echo "[objcopy]: $@"
+	@$(OBJCOPY) -j .text -j .data -O binary $< $@
 
 # Rules for building the .eeprom rom images
 
 
 %_eeprom.hex: %.elf
-	$(OBJCOPY) -j .eeprom --change-section-lma .eeprom=0 -O ihex $< $@
+	@echo "[objcopy]: $@"
+	@$(OBJCOPY) -j .eeprom --change-section-lma .eeprom=0 -O ihex $< $@
 
 %_eeprom.srec: %.elf
-	$(OBJCOPY) -j .eeprom --change-section-lma .eeprom=0 -O srec $< $@
+	@echo "[objcopy]: $@"
+	@$(OBJCOPY) -j .eeprom --change-section-lma .eeprom=0 -O srec $< $@
 
 %_eeprom.bin: %.elf
-	$(OBJCOPY) -j .eeprom --change-section-lma .eeprom=0 -O binary $< $@
+	@echo "[objcopy]: $@"
+	@$(OBJCOPY) -j .eeprom --change-section-lma .eeprom=0 -O binary $< $@
 	
 	
 # Every thing below here is used by avr-libc's build system and can be ignored

@@ -16,12 +16,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-/**
- * 
- * author: Daniel Otte
- * email:  daniel.otte@rub.de
- * license: GPLv3
- * 
+
+/** \file grain.h
+ * \author  Daniel Otte
+ * \email   daniel.otte@rub.de
+ * \license GPLv3 or later
+ * \brief implementation of the Grain streamcipher
  */
 
 #ifndef GRAIN_H_
