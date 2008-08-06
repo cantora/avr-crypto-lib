@@ -290,7 +290,7 @@ theta:
 #ifndef NOEKEON_NO_ENC
 ; === noekeon_enc ===
 ;
-;  param1: pointer to buffer/state (r24,r25)
+;  param1: pointer to buffer (r24,r25)
 ;  param2: pointer to k (r22,r23) 
 ;
 .global noekeon_enc

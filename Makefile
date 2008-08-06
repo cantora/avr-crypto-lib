@@ -204,6 +204,9 @@ docu:
 %.lst: %.elf
 	$(OBJDUMP) -h -S $< > $@
 
+%.lst: %.o
+	$(OBJDUMP) -h -S $< > $@
+
 # Rules for building the .text rom images
 
 %.hex: %.elf
