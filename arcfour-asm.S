@@ -26,68 +26,106 @@
  * 
  */
  
+#include <avr/io.h>
+
+
+.macro push_ p1:req, p2:vararg
+	push \p1
+.ifnb \p2	
+	push_ \p2
+.endif
+.endm
+
+.macro pop_ p1:req, p2:vararg
+	pop \p1
+.ifnb \p2	
+	pop_ \p2
+.endif
+.endm
+
+.macro push_range from:req, to:req
+	push \from
+.if     \to-\from
+	push_range "(\from+1)",\to
+.endif		
+.endm
+
+.macro pop_range from:req, to:req
+	pop \to
+.if     \to-\from
+	pop_range \from,"(\to-1)"	
+.endif
+.endm
+
+.macro stack_alloc size:req, reg1=r30, reg2=r31
+	in \reg1, _SFR_IO_ADDR(SPL)
+	in \reg2, _SFR_IO_ADDR(SPH)
+	sbiw r30, \size 
+	out  _SFR_IO_ADDR(SPH), \reg2
+	out  _SFR_IO_ADDR(SPL), \reg1
+.endm
+
+.macro stack_free size:req, reg1=r30, reg2=r31
+	in \reg1, _SFR_IO_ADDR(SPL)
+	in \reg2, _SFR_IO_ADDR(SPH)
+	adiw r30, \size 
+	out  _SFR_IO_ADDR(SPH), \reg2
+	out  _SFR_IO_ADDR(SPL), \reg1
+.endm
+ 
  /* +---+---+---------------------+
  *  | i | j | ......<256>........ |
  *  +---+---+---------------------+
  */
  
 .global arcfour_init
-
-;== arcfour_init ==
-;  this function initialises the context
-; param1: 16-bit pointer to a ctx struct
-;	given in r25,r24
-; param2: 16-bit pointer to a key
-;	given in r23,r22
-; param1: 8-bit integer indicating keylength in byte
-;	given in 	r20
-
+/*
+ *== arcfour_init ==
+ *  this function initialises the context
+ * param1: 16-bit pointer to the key
+ *	given in r24:r25
+ * param2: 8-bit integer indicating keylength in byte
+ *	given in r22
+ * param3: 16-bit pointer to a ctx struct
+ *	given in r20:r21
+ */
 arcfour_init:
-	push r29
-	push r28
-	push r2
-	
-	movw r26, r24	/* X points to ctx */
-	movw r30, r22	/* Z points to key */
+	push_ r2, r28, r29
+	movw r26, r20   /* X points to ctx */
+	movw r30, r24   /* Z points to key */
 	st X+, r1
-	st X+, r1		/* X points to S */
+	st X+, r1       /* X points to S */
+	movw r20, r26   /* store pointer to S in r21:r20 */
 	
 1:		
 	st X+, r1 
 	inc r1
 	brne 1b
 	
-	adiw r24, 2		/* r24:r25 points to S */
-	clr r21			/* r21 is j */
-	mov r18, r20		/* r18 is keyindex counter */
+	movw r26, r20
+	clr r18         /* r18 is keyindex counter */
 	clr r0
+	clr r19
 2:
-	movw r26, r24
-	ld r19, Z+
-	add r21, r19		/* j+= key[i%length] */
-	
-	add r26, r1
-	adc r27, r0
-	ld r19, X
-	add r21, r19		/* j += S[i] */
-	
-	dec r18		/* check the key-index counter */
-	brne 3f
-	movw r30, r22
-	mov r18, r20
-3:	/* now swap(S[i], S[j]) */ /* r19 is still S[i] */
-	movw r28, r24 
-	add r28, r21
-	adc r29, r0		/* Y points to S[j]*/
+	ld r23, X
+	ld r2, Z+
+	add r19, r2
+	add r19, r23
+	movw r28, r20   /* load pointer to S in Y */
+	add r28, r19
+	adc r29, r1
 	ld r2, Y
-	st Y, r19
-	st X, r2	
-	inc r1
+	st Y,  r23
+	st X+, r2 
+	inc r18
+	cp r18, r22
+	brne 3f
+	movw r30, r24
+	clr r18
+3:		
+	inc r0
 	brne 2b	
-	
-	pop r2
-	pop r28
-	pop r29
+	pop_ r29, r28, r2
 	ret
 
 /*

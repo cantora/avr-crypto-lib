@@ -66,8 +66,8 @@ email:  daniel.otte@rub.de
 3.2. *_init function
  The *_init function generally takes a pointer to the key as first parameter.
  For ciphers where the keysize is not fixed the second parameter gives the 
- keysize (in bits regularly) and the last parameter points to a context variable
- to fill.
+ keysize (in bits regularly) and the last parameter points to the context
+ variable to fill.
  For some ciphers there are additonal parameters like the number of rounds, 
  these parameters generally occur before the context pointer.
  
