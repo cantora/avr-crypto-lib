@@ -54,6 +54,7 @@ uint8_t arcfour_gen(arcfour_ctx_t *ctx){
 	uint8_t t;
 	ctx->i++;
 	ctx->j += ctx->s[ctx->i];
+	/* ctx->s[i] <--> ctx->s[j] */
 	t = ctx->s[ctx->j];
 	ctx->s[ctx->j] = ctx->s[ctx->i];
 	ctx->s[ctx->i] = t;

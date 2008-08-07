@@ -90,7 +90,7 @@
  *	given in r20:r21
  */
 arcfour_init:
-	push_ r2, r28, r29
+	push_ r28, r29
 	movw r26, r20   /* X points to ctx */
 	movw r30, r24   /* Z points to key */
 	st X+, r1
@@ -103,29 +103,27 @@ arcfour_init:
 	brne 1b
 	
 	movw r26, r20
-	clr r18         /* r18 is keyindex counter */
+	add r22, r30         /* r18 is keyindex counter */
 	clr r0
 	clr r19
 2:
 	ld r23, X
-	ld r2, Z+
-	add r19, r2
+	ld r18, Z+
+	add r19, r18
 	add r19, r23
 	movw r28, r20   /* load pointer to S in Y */
 	add r28, r19
 	adc r29, r1
-	ld r2, Y
+	ld r18, Y
 	st Y,  r23
-	st X+, r2 
-	inc r18
-	cp r18, r22
+	st X+, r18
+	cp r30, r22
 	brne 3f
 	movw r30, r24
-	clr r18
 3:		
 	inc r0
 	brne 2b	
-	pop_ r29, r28, r2
+	pop_ r29, r28
 	ret
 
 /*
