@@ -52,7 +52,7 @@ uint8_t sbox[] PROGMEM = {
 #define SHR_O(a) c=(a)&1; ((a) = (a)>>1)
 #define SHR_I(a) ((a) = (c?0x80:0x00)| ((a)>>1))
 
-static void ip(uint8_t *o, uint32_t *i){
+static void serpent_ip(uint32_t *i, uint8_t *o){
 	uint8_t c; // carry 
 	uint8_t n,m;
 	memset(o, 0, 16);
@@ -73,8 +73,7 @@ static void ip(uint8_t *o, uint32_t *i){
 #undef SHR_I
 #define SHR_I(a) ((a) = (c?0x80000000L:0x00L)| ((a)>>1)) /* we use 32-bit words here */
 
-
-static void fp(uint32_t *o, uint32_t *i){
+static void serpent_fp(uint32_t *i, uint32_t *o){
 	uint8_t c; // carry 
 	uint8_t n,m;
 	memset(o, 0, 16);
@@ -93,7 +92,6 @@ static void fp(uint32_t *o, uint32_t *i){
 }
 
 /******************************************************************************/
-
 static void sbox128x(uint8_t box, void* w){
 	uint8_t sb[16];
 	uint8_t i,t,x;
@@ -105,7 +103,7 @@ static void sbox128x(uint8_t box, void* w){
 		sb[2*i+1]=t&0xf;
 	}
 	uint8_t o[16];
-	ip(o, w);
+	serpent_ip(w,o);
 	
 	for(i=0; i<16; ++i){
 		t = ((uint8_t*)o)[i];
@@ -114,13 +112,17 @@ static void sbox128x(uint8_t box, void* w){
 		x |= sb[t&0xf];
 		((uint8_t*)o)[i] = x;
 	}
-	fp(w, (uint32_t*)o);
+	serpent_fp((uint32_t*)o, w);
 }
 
 void sbox128(void * w, uint8_t box){
 	sbox128x(box&0x7, w);
 }
 
+
 void inv_sbox128(void * w, uint8_t box){
 	sbox128x(((box&0x7)|0x8), w);
 }
+
+
+

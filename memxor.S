@@ -20,9 +20,9 @@
 /* 
  * File:        memxor.S
  * Author:      Daniel Otte
- * Date:        2006-07-06
+ * Date:        2008-08-07
  * License:     GPLv3 or later
- * Description: Implementation of the ARCFOUR (RC4 compatible) stream cipher algorithm.
+ * Description: memxor, XORing one block into another
  * 
  */
  

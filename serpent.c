@@ -111,28 +111,28 @@ void serpent_init(const void* key, uint16_t keysize, serpent_ctx_t* ctx){
 void serpent_enc(void* buffer, const serpent_ctx_t* ctx){
 	uint8_t i;
 	for(i=0; i<31; ++i){
-		memxor((uint8_t*)buffer, ctx->k[i], 16);
+		memxor(buffer, ctx->k[i], 16);
 		sbox128(buffer, i);
 		lt((uint8_t*)buffer);
 	}
-	memxor((uint8_t*)buffer, ctx->k[i], 16);
+	memxor(buffer, ctx->k[i], 16);
 	sbox128(buffer, i);
 	++i;
-	memxor((uint8_t*)buffer, ctx->k[i], 16);
+	memxor(buffer, ctx->k[i], 16);
 }
 
 void serpent_dec(void* buffer, const serpent_ctx_t* ctx){
 	int8_t i=32;
 	
-	memxor((uint8_t*)buffer, ctx->k[i], 16);
+	memxor(buffer, ctx->k[i], 16);
 	--i;
 	inv_sbox128(buffer, i);
 	memxor((uint8_t*)buffer, ctx->k[i], 16);
 	--i;
 	for(; i>=0; --i){
-		inv_lt((uint8_t*)buffer);
+		inv_lt(buffer);
 		inv_sbox128(buffer, i);
-		memxor((uint8_t*)buffer, ctx->k[i], 16);
+		memxor(buffer, ctx->k[i], 16);
 	}
 }
 
