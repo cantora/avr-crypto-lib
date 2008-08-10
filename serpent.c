@@ -47,7 +47,9 @@ uint32_t rotr32(uint32_t a, uint8_t n){
 #define X2 (((uint32_t*)b)[2])
 #define X3 (((uint32_t*)b)[3])
 
-static void lt(uint8_t *b){
+void serpent_lt(uint8_t *b);
+/*
+static void serpent_lt(uint8_t *b){
 	X0 = rotl32(X0, 13);
 	X2 = rotl32(X2,  3);
 	X1 ^= X0 ^ X2;
@@ -59,8 +61,12 @@ static void lt(uint8_t *b){
 	X0 = rotl32(X0, 5);
 	X2 = rotr32(X2, 10);
 }
+*/
 
-static void inv_lt(uint8_t *b){
+static void serpent_inv_lt(uint8_t *b);
+
+/*
+static void serpent_inv_lt(uint8_t *b){
 	X2 = rotl32(X2, 10);
 	X0 = rotr32(X0, 5);
 	X2 ^= X3 ^ (X1 << 7);
@@ -72,17 +78,19 @@ static void inv_lt(uint8_t *b){
 	X2 = rotr32(X2,  3);
 	X0 = rotr32(X0, 13);
 }
+*/
 
+uint32_t serpent_gen_w(uint32_t * b, uint8_t i);
+/*
 #define GOLDEN_RATIO 0x9e3779b9l
 
-static uint32_t gen_w(uint32_t * b, uint8_t i){
+static uint32_t serpent_gen_w(uint32_t * b, uint8_t i){
 	uint32_t ret;
 	ret = b[0] ^ b[3] ^ b[5] ^ b[7] ^ GOLDEN_RATIO ^ (uint32_t)i;
 	ret = rotl32(ret, 11);
 	return ret;
 } 
-
-/* key must be 256bit (32 byte) large! */
+*/
 void serpent_init(const void* key, uint16_t keysize, serpent_ctx_t* ctx){
 	uint32_t buffer[8];
 	uint8_t i,j;
@@ -97,7 +105,7 @@ void serpent_init(const void* key, uint16_t keysize, serpent_ctx_t* ctx){
 	}
 	for(i=0; i<33; ++i){
 		for(j=0; j<4; ++j){
-			ctx->k[i][j] = gen_w(buffer, i*4+j);
+			ctx->k[i][j] = serpent_gen_w(buffer, i*4+j);
 			memmove(buffer, &(buffer[1]), 7*4); /* shift buffer one to the "left" */
 			buffer[7] = ctx->k[i][j];
 		}
@@ -113,7 +121,7 @@ void serpent_enc(void* buffer, const serpent_ctx_t* ctx){
 	for(i=0; i<31; ++i){
 		memxor(buffer, ctx->k[i], 16);
 		sbox128(buffer, i);
-		lt((uint8_t*)buffer);
+		serpent_lt((uint8_t*)buffer);
 	}
 	memxor(buffer, ctx->k[i], 16);
 	sbox128(buffer, i);
@@ -130,7 +138,7 @@ void serpent_dec(void* buffer, const serpent_ctx_t* ctx){
 	memxor((uint8_t*)buffer, ctx->k[i], 16);
 	--i;
 	for(; i>=0; --i){
-		inv_lt(buffer);
+		serpent_inv_lt(buffer);
 		inv_sbox128(buffer, i);
 		memxor(buffer, ctx->k[i], 16);
 	}

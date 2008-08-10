@@ -21,8 +21,7 @@
  * \author	Daniel Otte 
  * \date	2007-06-07
  * \brief	SHABEA - a SHA Based Encryption Algorithm declarations
- * \par License	
- * GPL
+ * \license	GPLv3 or later
  * 
  * SHABEAn-r where n is the blocksize and r the number of round used
  * 
@@ -31,5 +30,16 @@
 #ifndef SHABEA_H_
 #define SHABEA_H_
 
-void shabea256(void * block, void * key, uint16_t keysize_b, uint8_t enc, uint8_t rounds);
+/** \fn void shabea256(void * block, const void * key, uint16_t keysize_b, uint8_t enc, uint8_t rounds);
+ * \brief shabea256 encryption/decryption
+ * 
+ * \param block pointer to a 256 bit (32 byte block) to en/decrypt
+ * \param key   pointer to the key material
+ * \param keysize_b length of the key in bits
+ * \param enc  controls if encryption (1) or decryption (0) is done
+ * \param rounds rounds to be done by the cipher (it is not recommended to use less then four rounds)
+ */
+void shabea256(void * block, const void * key, uint16_t keysize_b, 
+               uint8_t enc, uint8_t rounds);
+
 #endif /*SHABEA_H_*/
