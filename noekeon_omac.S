@@ -101,6 +101,7 @@ pop_r18_r27_func:
 .global noekeon_omac
 noekeon_omac:
 	stack_alloc 48
+	adiw r30, 1
 	ldi r17, 48
 1:
 	st Z+, r1
