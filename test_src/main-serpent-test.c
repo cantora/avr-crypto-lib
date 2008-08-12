@@ -62,6 +62,19 @@ void testrun_nessie_serpent(void){
 	nessie_bc_run();
 }
 
+void testrun_test_serpent(void){
+	uint8_t key[32];
+	serpent_ctx_t ctx;
+	uint8_t i;
+	memset(key, 0, 16);
+	serpent_init(key, 128, &ctx);
+	for(i=0; i<33; ++i){
+		uart_putstr_P(PSTR("\r\n subkekey "));	
+		uart_hexdump(&i, 1);
+		uart_putstr_P(PSTR(" : "));	
+		uart_hexdump(ctx.k[i], 16);
+	}
+}
 
 void testrun_performance_serpent(void){
 	uint64_t t;
@@ -114,7 +127,7 @@ int main (void){
 	uart_putstr_P(PSTR(")\r\nloaded and running\r\n"));
 
 	PGM_P    u   = PSTR("nessie\0test\0performance\0");
-	void_fpt v[] = {testrun_nessie_serpent, testrun_nessie_serpent, testrun_performance_serpent};
+	void_fpt v[] = {testrun_nessie_serpent, testrun_test_serpent, testrun_performance_serpent};
 
 	while(1){ 
 		if (!getnextwordn(str,20)){DEBUG_S("DBG: W1\r\n"); goto error;}

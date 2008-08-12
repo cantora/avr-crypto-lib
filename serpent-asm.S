@@ -538,6 +538,9 @@ static uint32_t serpent_gen_w(uint32_t * b, uint8_t i){
  * param i is passed in r22
  * return value is returned in r22.r23.r24.r25
  */
+ /* trashes:
+  *  r20-r25, r30-r31
+  */
 .global serpent_gen_w
 serpent_gen_w:
 	movw r30, r24
@@ -588,4 +591,121 @@ serpent_gen_w:
 	dec r20
 	brne 1b
 	ret
+
+/*
+ * void serpent_init(const void* key, uint16_t keysize_b, serpent_ctx_t* ctx)
+ */
+/*
+ * param key     is passed in r24:r25
+ * param keysize is passed in r22:r23
+ * param ctx     is passed in r20:r21
+ */
+.global serpent_init
+serpent_init:
+    stack_alloc 32
+    adiw r30, 1
+	push_ r30, r31
+    movw r26, r22
+    adiw r26, 7
+    tst r27
+    breq 1f
+	ldi r26, 32
+	rjmp 2f
+1:
+	lsr r26
+	lsr r26
+	lsr r26
+2:	
+	mov r22, r26
+	bst r22, 5 /* store in T if we have to do the "append 1 thing"*/
+	ldi r27, 32
+3:	/* set buffer to zero */
+	st Z+, r1
+	dec r27
+	brne 3b
+	
+	movw r26, r24 /* X points to the key */
+	sbiw r30, 32
+	tst r22
+	breq 5f /* if keylength_b==0 */
+4:	/* copy keybytes to buffer */
+	ld r19, X+
+	st Z+, r19
+	dec r22
+	brne 4b
+5:
+	brts 7f /* if keylength_b == 256 */
+	ldi r18, 0x01
+	andi r22, 0x07
+	brne 6f
+	st Z, r18
+	rjmp 7f
+6:	/* shift the one to the right position */
+	lsl r18
+	dec r22
+	brne 6b
+	or r18, r19
+	st -Z, r18
+7: /* post "appending 1 thing" buffer is ready for subkey generation */
+	movw r26, r20  /* X points to the context */
+	
+	pop_ r19, r18 /* r18:r19 points to the buffer */
+	push r16
+	clr r16
+8:
+	movw r24, r18
+	mov  r22, r16
+	rcall serpent_gen_w
+	movw r30, r18
+	ldi r20, 7*4
+1: /* the memmove */
+	ldd r0, Z+4
+	st Z+, r0
+	dec r20
+	brne 1b
+  /* store new word in buffer and context */	
+	st Z+, r22
+	st Z+, r23
+	st Z+, r24
+	st Z+, r25
+	st X+, r22
+	st X+, r23
+	st X+, r24
+	st X+, r25
+	
+	inc r16
+	cpi r16, 132
+	brne 8b	
+	
+	push_ r28, r29
+	movw r28, r26
+	subi r28, lo8(132*4)
+	sbci r29, hi8(132*4)
+	ldi r16, 33
+2:
+	movw r24, r28
+	adiw r28, 16
+	ldi r22, 2
+	add r22, r16
+	rcall sbox128
+	dec r16
+	brne 2b
+	pop_ r29, r28, r16
+	stack_free 32
+	ret
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

@@ -91,14 +91,15 @@ static uint32_t serpent_gen_w(uint32_t * b, uint8_t i){
 	return ret;
 } 
 */
-void serpent_init(const void* key, uint16_t keysize, serpent_ctx_t* ctx){
+#if 0
+void serpent_init(const void* key, uint16_t keysize_b, serpent_ctx_t* ctx){
 	uint32_t buffer[8];
 	uint8_t i,j;
-	if(keysize<256){
+	if(keysize_b<256){
 		/* keysize is less than 256 bit, padding needed */
 		memset(buffer, 0, 32);
-		memcpy(buffer, key, (keysize+7)/8);
-		((uint8_t*)buffer)[keysize/8] |= 1<<(keysize%8);
+		memcpy(buffer, key, (keysize_b+7)/8);
+		((uint8_t*)buffer)[keysize_b/8] |= 1<<(keysize_b%8);
 	} else {
 		/* keysize is 256 bit */
 		memcpy(buffer, key, 32); 
@@ -114,7 +115,7 @@ void serpent_init(const void* key, uint16_t keysize, serpent_ctx_t* ctx){
 		sbox128(ctx->k[i],3-i);
 	}
 }
-
+#endif
 
 void serpent_enc(void* buffer, const serpent_ctx_t* ctx){
 	uint8_t i;
