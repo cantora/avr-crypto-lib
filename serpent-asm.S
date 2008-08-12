@@ -123,7 +123,6 @@ T1 = 21
 T2 = 22
 T3 = 23
 
-.global serpent_lt
 serpent_lt:
 	push_range 4, 17
 	movw r26, r24
@@ -278,8 +277,8 @@ serpent_lt:
 	
 	pop_range 4, 17
 	ret
-
 #endif
+
 T0 = 22
 T1 = 23
 T2 = 24
@@ -339,7 +338,6 @@ memeor32:
   brne 1b
   ret
 
-.global serpent_lt
 serpent_lt:
 	 /* X0 := X0 <<< 13 */
 	movw r26, r24
@@ -432,7 +430,6 @@ serpent_lt:
 	rcall memrotr32
 	ret
 
-.global serpent_inv_lt
 serpent_inv_lt:
 	 /* X0 := X0 >>> 5 */
 	movw r26, r24
@@ -541,7 +538,6 @@ static uint32_t serpent_gen_w(uint32_t * b, uint8_t i){
  /* trashes:
   *  r20-r25, r30-r31
   */
-.global serpent_gen_w
 serpent_gen_w:
 	movw r30, r24
 	/* ^i^b[0]*/
@@ -694,7 +690,111 @@ serpent_init:
 	stack_free 32
 	ret
 
+/*
+ * void serpent_enc(void* buffer, const serpent_ctx_t* ctx){
+ */
+/*
+ * param buffer is passed in r24:r25
+ * param ctx    is passed in r22:r23
+ */
+.global serpent_enc
+serpent_enc:
 
+	push_ r12, r13, r14, r15, r16 
+	clr r16
+	movw r14, r24
+	movw r12, r22
+1:
+	movw r24, r14
+	movw r22, r12
+	ldi r20, 16
+	add r12, r20
+	adc r13, r1
+	clr r21
+	rcall memxor
+	movw r24, r14
+	mov r22, r16
+	rcall sbox128
+	movw r24, r14
+	rcall serpent_lt
+	
+	inc r16
+	cpi r16, 31
+	brne 1b
+	
+	movw r24, r14
+	movw r22, r12
+	ldi r20, 16
+	add r12, r20
+	adc r13, r1
+	clr r21
+	rcall memxor
+	movw r24, r14
+	mov r22, r16
+	rcall sbox128
+	
+	inc r16
+	movw r24, r14
+	movw r22, r12
+	ldi r20, 16
+	clr r21
+	pop_ r16, r15, r14, r13, r12
+	rjmp memxor
+
+/*
+ * void serpent_dec(void* buffer, const serpent_ctx_t* ctx){
+ */
+/*
+ * param buffer is passed in r24:r25
+ * param ctx    is passed in r22:r23
+ */
+.global serpent_dec
+serpent_dec:
+	push_ r12, r13, r14, r15, r16 
+	movw r14, r24
+//	ldi r16, lo8(32*16)
+//	add r22, r16
+	ldi r16, hi8(32*16)
+	add r23, r16
+	movw r12, r22
+	ldi r20, 16
+	clr r21
+	rcall memxor
+	
+	movw r24, r14
+	ldi r22, 31
+	rcall inv_sbox128
+	
+	movw r24, r14
+	ldi r20, 16
+	sub r12, r20
+	sbc r13, r1
+	movw r22, r12
+	clr r21
+	rcall memxor
+	ldi r16, 31
+1:
+	dec r16
+	movw r24, r14
+	rcall serpent_inv_lt
+	movw r24, r14
+	mov r22, r16
+	rcall inv_sbox128
+	movw r24, r14
+	ldi r20, 16
+	sub r12, r20
+	sbc r13, r1
+	movw r22, r12
+	clr r21
+	rcall memxor
+	
+	tst r16
+	brne 1b
+	pop_ r16, r15, r14, r13, r12
+	ret	
+	
+	
+	
 
 
 
