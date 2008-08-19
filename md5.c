@@ -132,32 +132,32 @@ void md5_nextBlock(md5_ctx_t *state, void* block){
 	state->counter++;
 }
 
-void md5_lastBlock(md5_ctx_t *state, void* block, uint16_t length){
+void md5_lastBlock(md5_ctx_t *state, void* block, uint16_t length_b){
 	uint16_t l;
 	uint8_t b[64];
-	while (length >= 512){
+	while (length_b >= 512){
 		md5_nextBlock(state, block);
-		length -= 512;
+		length_b -= 512;
 		block = ((uint8_t*)block) + 512/8;
 	}
 	memset(b, 0, 64);
-	memcpy(b, block, length/8);
+	memcpy(b, block, length_b/8);
 	/* insert padding one */
-	l=length/8;
-	if(length%8){
+	l=length_b/8;
+	if(length_b%8){
 		uint8_t t;
 		t = ((uint8_t*)block)[l];
-		t |= (0x80>>(length%8));
+		t |= (0x80>>(length_b%8));
 		b[l]=t;
 	}else{
 		b[l]=0x80;
 	}
 	/* insert length value */
-	if(l+sizeof(uint64_t) > 512/8){
+	if(l+sizeof(uint64_t) >= 512/8){
 		md5_nextBlock(state, b);
 		state->counter--;
 		memset(b, 0, 64);
 	}
-	*((uint64_t*)&b[64-sizeof(uint64_t)]) = (state->counter * 512) + length;
+	*((uint64_t*)&b[64-sizeof(uint64_t)]) = (state->counter * 512) + length_b;
 	md5_nextBlock(state, b);
 }

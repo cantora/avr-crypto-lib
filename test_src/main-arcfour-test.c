@@ -26,7 +26,7 @@
 #include "uart.h"
 #include "debug.h"
 
-#include "arcfour.h"
+#include <arcfour.h>
 #include "nessie_stream_test.h"
 #include "cli.h"
 #include "performance_test.h"

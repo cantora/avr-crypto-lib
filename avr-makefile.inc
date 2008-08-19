@@ -14,7 +14,9 @@ TESTPORT       = /dev/ttyUSB1
 TESTPORTBAUDR  = 9600
 TESTLOG_DIR    = testlog/
 TESTPREFIX     = nessie-
-CC	     = avr-gcc
+LIST_DIR       = listings/
+STAT_DIR       = stats/
+CC	       = avr-gcc
 
 override CFLAGS	= -MMD -MF$(DEP_DIR)$(patsubst %.c,%.d,$(patsubst $(TESTSRC_DIR)%,%,$<)) -I. -gdwarf-2 -pedantic -std=c99 -Wall -Wstrict-prototypes  $(OPTIMIZE) -mmcu=$(MCU_TARGET) $(DEFS)
 

@@ -17,7 +17,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 /* serpent-sboxes.c
- * a non-bitsliced implementation of the serpent sboxes
+ * a bitsliced implementation of the serpent sboxes
  * author: Daniel Otte 
  * email:  daniel.otte@rub.de
  * license: GPLv3

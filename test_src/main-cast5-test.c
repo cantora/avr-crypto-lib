@@ -26,7 +26,7 @@
 #include "uart.h"
 #include "debug.h"
 
-#include "cast5.h"
+#include <cast5.h>
 #include "nessie_bc_test.h"
 #include "performance_test.h"
 #include "cli.h"

@@ -19,18 +19,37 @@
 #ifndef SKIPJACK_H_
 #define SKIPJACK_H_
 
-#include <stdint.h>
-
-/*****************************************************************************/
-/**
- * block is 64 bits (=8 bytes) in size, key is 80 bits (=10 bytes) in size.
+/** 
+ * \file      skipjack.h
+ * \author    Daniel Otte
+ * \date      2006-11-01
+ * \license   GPLv3 or later
+ * \brief     Implementation of the serpent sbox function.
  * 
  */
-void skipjack_enc(void* block, void* key);
-/*****************************************************************************/
-/**
- * block is 64 bits (=8 bytes) in size, key is 80 bits (=10 bytes) in size.
+
+
+#include <stdint.h>
+
+/** \fn void skipjack_enc(void* block, void* key)
+ * \brief skipjack encryption function
  * 
+ * This function encrypts a block of plaintext with the Skipjac encryption
+ * algorithm. The block is 64 bit (8 byte) long, the key is 80 bit (10 byte)
+ * long.
+ * \param block pointer to the 64 bit (8 byte) block to encrypt
+ * \param key   pointer to the 80 bit (10 byte) key 
+ */
+void skipjack_enc(void* block, void* key);
+
+/** \fn void skipjack_dec(void* block, void* key)
+ * \brief skipjack decryption function
+ * 
+ * This function decrypts a block of ciphertext encrypted with the Skipjac
+ * encryption algorithm. 
+ * The block is 64 bit (8 byte) long, the key is 80 bit (10 byte) long.
+ * \param block pointer to the 64 bit (8 byte) block to decrypt
+ * \param key   pointer to the 80 bit (10 byte) key 
  */
 void skipjack_dec(void* block, void* key);
 

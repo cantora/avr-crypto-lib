@@ -27,51 +27,8 @@
  */
 
 #include <avr/io.h>
+#include "avr-asm-macros.S"
 
-
-.macro push_ p1:req, p2:vararg
-	push \p1
-.ifnb \p2	
-	push_ \p2
-.endif
-.endm
-
-.macro pop_ p1:req, p2:vararg
-	pop \p1
-.ifnb \p2	
-	pop_ \p2
-.endif
-.endm
-
-.macro push_range from:req, to:req
-	push \from
-.if     \to-\from
-	push_range "(\from+1)",\to
-.endif		
-.endm
-
-.macro pop_range from:req, to:req
-	pop \to
-.if     \to-\from
-	pop_range \from,"(\to-1)"	
-.endif
-.endm
-
-.macro stack_alloc size:req, reg1=r30, reg2=r31
-	in \reg1, _SFR_IO_ADDR(SPL)
-	in \reg2, _SFR_IO_ADDR(SPH)
-	sbiw r30, \size 
-	out  _SFR_IO_ADDR(SPH), \reg2
-	out  _SFR_IO_ADDR(SPL), \reg1
-.endm
-
-.macro stack_free size:req, reg1=r30, reg2=r31
-	in \reg1, _SFR_IO_ADDR(SPL)
-	in \reg2, _SFR_IO_ADDR(SPH)
-	adiw r30, \size 
-	out  _SFR_IO_ADDR(SPH), \reg2
-	out  _SFR_IO_ADDR(SPL), \reg1
-.endm
 
 push_r18_r27_func:
 	pop r31
@@ -108,10 +65,10 @@ noekeon_omac:
 	dec r17
 	brne 1b
 	sbiw r30, 48
-	mov r26, r22
-	mov r22, r18
-	mov r18, r24
-	mov r24, r30
+	movw r26, r22
+	movw r22, r18
+	movw r18, r24
+	movw r24, r30
 	cpi r16, 0xff
 	breq 2f
 	st Z, r16

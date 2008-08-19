@@ -27,64 +27,7 @@
  */
  
 #include <avr/io.h>
-
-/*******************************************************************************
-*  MACRO SECTION                                                               *
-*******************************************************************************/
-
-.macro push_ p1:req, p2:vararg
-	push \p1
-.ifnb \p2	
-	push_ \p2
-.endif
-.endm
-
-.macro pop_ p1:req, p2:vararg
-	pop \p1
-.ifnb \p2	
-	pop_ \p2
-.endif
-.endm
-
-.macro push_range from:req, to:req
-	push \from
-.if     \to-\from
-	push_range "(\from+1)",\to
-.endif		
-.endm
-
-.macro pop_range from:req, to:req
-	pop \to
-.if     \to-\from
-	pop_range \from,"(\to-1)"	
-.endif
-.endm
-
-.macro stack_alloc size:req, reg1=r30, reg2=r31
-	in r0, _SFR_IO_ADDR(SREG)
-	cli
-	in \reg1, _SFR_IO_ADDR(SPL)
-	in \reg2, _SFR_IO_ADDR(SPH)
-	sbiw \reg1, \size 
-	out _SFR_IO_ADDR(SPH), \reg2
-	out _SFR_IO_ADDR(SPL), \reg1
-	out _SFR_IO_ADDR(SREG), r0
-.endm
-
-.macro stack_free size:req, reg1=r30, reg2=r31
-	in r0, _SFR_IO_ADDR(SREG)
-	cli
-	in \reg1, _SFR_IO_ADDR(SPL)
-	in \reg2, _SFR_IO_ADDR(SPH)
-	adiw \reg1, \size 
-	out _SFR_IO_ADDR(SPH), \reg2
-	out _SFR_IO_ADDR(SPL), \reg1
-	out _SFR_IO_ADDR(SREG), r0
-.endm
-
-/*******************************************************************************
-* END of MACRO SECTION                                                         *
-*******************************************************************************/
+#include "avr-asm-macros.S"
 
 /*
 static void serpent_lt(uint8_t *b){

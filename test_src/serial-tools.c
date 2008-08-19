@@ -30,13 +30,15 @@
 #include <string.h>
 #include <stdint.h>
 
-int getnextwordn(char *s, int n){ /* words are seperated by spaces */
+int getnextwordn(char *s, int n){ /* words are seperated by spaces, lf or cr */
 	char c = ' ';
-	while ((c=uart_getc()) == ' ')
-		;
+	do{
+		c=uart_getc(); 
+	}while(c==' ' || c=='\r' || c=='\n');
 	*s++ = c;
-	while (n && (*s++=uart_getc())!=' ')
-		;
+	do{ 
+	  *s++ = c = uart_getc();
+	}while(c!=' ' && c!='\r' && c!='\n' && --n);
 	*(s-1) = '\0';
 	return n;
 }

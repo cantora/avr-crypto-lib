@@ -26,7 +26,7 @@
 #include "uart.h"
 #include "debug.h"
 
-#include "noekeon.h"
+#include <noekeon.h>
 #include "nessie_bc_test.h"
 #include "cli.h"
 #include "performance_test.h"

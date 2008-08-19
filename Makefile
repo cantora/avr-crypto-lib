@@ -73,10 +73,12 @@ info:
 	@echo "    $(MACS)"
 	@echo "  PRNG functions:"
 	@echo "    $(PRNGS)"
-	@echo "  ALGORITHMS_TEST_BIN"
-	@echo "    $(ALGORITHMS_TEST_BIN)"
-	@echo "  ALGORITHMS_TEST_TARGET_ELF:"
-	@echo "    $(ALGORITHMS_TEST_TARGET_ELF)"
+#	@echo "  ALGORITHMS_TEST_BIN"
+#	@echo "    $(ALGORITHMS_TEST_BIN)"
+#	@echo "  ALGORITHMS_TEST_TARGET_ELF:"
+#	@echo "    $(ALGORITHMS_TEST_TARGET_ELF)"
+
+#-------------------------------------------------------------------------------
 	
 
 $(BIN_DIR)%.o: %.c
@@ -104,37 +106,7 @@ $(TESTBIN_DIR)%.o: $(TESTSRC_DIR)%.S
 	@echo "[as] :  $@"
 	@$(CC) $(ASFLAGS) -c -o $@ $<
 
-
-.PHONY: cores
-cores: $(ALGORITHMS_OBJ)
-
-.PHONY: blockciphers
-blockciphers: $(patsubst %, %_OBJ, $(BLOCK_CIPHERS))
-
-.PHONY: streamciphers
-streamciphers: $(patsubst %, %_OBJ, $(STREAM_CIPHERS))
-
-.PHONY:  hashes
-hashes: $(patsubst %, %_OBJ, $(HASHES))
-
-.PHONY:  macs
-macs: $(patsubst %, %_OBJ, $(MACS))
-
-.PHONY:  prngs
-prngs: $(patsubst %, %_OBJ, $(PRNGS))
-
-tests: $(ALGORITHMS_TEST_BIN) \
-       $(ALGORITHMS_TEST_TARGET_ELF) \
-       $(ALGORITHMS_TEST_TARGET_HEX)
-
-.PHONY:  stats
-stats: $(SIZESTAT_FILE)
-	
-	
-$(SIZESTAT_FILE): $(patsubst %, %_size.txt, $(ALGORITHMS_LC))
-	$(RUBY) sumsize.rb $^ > $(SIZESTAT_FILE)
-	@cat $(SIZESTAT_FILE)	
-#-------------------------------------------------------------------------------	
+#-------------------------------------------------------------------------------
 	
 define OBJ_TEMPLATE
 $(1)_OBJ: $(2)
@@ -162,7 +134,7 @@ $(1)_size.txt: $(2)
 	@$(SIZE) $(2) > $(1)_size.txt
 endef
 
-$(foreach algo, $(ALGORITHMS), $(eval $(call SIZE_TEMPLATE, $(call lc,$(algo)), $($(algo)_OBJ))))
+$(foreach algo, $(ALGORITHMS), $(eval $(call SIZE_TEMPLATE, $(STAT_DIR)$(call lc,$(algo)), $($(algo)_OBJ))))
 
 #-------------------------------------------------------------------------------
 
@@ -188,12 +160,62 @@ ALL_TESTRUN: $(foreach algo, $(ALGORITHMS), $(algo)_TESTRUN)
 
 #-------------------------------------------------------------------------------
 
+define LISTING_TEMPLATE
+$(1)_LIST: $(2)
+endef
+
+$(foreach algo, $(ALGORITHMS),$(eval $(call LISTING_TEMPLATE,$(call uc, $(algo)), $(patsubst %.o,%.lst,$(algo)_OBJ) )))
+
+listings: $(patsubst %,%_LIST,$(ALGORITHMS))
+
+
+$(LIST_DIR)%.lst: $(TESTBIN_DIR)%.elf
+	$(OBJDUMP) -h -S $< > $@
+
+$(LIST_DIR)%.lst: $(BIN_DIR)%.o
+	$(OBJDUMP) -h -S $< > $@
+
+$(LIST_DIR)%.lst: $(TESTBIN_DIR)%.o
+	$(OBJDUMP) -h -S $< > $@
+
+#-------------------------------------------------------------------------------
+
+.PHONY: cores
+cores: $(ALGORITHMS_OBJ)
+
+.PHONY: blockciphers
+blockciphers: $(patsubst %, %_OBJ, $(BLOCK_CIPHERS))
+
+.PHONY: streamciphers
+streamciphers: $(patsubst %, %_OBJ, $(STREAM_CIPHERS))
+
+.PHONY:  hashes
+hashes: $(patsubst %, %_OBJ, $(HASHES))
+
+.PHONY:  macs
+macs: $(patsubst %, %_OBJ, $(MACS))
+
+.PHONY:  prngs
+prngs: $(patsubst %, %_OBJ, $(PRNGS))
+
+tests: $(ALGORITHMS_TEST_BIN) \
+       $(ALGORITHMS_TEST_TARGET_ELF) \
+       $(ALGORITHMS_TEST_TARGET_HEX)
+
+.PHONY:  stats
+stats: $(SIZESTAT_FILE)
+	@cat $(STAT_DIR)$(SIZESTAT_FILE)	
+	
+$(SIZESTAT_FILE): $(patsubst %, $(STAT_DIR)%_size.txt, $(ALGORITHMS_LC))
+	$(RUBY) sumsize.rb $^ > $(STAT_DIR)$(SIZESTAT_FILE)
+	
+#-------------------------------------------------------------------------------	
 
 
 .PHONY: clean
 clean:
-	rm -rf $(BIN_DIR)*.o *.o $(TESTBIN_DIR)*.elf $(TESTBIN_DIR)* *.elf *.eps *.png *.pdf *.bak *_size.txt
-	rm -rf *.lst *.map $(EXTRA_CLEAN_FILES) $(SIZESTAT_FILE)
+	rm -rf $(BIN_DIR)*.o *.o $(TESTBIN_DIR)*.elf $(TESTBIN_DIR)* *.elf *.eps *.png *.pdf *.bak
+	rm -rf *.lst *.map $(EXTRA_CLEAN_FILES) $(STAT_DIR)$(SIZESTAT_FILE) $(STAT_DIR)*_size.txt
 xclean: clean
 	rm -rf $(DEP_DIR)*.d
 
@@ -201,11 +223,6 @@ docu:
 	doxygen
 
 
-%.lst: %.elf
-	$(OBJDUMP) -h -S $< > $@
-
-%.lst: %.o
-	$(OBJDUMP) -h -S $< > $@
 
 # Rules for building the .text rom images
 
