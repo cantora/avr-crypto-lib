@@ -27,7 +27,10 @@
 
 #include <stdint.h>
 #include <string.h>
-#include <avr/pgmspace.h>
+
+#ifdef __AVR__
+	#include <avr/pgmspace.h>
+#endif
 #include "noekeon.h"
 // #include "uart.h"
 
@@ -67,7 +70,7 @@ void pi2(uint32_t* a){
 }
 
 static
-void theta(uint32_t* k, uint32_t* a){
+void theta(const uint32_t* k, uint32_t* a){
 	uint32_t temp;
 
 	temp = a[0] ^ a[2]; temp ^= ROTR32(temp, 8) ^ ROTL32(temp, 8);
@@ -90,12 +93,16 @@ void noekeon_round(uint32_t* key, uint32_t* state, uint8_t const1, uint8_t const
 	((uint8_t*)state)[RC_POS] ^= const1;
 	theta(key, state);
 	((uint8_t*)state)[RC_POS] ^= const2;
-	pi1(state);
 	gamma(state);
 	pi2(state);
+	pi1(state);
 }
 
-uint8_t rc_tab[] PROGMEM = {
+uint8_t rc_tab[]
+#ifdef __AVR__
+ PROGMEM 
+#endif
+  = {
 /*	0x80, */
 	      0x1B, 0x36, 0x6C, 0xD8, 0xAB, 0x4D, 0x9A,
 	0x2F, 0x5E, 0xBC, 0x63, 0xC6, 0x97, 0x35, 0x6A,
@@ -127,26 +134,31 @@ void changendian(void* a){
 
 /******************************************************************************/
 
-void noekeon_enc(void* buffer, void* key){
+void noekeon_enc(void* buffer, const void* key){
 	uint8_t rc=0x80;
+	uint8_t keyb[16];
 	int8_t i;
 	
+	memcpy(keyb, key, 16);
 	changendian(buffer);
-	changendian(key);
+	changendian(keyb);
 
 	for(i=0; i<ROUND_NR; ++i){
-		noekeon_round((uint32_t*)key, (uint32_t*)buffer, rc, 0);
+		noekeon_round((uint32_t*)keyb, (uint32_t*)buffer, rc, 0);
+#ifdef __AVR__
 		rc = pgm_read_byte(rc_tab+i);
+#else
+		rc = rc_tab[i];
+#endif
 	}
 	((uint8_t*)buffer)[RC_POS] ^= rc;
-	theta((uint32_t*)key, (uint32_t*)buffer);
+	theta((uint32_t*)keyb, (uint32_t*)buffer);
 
 	changendian(buffer);
-	changendian(key);
 }
 
 
-void noekeon_dec(void* buffer, void* key){
+void noekeon_dec(void* buffer, const void* key){
 	uint8_t rc;
 	int8_t i;
 	uint8_t nullv[16];
@@ -154,27 +166,30 @@ void noekeon_dec(void* buffer, void* key){
 	
 
 	changendian(buffer);
-	changendian(key);
 	
 	memset(nullv, 0, 16);
 	memcpy(dkey, key, 16);
+	changendian(dkey);
 	
 	theta((uint32_t*)nullv, (uint32_t*)dkey);
 //	uart_putstr_P(PSTR("\r\nTheta: "));
 //	uart_hexdump(dkey, 16);
 	
 	for(i=ROUND_NR-1; i>=0; --i){
+#ifdef __AVR__
 		rc = pgm_read_byte(rc_tab+i);
+#else
+		rc = rc_tab[i];
+#endif
 		noekeon_round((uint32_t*)dkey, (uint32_t*)buffer, 0, rc);
 	}
 	theta((uint32_t*)dkey, (uint32_t*)buffer);
 	((uint8_t*)buffer)[RC_POS] ^= 0x80;
 
 	changendian(buffer);
-	changendian(key);
 }
 
-void noekeon_init(void* key, noekeon_ctx_t* ctx){
+void noekeon_init(const void* key, noekeon_ctx_t* ctx){
 	uint8_t nullv[16];
 	
 	memset(nullv, 0, 16);
