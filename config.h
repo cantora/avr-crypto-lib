@@ -43,5 +43,7 @@
 
 //#define ATMEGA644 /* this is now done by make */
 
+#define CLI_AUTO_HELP 
+
 #endif
 

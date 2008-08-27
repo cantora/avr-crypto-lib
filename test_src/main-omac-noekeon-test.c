@@ -31,7 +31,9 @@
 
 #include "cli.h"
 #include "nessie_mac_test.h"
+#include "performance_test.h"
 
+#include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
 
@@ -56,7 +58,7 @@ void test_mac(void* key, void* data, uint16_t datalength_b){
 	
 }
 
-void testrun_test_noekeonomac(void){
+void testrun_test_omac_noekeon(void){
 	uint8_t key[16], data[64];
 	uint16_t i;
 	memset(key,  0xAA, 16);
@@ -70,16 +72,16 @@ void testrun_test_noekeonomac(void){
 
 uint8_t stat_key[16];
 
-void noekeonomac_next_dummy(void* buffer, void* ctx){
+void omac_noekeon_next_dummy(void* buffer, void* ctx){
 	omac_noekeon_next(buffer, stat_key, ctx);
 }
 
-void noekeonomac_init_dummy(void* key, uint16_t keysize_b, void* ctx){
+void omac_noekeon_init_dummy(void* key, uint16_t keysize_b, void* ctx){
 	omac_noekeon_init(ctx);
 	memcpy(stat_key, key, 16);
 }
 
-void noekeonomac_last_dummy(void* buffer, uint16_t size_b, void* key, uint16_t keysize_b, void* ctx){
+void omac_noekeon_last_dummy(void* buffer, uint16_t size_b, void* key, uint16_t keysize_b, void* ctx){
 	while(size_b>128){
 		omac_noekeon_next(buffer, key, ctx);
 		size_b -= 128;
@@ -88,26 +90,63 @@ void noekeonomac_last_dummy(void* buffer, uint16_t size_b, void* key, uint16_t k
 	omac_noekeon_last(buffer, size_b, key, ctx);
 }
 
-void noekeonomac_conv_dummy(void* buffer, void* ctx){
+void omac_noekeon_conv_dummy(void* buffer, void* ctx){
 	memcpy(buffer, ctx, 16);
 }
 
-void testrun_nessie_noekeonomac(void){
+void testrun_nessie_omac_noekeon(void){
 	nessie_mac_ctx.macsize_b   = 128;
 	nessie_mac_ctx.keysize_b   = 128;
 	nessie_mac_ctx.blocksize_B = 16;
-	nessie_mac_ctx.ctx_size_B  = sizeof(noekeon_omac_ctx_t);
+	nessie_mac_ctx.ctx_size_B  = sizeof(omac_noekeon_ctx_t);
 	nessie_mac_ctx.name = algo_name;
-	nessie_mac_ctx.mac_init = noekeonomac_init_dummy;
-	nessie_mac_ctx.mac_next = noekeonomac_next_dummy;
-	nessie_mac_ctx.mac_last = noekeonomac_last_dummy;
-	nessie_mac_ctx.mac_conv = noekeonomac_conv_dummy;
+	nessie_mac_ctx.mac_init = omac_noekeon_init_dummy;
+	nessie_mac_ctx.mac_next = omac_noekeon_next_dummy;
+	nessie_mac_ctx.mac_last = omac_noekeon_last_dummy;
+	nessie_mac_ctx.mac_conv = omac_noekeon_conv_dummy;
 	
 	nessie_mac_run();
 }
 
+/******************************************************************************/
 
-
+void testrun_performance_omac_noekeon(void){
+	uint64_t t;
+	char str[16];
+	uint8_t data[16], key[16];
+	omac_noekeon_ctx_t ctx;
+	
+	calibrateTimer();
+	print_overhead();
+	
+	memset(data, 0, 16);
+	memset(key,  0, 16);
+	
+	startTimer(1);
+	omac_noekeon_init(&ctx);
+	t = stopTimer();
+	uart_putstr_P(PSTR("\r\n\tctx-gen time: "));
+	ultoa((unsigned long)t, str, 10);
+	uart_putstr(str);
+	
+	
+	startTimer(1);
+	omac_noekeon_next(data, key, &ctx);
+	t = stopTimer();
+	uart_putstr_P(PSTR("\r\n\tone-block time: "));
+	ultoa((unsigned long)t, str, 10);
+	uart_putstr(str);
+	
+	
+	startTimer(1);
+	omac_noekeon_last(data, 128, key, &ctx);
+	t = stopTimer();
+	uart_putstr_P(PSTR("\r\n\tlast block time: "));
+	ultoa((unsigned long)t, str, 10);
+	uart_putstr(str);
+	
+	uart_putstr_P(PSTR("\r\n"));
+}
 
 /*****************************************************************************
  *  main																	 *
@@ -122,8 +161,10 @@ int main (void){
 	uart_putstr(algo_name);
 	uart_putstr_P(PSTR(")\r\nloaded and running\r\n"));
 
-	PGM_P    u   = PSTR("nessie\0test\0");
-	void_fpt v[] = {testrun_nessie_noekeonomac, testrun_test_noekeonomac};
+	PGM_P    u   = PSTR("nessie\0test\0performance\0");
+	void_fpt v[] = {testrun_nessie_omac_noekeon, 
+		            testrun_test_omac_noekeon,
+		            testrun_performance_omac_noekeon};
 
 	while(1){ 
 		if (!getnextwordn(str,20)){DEBUG_S("DBG: W1\r\n"); goto error;}

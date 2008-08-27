@@ -29,6 +29,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <avr/pgmspace.h>
+#include "config.h"
 
 int16_t findstring_d0(const char* str, const char* v){
 	uint8_t i=0;
@@ -56,8 +57,26 @@ int16_t findstring_d0_P(const char* str, PGM_P v){
 	return -1;
 } 
 
+#ifdef CLI_AUTO_HELP
+#include "uart.h"
+
+void cli_auto_help_P(PGM_P dbzstr){
+	char c;
+	uart_putstr_P(PSTR("\r\n[auto help] available commands are:\r\n\t"));
+	do{
+		while((c=pgm_read_byte(dbzstr++))!=0){
+			uart_putc(c);
+		}
+		uart_putstr_P(PSTR("\r\n\t"));
+	}while((c=pgm_read_byte(dbzstr))!=0);
+	uart_putstr_P(PSTR("\r\n"));
+}
+
+#endif
+
 int16_t execcommand_d0_P(const char* str, PGM_P v, void(*fpt[])(void) ){
 	uint8_t i=0;
+	PGM_P commands=v;
 	while(pgm_read_byte(v)){	
 		if(!strcmp_P(str, v)){
 			(fpt[i])();
@@ -67,6 +86,7 @@ int16_t execcommand_d0_P(const char* str, PGM_P v, void(*fpt[])(void) ){
 		;
 		++i;
 	}
+	cli_auto_help_P(commands);
 	return -1;
 }
 

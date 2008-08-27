@@ -164,7 +164,11 @@ define LISTING_TEMPLATE
 $(1)_LIST: $(2)
 endef
 
-$(foreach algo, $(ALGORITHMS),$(eval $(call LISTING_TEMPLATE,$(call uc, $(algo)), $(patsubst %.o,%.lst,$(algo)_OBJ) )))
+$(foreach algo, $(ALGORITHMS),$(eval $(call LISTING_TEMPLATE,$(call uc, $(algo)), \
+ $(patsubst %,$(LIST_DIR)%, \
+  $(patsubst $(BIN_DIR)%,%, \
+  $(patsubst $(TESTBIN_DIR)%,%, \
+  $(patsubst %.o,%.lst,$($(algo)_OBJ)))) ))))
 
 listings: $(patsubst %,%_LIST,$(ALGORITHMS))
 
