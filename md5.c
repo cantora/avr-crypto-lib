@@ -20,9 +20,8 @@
  * \file	md5.c
  * \author	Daniel Otte
  * \date 	2006-07-31
- * \par License:
- * GPLv3 or later
- * \brief Implementation of the MD5 hash algorithm as described in RFC 1321
+ * \license GPLv3 or later
+ * \brief   Implementation of the MD5 hash algorithm as described in RFC 1321
  * 
  */
 

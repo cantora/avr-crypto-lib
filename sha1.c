@@ -19,9 +19,8 @@
 /**
  * \file	sha1.c
  * \author	Daniel Otte
- * \date	08.10.2006
- * \par License:
- * GPLv3
+ * \date	2006-10-08
+ * \license GPLv3 or later
  * \brief SHA-1 implementation.
  * 
  */

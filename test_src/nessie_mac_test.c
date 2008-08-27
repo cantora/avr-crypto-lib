@@ -50,7 +50,7 @@ void ascii_mac(char* data, char* desc, uint8_t* key){
 	PRINTKEY;
 	nessie_mac_ctx.mac_init(key, nessie_mac_ctx.keysize_b, ctx);
 	sl = strlen(data);
-	while(sl>=nessie_mac_ctx.blocksize_B){
+	while(sl>nessie_mac_ctx.blocksize_B){
 		nessie_mac_ctx.mac_next(data, ctx);
 		data += nessie_mac_ctx.blocksize_B;
 		sl   -= nessie_mac_ctx.blocksize_B;
@@ -75,7 +75,7 @@ void amillion_mac(uint8_t* key){
 	
 	memset(block, 'a', nessie_mac_ctx.blocksize_B);
 	nessie_mac_ctx.mac_init(key, nessie_mac_ctx.keysize_b, ctx);
-	while(n>=nessie_mac_ctx.blocksize_B){
+	while(n>nessie_mac_ctx.blocksize_B){
 		nessie_mac_ctx.mac_next(block, ctx);
 		n    -= nessie_mac_ctx.blocksize_B;
 	}
@@ -106,7 +106,7 @@ void zero_mac(uint16_t n, uint8_t* key){
 	
 	memset(block, 0, nessie_mac_ctx.blocksize_B); 
 	nessie_mac_ctx.mac_init(key, nessie_mac_ctx.keysize_b,ctx);;
-	while(n>=nessie_mac_ctx.blocksize_B*8){
+	while(n>nessie_mac_ctx.blocksize_B*8){
 		nessie_mac_ctx.mac_next(block, ctx);
 		n   -= nessie_mac_ctx.blocksize_B*8;
 	}
@@ -148,12 +148,15 @@ void one_in512_mac(uint16_t pos, uint8_t* key){
 	/* now the real stuff */
 	memset(block, 0, 512/8);
 	block[pos>>3] = 0x80>>(pos&0x7);
-	nessie_mac_ctx.mac_init(key, nessie_mac_ctx.keysize_b, ctx);;
-	while(n>=nessie_mac_ctx.blocksize_B*8){
-		nessie_mac_ctx.mac_next(block, ctx);
+	uint8_t* bp;
+	bp = block;
+	nessie_mac_ctx.mac_init(key, nessie_mac_ctx.keysize_b, ctx);
+	while(n>nessie_mac_ctx.blocksize_B*8){
+		nessie_mac_ctx.mac_next(bp, ctx);
 		n   -= nessie_mac_ctx.blocksize_B*8;
+		bp  += nessie_mac_ctx.blocksize_B;
 	}
-	nessie_mac_ctx.mac_last(block, n, key, nessie_mac_ctx.keysize_b, ctx);
+	nessie_mac_ctx.mac_last(bp, n, key, nessie_mac_ctx.keysize_b, ctx);
 	nessie_mac_ctx.mac_conv(mac, ctx);
 	PRINTMAC;
 }
@@ -171,7 +174,7 @@ void tv4_mac(uint8_t* key){
 	memset(block, 0, 256/8);
 	
 	nessie_mac_ctx.mac_init(key, nessie_mac_ctx.keysize_b, ctx);;
-	while(n>=nessie_mac_ctx.blocksize_B*8){
+	while(n>nessie_mac_ctx.blocksize_B*8){
 		nessie_mac_ctx.mac_next(block, ctx);
 		n    -= nessie_mac_ctx.blocksize_B*8;
 	}
@@ -215,6 +218,7 @@ void nessie_mac_run(void){
 		{"Now is the time for all ", "\"Now is the time for all \""},
 		{"Now is the time for it", "\"Now is the time for it\""}
 	};
+
 	set=1;
 	nessie_print_setheader(set);
 	for(i=0; i<KEYSIZE_B; ++i){
