@@ -75,18 +75,13 @@ void cli_auto_help_P(PGM_P dbzstr){
 #endif
 
 int16_t execcommand_d0_P(const char* str, PGM_P v, void(*fpt[])(void) ){
-	uint8_t i=0;
-	PGM_P commands=v;
-	while(pgm_read_byte(v)){	
-		if(!strcmp_P(str, v)){
-			(fpt[i])();
-			return i;
-		}
-		while(pgm_read_byte(v++)) /* go to the next string */
-		;
-		++i;
+	int16_t i=0;
+	i=findstring_d0_P(str, v);
+	if(i!=-1){
+		if(fpt[i])
+			fpt[i]();
 	}
-	cli_auto_help_P(commands);
+	cli_auto_help_P(v);
 	return -1;
 }
 
