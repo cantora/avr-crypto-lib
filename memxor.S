@@ -26,9 +26,6 @@
  * 
  */
  
-#include <avr/io.h>
-#include "avr-asm-macros.S"
-
 /*
  * void memxor(void* dest, const void* src, uint16_t n);
  */
