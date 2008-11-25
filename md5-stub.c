@@ -49,7 +49,7 @@ void md5_core(uint32_t* a, void* block, uint8_t as, uint8_t s, uint8_t i, uint8_
 }
 */
 
-
+#if 0
 void md5_nextBlock(md5_ctx_t *state, void* block){
 	uint32_t	a[4];
 	uint8_t		m,n,i=0;
@@ -101,6 +101,7 @@ void md5_nextBlock(md5_ctx_t *state, void* block){
 	state->a[3] += a[3];
 	state->counter++;
 }
+#endif
 
 void md5_lastBlock(md5_ctx_t *state, void* block, uint16_t length_b){
 	uint16_t l;

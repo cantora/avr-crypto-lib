@@ -22,7 +22,8 @@
  * Date:    2008-11-15
 */
 
-.include "avr-asm-macros.S"
+
+#include "avr-asm-macros.S"
 
 ;###########################################################	
 ; S-BOX
@@ -495,23 +496,252 @@ void md5_nextBlock(md5_ctx_t *state, void* block){
 	state->counter++;
 }
 */
-/*
-shift_table:
- .byte  7,12,17,22
- .byte  5, 9,14,20
- .byte  4,11,16,23
- .byte  6,10,15,21
 
+shift_table_1:  .byte  7,12,17,22
+shift_table_2:  .byte  5, 9,14,20
+shift_table_3:  .byte  4,11,16,23
+shift_table_4:  .byte  6,10,15,21
+
+index_table_r2:
+;(1+m*4+n*5)&0xf:
+        .byte 0x04, 0x18, 0x2c, 0x00 
+        .byte 0x14, 0x28, 0x3c, 0x10 
+        .byte 0x24, 0x38, 0x0c, 0x20 
+        .byte 0x34, 0x08, 0x1c, 0x30 
+
+index_table_r3:
+;(5-m*4+n*3)&0xf:
+        .byte 0x14, 0x20, 0x2c, 0x38 
+        .byte 0x04, 0x10, 0x1c, 0x28 
+        .byte 0x34, 0x00, 0x0c, 0x18 
+        .byte 0x24, 0x30, 0x3c, 0x08 
+
+index_table_r4:
+;(0-m*4+n*7)&0xf:
+        .byte 0x00, 0x1c, 0x38, 0x14 
+        .byte 0x30, 0x0c, 0x28, 0x04 
+        .byte 0x20, 0x3c, 0x18, 0x34 
+        .byte 0x10, 0x2c, 0x08, 0x24
+
+APTR_REG = 2
+BPTR_REG = 4
+N_REG = 6
+M_REG = 7
+I_REG = 8
+.global md5_nextBlock
 md5_nextBlock:
-	stack_alloc 4*4
+	stack_alloc 16
+	push_range 2, 8
+	push r16
+	push r17
+	push r24
+	push r25
+	adiw r30, 1 /* Z now points to the beginning of the allocated memory */
+	movw r2, r30
+	movw r4, r22
+	movw r26, r24
+	ldi r20, 16
+1:
+	ld r0, X+
+	st Z+, r0
+	dec r20
+	brne 1b
+	/* state now copied to stack memory */
+	clr I_REG	
+	/* Round 1 */
+	clr M_REG
+	ldi r17, 4
+1:
+	clr N_REG	
+	ldi r16, 4
+2:
+	movw r24, APTR_REG
+	movw r22, BPTR_REG 
+	mov r0, M_REG
+	lsl r0
+	lsl r0
+	add r0, N_REG
+	lsl r0
+	lsl r0
+	add r22, r0
+	adc r23, r1
+	mov r21, r16	
+	ldi r30, lo8(shift_table_1)
+	ldi r31, hi8(shift_table_1)
+	add r30, N_REG
+	adc r31, r1
+	lpm r20, Z
+	mov r19, I_REG
+	ldi r18, 0
+	rcall md5_core_asm
+	inc I_REG
+	inc N_REG
+	dec r16
+	brne 2b
+	inc M_REG
+	dec r17
+	brne 1b
+	
+	/* Round 2 */
+	clr M_REG
+	ldi r17, 4
+1:
+	clr N_REG	
+	ldi r16, 4
+2:
+	movw r24, APTR_REG
+	movw r22, BPTR_REG 
+	ldi r30, lo8(index_table_r2)
+	ldi r31, hi8(index_table_r2)
+	mov r0, M_REG
+	lsl r0
+	lsl r0
+	add r0, N_REG
+	add r30, r0
+	adc r31, r1
+	lpm r0, Z	
+	add r22, r0
+	adc r23, r1
+	mov r21, r16	
+	ldi r30, lo8(shift_table_2)
+	ldi r31, hi8(shift_table_2)
+	add r30, N_REG
+	adc r31, r1
+	lpm r20, Z
+	mov r19, I_REG
+	ldi r18, 1
+	rcall md5_core_asm
+	inc I_REG
+	inc N_REG
+	dec r16
+	brne 2b
+	inc M_REG
+	dec r17
+	brne 1b
+
+	/* Round 3 */
+	clr M_REG
+	ldi r17, 4
+1:
+	clr N_REG	
+	ldi r16, 4
+2:
+	movw r24, APTR_REG
+	movw r22, BPTR_REG 
+	ldi r30, lo8(index_table_r3)
+	ldi r31, hi8(index_table_r3)
+	mov r0, M_REG
+	lsl r0
+	lsl r0
+	add r0, N_REG
+	add r30, r0
+	adc r31, r1
+	lpm r0, Z	
+	add r22, r0
+	adc r23, r1
+	mov r21, r16	
+	ldi r30, lo8(shift_table_3)
+	ldi r31, hi8(shift_table_3)
+	add r30, N_REG
+	adc r31, r1
+	lpm r20, Z
+	mov r19, I_REG
+	ldi r18, 2
+	rcall md5_core_asm
+	inc I_REG
+	inc N_REG
+	dec r16
+	brne 2b
+	inc M_REG
+	dec r17
+	brne 1b
+
+	/* Round 4 */
+	clr M_REG
+	ldi r17, 4
+1:
+	clr N_REG	
+	ldi r16, 4
+2:
+	movw r24, APTR_REG
+	movw r22, BPTR_REG 
+	ldi r30, lo8(index_table_r4)
+	ldi r31, hi8(index_table_r4)
+	mov r0, M_REG
+	lsl r0
+	lsl r0
+	add r0, N_REG
+	add r30, r0
+	adc r31, r1
+	lpm r0, Z	
+	add r22, r0
+	adc r23, r1
+	mov r21, r16	
+	ldi r30, lo8(shift_table_4)
+	ldi r31, hi8(shift_table_4)
+	add r30, N_REG
+	adc r31, r1
+	lpm r20, Z
+	mov r19, I_REG
+	ldi r18, 3
+	rcall md5_core_asm
+	inc I_REG
+	inc N_REG
+	dec r16
+	brne 2b
+	inc M_REG
+	dec r17
+	brne 1b
 
 
+	pop r27
+	pop r26 /* X now points to the context */
+	movw r30, APTR_REG
+	ldi r16, 4
+1:
+	ld r0, X
+	ld r2, Z+
+	add r0, r2
+	st X+, r0	
+	ld r0, X
+	ld r2, Z+
+	adc r0, r2
+	st X+, r0	
+	ld r0, X
+	ld r2, Z+
+	adc r0, r2
+	st X+, r0	
+	ld r0, X
+	ld r2, Z+
+	adc r0, r2
+	st X+, r0	
+	dec r16
+	brne 1b
+
+	ld r0, X
+	inc r0
+	st X+, r0	
+	brne 2f
+	ld r0, X
+	inc r0
+	st X+, r0	
+	brne 2f
+	ld r0, X
+	inc r0
+	st X+, r0	
+	brne 2f	
+	ld r0, X
+	inc r0
+	st X+, r0	
+2:			
+
+	pop r17
+	pop r16
+	pop_range 2, 8
+	stack_free 16
+	ret
 
 
-	stack_free 4*4
-
-
-*/
 
 
 
