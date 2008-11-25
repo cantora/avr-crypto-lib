@@ -1,9 +1,9 @@
 
-OBJ = $(SERPENT_OBJ)
 MCU_TARGET     = atmega644
 OPTIMIZE       = -Os
 DEFS           = -D$(call uc, $(MCU_TARGET))
 FLASHCMD       = avrdude -p $(MCU_TARGET) -P /dev/ttyUSB0 -c avr911 -U flash:w:# no space at the end
+#FLASHCMD       = avrdude -p $(MCU_TARGET) -c usbasp -U flash:w:# no space at the end
 DEP_DIR        = deps/
 BIN_DIR        = bin/
 TESTBIN_DIR    = test_bin/
@@ -21,7 +21,7 @@ CC	       = avr-gcc
 override CFLAGS	= -MMD -MF$(DEP_DIR)$(patsubst %.c,%.d,$(patsubst $(TESTSRC_DIR)%,%,$<)) -I. -gdwarf-2 -pedantic -std=c99 -Wall -Wstrict-prototypes  $(OPTIMIZE) -mmcu=$(MCU_TARGET) $(DEFS)
 
 override LDFLAGS       = -gdwarf-2 -Wl,-Map,
-override ASFLAGS	   = -mmcu=$(MCU_TARGET) -gdwarf-2
+override ASFLAGS	   = -mmcu=$(MCU_TARGET) -Wa,--gdwarf-2
 
 SIZESTAT_FILE = sizestats.txt
 

@@ -85,7 +85,12 @@ void testrun_nessie_md5(void){
 
 void testrun_md5(void){
 	md5_ctx_t s;
-	char* testv[]={"", "a", "abc", "message digest", "abcdefghijklmnopqrstuvwxyz", 
+	char* testv[]={
+		"", 
+		"a", 
+		"abc", 
+		"message digest", 
+		"abcdefghijklmnopqrstuvwxyz", 
 		"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", 
 		"12345678901234567890123456789012345678901234567890123456789012345678901234567890"};
 	uint8_t i;
@@ -94,10 +99,10 @@ void testrun_md5(void){
 	for(i=0; i<7; ++i){
 		uart_putstr("\r\n MD5 (\"");
 		uart_putstr(testv[i]);
-		uart_putstr("\") = \r\n");
+		uart_putstr("\") = \r\n\t");
 		md5_init(&s);
 		md5_lastBlock(&s, testv[i], strlen(testv[i])*8);
-		uart_hexdump(&s.a[0], 16);
+		uart_hexdump(&(s.a[0]), 16);
 	}
 }
 
@@ -141,7 +146,7 @@ void testrun_performance_md5(void){
 
 
 /*****************************************************************************
- *  main																	 *
+ * main																	 *
  *****************************************************************************/
 
 int main (void){

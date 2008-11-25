@@ -80,9 +80,11 @@ int16_t execcommand_d0_P(const char* str, PGM_P v, void(*fpt[])(void) ){
 	if(i!=-1){
 		if(fpt[i])
 			fpt[i]();
+		return i;
+	}else{
+		cli_auto_help_P(v);
+		return -1;
 	}
-	cli_auto_help_P(v);
-	return -1;
 }
 
 

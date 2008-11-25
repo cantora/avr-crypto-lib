@@ -67,8 +67,8 @@
 	sbiw \reg1, \size 
 	cli
 	out _SFR_IO_ADDR(SPH), \reg2
-	out _SFR_IO_ADDR(SPL), \reg1
 	out _SFR_IO_ADDR(SREG), r0
+	out _SFR_IO_ADDR(SPL), \reg1
 .endm
 
 .macro stack_free size:req, reg1=r30, reg2=r31
@@ -78,8 +78,8 @@
 	adiw \reg1, \size 
 	cli
 	out _SFR_IO_ADDR(SPH), \reg2
-	out _SFR_IO_ADDR(SPL), \reg1
 	out _SFR_IO_ADDR(SREG), r0
+	out _SFR_IO_ADDR(SPL), \reg1
 .endm
 
 /*******************************************************************************

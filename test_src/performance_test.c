@@ -51,13 +51,13 @@ ISR(TIMER1_OVF_vect){
 }
 
 void calibrateTimer(void){
+	volatile uint8_t i;
 	startTimer(1);
 	stopTimer();
 	const_overhead = TCNT1;
 	startTimer(1);
 	TCNT1=0xFFFE;
-	; ; ; ;
-//	asm volatile("NOP\n"::); asm volatile("NOP\n"::);
+	i++;
 	stopTimer();
 	int_overhead = TCNT1;
 }

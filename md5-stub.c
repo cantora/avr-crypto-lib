@@ -1,4 +1,4 @@
-/* md5.c */
+/* md5-asm.c */
 /*
     This file is part of the Crypto-avr-lib/microcrypt-lib.
     Copyright (C) 2008  Daniel Otte (daniel.otte@rub.de)
@@ -16,53 +16,17 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-/* 
- * \file	md5.c
- * \author	Daniel Otte
- * \date 	2006-07-31
- * \license GPLv3 or later
- * \brief   Implementation of the MD5 hash algorithm as described in RFC 1321
- * 
- */
 
  #include "md5.h"
- #include "md5_sbox.h"
  #include "uart.h" 
  #include <stdint.h>
  #include <string.h>
  
  #undef DEBUG
- 
-void md5_init(md5_ctx_t *s){
-	s->counter = 0;
-	s->a[0] = 0x67452301;
-	s->a[1] = 0xefcdab89;
-	s->a[2] = 0x98badcfe;
-	s->a[3] = 0x10325476;
-}
 
-static 
-uint32_t md5_F(uint32_t x, uint32_t y, uint32_t z){
-	return ((x&y)|((~x)&z));
-}
+void md5_core(uint32_t* a, void* block, uint8_t as, uint8_t s, uint8_t i, uint8_t fi);
 
-static
-uint32_t md5_G(uint32_t x, uint32_t y, uint32_t z){
-	return ((x&z)|((~z)&y));
-}
-
-static
-uint32_t md5_H(uint32_t x, uint32_t y, uint32_t z){
-	return (x^y^z);
-}
-
-static
-uint32_t md5_I(uint32_t x, uint32_t y, uint32_t z){
-	return (y ^ (x | (~z)));
-}
-
-typedef uint32_t md5_func_t(uint32_t, uint32_t, uint32_t);
-
+/*
 #define ROTL32(x,n) (((x)<<(n)) | ((x)>>(32-(n))))  
 
 static
@@ -70,7 +34,7 @@ void md5_core(uint32_t* a, void* block, uint8_t as, uint8_t s, uint8_t i, uint8_
 	uint32_t t;
 	md5_func_t* funcs[]={md5_F, md5_G, md5_H, md5_I};
 	as &= 0x3;
-	/* a = b + ((a + F(b,c,d) + X[k] + T[i]) <<< s). */
+	// * a = b + ((a + F(b,c,d) + X[k] + T[i]) <<< s). * /
 #ifdef DEBUG
 	char funcc[]={'*', '-', '+', '~'};
 	uart_putstr("\r\n DBG: md5_core [");
@@ -83,6 +47,8 @@ void md5_core(uint32_t* a, void* block, uint8_t as, uint8_t s, uint8_t i, uint8_
 	t = a[as] + funcs[fi](a[(as+1)&3], a[(as+2)&3], a[(as+3)&3]) + *((uint32_t*)block) + md5_T[i] ;
 	a[as]=a[(as+1)&3] + ROTL32(t, s);
 }
+*/
+
 
 void md5_nextBlock(md5_ctx_t *state, void* block){
 	uint32_t	a[4];
@@ -100,7 +66,7 @@ void md5_nextBlock(md5_ctx_t *state, void* block){
 	a[1]=state->a[1];
 	a[2]=state->a[2];
 	a[3]=state->a[3];
-	
+
 	/* round 1 */
 	uint8_t s1t[]={7,12,17,22}; // 1,-1   1,4   2,-1   3,-2
 	for(m=0;m<4;++m){
@@ -165,3 +131,5 @@ void md5_lastBlock(md5_ctx_t *state, void* block, uint16_t length_b){
 	*((uint64_t*)&b[64-sizeof(uint64_t)]) = (state->counter * 512) + length_b;
 	md5_nextBlock(state, b);
 }
+
+

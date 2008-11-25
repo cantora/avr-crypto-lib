@@ -14,15 +14,18 @@ include mkfiles/*.mk
 
 ALGORITHMS = $(BLOCK_CIPHERS) $(STREAM_CIPHERS) $(HASHES) $(PRNGS) $(MACS)
 ALGORITHMS_OBJ = $(patsubst %,%_OBJ, $(ALGORITHMS))
+ALGORITHMS_TEST_BIN = $(patsubst %,%_TEST_BIN, $(ALGORITHMS))
+
 define OBJinBINDIR_TEMPLATE
 $(1) = $(2)
 endef
+
 $(foreach a, $(ALGORITHMS_OBJ), $(eval $(call OBJinBINDIR_TEMPLATE, $(a), $(patsubst %.o,$(BIN_DIR)%.o,$($(a))))))
-ALGORITHMS_TEST_BIN = $(patsubst %,%_TEST_BIN, $(ALGORITHMS))
+
 $(foreach a, $(ALGORITHMS_TEST_BIN), $(eval $(call OBJinBINDIR_TEMPLATE, $(a), $(patsubst %.o,$(TESTBIN_DIR)%.o,$($(a))))))
 
 
-ALGORITHMS_TEST_BIN_IMM =  $(foreach a, $(ALGORITHMS_TEST_BIN), $($(a)))
+#ALGORITHMS_TEST_BIN_IMM =  $(foreach a, $(ALGORITHMS_TEST_BIN), $($(a)))
 ALGORITHMS_NESSIE_TEST = $(patsubst %,%_NESSIE_TEST, $(ALGORITHMS))
 ALGORITHMS_PERFORMANCE_TEST = $(patsubst %,%_PERORMANCE_TEST, $(ALGORITHMS))
 
@@ -73,7 +76,7 @@ info:
 	@echo "    $(MACS)"
 	@echo "  PRNG functions:"
 	@echo "    $(PRNGS)"
-#	@echo "  ALGORITHMS_TEST_BIN"
+#	@echo "  ALGORITHMS_TEST_BIN:"
 #	@echo "    $(ALGORITHMS_TEST_BIN)"
 #	@echo "  ALGORITHMS_TEST_TARGET_ELF:"
 #	@echo "    $(ALGORITHMS_TEST_TARGET_ELF)"
@@ -116,6 +119,15 @@ endef
 
 $(foreach algo, $(ALGORITHMS), $(eval $(call OBJ_TEMPLATE, $(algo), $($(algo)_OBJ))))
 
+
+#-------------------------------------------------------------------------------
+
+define TESTBIN_TEMPLATE
+$(1)_TEST_BIN: $(2)
+endef
+
+$(foreach algo, $(ALGORITHMS), $(eval $(call TESTBIN_TEMPLATE, $(algo), $($(algo)_TEST_BIN))))
+
 #-------------------------------------------------------------------------------
 
 $(BLOCK_CIPHERS_OBJ): $(patsubst %,%_OBJ, $(BLOCK_CIPHERS)) 
@@ -123,8 +135,6 @@ $(STREAM_CIPHERS_OBJ): $(patsubst %,%_OBJ, $(STREAM_CIPHERS))
 $(HASHES_OBJ): $(patsubst %,%_OBJ, $(HASHES))
 $(PRNGS_OBJ): $(patsubst %,%_OBJ, $(PRNGS))
 $(MACS_OBJ): $(patsubst %,%_OBJ, $(MACS))
-
-$(ALGORITHMS_TEST_BIN): $(ALGORITHMS_TEST_BIN_IMM)
 
 #-------------------------------------------------------------------------------
 

@@ -16,16 +16,16 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-/* 
+/*
  * File:        arcfour.c
  * Author:      Daniel Otte
  * email:       daniel.otte@rub.de
  * Date:        2006-06-07
  * License:     GPLv3 or later
  * Description: Implementation of the ARCFOUR (RC4 compatible) stream cipher algorithm.
- * 
+ *
  */
- 
+
 #include <stdint.h>
 #include "arcfour.h"
 
@@ -38,7 +38,7 @@ void arcfour_init(const void *key, uint8_t length_B, arcfour_ctx_t *ctx){
 	uint16_t x,y=0;
 	for(x=0; x<= 255; ++x)
 		ctx->s[x]=x;
-	
+
 	for(x=0; x<= 255; ++x){
 		y += ctx->s[x] + ((uint8_t*)key)[x % length_B];
 		y &= 0xff;
@@ -46,7 +46,7 @@ void arcfour_init(const void *key, uint8_t length_B, arcfour_ctx_t *ctx){
 		t = ctx->s[y];
 		ctx->s[y] = ctx->s[x];
 		ctx->s[x] = t;
-	}	
+	}
 	ctx->i = ctx->j = 0;
 }
 

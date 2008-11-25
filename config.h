@@ -20,13 +20,17 @@
 #define __CONFIG_H__
 #include <avr/io.h>
 
+
 #define F_CPU 16000000         /* Oszillator-Frequenz in Hz */
+// #define F_CPU    14745600
+
+
 
 #define DEBUG uart
 
 /* uart.[ch] defines */
 #define UART_INTERRUPT 1
-#define UART_BAUD_RATE 38400
+#define UART_BAUD_RATE 9600
 #define UART_RXBUFSIZE 16
 #define UART_TXBUFSIZE 16
 #define UART_LINE_BUFFER_SIZE 40
@@ -40,8 +44,6 @@
 #define UART_RTS_BIT 0
 #define UART_CTS_BIT 1
 */
-
-//#define ATMEGA644 /* this is now done by make */
 
 #define CLI_AUTO_HELP 
 

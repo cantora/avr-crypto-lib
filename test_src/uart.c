@@ -33,6 +33,9 @@
 #define UBRRH UBRR0H
 #define UBRRL UBRR0L
 #define URSEL UMSEL
+#define USART_UDRE_vect USART0_UDRE_vect
+#define USART_RXC_vect USART0_RX_vect
+#define UCSRA UCSR0A
 #endif
 
 #ifdef ATMEGA644

@@ -151,12 +151,22 @@ static
 void tv4_hash(void){
 	uint8_t ctx[nessie_hash_ctx.ctx_size_B];
 	uint8_t hash[(nessie_hash_ctx.hashsize_b+7)/8];
-	uint8_t block[256/8];
-	uint16_t n=256;
+	uint8_t block[nessie_hash_ctx.hashsize_b/8];
+	uint16_t n=nessie_hash_ctx.hashsize_b;
 	uint32_t i;
 	
 	uart_putstr_P(PSTR("\r\n                       message="));
-	uart_putstr(PSTR("256 zero bits"));
+	if(nessie_hash_ctx.hashsize_b>=10000)
+		uart_putc('0' + (nessie_hash_ctx.hashsize_b/10000)%10);
+	if(nessie_hash_ctx.hashsize_b>=1000)
+		uart_putc('0' + (nessie_hash_ctx.hashsize_b/1000)%10);
+	if(nessie_hash_ctx.hashsize_b>=100)
+		uart_putc('0' + (nessie_hash_ctx.hashsize_b/100)%10);
+	if(nessie_hash_ctx.hashsize_b>=10)
+		uart_putc('0' + (nessie_hash_ctx.hashsize_b/10)%10);
+	uart_putc('0' + nessie_hash_ctx.hashsize_b%10);
+
+	uart_putstr_P(PSTR(" zero bits"));
 	memset(block, 0, 256/8);
 	
 	nessie_hash_ctx.hash_init(ctx);
