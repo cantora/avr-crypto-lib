@@ -84,7 +84,7 @@ void md5_core(uint32_t* a, void* block, uint8_t as, uint8_t s, uint8_t i, uint8_
 	a[as]=a[(as+1)&3] + ROTL32(t, s);
 }
 
-void md5_nextBlock(md5_ctx_t *state, void* block){
+void md5_nextBlock(md5_ctx_t *state, const void* block){
 	uint32_t	a[4];
 	uint8_t		m,n,i=0;
 	/* this requires other mixed sboxes */
@@ -136,7 +136,7 @@ void md5_nextBlock(md5_ctx_t *state, void* block){
 	state->counter++;
 }
 
-void md5_lastBlock(md5_ctx_t *state, void* block, uint16_t length_b){
+void md5_lastBlock(md5_ctx_t *state, const void* block, uint16_t length_b){
 	uint16_t l;
 	uint8_t b[64];
 	while (length_b >= 512){
@@ -160,8 +160,25 @@ void md5_lastBlock(md5_ctx_t *state, void* block, uint16_t length_b){
 	if(l+sizeof(uint64_t) >= 512/8){
 		md5_nextBlock(state, b);
 		state->counter--;
-		memset(b, 0, 64);
+		memset(b, 0, 64-8);
 	}
 	*((uint64_t*)&b[64-sizeof(uint64_t)]) = (state->counter * 512) + length_b;
 	md5_nextBlock(state, b);
 }
+
+void md5_ctx2hash(md5_hash_t* dest, const md5_ctx_t* state){
+	memcpy(dest, state->a, MD5_HASH_BYTES);
+}
+
+void md5(md5_hash_t* dest, const void* msg, uint32_t length_b){
+	md5_ctx_t ctx;
+	md5_init(&ctx);
+	while(length_b>=MD5_BLOCK_BITS){
+		md5_nextBlock(&ctx, msg);
+		msg = (uint8_t*)msg + MD5_BLOCK_BYTES;
+		length_b -= MD5_BLOCK_BITS;
+	}
+	md5_lastBlock(&ctx, msg, length_b);
+	md5_ctx2hash(dest, &ctx);
+}
+

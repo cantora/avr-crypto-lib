@@ -301,9 +301,9 @@ ARG_Z3    = 17
 
 
 md5_core_asm:
-	push r28
-	push r29
-	push_range 4, 17
+	push r16
+	push r17
+	push_range 4, 8
 	ldi r30, lo8(T_table)
 	ldi r31, hi8(T_table)
 	lsl P_I
@@ -445,9 +445,9 @@ fixrotl:
 	st X+, r24
 	st X , r25	
 md5_core_exit:
-	pop_range 4, 17
-	pop r29
-	pop r28
+	pop_range 4, 8
+	pop r17
+	pop r16
 	ret
 
 ;###################################################################
@@ -531,9 +531,9 @@ I_REG = 8
 .global md5_nextBlock
 md5_nextBlock:
 	stack_alloc 16
-	push_range 2, 8
-	push r16
-	push r17
+	push_range 2, 17
+	push r28
+	push r29
 	push r24
 	push r25
 	adiw r30, 1 /* Z now points to the beginning of the allocated memory */
@@ -735,16 +735,180 @@ md5_nextBlock:
 	st X+, r0	
 2:			
 
-	pop r17
-	pop r16
-	pop_range 2, 8
+	pop r29
+	pop r28
+	pop_range 2, 17
 	stack_free 16
 	ret
 
+;###############################################################################
+/*
+void md5_lastBlock(md5_ctx_t *state, const void* block, uint16_t length_b){
+	uint16_t l;
+	uint8_t b[64];
+	while (length_b >= 512){
+		md5_nextBlock(state, block);
+		length_b -= 512;
+		block = ((uint8_t*)block) + 512/8;
+	}
+	memset(b, 0, 64);
+	memcpy(b, block, length_b/8);
+	/ * insert padding one * /
+	l=length_b/8;
+	if(length_b%8){
+		uint8_t t;
+		t = ((uint8_t*)block)[l];
+		t |= (0x80>>(length_b%8));
+		b[l]=t;
+	}else{
+		b[l]=0x80;
+	}
+	/ * insert length value * /
+	if(l+sizeof(uint64_t) >= 512/8){
+		md5_nextBlock(state, b);
+		state->counter--;
+		memset(b, 0, 64-8);
+	}
+	*((uint64_t*)&b[64-sizeof(uint64_t)]) = (state->counter * 512) + length_b;
+	md5_nextBlock(state, b);
+}
+*/
+; state_ptr : r24,r25
+; block_ptr : r22,r23
+; length_b  : r20,r21
+.global md5_lastBlock
+md5_lastBlock:
+	stack_alloc_large 64
+	push_range 12, 17
+	push r30
+	push r31
+	movw r16, r20 /* length_b  */ 
+	movw r14, r22 /* block_ptr */
+	movw r12, r24 /* state_ptr */
 
+	cpi r17, 2 /* hi8(512) */	
+	brlo 2f
+1:
+	movw r24, r12
+	movw r22, r14
+	rcall md5_nextBlock
+	ldi r18, 64
+	add r14, r18
+	adc r15, r1
+	subi r17, 2
+	brge 1b
+2:
+	pop r31
+	pop r30
 
+	adiw r30, 1
+	movw r26, r14
+	movw r24, r16
+	adiw r24, 7
 
+	lsr r25
+	ror r24
+	lsr r24
+	lsr r24 /* r24 now holds how many bytes are to copy */
+	ldi r18, 64
+	sub r18, r24
+	tst r24
+4:
+	breq 5f
+	ld r0, X+
+	st Z+, r0
+	dec r24
+	rjmp 4b
+5:	/* append 1-bit */
+	mov r20, r16
+	andi r20, 0x07
+	brne bit_fucking
+	ldi r19, 0x80
+	st Z+, r19
+	dec r18
+	rjmp after_bit_fucking
+bit_fucking:
+	ldi r19, 0x80
+1:
+	lsr r19
+	dec r20
+	brne 1b
+	or r0, r19
+	st -Z, r0
+	adiw r30, 1
+after_bit_fucking:
+	clt	
+	cpi r18, 8
+	brmi 2f
+	set         /* store in t if the counter will also fit in this block */
+2:
+	tst r18
+	breq 2f
+1:
+	st Z+, r1
+	dec r18
+	brne 1b
+2:
+	sbiw r30, 63
+	sbiw r30,  1
+	movw r14, r30	
+	brts load_counter
+	movw r24, r12
+	movw r22, r14
+	rcall md5_nextBlock
+	movw r30, r14
+	ldi r20, 64-8
+3:
+	st Z+, r1
+	dec r20
+	brne 3b
+	
+load_counter:		
+	movw r26, r12
+	adiw r26, 16
+	ld r19, X+
+	ld r20, X+
+	ld r21, X+
+	ld r22, X+
+	brts post_counter_decrement	
+	subi r19, 1
+	sbci r20, 0
+	sbci r21, 0
+	sbci r22, 0
+post_counter_decrement:
+	clr r18
+	clr r23
+	lsl r19
+	rol r20
+	rol r21
+	rol r22
+	rol r23
+	add r18, r16
+	adc r19, r17
+	adc r20, r1
+	adc r21, r1
+	adc r22, r1
+	adc r23, r1
+	movw r30, r14
+	adiw r30, 64-8
+	st Z+, r18
+	st Z+, r19
+	st Z+, r20
+	st Z+, r21
+	st Z+, r22
+	st Z+, r23
+	st Z+, r1
+	st Z, r1
 
+	sbiw r30, 63
+;	sbiw r30, 1
+	movw r24, r12
+	movw r22, r30
+	rcall md5_nextBlock
+md5_lastBlock_exit:	
+	pop_range 12, 17
+	stack_free_large 64
+	ret
 
 
 

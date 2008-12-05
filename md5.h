@@ -31,14 +31,25 @@
 
 #include <stdint.h>
 
+
+#define MD5_HASH_BITS  128
+#define MD5_HASH_BYTES (MD5_HASH_BITS/8)
+#define MD5_BLOCK_BITS 512
+#define MD5_BLOCK_BYTES (MD5_BLOCK_BITS/8)
+
+
 typedef struct md5_ctx_st {
 	uint32_t a[4];
 	uint32_t counter;
 } md5_ctx_t;
 
+typedef uint8_t md5_hash_t[MD5_HASH_BYTES];
+
  
 void md5_init(md5_ctx_t *s);
-void md5_nextBlock(md5_ctx_t *state, void* block);
-void md5_lastBlock(md5_ctx_t *state, void* block, uint16_t length);
+void md5_nextBlock(md5_ctx_t *state, const void* block);
+void md5_lastBlock(md5_ctx_t *state, const void* block, uint16_t length);
+void md5_ctx2hash(md5_hash_t* dest, const md5_ctx_t* state);
+void md5(md5_hash_t* dest, const void* msg, uint32_t length_b);
 
 #endif /*MD5_H_*/

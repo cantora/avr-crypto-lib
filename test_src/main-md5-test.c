@@ -84,7 +84,7 @@ void testrun_nessie_md5(void){
  */
 
 void testrun_md5(void){
-	md5_ctx_t s;
+	md5_hash_t hash;
 	char* testv[]={
 		"", 
 		"a", 
@@ -100,9 +100,8 @@ void testrun_md5(void){
 		uart_putstr("\r\n MD5 (\"");
 		uart_putstr(testv[i]);
 		uart_putstr("\") = \r\n\t");
-		md5_init(&s);
-		md5_lastBlock(&s, testv[i], strlen(testv[i])*8);
-		uart_hexdump(&(s.a[0]), 16);
+		md5(&hash, testv[i], strlen(testv[i])*8);
+		uart_hexdump(hash, 16);
 	}
 }
 
