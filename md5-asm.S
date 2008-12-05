@@ -785,7 +785,7 @@ md5_lastBlock:
 	movw r16, r20 /* length_b  */ 
 	movw r14, r22 /* block_ptr */
 	movw r12, r24 /* state_ptr */
-
+2:
 	cpi r17, 2 /* hi8(512) */	
 	brlo 2f
 1:
@@ -796,7 +796,7 @@ md5_lastBlock:
 	add r14, r18
 	adc r15, r1
 	subi r17, 2
-	brge 1b
+	rjmp 2b
 2:
 	pop r31
 	pop r30
@@ -910,6 +910,66 @@ md5_lastBlock_exit:
 	stack_free_large 64
 	ret
 
+
+;###############################################################################
+
+
+.global md5_ctx2hash
+md5_ctx2hash:
+	movw r26, r24
+	movw r30, r22
+	ldi r22, 16
+1:
+	ld r0, Z+
+	st X+, r0
+	dec r22
+	brne 1b	
+	ret
+
+
+;###############################################################################
+
+
+.global md5
+md5:
+	stack_alloc 20
+	push_range  8, 17
+	adiw r30, 1
+	movw  r8, r30 /* ctx           */
+	movw r10, r24 /* dest          */
+	movw r12, r22 /* msg           */
+	movw r14, r18 /* length (low)  */
+	movw r16, r20 /* length (high) */
+	movw r24, r30
+	rcall md5_init
+1:
+	tst r16
+	brne next_round
+	tst r17
+	breq last_round
+next_round:
+	movw r24,  r8
+	movw r22, r12
+	rcall md5_nextBlock
+	ldi r22, 64
+	add r12, r22
+	adc r13, r1
+	ldi r22, 2
+	sub r15, r22
+	sbci r16, 0
+	sbci r17, 0
+	rjmp 1b
+last_round:		
+	movw r24, r8
+	movw r22, r12
+	movw r20, r14
+	rcall md5_lastBlock
+	movw r24, r10
+	movw r22,  r8
+	rcall md5_ctx2hash
+	pop_range  8, 17
+	stack_free 20
+	ret
 
 
 
