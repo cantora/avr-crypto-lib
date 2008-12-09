@@ -103,9 +103,40 @@ void test_performance_camellia(void){
 /*****************************************************************************
  *  self tests																 *
  *****************************************************************************/
+/*
+128-bit key
+key         01 23 45 67 89 ab cd ef fe dc ba 98 76 54 32 10
+plaintext   01 23 45 67 89 ab cd ef fe dc ba 98 76 54 32 10
+ciphertext  67 67 31 38 54 96 69 73 08 57 06 56 48 ea be 43
+*/
+void testrun_camellia(void){
+
+  uint8_t data[16] = { 0x01, 0x23, 0x45, 0x67, 
+                       0x89, 0xab, 0xcd, 0xef, 
+                       0xfe, 0xdc, 0xba, 0x98, 
+                       0x76, 0x54, 0x32, 0x10 };
+/*
+  uint8_t data[16] = {  
+                       0x10, 0x32, 0x54, 0x76, 
+                       0x98, 0xba, 0xdc, 0xfe, 
+                       0xfe, 0xcd, 0xab, 0x89 
+                       0x67, 0x89, 0x67, 0x01};
+*/
+  camellia128_ctx_t ctx;
+  camellia128_init(data, &ctx);
+  uart_putstr_P(PSTR("\r\n key:        "));
+  uart_hexdump(data, 16);
+  uart_putstr_P(PSTR("\r\n plaintext:  "));
+  uart_hexdump(data, 16);
+  camellia128_enc(data, &ctx);
+  uart_putstr_P(PSTR("\r\n ciphertext: "));
+  uart_hexdump(data, 16);
+
+}
+
 
 /*****************************************************************************
- *  main																	 *
+ * main																	 *
  *****************************************************************************/
 
 int main (void){
@@ -120,7 +151,7 @@ int main (void){
 	uart_putstr_P(PSTR(")\r\nloaded and running\r\n"));
 
 	PGM_P    u   = PSTR("nessie\0test\0performance\0");
-	void_fpt v[] = {testrun_nessie_camellia, testrun_nessie_camellia, test_performance_camellia};
+	void_fpt v[] = {testrun_nessie_camellia, testrun_camellia, test_performance_camellia};
 	
 	while(1){ 
 		if (!getnextwordn(str,20)){DEBUG_S("DBG: W1\r\n"); goto error;}

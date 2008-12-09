@@ -29,9 +29,9 @@ typedef struct camellia128_ctx_s{
 }camellia128_ctx_t;
 
 
-void camellia128_init(uint8_t* key, camellia128_ctx_t* s);
-void camellia128_enc(void* block, camellia128_ctx_t* s);
-void camellia128_dec(void* block, camellia128_ctx_t* s);
+void camellia128_init(const uint8_t* key, camellia128_ctx_t* s);
+void camellia128_enc(void* block, const camellia128_ctx_t* s);
+void camellia128_dec(void* block, const camellia128_ctx_t* s);
 
 
 #endif /*CAMELLIA_H_*/
