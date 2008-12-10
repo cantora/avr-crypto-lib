@@ -1,4 +1,4 @@
-/* seed.c */
+/* seed_C.c */
 /*
     This file is part of the Crypto-avr-lib/microcrypt-lib.
     Copyright (C) 2008  Daniel Otte (daniel.otte@rub.de)
@@ -17,7 +17,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
  /**
- * \file	seed.c
+ * \file	seed_C.c
  * \author	Daniel Otte 
  * \date	2007-06-1
  * \brief	SEED parts in C for AVR
@@ -32,52 +32,36 @@
 #include "uart.h"
 #include "debug.h"
 
-
-static uint64_t f_function(uint64_t a, uint32_t k0, uint32_t k1);
-static uint32_t g_function(uint32_t x);
-
 /******************************************************************************/
-/*
+
+static
 void changeendian32(uint32_t * a){
 	*a = (*a & 0x000000FF) << 24 |
 		 (*a & 0x0000FF00) <<  8 |
 		 (*a & 0x00FF0000) >>  8 |
 		 (*a & 0xFF000000) >> 24;
 }
-*/
-/******************************************************************************/
-/*
-void changeendian64(uint64_t * a){
-	*a = (*a & 0x00000000000000FFLL) << 56 |
-		 (*a & 0x000000000000FF00LL) << 40 |
-		 (*a & 0x0000000000FF0000LL) << 24 |
-		 (*a & 0x00000000FF000000LL) <<  8 |
-		 (*a & 0x000000FF00000000LL) >>  8 |
-		 (*a & 0x0000FF0000000000LL) >> 24 |
-		 (*a & 0x00FF000000000000LL) >> 40 |
-		 (*a & 0xFF00000000000000LL) >> 56 ;
-}
-*/
-/******************************************************************************/
 
-uint32_t bigendian_sum32(uint32_t a, uint32_t b);/*{
+/******************************************************************************/
+static
+uint32_t bigendian_sum32(uint32_t a, uint32_t b){
 	changeendian32(&a);
 	changeendian32(&b);
 	a += b;
 	changeendian32(&a);
 	return a;
 }
-*/
+
 /******************************************************************************/
-/* static */
-uint32_t bigendian_sub32(uint32_t a, uint32_t b);/*{
+static 
+uint32_t bigendian_sub32(uint32_t a, uint32_t b){
 	changeendian32(&a);
 	changeendian32(&b);
 	a -= b;
 	changeendian32(&a);
 	return a;
 }
-*/
+
 /******************************************************************************/
 static inline
 uint64_t bigendian_rotl8_64(uint64_t a){

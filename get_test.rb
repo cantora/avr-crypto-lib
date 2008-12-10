@@ -1,6 +1,6 @@
 #!/usr/bin/ruby 
 
-require "serialport.so"
+require 'serialport'
 
 if ARGV.size < 5
   STDERR.print <<EOF
@@ -16,7 +16,8 @@ param=(ARGV.size>=7)?ARGV[6]:"";
 puts("\nPort: "+ARGV[0]+ "@"+ARGV[1]+" "+ARGV[2]+"N"+ARGV[3]+"\n");
 $linewidth = 16
 $sp = SerialPort.new(ARGV[0], ARGV[1].to_i, ARGV[2].to_i, ARGV[3].to_i, SerialPort::NONE);
-$sp.read_timeout=5000; # 5 seconds
+$sp.read_timeout=1*60*1000; # 5 minutes
+$extended_wait=10;
 $sp.write(command);
 
 def readTestVector(param)
@@ -26,7 +27,10 @@ def readTestVector(param)
   set=0;
   vector=0;
   begin
-    lb=$sp.gets();
+    ctr=$extended_wait;
+    while((lb=$sp.gets())==nil && ctr>=0)do
+      ctr -= 1;
+    end
     if (m=/unknown command/.match(lb) || m=/[Ee][Rr]{2}[Oo][Rr]/.match(lb))
       puts("ERROR: "+lb);
       exit(2);
@@ -38,7 +42,10 @@ def readTestVector(param)
   
   buffer += lb;
   begin
-    lb=$sp.gets();
+    ctr=$extended_wait;
+    while((lb=$sp.gets())==nil && ctr>=0)do
+      ctr -= 1;
+    end
     if(lb==nil)
       return false;
     end
@@ -51,7 +58,10 @@ def readTestVector(param)
       fname+=m[1]+".";
     end
     buffer+=lb;
-    lb = $sp.gets();
+    ctr=$extended_wait;
+    while((lb=$sp.gets())==nil && ctr>=0)do
+      ctr -= 1;
+    end
   end
   if(param!="")
     fname+=param+".";
@@ -71,9 +81,12 @@ def readTestVector(param)
 	if(vector!=0 && vector % $linewidth==0)
 	  print("\n      ")
 	end
-        printf(" %3u", vector);
+        printf(" %4u", vector);
       end
-      lb=$sp.gets();
+      ctr=$extended_wait;
+      while((lb=$sp.gets())==nil && ctr>=0)do
+        ctr -= 1;
+      end
       if(lb==nil)
         file.close();
         return false;
@@ -86,7 +99,7 @@ def readTestVector(param)
 end
 
 if(readTestVector(param)==false)
-  puts("ERROR: test seem not to be implemented");
+  puts("ERROR: test seems not to be implemented");
   exit(3);
 end
 
