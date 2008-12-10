@@ -1,4 +1,4 @@
-/* camellia.c */
+/* camellia128-stub.c */
 /*
     This file is part of the Crypto-avr-lib/microcrypt-lib.
     Copyright (C) 2008  Daniel Otte (daniel.otte@rub.de)
@@ -27,10 +27,11 @@
 #include <avr/io.h>
 #include <avr/pgmspace.h>
 #include "camellia.h"
-#include "uart.h"
-#include "debug.h"
-#include <util/delay.h>
- 
+#if 0
+ #include "uart.h"
+ #include "debug.h"
+ #include <util/delay.h>
+#endif
 /*****************************************************************************/
 uint64_t camellia_f(uint64_t x, uint64_t k);
 /*****************************************************************************/
@@ -69,7 +70,7 @@ uint32_t PROGMEM camellia_sigma[12]={ /* 48 byte table */
 
 
 /*****************************************************************************/
-
+/*
 void camellia128_ctx_dump(camellia128_ctx_t *s){
 	uart_putstr_P(PSTR("\r\n==State Dump=="));
 	uart_putstr_P(PSTR("\n\rKAl: ")); uart_hexdump(&(s->kal), 8);
@@ -78,22 +79,24 @@ void camellia128_ctx_dump(camellia128_ctx_t *s){
 	uart_putstr_P(PSTR("\n\rKLr: ")); uart_hexdump(&(s->klr), 8);	
 	return;
 }
-
+*/
 /*****************************************************************************/
 /* extern prog_uint64_t camellia_sigma[6]; */
 
-void camellia128_init(const uint8_t* key, camellia128_ctx_t* s){
+void camellia128_init(const void* key, camellia128_ctx_t* s){
 	uint8_t i;
 	s->kll = 0; /* ((uint64_t*)key)[0]; */
 	
 	/* load the key, endian-adjusted, to kll,klr */
 	for(i=0; i<8; ++i){
 		s->kll <<= 8;
-		s->kll |= *key++;
+		s->kll |= *((uint8_t*)key);
+		key = (uint8_t*)key+1;
 	}
 	for(i=0; i<8; ++i){
 		s->klr <<= 8;
-		s->klr |= *key++;
+		s->klr |= *((uint8_t*)key);
+		key = (uint8_t*)key+1;
 	}
 
 	s->kal = s->kll;

@@ -9,5 +9,5 @@ $(ALGO_NAME)_TEST_BIN := main-entropium-test.o debug.o uart.o serial-tools.o \
                          cli.o performance_test.o
                          
 $(ALGO_NAME)_NESSIE_TEST      := "nessie"
-$(ALGO_NAME)_PEROFRMANCE_TEST := "performance"
+$(ALGO_NAME)_PERFORMANCE_TEST := "performance"
 

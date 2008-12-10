@@ -407,26 +407,26 @@ B1 = 18
 B2 = 19
 .global camellia128_keyop_rot15
 camellia128_keyop_rot15:
-	movw r30, r24 ; Z points at LSB of kl			;-- 0
+	movw r30, r24 ; Z points at LSB of kl            ;-- 0
 	ldi r22, 2		
-2:	adiw r30, 15									;-- 15
+2:	adiw r30, 15                                     ;-- 15
 	ld  r21, Z
-	ld  r20, -Z										;-- 14
+	ld  r20, -Z                                      ;-- 14
 	movw B1, r20 ; store Backup of the 2 MSB of kl
 	ror r20
 
 	ldi r21, 14
-1:	ld r20, -Z										;-- 13..0
+1:	ld r20, -Z                                       ;-- 13..0
 	ror r20
-	std Z+2, r20									;-- (15..2)
+	std Z+2, r20                                     ;-- (15..2)
 	dec r21
 	brne 1b
 	
 	ror B2
 	ror B1
-	st Z+, B1										;-- 1
+	st Z+, B1                                        ;-- 1
 	st Z, B2
-	adiw r30, 15									;-- 16
+	adiw r30, 15                                     ;-- 16
 	
 	dec r22
 	brne 2b
@@ -513,26 +513,26 @@ B1 = 18
 B2 = 19
 .global camellia128_keyop_inv_rot15
 camellia128_keyop_inv_rot15:
-	movw r30, r24 ; Z points at LSB of kl			;-- 0
+	movw r30, r24 ; Z points at LSB of kl                ;-- 0
 	movw r26, r24 ; X also
 	ldi r22, 2		
-2:													;-- 0
-	ld  r20, Z+										;-- 0/1
-	ld  r21, Z+										;-- 1/2
+2:                                                           ;-- 0
+	ld  r20, Z+                                          ;-- 0/1
+	ld  r21, Z+                                          ;-- 1/2
 	movw B1, r20 ; store Backup of the 2 LSB of kl
 	rol r21
 
 	ldi r20, 14
-1:	ld r21, Z+										;-- 2/14..3/16
+1:	ld r21, Z+                                           ;-- 2/14..3/16
 	rol r21
-	st X+, r21										;-- (0..13)/(1..14)
+	st X+, r21                                           ;-- (0..13)/(1..14)
 	dec r20
 	brne 1b
 	
 	rol B1
 	rol B2
-	st X+, B1										;-- 14/15
-	st X+, B2										;-- 15/16
+	st X+, B1                                            ;-- 14/15
+	st X+, B2                                            ;-- 15/16
 	
 	dec r22
 	brne 2b

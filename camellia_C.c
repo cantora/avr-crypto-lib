@@ -27,10 +27,11 @@
 #include <avr/io.h>
 #include <avr/pgmspace.h>
 #include "camellia.h"
-#include "uart.h"
-#include "debug.h"
-#include <util/delay.h>
- 
+#if 0
+ #include "uart.h"
+ #include "debug.h"
+ #include <util/delay.h>
+#endif 
 /*****************************************************************************/
 
 uint8_t rol(uint8_t a, uint8_t n){return ((a<<n) | (a>>(8-n)));}
@@ -54,22 +55,22 @@ uint64_t rol64(uint64_t a, uint8_t n){
 /*****************************************************************************/
  
 uint8_t camellia_s1_table[256] PROGMEM = {
-	112, 130,  44, 236, 179,  39, 192, 229, 228, 133,  87,  53, 234,  12, 174,  65,
-	 35, 239, 107, 147,  69,  25, 165,  33, 237,  14,  79,  78,  29, 101, 146, 189,
-	134, 184, 175, 143, 124, 235,  31, 206,  62,  48, 220,  95,  94, 197,  11,  26,
-	166, 225,  57, 202, 213,  71,  93,  61, 217,   1,  90, 214,  81,  86, 108,  77,
-	139,  13, 154, 102, 251, 204, 176,  45, 116,  18,  43,  32, 240, 177, 132, 153,
-	223,  76, 203, 194,  52, 126, 118,   5, 109, 183, 169,  49, 209,  23,   4, 215,
-	 20,  88,  58,  97, 222,  27,  17,  28,  50,  15, 156,  22,  83,  24, 242,  34,
-	254,  68, 207, 178, 195, 181, 122, 145,  36,   8, 232, 168,  96, 252, 105,  80,
-	170, 208, 160, 125, 161, 137,  98, 151,  84,  91,  30, 149, 224, 255, 100, 210,
-	 16, 196,   0,  72, 163, 247, 117, 219, 138,   3, 230, 218,   9,  63, 221, 148,
-	135,  92, 131,   2, 205,  74, 144,  51, 115, 103, 246, 243, 157, 127, 191, 226,
-	 82, 155, 216,  38, 200,  55, 198,  59, 129, 150, 111,  75,  19, 190,  99,  46,
-	233, 121, 167, 140, 159, 110, 188, 142,  41, 245, 249, 182,  47, 253, 180,  89,
-	120, 152,   6, 106, 231,  70, 113, 186, 212,  37, 171,  66, 136, 162, 141, 250,
-	114,   7, 185,  85, 248, 238, 172,  10,  54,  73,  42, 104,  60,  56, 241, 164,
-	 64,  40, 211, 123, 187, 201,  67, 193,  21, 227, 173, 244, 119, 199, 128, 158
+ 112, 130,  44, 236, 179,  39, 192, 229, 228, 133,  87,  53, 234,  12, 174,  65,
+  35, 239, 107, 147,  69,  25, 165,  33, 237,  14,  79,  78,  29, 101, 146, 189,
+ 134, 184, 175, 143, 124, 235,  31, 206,  62,  48, 220,  95,  94, 197,  11,  26,
+ 166, 225,  57, 202, 213,  71,  93,  61, 217,   1,  90, 214,  81,  86, 108,  77,
+ 139,  13, 154, 102, 251, 204, 176,  45, 116,  18,  43,  32, 240, 177, 132, 153,
+ 223,  76, 203, 194,  52, 126, 118,   5, 109, 183, 169,  49, 209,  23,   4, 215,
+  20,  88,  58,  97, 222,  27,  17,  28,  50,  15, 156,  22,  83,  24, 242,  34,
+ 254,  68, 207, 178, 195, 181, 122, 145,  36,   8, 232, 168,  96, 252, 105,  80,
+ 170, 208, 160, 125, 161, 137,  98, 151,  84,  91,  30, 149, 224, 255, 100, 210,
+  16, 196,   0,  72, 163, 247, 117, 219, 138,   3, 230, 218,   9,  63, 221, 148,
+ 135,  92, 131,   2, 205,  74, 144,  51, 115, 103, 246, 243, 157, 127, 191, 226,
+  82, 155, 216,  38, 200,  55, 198,  59, 129, 150, 111,  75,  19, 190,  99,  46,
+ 233, 121, 167, 140, 159, 110, 188, 142,  41, 245, 249, 182,  47, 253, 180,  89,
+ 120, 152,   6, 106, 231,  70, 113, 186, 212,  37, 171,  66, 136, 162, 141, 250,
+ 114,   7, 185,  85, 248, 238, 172,  10,  54,  73,  42, 104,  60,  56, 241, 164,
+  64,  40, 211, 123, 187, 201,  67, 193,  21, 227, 173, 244, 119, 199, 128, 158
 };
 
 /*****************************************************************************/
@@ -155,29 +156,24 @@ uint64_t camellia_p(uint64_t d){
 uint64_t camellia_f(uint64_t x, uint64_t k){
 	uint64_t y;
 	y = camellia_p(camellia_s(x ^ k));
-/*
-	uart_putstr("\r\nEfunc X=");
-	uart_hexdump(&(x), 8);
-	uart_putstr("  K=");
-	uart_hexdump(&(k), 8);
-	uart_putstr("  Y=");
-	uart_hexdump(&(y), 8);
-*/	
 	return y;
 }
 
 /*****************************************************************************/
 
 uint64_t camellia_fl(uint64_t x, uint64_t k){
-	uint64_t lx[1], lk[1], y[1];
-	lx[0]=x; lk[0] = k; 
-	
+//	uint64_t lx, lk, y;
+	uint32_t lx[2], lk[2], yr, yl;
+	lx[0]=(uint32_t)x;
+	lx[1]=(uint32_t)(x>>32); 
+	lk[0]=(uint32_t)k; 
+	lk[1]=(uint32_t)(k>>32); 
 	#define Y ((uint32_t*)y)
 	#define X ((uint32_t*)lx)
 	#define K ((uint32_t*)lk)
 
-	Y[0] = rol32((X[1]) & K[1] ,1) ^ (X[0]); /* Yr */
-	Y[1] = (Y[0] | K[0]) ^ (X[1]);           /* Yl */
+	yr = rol32((X[1]) & (K[1]) ,1) ^ (X[0]); /* Yr */
+	yl = (yr | K[0]) ^ (X[1]);           /* Yl */
 	
 /*	
 	uart_putstr("\r\nFL(");
@@ -190,15 +186,18 @@ uint64_t camellia_fl(uint64_t x, uint64_t k){
 	#undef K
 	#undef X
 	#undef Y
-	return y[0];	
+	return (((uint64_t)yl)<<32 | yr);	
 }
 
 /*****************************************************************************/
 
 uint64_t camellia_fl_inv(uint64_t y, uint64_t k){
 //volatile	uint32_t xl, xr;
-	volatile uint64_t ly[1], lk[1], x[1];
-	ly[0]=y; lk[0] = k; 
+	uint32_t ly[2], lk[2], x[2];
+	ly[0]=(uint32_t)y;
+	ly[1]=(uint32_t)(y>>32);
+	lk[0]=(uint32_t)k; 
+	lk[1]=(uint32_t)(k>>32); 
 	#define Y ((uint32_t*)ly) 
 	#define X ((uint32_t*)x) 
 	#define K ((uint32_t*)lk) 
@@ -216,7 +215,7 @@ uint64_t camellia_fl_inv(uint64_t y, uint64_t k){
 	#undef K
 	#undef X
 	#undef Y
-	return x[0];	
+	return ((uint64_t)(x[1]))<<32 | x[0];	
 }
 
 /*****************************************************************************/
@@ -231,7 +230,7 @@ uint64_t camellia_sigma[6]={
 };	
 
 /*****************************************************************************/
-
+#if 0
 void camellia128_ctx_dump(camellia128_ctx_t *s){
 	uart_putstr("\r\n==State Dump==");
 	uart_putstr("\n\rKAl: "); uart_hexdump(&(s->kal), 8);
@@ -240,21 +239,23 @@ void camellia128_ctx_dump(camellia128_ctx_t *s){
 	uart_putstr("\n\rKLr: "); uart_hexdump(&(s->klr), 8);	
 	return;
 }
-
+#endif
 /*****************************************************************************/
 
-void camellia128_init(const uint8_t* key, camellia128_ctx_t* s){
+void camellia128_init(const void* key, camellia128_ctx_t* s){
 	uint8_t i;
 	s->kll = 0; //((uint64_t*)key)[0];
 	
 	/* load the key, endian-adjusted, to kll,klr */
 	for(i=0; i<8; ++i){
 		s->kll <<= 8;
-		s->kll |= *key++;
+		s->kll |= *((uint8_t*)key);
+		key = (uint8_t*)key+1;
 	}
 	for(i=0; i<8; ++i){
 		s->klr <<= 8;
-		s->klr |= *key++;
+		s->klr |= *((uint8_t*)key);
+		key = (uint8_t*)key+1;
 	}
 	
 	s->kal = s->kll;
@@ -309,31 +310,31 @@ void camellia128_keyop_inv(camellia128_ctx_t* s, int8_t q){
 #define SEL_KA 1
 #define SEL_KL 0
 
-#define KEY_POSTC1		0x00
-#define KEY_POSTC2		0x01
-#define KEY_INC2		0x02
+#define KEY_POSTC1              0x00
+#define KEY_POSTC2              0x01
+#define KEY_INC2                0x02
 
-#define KEY_DIR			0x04
-#define KEY_DIR_NORM	0x00
-#define KEY_DIR_INV		0x04
+#define KEY_DIR	                0x04
+#define KEY_DIR_NORM            0x00
+#define KEY_DIR_INV             0x04
 
-#define KEY_AMMOUNT		0x08 
-#define KEY_ROL17		0x08
-#define KEY_ROL15		0x00
+#define KEY_AMMOUNT             0x08 
+#define KEY_ROL17               0x08
+#define KEY_ROL15               0x00
 
 void camellia_6rounds(const camellia128_ctx_t* s, uint64_t* bl, uint64_t* br, uint8_t roundop, uint8_t keychoice){
 	uint8_t i;
 	uint64_t* k[4];
-	k[0] = &(s->kll);
-	k[1] = &(s->klr);
-	k[2] = &(s->kal);
-	k[3] = &(s->kar);
+	k[0] = &(((camellia128_ctx_t*)s)->kll);
+	k[1] = &(((camellia128_ctx_t*)s)->klr);
+	k[2] = &(((camellia128_ctx_t*)s)->kal);
+	k[3] = &(((camellia128_ctx_t*)s)->kar);
 	for(i=0; i<3; ++i){ /* each cycle */
 		br[0] ^= camellia_f(bl[0],*(k[(keychoice&1)*2+((roundop&KEY_DIR)?1:0)]));
 		keychoice >>= 1;
 		
 		if((i == 1) && (roundop&KEY_INC2)){
-			((roundop&KEY_DIR)?camellia128_keyop_inv:camellia128_keyop)(s,(roundop&KEY_AMMOUNT)?1:-1);
+			((roundop&KEY_DIR)?camellia128_keyop_inv:camellia128_keyop)(((camellia128_ctx_t*)s),(roundop&KEY_AMMOUNT)?1:-1);
 		}
 		
 		bl[0] ^= camellia_f(br[0],*(k[(keychoice&1)*2+((roundop&KEY_DIR)?0:1)]));
@@ -341,7 +342,7 @@ void camellia_6rounds(const camellia128_ctx_t* s, uint64_t* bl, uint64_t* br, ui
 		
 		/* check if we should do some keyop */
 		if((i == (roundop&1)) && (!(roundop&KEY_INC2)) ){
-			((roundop&KEY_DIR)?camellia128_keyop_inv:camellia128_keyop)(s,(roundop&KEY_AMMOUNT)?1:-1);
+			((roundop&KEY_DIR)?camellia128_keyop_inv:camellia128_keyop)(((camellia128_ctx_t*)s),(roundop&KEY_AMMOUNT)?1:-1);
 			/* isn't it fuckin nice what we can do in C?! */
 		}
 	}
@@ -349,6 +350,16 @@ void camellia_6rounds(const camellia128_ctx_t* s, uint64_t* bl, uint64_t* br, ui
 
 /*****************************************************************************/
 
+void change_endian(void* data, uint8_t length){
+	uint8_t i,a;
+	for(i=0; i<length/2; ++i){
+		a = ((uint8_t*)data)[i];
+		((uint8_t*)data)[i] = ((uint8_t*)data)[length-i-1];
+		((uint8_t*)data)[length-i-1] = a;
+	}
+}
+
+/*****************************************************************************/
 
 void camellia128_enc(void* block, const camellia128_ctx_t* s){
 
@@ -361,32 +372,15 @@ void camellia128_enc(void* block, const camellia128_ctx_t* s){
 	  */
 	 
 	uint64_t temp64;
-
-	temp64 = BL;
-	BL = temp64 >> 56 | temp64 << 56  /* swap the most out bytes (1 & 8) */
-		| (temp64 & (0xffLL<<48))>>(5*8) | (temp64 & (0xffLL<< 8))<<(5*8) /* 2 & 7 */
-		| (temp64 & (0xffLL<<40))>>(3*8) | (temp64 & (0xffLL<<16))<<(3*8) /* 3 & 6 */		
-		| (temp64 & (0xffLL<<32))>>(1*8) | (temp64 & (0xffLL<<24))<<(1*8); /* 4 & 5 */
-	temp64 = BR;
-	BR = temp64 >> 56 | temp64 << 56  /* swap the most out bytes (1 & 8) */
-		| (temp64 & (0xffLL<<48))>>(5*8) | (temp64 & (0xffLL<< 8))<<(5*8) /* 2 & 7 */
-		| (temp64 & (0xffLL<<40))>>(3*8) | (temp64 & (0xffLL<<16))<<(3*8) /* 3 & 6 */		
-		| (temp64 & (0xffLL<<32))>>(1*8) | (temp64 & (0xffLL<<24))<<(1*8); /* 4 & 5 */
+	
+	change_endian(&BL, 64/8);	
+	change_endian(&BR, 64/8);
 	
 	/* Prewhitening */
 	BL ^= s->kll;
 	BR ^= s->klr;
 	
 	/* the first 6 */
-/*	
-	BR ^= camellia_f(BL, s->kal);
-	BL ^= camellia_f(BR, s->kar);
-   camellia128_keyop(s, -1);
-	BR ^= camellia_f(BL, s->kll);
-	BL ^= camellia_f(BR, s->klr);
-	BR ^= camellia_f(BL, s->kal);
-	BL ^= camellia_f(BR, s->kar);
-*/
 	camellia_6rounds(s, &BL, &BR, KEY_ROL15 | KEY_DIR_NORM | KEY_POSTC1 , 0x33);
 	/* FL injection  */
    camellia128_keyop((camellia128_ctx_t*)s, -1);
@@ -394,14 +388,6 @@ void camellia128_enc(void* block, const camellia128_ctx_t* s){
 	BR = camellia_fl_inv(BR, s->kar);
    camellia128_keyop((camellia128_ctx_t*)s, -1);
 	/* middle 6 */
-/*	BR ^= camellia_f(BL, s->kll);
-	BL ^= camellia_f(BR, s->klr);
-	BR ^= camellia_f(BL, s->kal);
-   camellia128_keyop(s, -1);
-	BL ^= camellia_f(BR, s->klr);
-	BR ^= camellia_f(BL, s->kal);
-	BL ^= camellia_f(BR, s->kar);
-/*/
 	camellia_6rounds(s, &BL, &BR, KEY_ROL15 | KEY_DIR_NORM | KEY_INC2 , 0x34);
 	/* FL injection  */
    camellia128_keyop((camellia128_ctx_t*)s, 1);
@@ -409,15 +395,6 @@ void camellia128_enc(void* block, const camellia128_ctx_t* s){
 	BR = camellia_fl_inv(BR, s->klr);
    camellia128_keyop((camellia128_ctx_t*)s, 1);
    /* last 6 */
-/*	BR ^= camellia_f(BL, s->kll);
-	BL ^= camellia_f(BR, s->klr);
-	BR ^= camellia_f(BL, s->kal);
-	BL ^= camellia_f(BR, s->kar);
-   camellia128_keyop(s, 1);
-  
-	BR ^= camellia_f(BL, s->kll);
-	BL ^= camellia_f(BR, s->klr);
-*/
 	camellia_6rounds(s, &BL, &BR, KEY_ROL17 | KEY_DIR_NORM | KEY_POSTC2 , 0x0C);
 	/* Postwhitening */
 	BR ^= s->kal;
@@ -427,16 +404,10 @@ void camellia128_enc(void* block, const camellia128_ctx_t* s){
 	BR = BL;
 	BL = temp64;
 
+	camellia128_keyop((camellia128_ctx_t*)s,1);
 	
-	BL = temp64 >> 56 | temp64 << 56  /* swap the most out bytes (1 & 8) */
-		| (temp64 & (0xffLL<<48))>>(5*8) | (temp64 & (0xffLL<< 8))<<(5*8) /* 2 & 7 */
-		| (temp64 & (0xffLL<<40))>>(3*8) | (temp64 & (0xffLL<<16))<<(3*8) /* 3 & 6 */		
-		| (temp64 & (0xffLL<<32))>>(1*8) | (temp64 & (0xffLL<<24))<<(1*8); /* 4 & 5 */
-	temp64 = BR;
-	BR = temp64 >> 56 | temp64 << 56  /* swap the most out bytes (1 & 8) */
-		| (temp64 & (0xffLL<<48))>>(5*8) | (temp64 & (0xffLL<< 8))<<(5*8) /* 2 & 7 */
-		| (temp64 & (0xffLL<<40))>>(3*8) | (temp64 & (0xffLL<<16))<<(3*8) /* 3 & 6 */		
-		| (temp64 & (0xffLL<<32))>>(1*8) | (temp64 & (0xffLL<<24))<<(1*8); /* 4 & 5 */
+	change_endian(&BL, 64/8);	
+	change_endian(&BR, 64/8);
 		
 	#undef BL
 	#undef BR	
@@ -455,67 +426,28 @@ void camellia128_dec(void* block, const camellia128_ctx_t* s){
 	  */
 	 
 	uint64_t temp64;
-	
-	temp64 = BL;
-
-	BL = temp64 >> 56 | temp64 << 56  /* swap the most out bytes (1 & 8) */
-		| (temp64 & (0xffLL<<48))>>(5*8) | (temp64 & (0xffLL<< 8))<<(5*8) /* 2 & 7 */
-		| (temp64 & (0xffLL<<40))>>(3*8) | (temp64 & (0xffLL<<16))<<(3*8) /* 3 & 6 */		
-		| (temp64 & (0xffLL<<32))>>(1*8) | (temp64 & (0xffLL<<24))<<(1*8); /* 4 & 5 */
-	temp64 = BR;
-	BR = temp64 >> 56 | temp64 << 56  /* swap the most out bytes (1 & 8) */
-		| (temp64 & (0xffLL<<48))>>(5*8) | (temp64 & (0xffLL<< 8))<<(5*8) /* 2 & 7 */
-		| (temp64 & (0xffLL<<40))>>(3*8) | (temp64 & (0xffLL<<16))<<(3*8) /* 3 & 6 */		
-		| (temp64 & (0xffLL<<32))>>(1*8) | (temp64 & (0xffLL<<24))<<(1*8); /* 4 & 5 */
+	change_endian(&BL, 64/8);	
+	change_endian(&BR, 64/8);
 		
 	camellia128_keyop_inv((camellia128_ctx_t*)s, 1);
 	/* Prewhitening */
 	BR ^= s->kal; /* kw3 */
 	BL ^= s->kar; /* kw4 */
-
 	/* the first 6 */
-/*	
-	BL ^= camellia_f(BR, s->klr); /* k18 * /
-	BR ^= camellia_f(BL, s->kll); /* k17 * /
-   camellia128_keyop_inv(s, 1);
-	BL ^= camellia_f(BR, s->kar);
-	BR ^= camellia_f(BL, s->kal);
-	BL ^= camellia_f(BR, s->klr);
-	BR ^= camellia_f(BL, s->kll);
-*/
 	camellia_6rounds(s, &BR, &BL, KEY_ROL17 | KEY_DIR_INV | KEY_POSTC1 , 0x0C);
-
 	/* FL injection  */
    camellia128_keyop_inv((camellia128_ctx_t*)s, 1);
 	BR = camellia_fl(BR, s->klr);
 	BL = camellia_fl_inv(BL, s->kll);
    camellia128_keyop_inv((camellia128_ctx_t*)s, 1);
 	/* middle 6 */	
-/*	BL ^= camellia_f(BR, s->kar);
-	BR ^= camellia_f(BL, s->kal);
-	BL ^= camellia_f(BR, s->klr);
-   camellia128_keyop_inv(s, -1);
-	BR ^= camellia_f(BL, s->kal);
-	BL ^= camellia_f(BR, s->klr);
-	BR ^= camellia_f(BL, s->kll);
-*/
 	camellia_6rounds(s, &BR, &BL, KEY_ROL15 | KEY_DIR_INV | KEY_INC2 , 0x0B);
-
 	/* FL injection  */
-   camellia128_keyop_inv(s, -1);
+   camellia128_keyop_inv((camellia128_ctx_t*)s, -1);
    	BR = camellia_fl(BR, s->kar);
 	BL = camellia_fl_inv(BL, s->kal);
    camellia128_keyop_inv((camellia128_ctx_t*)s, -1);
    /* last 6 */
-/*   
-	BL ^= camellia_f(BR, s->kar);
-	BR ^= camellia_f(BL, s->kal);
-	BL ^= camellia_f(BR, s->klr);
-	BR ^= camellia_f(BL, s->kll);
-   camellia128_keyop_inv(s, -1);
-	BL ^= camellia_f(BR, s->kar);
-	BR ^= camellia_f(BL, s->kal);
-/*/
 	camellia_6rounds(s, &BR, &BL, KEY_ROL15 | KEY_DIR_INV | KEY_POSTC2 , 0x33);
 	
 	/* Postwhitening */
@@ -525,19 +457,13 @@ void camellia128_dec(void* block, const camellia128_ctx_t* s){
 	temp64 = BR;
 	BR = BL;
 	BL = temp64;
-
 	
-	BL = temp64 >> 56 | temp64 << 56  /* swap the most out bytes (1 & 8) */
-		| (temp64 & (0xffLL<<48))>>(5*8) | (temp64 & (0xffLL<< 8))<<(5*8) /* 2 & 7 */
-		| (temp64 & (0xffLL<<40))>>(3*8) | (temp64 & (0xffLL<<16))<<(3*8) /* 3 & 6 */		
-		| (temp64 & (0xffLL<<32))>>(1*8) | (temp64 & (0xffLL<<24))<<(1*8); /* 4 & 5 */
-	temp64 = BR;
-	BR = temp64 >> 56 | temp64 << 56  /* swap the most out bytes (1 & 8) */
-		| (temp64 & (0xffLL<<48))>>(5*8) | (temp64 & (0xffLL<< 8))<<(5*8) /* 2 & 7 */
-		| (temp64 & (0xffLL<<40))>>(3*8) | (temp64 & (0xffLL<<16))<<(3*8) /* 3 & 6 */		
-		| (temp64 & (0xffLL<<32))>>(1*8) | (temp64 & (0xffLL<<24))<<(1*8); /* 4 & 5 */
+	change_endian(&BL, 64/8);	
+	change_endian(&BR, 64/8);
 		
 }
+
+
 
 /*****************************************************************************/
 /*****************************************************************************/

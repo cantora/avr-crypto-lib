@@ -115,21 +115,24 @@ void testrun_camellia(void){
                        0x89, 0xab, 0xcd, 0xef, 
                        0xfe, 0xdc, 0xba, 0x98, 
                        0x76, 0x54, 0x32, 0x10 };
-/*
-  uint8_t data[16] = {  
-                       0x10, 0x32, 0x54, 0x76, 
-                       0x98, 0xba, 0xdc, 0xfe, 
-                       0xfe, 0xcd, 0xab, 0x89 
-                       0x67, 0x89, 0x67, 0x01};
-*/
+
+  uint8_t key[16] = { 0x01, 0x23, 0x45, 0x67, 
+                       0x89, 0xab, 0xcd, 0xef, 
+                       0xfe, 0xdc, 0xba, 0x98, 
+                       0x76, 0x54, 0x32, 0x10 };
+
+
   camellia128_ctx_t ctx;
-  camellia128_init(data, &ctx);
+  camellia128_init(key, &ctx);
   uart_putstr_P(PSTR("\r\n key:        "));
   uart_hexdump(data, 16);
   uart_putstr_P(PSTR("\r\n plaintext:  "));
   uart_hexdump(data, 16);
   camellia128_enc(data, &ctx);
   uart_putstr_P(PSTR("\r\n ciphertext: "));
+  uart_hexdump(data, 16);
+  camellia128_dec(data, &ctx);
+  uart_putstr_P(PSTR("\r\n decrypted:  "));
   uart_hexdump(data, 16);
 
 }
