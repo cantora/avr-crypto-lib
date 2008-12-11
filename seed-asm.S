@@ -112,8 +112,8 @@ T3 = X1
  *  X2 = R23
  *  X3 = R22
  */    
-.global g_function
-g_function:
+.global seed_g_function
+seed_g_function:
 	ldi r30, lo8(seed_sbox1)
 	ldi r31, hi8(seed_sbox1)
  	movw r26, r30
@@ -249,8 +249,430 @@ seed_sbox2:
 .byte    55,  231,   36,  164,  203,   83,   10,  135 
 .byte   217,   76,  131,  143,  206,   59,   74,  183 
 
+/******************************************************************************/
 
+/*
+static
+uint64_t f_function(const uint64_t* a, uint32_t k0, uint32_t k1){
+	uint32_t c,d;
 
+	c = *a & 0x00000000FFFFFFFFLL;
+	d = (*a>>32) & 0x00000000FFFFFFFFLL;
+	
+	c ^= k0; d ^= k1;
+	d ^= c;
+	d = g_function(d);
+	c = bigendian_sum32(c,d);
+	c = g_function(c);
+	d = bigendian_sum32(c,d);
+	d = g_function(d);
+	c = bigendian_sum32(c,d);	
+	return ((uint64_t)d << 32) | c;
+}
+*/
+/*
+ * param a   r24:r25
+ * param k0  r20:r23
+ * param k1  r16:r19
+ */
+D0 = 10
+D1 = 11
+C0 = 12
+C1 = 13
+C2 = 14
+C3 = 15
+D2 = 16
+D3 = 17
+.global seed_f_function
+seed_f_function:
+	push_range 10, 17
+	movw r30, r24
+	ld C0, Z+
+	ld C1, Z+
+	ld C2, Z+
+	ld C3, Z+
+	eor C0, r20
+	eor C1, r21
+	eor C2, r22
+	eor C3, r23
+	ld r22, Z+
+	ld r23, Z+
+	ld r24, Z+
+	ld r25, Z+
+	eor r22, r16
+	eor r23, r17
+	eor r24, r18
+	eor r25, r19
+	eor r22, C0
+	eor r23, C1
+	eor r24, C2
+	eor r25, C3
+	rcall seed_g_function
+	mov D0, r22
+	mov D1, r23
+	mov D2, r24
+	mov D3, r25
 
+	add r25, C3
+	adc r24, C2
+	adc r23, C1
+	adc r22, C0
+	rcall seed_g_function
+	mov C0, r22
+	mov C1, r23
+	mov C2, r24
+	mov C3, r25
 
+	add r25, D3
+	adc r24, D2
+	adc r23, D1
+	adc r22, D0
+	rcall seed_g_function
+	mov D0, r22
+	mov D1, r23
+	mov D2, r24
+	mov D3, r25
+
+	add C3, r25
+	adc C2, r24
+	adc C1, r23
+	adc C0, r22
+
+	mov r18, C0
+	mov r19, C1
+	mov r20, C2
+	mov r21, C3
+	
+	pop_range 10, 17
+	ret
+
+/******************************************************************************/
+/*
+void seed_init(uint8_t * key, seed_ctx_t * ctx){
+	memcpy(ctx->k, key, 128/8);
+}
+*/
+
+.global seed_init
+seed_init:
+	movw r26, r24
+	movw r30, r22
+	ldi r22, 16
+1:
+	ld r0, X+
+	st Z+, r0
+	dec r22
+	brne 1b	
+	ret
+/******************************************************************************/
+/*
+typedef struct {
+	uint32_t k0, k1;
+} keypair_t;
+
+keypair_t getnextkeys(uint32_t *keystate, uint8_t curround){
+	keypair_t ret;
+	if (curround>15){
+		/ * ERROR * /
+		ret.k0 = ret.k1 = 0;
+	} else {
+	/ *	ret.k0 = seed_g_function(keystate[0] + keystate[2] - pgm_read_dword(&(seed_kc[curround])));
+		ret.k1 = seed_g_function(keystate[1] - keystate[3] + pgm_read_dword(&(seed_kc[curround]))); * /
+		ret.k0 = bigendian_sum32(keystate[0], keystate[2]);
+		ret.k0 = bigendian_sub32(ret.k0, pgm_read_dword(&(seed_kc[curround])));
+		ret.k0 = seed_g_function(ret.k0);
+		ret.k1 = bigendian_sub32(keystate[1], keystate[3]);
+		ret.k1 = bigendian_sum32(ret.k1, pgm_read_dword(&(seed_kc[curround])));
+		ret.k1 = seed_g_function(ret.k1);
+		
+		if (curround & 1){
+			/ * odd round (1,3,5, ...) * /
+			((uint64_t*)keystate)[1] = bigendian_rotl8_64( ((uint64_t*)keystate)[1] );
+		} else {
+			/ * even round (0,2,4, ...) * /
+			((uint64_t*)keystate)[0] = bigendian_rotr8_64(((uint64_t*)keystate)[0]);
+		}
+	}
+	return ret;
+}
+*/
+/*
+ * param keystate: r24:r25
+ * param curround: r22
+ */
+XRC0 = 10
+XRC1 = 11
+XRC2 = 12
+XRC3 = 13
+D0 = 14
+D1 = 15
+D2 = 16
+D3 = 17
+
+compute_keys:
+	ldi r30, lo8(seed_kc)
+	ldi r31, hi8(seed_kc)
+	lsl r22
+	lsl r22
+	add r30, r22
+	adc r31, r1
+	lpm XRC0, Z+
+	lpm XRC1, Z+
+	lpm XRC2, Z+
+	lpm XRC3, Z+
+	movw r28, r24
+	ldd r25, Y+0*4+3
+	ldd r24, Y+0*4+2
+	ldd r23, Y+0*4+1
+	ldd r22, Y+0*4+0
+	
+	ldd r0, Y+2*4+3
+	add r25, r0
+	ldd r0, Y+2*4+2
+	adc r24, r0
+	ldd r0, Y+2*4+1
+	adc r23, r0
+	ldd r0, Y+2*4+0
+	adc r22, r0
+
+	sub r25, XRC3
+	sbc r24, XRC2
+	sbc r23, XRC1
+	sbc r22, XRC0
+	rcall seed_g_function
+	mov D0, r22
+	mov D1, r23
+	mov D2, r24
+	mov D3, r25
+	
+
+	ldd r25, Y+1*4+3
+	ldd r24, Y+1*4+2
+	ldd r23, Y+1*4+1
+	ldd r22, Y+1*4+0
+
+	ldd r0, Y+3*4+3
+	sub r25, r0
+	ldd r0, Y+3*4+2
+	sbc r24, r0
+	ldd r0, Y+3*4+1
+	sbc r23, r0
+	ldd r0, Y+3*4+0
+	sbc r22, r0
+
+	add r25, XRC3
+	adc r24, XRC2
+	adc r23, XRC1
+	adc r22, XRC0
+	rcall seed_g_function
+
+	mov r21, D3
+	mov r20, D2
+	mov r19, D1
+	mov r18, D0 
+	ret
+
+.global seed_getnextkeys
+seed_getnextkeys:
+	push_range 10, 17
+	push r28
+	push r29
+	andi r22, 0x0F
+	bst r22,0
+	rcall compute_keys		
+	brtc even_round
+odd_round:
+
+	adiw r28, 8
+	ld r26, Y
+	ldd r0, Y+1
+	std Y+0, r0
+	ldd r0, Y+2
+	std Y+1, r0
+	ldd r0, Y+3
+	std Y+2, r0
+	ldd r0, Y+4
+	std Y+3, r0
+	ldd r0, Y+5
+	std Y+4, r0
+	ldd r0, Y+6
+	std Y+5, r0
+	ldd r0, Y+7
+	std Y+6, r0
+	std Y+7, r26	
+/*
+	movw r30, r28
+	ld r26, Z+
+	ldi r27, 7
+1:
+	ld r0, Z+
+	st Y+, r0
+	dec r27
+	brne 1b
+	st Y, r26
+*/	
+	rjmp 4f
+
+even_round:
+
+	ldd r26, Y+7
+	ldd r0, Y+6
+	std Y+7, r0
+	ldd r0, Y+5
+	std Y+6, r0
+	ldd r0, Y+4
+	std Y+5, r0
+	ldd r0, Y+3
+	std Y+4, r0
+	ldd r0, Y+2
+	std Y+3, r0
+	ldd r0, Y+1
+	std Y+2, r0
+	ldd r0, Y+0
+	std Y+1, r0
+	std Y+0, r26
+/*
+	adiw r28, 7	
+	ld r26, Y
+	ldi r27, 7	
+1:
+	ld r0, -Y
+	std Y+1, r0
+	dec r27
+	brne 1b
+	st Y, r26
+*/
+4:	
+	pop r29
+	pop r28
+	pop_range 10, 17
+	ret
+
+/******************************************************************************/
+/*
+keypair_t getprevkeys(uint32_t *keystate, uint8_t curround){
+	keypair_t ret;
+	if (curround>15){
+		/ * ERROR * /
+		ret.k0 = ret.k1 = 0;
+	} else {
+		if (curround & 1){
+			/ * odd round (1,3,5, ..., 15) * /
+			((uint64_t*)keystate)[1] = bigendian_rotr8_64( ((uint64_t*)keystate)[1] );
+		} else {
+			/ * even round (0,2,4, ..., 14) * /
+			((uint64_t*)keystate)[0] = bigendian_rotl8_64(((uint64_t*)keystate)[0]);
+		}
+	/ *	ret.k0 = seed_g_function(keystate[0] + keystate[2] - pgm_read_dword(&(seed_kc[curround])));
+		ret.k1 = seed_g_function(keystate[1] - keystate[3] + pgm_read_dword(&(seed_kc[curround]))); * /
+		ret.k0 = bigendian_sum32(keystate[0], keystate[2]);
+		ret.k0 = bigendian_sub32(ret.k0, pgm_read_dword(&(seed_kc[curround])));
+		ret.k0 = seed_g_function(ret.k0);
+		ret.k1 = bigendian_sub32(keystate[1], keystate[3]);
+		ret.k1 = bigendian_sum32(ret.k1, pgm_read_dword(&(seed_kc[curround])));
+		ret.k1 = seed_g_function(ret.k1);
+		}
+	return ret;
+}
+*/
+/*
+ * param keystate: r24:r25
+ * param curround: r22
+ */
+
+.global seed_getprevkeys
+seed_getprevkeys:
+	push_range 10, 17
+	push r28
+	push r29
+	movw r28, r24	
+	andi r22, 0x0F
+	bst r22, 0
+	brts r_odd_round
+r_even_round:
+	ldd r26, Y+0
+	ldd r0, Y+1
+	std Y+0, r0
+	ldd r0, Y+2
+	std Y+1, r0
+	ldd r0, Y+3
+	std Y+2, r0
+	ldd r0, Y+4
+	std Y+3, r0
+	ldd r0, Y+5
+	std Y+4, r0
+	ldd r0, Y+6
+	std Y+5, r0
+	ldd r0, Y+7
+	std Y+6, r0
+	std Y+7, r26	
+/*
+	movw r30, r28
+	ld r26, Z+
+	ldi r27, 7
+1:
+	ld r0, Z+
+	st Y+, r0
+	dec r27
+	brne 1b
+	st Y, r26
+*/	
+
+	rjmp 4f
+r_odd_round:
+	ldd r26, Y+8+7
+	ldd r0, Y+8+6
+	std Y+8+7, r0
+	ldd r0, Y+8+5
+	std Y+8+6, r0
+	ldd r0, Y+8+4
+	std Y+8+5, r0
+	ldd r0, Y+8+3
+	std Y+8+4, r0
+	ldd r0, Y+8+2
+	std Y+8+3, r0
+	ldd r0, Y+8+1
+	std Y+8+2, r0
+	ldd r0, Y+8+0
+	std Y+8+1, r0
+	std Y+8+0, r26
+/*
+	adiw r28, 7	
+	ld r26, Y
+	ldi r27, 7	
+1:
+	ld r0, -Y
+	std Y+1, r0
+	dec r27
+	brne 1b
+	st Y, r26
+*/
+4:
+	rcall compute_keys	
+
+	pop r29
+	pop r28
+	pop_range 10, 17
+	ret
+
+/******************************************************************************/
+
+.global seed_kc
+seed_kc:
+.long   0xb979379e 
+.long   0x73f36e3c
+.long   0xe6e6dd78 
+.long   0xcccdbbf1 
+.long   0x999b77e3 
+.long   0x3337efc6 
+.long   0x676ede8d 
+.long   0xcfdcbc1b 
+.long   0x9eb97937
+.long   0x3c73f36e	
+.long   0x78e6e6dd
+.long   0xf1cccdbb
+.long   0xe3999b77
+.long   0xc63337ef
+.long   0x8d676ede
+.long   0x1bcfdcbc
 

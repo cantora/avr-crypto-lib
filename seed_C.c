@@ -91,13 +91,13 @@ uint64_t bigendian_rotr8_64(uint64_t a){
 
 /******************************************************************************/
 static
-uint64_t f_function(uint64_t a, uint32_t k0, uint32_t k1){
+uint64_t f_function(const uint64_t* a, uint32_t k0, uint32_t k1){
 	uint32_t c,d;
 
-	c = a & 0x00000000FFFFFFFFLL;
-	d = (a>>32) & 0x00000000FFFFFFFFLL;
+	c = *a & 0x00000000FFFFFFFFLL;
+	d = (*a>>32) & 0x00000000FFFFFFFFLL;
 	
-	c ^= k0;	d ^= k1;
+	c ^= k0; d ^= k1;
 	d ^= c;
 	d = g_function(d);
 	c = bigendian_sum32(c,d);
@@ -105,8 +105,7 @@ uint64_t f_function(uint64_t a, uint32_t k0, uint32_t k1){
 	d = bigendian_sum32(c,d);
 	d = g_function(d);
 	c = bigendian_sum32(c,d);
-	a = ((uint64_t)d << 32) | c;
-	return a;
+	return ((uint64_t)d << 32) | c;
 }
 
 /******************************************************************************/
@@ -227,7 +226,7 @@ void seed_enc(void * buffer, seed_ctx_t * ctx){
 	DEBUG_S("\r\n\t DBG L: "); uart_hexdump((uint8_t*)buffer+0, 8);
 	DEBUG_S("\r\n\t DBG R: "); uart_hexdump((uint8_t*)buffer+8, 8);
 */
-			L ^= f_function(R,k.k0,k.k1);
+			L ^= f_function(&R,k.k0,k.k1);
 			
 			k = getnextkeys(ctx->k, 2*r+1);
 /*
@@ -236,7 +235,7 @@ void seed_enc(void * buffer, seed_ctx_t * ctx){
 	DEBUG_S("\r\n\t DBG L: "); uart_hexdump((uint8_t*)buffer+8, 8);
 	DEBUG_S("\r\n\t DBG R: "); uart_hexdump((uint8_t*)buffer+0, 8);
 */
-			R ^= f_function(L,k.k0,k.k1);
+			R ^= f_function(&L,k.k0,k.k1);
 	}
 	/* just an exchange without temp. variable */
 	L ^= R;
@@ -260,7 +259,7 @@ void seed_dec(void * buffer, seed_ctx_t * ctx){
 	DEBUG_S("\r\n\t DBG L: "); uart_hexdump((uint8_t*)buffer+0, 8);
 	DEBUG_S("\r\n\t DBG R: "); uart_hexdump((uint8_t*)buffer+8, 8);
 */
-			L ^= f_function(R,k.k0,k.k1);
+			L ^= f_function(&R,k.k0,k.k1);
 			
 			k = getprevkeys(ctx->k, 2*r+0);
 /*
@@ -269,7 +268,7 @@ void seed_dec(void * buffer, seed_ctx_t * ctx){
 	DEBUG_S("\r\n\t DBG L: "); uart_hexdump((uint8_t*)buffer+8, 8);
 	DEBUG_S("\r\n\t DBG R: "); uart_hexdump((uint8_t*)buffer+0, 8);
 */
-			R ^= f_function(L,k.k0,k.k1);
+			R ^= f_function(&L,k.k0,k.k1);
 	}
 	/* just an exchange without temp. variable */
 	L ^= R;
