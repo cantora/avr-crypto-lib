@@ -32,6 +32,9 @@
 #include "uart.h"
 #include "debug.h"
 
+
+static
+uint32_t g_function(uint32_t x);
 /******************************************************************************/
 
 static

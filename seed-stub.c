@@ -28,9 +28,28 @@
 #include <stdint.h>
 #include <avr/pgmspace.h>
 #include <string.h>
-#include "seed_sbox.h"
 #include "uart.h"
 #include "debug.h"
+
+/* key constants */
+uint32_t seed_kc[16] PROGMEM ={
+	0xb979379e, 
+	0x73f36e3c,
+	0xe6e6dd78, 
+	0xcccdbbf1, 
+	0x999b77e3, 
+	0x3337efc6, 
+	0x676ede8d, 
+	0xcfdcbc1b, 
+	0x9eb97937,
+	0x3c73f36e,	
+	0x78e6e6dd,
+	0xf1cccdbb,
+	0xe3999b77,
+	0xc63337ef,
+	0x8d676ede,
+	0x1bcfdcbc
+};
 
 
 static uint64_t f_function(uint64_t a, uint32_t k0, uint32_t k1);
@@ -83,39 +102,7 @@ uint64_t f_function(uint64_t a, uint32_t k0, uint32_t k1){
 	return a;
 }
 
-/******************************************************************************/
-#if 0
-#define M0 0xfc
-#define M1 0xf3
-#define M2 0xcf
-#define M3 0x3f
 
-#define X3 (((uint8_t*)(&x))[0])
-#define X2 (((uint8_t*)(&x))[1])
-#define X1 (((uint8_t*)(&x))[2])
-#define X0 (((uint8_t*)(&x))[3])
-
-#define Z3 (((uint8_t*)(&z))[0])
-#define Z2 (((uint8_t*)(&z))[1])
-#define Z1 (((uint8_t*)(&z))[2])
-#define Z0 (((uint8_t*)(&z))[3])
-
-static
-uint32_t g_function(uint32_t x){
-	uint32_t z;
-	/* sbox substitution */
-	X3 = pgm_read_byte(&(seed_sbox2[X3]));
-	X2 = pgm_read_byte(&(seed_sbox1[X2]));
-	X1 = pgm_read_byte(&(seed_sbox2[X1]));
-	X0 = pgm_read_byte(&(seed_sbox1[X0]));
-	/* now the permutation */
-	Z0 = (X0 & M0) ^ (X1 & M1) ^ (X2 & M2) ^ (X3 & M3);
-	Z1 = (X0 & M1) ^ (X1 & M2) ^ (X2 & M3) ^ (X3 & M0);
-	Z2 = (X0 & M2) ^ (X1 & M3) ^ (X2 & M0) ^ (X3 & M1);
-	Z3 = (X0 & M3) ^ (X1 & M0) ^ (X2 & M1) ^ (X3 & M2);
-	return z;
-}
-#endif
 /******************************************************************************/
 typedef struct {
 	uint32_t k0, k1;

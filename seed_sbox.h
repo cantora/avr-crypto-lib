@@ -31,7 +31,7 @@
 
 #include <stdint.h>
 #include <avr/pgmspace.h>
-/*
+
 uint8_t seed_sbox1[256] PROGMEM ={
 	169,  133,  214,  211,   84,   29,  172,   37, 
 	 93,   67,   24,   30,   81,  252,  202,   99, 
@@ -101,7 +101,7 @@ uint8_t seed_sbox2[256] PROGMEM ={
 	 55,  231,   36,  164,  203,   83,   10,  135, 
 	217,   76,  131,  143,  206,   59,   74,  183 
 };
-*/
+
 /* key constants */
 uint32_t seed_kc[16] PROGMEM ={
 	0xb979379e, 
