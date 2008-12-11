@@ -27,36 +27,6 @@
  */
 #include "avr-asm-macros.S"
 
-.global bigendian_sum32
-; === bigendian_sum32 ===
-; function that adds two 32-bit words in the bigendian way and returns the result
-;  param1: the first 32-bit word
-;	given in r25,r24,r23,22 (r25 is most significant for little endian)
-;  param2: the second 32-bit word
-;	given in r21,r20,r19,18 (r21 is most significant for little endian)
-;  modifys: 
-bigendian_sum32:
-	add r25, r21
-	adc r24, r20
-	adc r23, r19
-	adc r22, r18
-	ret
-	
-.global bigendian_sub32
-; === bigendian_sub32 ===
-; function that subtracts a 32-bit words from another in the bigendian way and returns the result
-;  param1: the minuend 32-bit word
-;	given in r25,r24,r23,22 (r25 is most significant for little endian)
-;  param2: the subtrahend 32-bit word
-;	given in r21,r20,r19,18 (r21 is most significant for little endian)
-;  modifys: 
-bigendian_sub32:
-	sub r25, r21
-	sbc r24, r20
-	sbc r23, r19
-	sbc r22, r18
-	ret
-
 /******************************************************************************/	
 /*
 #define M0 0xfc
@@ -112,7 +82,6 @@ T3 = X1
  *  X2 = R23
  *  X3 = R22
  */    
-.global seed_g_function
 seed_g_function:
 	ldi r30, lo8(seed_sbox1)
 	ldi r31, hi8(seed_sbox1)
@@ -283,7 +252,6 @@ C2 = 14
 C3 = 15
 D2 = 16
 D3 = 17
-.global seed_f_function
 seed_f_function:
 	push_range 10, 17
 	movw r30, r24
@@ -472,7 +440,6 @@ compute_keys:
 	mov r18, D0 
 	ret
 
-.global seed_getnextkeys
 seed_getnextkeys:
 	push_range 10, 17
 	push r28
@@ -580,7 +547,6 @@ keypair_t getprevkeys(uint32_t *keystate, uint8_t curround){
  * param curround: r22
  */
 
-.global seed_getprevkeys
 seed_getprevkeys:
 	push_range 10, 17
 	push r28
@@ -657,7 +623,6 @@ r_odd_round:
 
 /******************************************************************************/
 
-.global seed_kc
 seed_kc:
 .long   0xb979379e 
 .long   0x73f36e3c
@@ -833,6 +798,160 @@ seed_enc:
 	pop_range 9, 17
 	ret
 
+/******************************************************************************/
+/*
+#define L (((uint64_t*)buffer)[0])
+#define R (((uint64_t*)buffer)[1])
 
+void seed_dec(void * buffer, seed_ctx_t * ctx){
+	int8_t r;
+	keypair_t k;
+	for(r=7; r>=0; --r){
+			k = seed_getprevkeys(ctx->k, 2*r+1);
+/ *
+	DEBUG_S("\r\n\tDBG ka,0: "); uart_hexdump(&k.k0, 4);
+	DEBUG_S("\r\n\tDBG ka,1: "); uart_hexdump(&k.k1, 4);
+	DEBUG_S("\r\n\t DBG L: "); uart_hexdump((uint8_t*)buffer+0, 8);
+	DEBUG_S("\r\n\t DBG R: "); uart_hexdump((uint8_t*)buffer+8, 8);
+* /
+			L ^= seed_f_function(&R,k.k0,k.k1);
+			
+			k = seed_getprevkeys(ctx->k, 2*r+0);
+/ *
+	DEBUG_S("\r\n\tDBG kb,0: "); uart_hexdump(&k.k0, 4);
+	DEBUG_S("\r\n\tDBG kb,1: "); uart_hexdump(&k.k1, 4);
+	DEBUG_S("\r\n\t DBG L: "); uart_hexdump((uint8_t*)buffer+8, 8);
+	DEBUG_S("\r\n\t DBG R: "); uart_hexdump((uint8_t*)buffer+0, 8);
+* /
+			R ^= seed_f_function(&L,k.k0,k.k1);
+	}
+	/ * just an exchange without temp. variable * /
+	L ^= R;
+	R ^= L;
+	L ^= R;
+}
+*/
+/*
+ * param buffer: r24:r25
+ * param ctx:    r22:r23
+ */
+CTR  = 9
+xLPTR = 10
+xRPTR = 12
+CPTR = 14
 
+.global seed_dec
+seed_dec:
+	push_range 9, 17
+	push r28
+	push r29	
+	ldi r16, 7
+	mov CTR, r16
+	movw xLPTR, r24
+	adiw r24, 8
+	movw xRPTR, r24		
+	movw CPTR, r22
+1:
+	movw r28, xLPTR
+	movw r24, CPTR
+	mov r22, CTR
+	lsl r22
+	inc r22
+	rcall seed_getprevkeys	
+
+	/* use pen & paper to understand the following permutation */
+	movw r16, r22
+	movw r22, r18
+	movw r18, r24
+	movw r24, r20
+	movw r20, r22
+	movw r22, r24
+	movw r24, xRPTR	
+
+	rcall seed_f_function
+
+	ld r0, Y
+	eor r0, r18
+	st Y+, r0
+	ld r0, Y
+	eor r0, r19
+	st Y+, r0
+	ld r0, Y
+	eor r0, r20
+	st Y+, r0
+	ld r0, Y
+	eor r0, r21
+	st Y+, r0
+	ld r0, Y
+	eor r0, r22
+	st Y+, r0
+	ld r0, Y
+	eor r0, r23
+	st Y+, r0
+	ld r0, Y
+	eor r0, r24
+	st Y+, r0
+	ld r0, Y
+	eor r0, r25
+	st Y+, r0
+	/* secound half */
+	movw r24, CPTR
+	mov r22, CTR
+	lsl r22
+	rcall seed_getprevkeys	
+
+	movw r16, r22
+	movw r22, r18
+	movw r18, r24
+	movw r24, r20
+	movw r20, r22
+	movw r22, r24
+	movw r24, xLPTR	
+	
+	rcall seed_f_function
+
+	ld r0, Y
+	eor r0, r18
+	st Y+, r0
+	ld r0, Y
+	eor r0, r19
+	st Y+, r0
+	ld r0, Y
+	eor r0, r20
+	st Y+, r0
+	ld r0, Y
+	eor r0, r21
+	st Y+, r0
+	ld r0, Y
+	eor r0, r22
+	st Y+, r0
+	ld r0, Y
+	eor r0, r23
+	st Y+, r0
+	ld r0, Y
+	eor r0, r24
+	st Y+, r0
+	ld r0, Y
+	eor r0, r25
+	st Y+, r0
+	
+	dec CTR
+	brmi 3f
+	rjmp 1b
+3:
+	movw r28, xLPTR
+	movw r30, xRPTR
+	ldi r17, 8
+4:
+	ld r10, Y
+	ld r11, Z
+	st Z+, r10
+	st Y+, r11
+	dec r17
+	brne 4b
+5:
+	pop r29
+	pop r28
+	pop_range 9, 17
+	ret
 
