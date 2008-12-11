@@ -44,7 +44,7 @@ keypair_t seed_getnextkeys(uint32_t *keystate, uint8_t curround);
 keypair_t seed_getprevkeys(uint32_t *keystate, uint8_t curround);
 
 /******************************************************************************/
-
+#if 0
 #define L (((uint64_t*)buffer)[0])
 #define R (((uint64_t*)buffer)[1])
 
@@ -75,6 +75,7 @@ void seed_enc(void * buffer, seed_ctx_t * ctx){
 	R ^= L;
 	L ^= R;
 }
+#endif
 
 /******************************************************************************/
 
@@ -108,8 +109,6 @@ void seed_dec(void * buffer, seed_ctx_t * ctx){
 	R ^= L;
 	L ^= R;
 }
-
-
 
 
 
