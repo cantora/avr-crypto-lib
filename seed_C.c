@@ -206,7 +206,7 @@ typedef struct{
 
 /******************************************************************************/
 
-void seed_init(uint8_t * key, seed_ctx_t * ctx){
+void seed_init(const void * key, seed_ctx_t * ctx){
 	memcpy(ctx->k, key, 128/8);
 }
 
@@ -215,11 +215,11 @@ void seed_init(uint8_t * key, seed_ctx_t * ctx){
 #define L (((uint64_t*)buffer)[0])
 #define R (((uint64_t*)buffer)[1])
 
-void seed_enc(void * buffer, seed_ctx_t * ctx){
+void seed_enc(void * buffer, const seed_ctx_t * ctx){
 	uint8_t r;
 	keypair_t k;
 	for(r=0; r<8; ++r){
-			k = getnextkeys(ctx->k, 2*r);
+			k = getnextkeys(((seed_ctx_t*)ctx)->k, 2*r);
 /*
 	DEBUG_S("\r\n\tDBG ka,0: "); uart_hexdump(&k.k0, 4);
 	DEBUG_S("\r\n\tDBG ka,1: "); uart_hexdump(&k.k1, 4);
@@ -228,7 +228,7 @@ void seed_enc(void * buffer, seed_ctx_t * ctx){
 */
 			L ^= f_function(&R,k.k0,k.k1);
 			
-			k = getnextkeys(ctx->k, 2*r+1);
+			k = getnextkeys(((seed_ctx_t*)ctx)->k, 2*r+1);
 /*
 	DEBUG_S("\r\n\tDBG kb,0: "); uart_hexdump(&k.k0, 4);
 	DEBUG_S("\r\n\tDBG kb,1: "); uart_hexdump(&k.k1, 4);
@@ -252,7 +252,7 @@ void seed_dec(void * buffer, seed_ctx_t * ctx){
 	int8_t r;
 	keypair_t k;
 	for(r=7; r>=0; --r){
-			k = getprevkeys(ctx->k, 2*r+1);
+			k = getprevkeys(((seed_ctx_t*)ctx)->k, 2*r+1);
 /*
 	DEBUG_S("\r\n\tDBG ka,0: "); uart_hexdump(&k.k0, 4);
 	DEBUG_S("\r\n\tDBG ka,1: "); uart_hexdump(&k.k1, 4);
@@ -261,7 +261,7 @@ void seed_dec(void * buffer, seed_ctx_t * ctx){
 */
 			L ^= f_function(&R,k.k0,k.k1);
 			
-			k = getprevkeys(ctx->k, 2*r+0);
+			k = getprevkeys(((seed_ctx_t*)ctx)->k, 2*r+0);
 /*
 	DEBUG_S("\r\n\tDBG kb,0: "); uart_hexdump(&k.k0, 4);
 	DEBUG_S("\r\n\tDBG kb,1: "); uart_hexdump(&k.k1, 4);

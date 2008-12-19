@@ -108,7 +108,7 @@ void cast5_init_rM(uint8_t *klo, uint8_t *khi, uint8_t offset, uint8_t *src, boo
 
 
 
-void cast5_init(void* key, uint8_t keylength_b, cast5_ctx_t* s){
+void cast5_init(const void* key, uint8_t keylength_b, cast5_ctx_t* s){
  	 /* we migth return if the key is valid and if setup was sucessfull */
 	uint32_t x[4], z[4];
 	#define BPX ((uint8_t*)&(x[0]))
@@ -198,8 +198,10 @@ uint32_t cast5_f1(uint32_t d, uint32_t m, uint8_t r){
 
 #else
 	
-	return (((pgm_read_dword(&s1[((uint8_t*)&t)[IA]] ) ^ pgm_read_dword(&s2[((uint8_t*)&t)[IB]] )) 
-		- pgm_read_dword(&s3[((uint8_t*)&t)[IC]] )) + pgm_read_dword(&s4[((uint8_t*)&t)[ID]]));
+	return (((  pgm_read_dword(&s1[((uint8_t*)&t)[IA]]) 
+                  ^ pgm_read_dword(&s2[((uint8_t*)&t)[IB]]) ) 
+		  - pgm_read_dword(&s3[((uint8_t*)&t)[IC]]) ) 
+                  + pgm_read_dword(&s4[((uint8_t*)&t)[ID]]) );
 
 #endif
 }
@@ -227,8 +229,8 @@ uint32_t cast5_f2(uint32_t d, uint32_t m, uint8_t r){
 	return (((ia - ib) + ic) ^ id);
 #else
 	
-	return (((pgm_read_dword(&s1[((uint8_t*)&t)[IA]]) 
-	        - pgm_read_dword(&s2[((uint8_t*)&t)[IB]]) ) 
+	return (((    pgm_read_dword(&s1[((uint8_t*)&t)[IA]]) 
+	            - pgm_read_dword(&s2[((uint8_t*)&t)[IB]]) ) 
 		    + pgm_read_dword(&s3[((uint8_t*)&t)[IC]]) ) 
 		    ^ pgm_read_dword(&s4[((uint8_t*)&t)[ID]]) );
 
@@ -257,8 +259,10 @@ uint32_t cast5_f3(uint32_t d, uint32_t m, uint8_t r){
 	uart_putstr("\r\n\tID="); uart_hexdump(&id, 4);
 	return (((ia + ib) ^ ic) - id);
 #else
-	return ((pgm_read_dword(&s1[((uint8_t*)&t)[IA]] ) + pgm_read_dword(&s2[((uint8_t*)&t)[IB]] )) 
-		^ pgm_read_dword(&s3[((uint8_t*)&t)[IC]] )) - pgm_read_dword(&s4[((uint8_t*)&t)[ID]] );
+	return ((  pgm_read_dword(&s1[((uint8_t*)&t)[IA]] )
+                 + pgm_read_dword(&s2[((uint8_t*)&t)[IB]] )) 
+		 ^ pgm_read_dword(&s3[((uint8_t*)&t)[IC]] )) 
+                 - pgm_read_dword(&s4[((uint8_t*)&t)[ID]] );
 
 #endif
 }

@@ -11,7 +11,7 @@ TESTSRC_DIR    = test_src/
 #uisp -dprog=bsd -dlpt=/dev/parport1 --upload if=$(PRG).hex
 ERASECMD       = 
 TESTPORT       = /dev/ttyUSB1
-TESTPORTBAUDR  = 9600
+TESTPORTBAUDR  = 38400
 TESTLOG_DIR    = testlog/
 TESTPREFIX     = nessie-
 LIST_DIR       = listings/
@@ -29,3 +29,7 @@ OBJCOPY	= avr-objcopy
 OBJDUMP	= avr-objdump
 SIZE = avr-size
 RUBY = ruby
+GET_TEST = host/get_test.rb
+MAKE = make
+MAKE2GRAPH = ~/bin/make2graph.rb
+TWOPI = twopi

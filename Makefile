@@ -80,6 +80,26 @@ info:
 #	@echo "    $(ALGORITHMS_TEST_BIN)"
 #	@echo "  ALGORITHMS_TEST_TARGET_ELF:"
 #	@echo "    $(ALGORITHMS_TEST_TARGET_ELF)"
+	@echo " targets:"
+	@echo "  all           - all algorithm cores"
+	@echo "  cores         - all algorithm cores"
+	@echo "  listings      - all algorithm core listings"
+	@echo "  tests         - all algorithm test programs"
+	@echo "  stats         - all algorithm size statistics"
+	@echo "  blockciphers  - all blockcipher cores"
+	@echo "  streamciphers - all streamcipher cores"
+	@echo "  hashes        - all hash cores"
+	@echo "  macs          - all MAC cores"
+	@echo "  prngs         - all PRNG cores"
+	@echo "  all_testrun   - testrun all algorithms"
+	@echo "  docu          - build doxygen documentation"
+	@echo "  clean         - remove a lot of builded files"
+	@echo "  xclean        - also remove dependency files"
+	@echo "  *_TEST_BIN    - build test program"
+	@echo "  *_TESTRUN     - run nessie test"
+	@echo "  *_OBJ         - build algorithm core"
+	@echo "  *_FLASH       - flash test program"
+	@echo "  *_LIST        - build assembler listing"
 
 #-------------------------------------------------------------------------------
 	
@@ -161,12 +181,12 @@ $(foreach algo, $(ALGORITHMS),$(eval $(call FLASH_TEMPLATE, $(algo), $(TESTBIN_D
 define TESTRUN_TEMPLATE
 $(1)_TESTRUN: $(1)_FLASH
 	@echo "[test]: $(1)"
-	$(RUBY) get_test.rb  $(TESTPORT) $(TESTPORTBAUDR) 8 1 nessie $(TESTLOG_DIR)$(TESTPREFIX) $(2)
+	$(RUBY) $(GET_TEST)  $(TESTPORT) $(TESTPORTBAUDR) 8 1 nessie $(TESTLOG_DIR)$(TESTPREFIX) $(2)
 endef
 
 $(foreach algo, $(ALGORITHMS),$(eval $(call TESTRUN_TEMPLATE, $(algo), $(call lc,$(algo)) )))
 
-ALL_TESTRUN: $(foreach algo, $(ALGORITHMS), $(algo)_TESTRUN)
+all_testrun: $(foreach algo, $(ALGORITHMS), $(algo)_TESTRUN)
 
 #-------------------------------------------------------------------------------
 
@@ -236,6 +256,20 @@ xclean: clean
 docu:
 	doxygen
 
+make.dump: Makefile
+	$(MAKE) -p -B -n -f $^ > $@
+
+make.dot: make.dump
+	$(MAKE2GRAPH) $^ > $@
+
+make.png: make.dot
+	$(TWOPI) -Tpng -o $@ $^
+
+make.svg: make.dot
+	$(TWOPI) -Tsvg -o $@ $^
+
+.PHONY: make-info
+make-info: make.png make.svg
 
 
 # Rules for building the .text rom images
