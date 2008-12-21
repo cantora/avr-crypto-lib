@@ -48,18 +48,39 @@
 #define S7(x) pgm_read_dword(&s7[(x)])
 #define S8(x) pgm_read_dword(&s8[(x)])
 
- 
+static 
 void cast5_init_A(uint8_t *dest, uint8_t *src, bool bmode){
 	uint8_t mask = bmode?0x8:0;
-	*((uint32_t*)(&dest[0x0])) = *((uint32_t*)(&src[0x0^mask])) ^ S5(src[0xD^mask]) ^ S6(src[0xF^mask]) ^ S7(src[0xC^mask]) ^ S8(src[0xE^mask]) ^ S7(src[0x8^mask]);
-	*((uint32_t*)(&dest[0x4])) = *((uint32_t*)(&src[0x8^mask])) ^ S5(dest[0x0]) ^ S6(dest[0x2]) ^ S7(dest[0x1]) ^ S8(dest[0x3]) ^ S8(src[0xA^mask]);
-	*((uint32_t*)(&dest[0x8])) = *((uint32_t*)(&src[0xC^mask])) ^ S5(dest[0x7]) ^ S6(dest[0x6]) ^ S7(dest[0x5]) ^ S8(dest[0x4]) ^ S5(src[0x9^mask]);
-	*((uint32_t*)(&dest[0xC])) = *((uint32_t*)(&src[0x4^mask])) ^ S5(dest[0xA]) ^ S6(dest[0x9]) ^ S7(dest[0xB]) ^ S8(dest[0x8]) ^ S6(src[0xB^mask]);
+	*((uint32_t*)(&dest[0x0])) = *((uint32_t*)(&src[0x0^mask]))
+                                     ^ S5(src[0xD^mask]) ^ S6(src[0xF^mask]) 
+                                     ^ S7(src[0xC^mask]) ^ S8(src[0xE^mask]) 
+                                     ^ S7(src[0x8^mask]);
+	*((uint32_t*)(&dest[0x4])) = *((uint32_t*)(&src[0x8^mask])) 
+                                     ^ S5(dest[0x0]) ^ S6(dest[0x2]) 
+                                     ^ S7(dest[0x1]) ^ S8(dest[0x3]) 
+                                     ^ S8(src[0xA^mask]);
+	*((uint32_t*)(&dest[0x8])) = *((uint32_t*)(&src[0xC^mask])) 
+                                     ^ S5(dest[0x7]) ^ S6(dest[0x6]) 
+                                     ^ S7(dest[0x5]) ^ S8(dest[0x4]) 
+                                     ^ S5(src[0x9^mask]);
+	*((uint32_t*)(&dest[0xC])) = *((uint32_t*)(&src[0x4^mask])) 
+                                     ^ S5(dest[0xA]) 
+                                     ^ S6(dest[0x9]) 
+                                     ^ S7(dest[0xB]) 
+                                     ^ S8(dest[0x8]) 
+                                     ^ S6(src[0xB^mask]);
 }
 
+static
 void cast5_init_M(uint8_t *dest, uint8_t *src, bool nmode, bool xmode){
-	uint8_t nmt[] = {0xB, 0xA, 0x9, 0x8, 0xF, 0xE, 0xD, 0xC, 0x3, 0x2, 0x1, 0x0, 0x7, 0x6, 0x5, 0x4}; /* nmode table */
-	uint8_t xmt[4][4] = {{0x2, 0x6, 0x9, 0xC}, {0x8, 0xD, 0x3, 0x7}, {0x3, 0x7, 0x8, 0xD}, {0x9, 0xC, 0x2, 0x6}};
+	uint8_t nmt[] = {0xB, 0xA, 0x9, 0x8, 
+                         0xF, 0xE, 0xD, 0xC, 
+                         0x3, 0x2, 0x1, 0x0, 
+                         0x7, 0x6, 0x5, 0x4}; /* nmode table */
+	uint8_t xmt[4][4] = {{0x2, 0x6, 0x9, 0xC}, 
+                             {0x8, 0xD, 0x3, 0x7}, 
+                             {0x3, 0x7, 0x8, 0xD}, 
+                             {0x9, 0xC, 0x2, 0x6}};
 	#define NMT(x) (src[nmode?nmt[(x)]:(x)])
 	#define XMT(x) (src[xmt[(xmode<<1) + nmode][(x)]])
 	*((uint32_t*)(&dest[0x0])) = S5(NMT(0x8)) ^ S6(NMT(0x9)) ^ S7(NMT(0x7)) ^ S8(NMT(0x6)) ^ S5(XMT(0));
@@ -73,6 +94,7 @@ void cast5_init_M(uint8_t *dest, uint8_t *src, bool nmode, bool xmode){
 #define S7B(x) pgm_read_byte(3+(uint8_t*)(&s7[(x)]))
 #define S8B(x) pgm_read_byte(3+(uint8_t*)(&s8[(x)]))
 
+static
 void cast5_init_rM(uint8_t *klo, uint8_t *khi, uint8_t offset, uint8_t *src, bool nmode, bool xmode){
 	uint8_t nmt[] = {0xB, 0xA, 0x9, 0x8, 0xF, 0xE, 0xD, 0xC, 0x3, 0x2, 0x1, 0x0, 0x7, 0x6, 0x5, 0x4}; /* nmode table */
 	uint8_t xmt[4][4] = {{0x2, 0x6, 0x9, 0xC}, {0x8, 0xD, 0x3, 0x7}, {0x3, 0x7, 0x8, 0xD}, {0x9, 0xC, 0x2, 0x6}};
@@ -176,7 +198,7 @@ typedef uint32_t cast5_f_t(uint32_t,uint32_t,uint8_t);
 #define IC 1
 #define ID 0
 
-
+static
 uint32_t cast5_f1(uint32_t d, uint32_t m, uint8_t r){
 	uint32_t t;
 	t = ROTL32((d + m),r);
@@ -206,7 +228,7 @@ uint32_t cast5_f1(uint32_t d, uint32_t m, uint8_t r){
 #endif
 }
 
-
+static
 uint32_t cast5_f2(uint32_t d, uint32_t m, uint8_t r){
 	uint32_t t;
 	t = ROTL32((d ^ m),r);
@@ -237,6 +259,7 @@ uint32_t cast5_f2(uint32_t d, uint32_t m, uint8_t r){
 #endif
 }
 
+static
 uint32_t cast5_f3(uint32_t d, uint32_t m, uint8_t r){
 	uint32_t t;
 	t = ROTL32((m - d),r);
@@ -267,7 +290,7 @@ uint32_t cast5_f3(uint32_t d, uint32_t m, uint8_t r){
 #endif
 }
 
-/*************************************************************************/
+/******************************************************************************/
 
 void cast5_enc(void* block, const cast5_ctx_t *s){
 	uint32_t l,r, x, y;
@@ -291,7 +314,7 @@ void cast5_enc(void* block, const cast5_ctx_t *s){
 	((uint32_t*)block)[1]=l;
 }
 
-/*************************************************************************/
+/******************************************************************************/
 
 void cast5_dec(void* block, const cast5_ctx_t *s){
 	uint32_t l,r, x, y;
@@ -313,162 +336,7 @@ void cast5_dec(void* block, const cast5_ctx_t *s){
 }
 
 
-/*********************************************************************************************************/
-/*********************************************************************************************************/
-/*********************************************************************************************************/
-
-#if 0
-
-void cast5_old_init(cast5_ctx_t* s, uint8_t* key, uint8_t keylength){
- 	 /* we migth return if the key is valid and if setup was sucessfull */
-	uint32_t x[4], z[4], t;
-	#define BPX ((uint8_t*)&(x[0]))
-	#define BPZ ((uint8_t*)&(z[0]))
-	s->shortkey = (keylength<=80);
-	/* littel endian only! */
-	memset(&(x[0]), 0 ,16); /* set x to zero */
-	memcpy(&(x[0]), key, keylength/8);
-	
-
-	/* todo: merge a and b and compress the whole stuff */
-	/***** A *****/
-	z[0] = x[0] ^ S_5X(0xD) ^ S_6X(0xF) ^ S_7X(0xC) ^ S_8X(0xE) ^ S_7X(0x8);	
-	z[1] = x[2] ^ S_5Z(0x0) ^ S_6Z(0x2) ^ S_7Z(0x1) ^ S_8Z(0x3) ^ S_8X(0xA);
-	z[2] = x[3] ^ S_5Z(0x7) ^ S_6Z(0x6) ^ S_7Z(0x5) ^ S_8Z(0x4) ^ S_5X(0x9);
-	z[3] = x[1] ^ S_5Z(0xA) ^ S_6Z(0x9) ^ S_7Z(0xB) ^ S_8Z(0x8) ^ S_6X(0xB);
-	/***** M *****/
-	s->mask[0] = S_5Z(0x8) ^ S_6Z(0x9) ^ S_7Z(0x7) ^ S_8Z(0x6) ^ S_5Z(0x2);
-	s->mask[1] = S_5Z(0xA) ^ S_6Z(0xB) ^ S_7Z(0x5) ^ S_8Z(0x4) ^ S_6Z(0x6);
-	s->mask[2] = S_5Z(0xC) ^ S_6Z(0xD) ^ S_7Z(0x3) ^ S_8Z(0x2) ^ S_7Z(0x9);
-	s->mask[3] = S_5Z(0xE) ^ S_6Z(0xF) ^ S_7Z(0x1) ^ S_8Z(0x0) ^ S_8Z(0xC);
-	/***** B *****/
-	x[0] = z[2] ^ S_5Z(0x5) ^ S_6Z(0x7) ^ S_7Z(0x4) ^ S_8Z(0x6) ^ S_7Z(0x0);
-	x[1] = z[0] ^ S_5X(0x0) ^ S_6X(0x2) ^ S_7X(0x1) ^ S_8X(0x3) ^ S_8Z(0x2);
-	x[2] = z[1] ^ S_5X(0x7) ^ S_6X(0x6) ^ S_7X(0x5) ^ S_8X(0x4) ^ S_5Z(0x1);
-	x[3] = z[3] ^ S_5X(0xA) ^ S_6X(0x9) ^ S_7X(0xB) ^ S_8X(0x8) ^ S_6Z(0x3);
-	/***** N *****/
-	s->mask[4] = S_5X(0x3) ^ S_6X(0x2) ^ S_7X(0xC) ^ S_8X(0xD) ^ S_5X(0x8);
-	s->mask[5] = S_5X(0x1) ^ S_6X(0x0) ^ S_7X(0xE) ^ S_8X(0xF) ^ S_6X(0xD);
-	s->mask[6] = S_5X(0x7) ^ S_6X(0x6) ^ S_7X(0x8) ^ S_8X(0x9) ^ S_7X(0x3);
-	s->mask[7] = S_5X(0x5) ^ S_6X(0x4) ^ S_7X(0xA) ^ S_8X(0xB) ^ S_8X(0x7);
-	/***** A *****/
-	z[0] = x[0] ^ S_5X(0xD) ^ S_6X(0xF) ^ S_7X(0xC) ^ S_8X(0xE) ^ S_7X(0x8);
-	z[1] = x[2] ^ S_5Z(0x0) ^ S_6Z(0x2) ^ S_7Z(0x1) ^ S_8Z(0x3) ^ S_8X(0xA);
-	z[2] = x[3] ^ S_5Z(0x7) ^ S_6Z(0x6) ^ S_7Z(0x5) ^ S_8Z(0x4) ^ S_5X(0x9);
-	z[3] = x[1] ^ S_5Z(0xA) ^ S_6Z(0x9) ^ S_7Z(0xB) ^ S_8Z(0x8) ^ S_6X(0xB);
-	/***** N' *****/
-	s->mask[8] = S_5Z(0x3) ^ S_6Z(0x2) ^ S_7Z(0xC) ^ S_8Z(0xD) ^ S_5Z(0x9);
-	s->mask[9] = S_5Z(0x1) ^ S_6Z(0x0) ^ S_7Z(0xE) ^ S_8Z(0xF) ^ S_6Z(0xC);
-	s->mask[10] = S_5Z(0x7) ^ S_6Z(0x6) ^ S_7Z(0x8) ^ S_8Z(0x9) ^ S_7Z(0x2);
-	s->mask[11] = S_5Z(0x5) ^ S_6Z(0x4) ^ S_7Z(0xA) ^ S_8Z(0xB) ^ S_8Z(0x6);
-	/***** B *****/
-	x[0] = z[2] ^ S_5Z(0x5) ^ S_6Z(0x7) ^ S_7Z(0x4) ^ S_8Z(0x6) ^ S_7Z(0x0);
-	x[1] = z[0] ^ S_5X(0x0) ^ S_6X(0x2) ^ S_7X(0x1) ^ S_8X(0x3) ^ S_8Z(0x2);
-	x[2] = z[1] ^ S_5X(0x7) ^ S_6X(0x6) ^ S_7X(0x5) ^ S_8X(0x4) ^ S_5Z(0x1);
-	x[3] = z[3] ^ S_5X(0xA) ^ S_6X(0x9) ^ S_7X(0xB) ^ S_8X(0x8) ^ S_6Z(0x3);
-	/***** M' *****/
-	s->mask[12] = S_5X(0x8) ^ S_6X(0x9) ^ S_7X(0x7) ^ S_8X(0x6) ^ S_5X(0x3);
-	s->mask[13] = S_5X(0xA) ^ S_6X(0xB) ^ S_7X(0x5) ^ S_8X(0x4) ^ S_6X(0x7);
-	s->mask[14] = S_5X(0xC) ^ S_6X(0xD) ^ S_7X(0x3) ^ S_8X(0x2) ^ S_7X(0x8);
-	s->mask[15] = S_5X(0xE) ^ S_6X(0xF) ^ S_7X(0x1) ^ S_8X(0x0) ^ S_8X(0xD);
-
-	/* that were the masking keys, now the rotation keys */
-	/* set the keys to zero */
-	memset(&(s->rotl[0]),0,8);
-	s->roth[0]=s->roth[1]=0;
-	/***** A *****/
-	z[0] = x[0] ^ S_5X(0xD) ^ S_6X(0xF) ^ S_7X(0xC) ^ S_8X(0xE) ^ S_7X(0x8);
-	z[1] = x[2] ^ S_5Z(0x0) ^ S_6Z(0x2) ^ S_7Z(0x1) ^ S_8Z(0x3) ^ S_8X(0xA);
-	z[2] = x[3] ^ S_5Z(0x7) ^ S_6Z(0x6) ^ S_7Z(0x5) ^ S_8Z(0x4) ^ S_5X(0x9);
-	z[3] = x[1] ^ S_5Z(0xA) ^ S_6Z(0x9) ^ S_7Z(0xB) ^ S_8Z(0x8) ^ S_6X(0xB);
-	/***** M *****/
-	t = S_5Z(0x8) ^ S_6Z(0x9) ^ S_7Z(0x7) ^ S_8Z(0x6) ^ S_5Z(0x2);
-	t >>= 24;
-	s->rotl[0] |= t & 0x0f;		
-	s->roth[0] |= (t >> 4) & (1<<0);
-	t = S_5Z(0xA) ^ S_6Z(0xB) ^ S_7Z(0x5) ^ S_8Z(0x4) ^ S_6Z(0x6);
-	t >>= 24;
-	s->rotl[0] |= (t<<4) & 0xf0;
-	s->roth[0] |= (t >> 3) & (1<<1);
-	t = S_5Z(0xC) ^ S_6Z(0xD) ^ S_7Z(0x3) ^ S_8Z(0x2) ^ S_7Z(0x9);
-	t >>= 24;
-	s->rotl[1] |= t & 0x0f;		
-	s->roth[0] |= (t >> 2) & (1<<2);
-	t = S_5Z(0xE) ^ S_6Z(0xF) ^ S_7Z(0x1) ^ S_8Z(0x0) ^ S_8Z(0xC);
-	t >>= 24;
-	s->rotl[1] |= (t<<4) & 0xf0;
-	s->roth[0] |= (t >> 1) & (1<<3);
-	/***** B *****/
-	x[0] = z[2] ^ S_5Z(0x5) ^ S_6Z(0x7) ^ S_7Z(0x4) ^ S_8Z(0x6) ^ S_7Z(0x0);
-	x[1] = z[0] ^ S_5X(0x0) ^ S_6X(0x2) ^ S_7X(0x1) ^ S_8X(0x3) ^ S_8Z(0x2);
-	x[2] = z[1] ^ S_5X(0x7) ^ S_6X(0x6) ^ S_7X(0x5) ^ S_8X(0x4) ^ S_5Z(0x1);
-	x[3] = z[3] ^ S_5X(0xA) ^ S_6X(0x9) ^ S_7X(0xB) ^ S_8X(0x8) ^ S_6Z(0x3);
-	/***** N *****/
-	t = S_5X(0x3) ^ S_6X(0x2) ^ S_7X(0xC) ^ S_8X(0xD) ^ S_5X(0x8);
-	t >>= 24;
-	s->rotl[2] |= t & 0x0f;		
-	s->roth[0] |= t & (1<<4);
-	t = S_5X(0x1) ^ S_6X(0x0) ^ S_7X(0xE) ^ S_8X(0xF) ^ S_6X(0xD);
-	t >>= 24;
-	s->rotl[2] |= (t<<4) & 0xf0;		
-	s->roth[0] |= (t<<1) & (1<<5);
-	t = S_5X(0x7) ^ S_6X(0x6) ^ S_7X(0x8) ^ S_8X(0x9) ^ S_7X(0x3);
-	t >>= 24;
-	s->rotl[3] |= t & 0x0f;		
-	s->roth[0] |= (t<<2) & (1<<6);
-	t = S_5X(0x5) ^ S_6X(0x4) ^ S_7X(0xA) ^ S_8X(0xB) ^ S_8X(0x7);
-	t >>= 24;
-	s->rotl[3] |= (t<<4) & 0xf0;		
-	s->roth[0] |= (t<<3) & (1<<7);
-	/***** A *****/
-	z[0] = x[0] ^ S_5X(0xD) ^ S_6X(0xF) ^ S_7X(0xC) ^ S_8X(0xE) ^ S_7X(0x8);
-	z[1] = x[2] ^ S_5Z(0x0) ^ S_6Z(0x2) ^ S_7Z(0x1) ^ S_8Z(0x3) ^ S_8X(0xA);
-	z[2] = x[3] ^ S_5Z(0x7) ^ S_6Z(0x6) ^ S_7Z(0x5) ^ S_8Z(0x4) ^ S_5X(0x9);
-	z[3] = x[1] ^ S_5Z(0xA) ^ S_6Z(0x9) ^ S_7Z(0xB) ^ S_8Z(0x8) ^ S_6X(0xB);
-	/***** N' *****/
-	t = S_5Z(0x3) ^ S_6Z(0x2) ^ S_7Z(0xC) ^ S_8Z(0xD) ^ S_5Z(0x9);
-	t >>= 24;
-	s->rotl[4] |= t & 0x0f;		
-	s->roth[1] |= (t>>4) & (1<<0);
-	t = S_5Z(0x1) ^ S_6Z(0x0) ^ S_7Z(0xE) ^ S_8Z(0xF) ^ S_6Z(0xC);
-	t >>= 24;
-	s->rotl[4] |= (t<<4) & 0xf0;		
-	s->roth[1] |= (t>>3) & (1<<1);
-	t = S_5Z(0x7) ^ S_6Z(0x6) ^ S_7Z(0x8) ^ S_8Z(0x9) ^ S_7Z(0x2);
-	t >>= 24;
-	s->rotl[5] |= t & 0x0f;		
-	s->roth[1] |= (t>>2) & (1<<2);
-	t = S_5Z(0x5) ^ S_6Z(0x4) ^ S_7Z(0xA) ^ S_8Z(0xB) ^ S_8Z(0x6);
-	t >>= 24;
-	s->rotl[5] |= (t<<4) & 0xf0;		
-	s->roth[1] |= (t>>1) & (1<<3);
-	/***** B *****/
-	x[0] = z[2] ^ S_5Z(0x5) ^ S_6Z(0x7) ^ S_7Z(0x4) ^ S_8Z(0x6) ^ S_7Z(0x0);
-	x[1] = z[0] ^ S_5X(0x0) ^ S_6X(0x2) ^ S_7X(0x1) ^ S_8X(0x3) ^ S_8Z(0x2);
-	x[2] = z[1] ^ S_5X(0x7) ^ S_6X(0x6) ^ S_7X(0x5) ^ S_8X(0x4) ^ S_5Z(0x1);
-	x[3] = z[3] ^ S_5X(0xA) ^ S_6X(0x9) ^ S_7X(0xB) ^ S_8X(0x8) ^ S_6Z(0x3);
-	/***** M' *****/
-	t = S_5X(0x8) ^ S_6X(0x9) ^ S_7X(0x7) ^ S_8X(0x6) ^ S_5X(0x3);
-	t >>= 24;
-	s->rotl[6] |= t & 0x0f;		
-	s->roth[1] |= t & (1<<4);
-	t = S_5X(0xA) ^ S_6X(0xB) ^ S_7X(0x5) ^ S_8X(0x4) ^ S_6X(0x7);
-	t >>= 24;
-	s->rotl[6] |= (t<<4) & 0xf0;		
-	s->roth[1] |= (t<<1) & (1<<5);
-	t = S_5X(0xC) ^ S_6X(0xD) ^ S_7X(0x3) ^ S_8X(0x2) ^ S_7X(0x8);
-	t >>= 24;
-	s->rotl[7] |= t & 0x0f;		
-	s->roth[1] |= (t<<2) & (1<<6);
-	t = S_5X(0xE) ^ S_6X(0xF) ^ S_7X(0x1) ^ S_8X(0x0) ^ S_8X(0xD);
-	t >>= 24;
-	s->rotl[7] |= (t<<4) & 0xf0;		
-	s->roth[1] |= (t<<3) & (1<<7);
-	
-	/* done ;-) */
-}
-
-#endif
+/******************************************************************************/
 
 
 
