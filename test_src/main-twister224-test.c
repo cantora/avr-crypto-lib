@@ -117,7 +117,7 @@ void testrun_twister224(void){
 	for(i=0; i<16777216; ++i){
 		twister224_nextBlock(&ctx, ltest);
 	}
-	twister224_ctx2hash(hash, &ctx)
+	twister224_ctx2hash(hash, &ctx);
 	uart_hexdump(hash, 224/8);
 }
 
