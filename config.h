@@ -44,7 +44,7 @@
 #define UART_RTS_BIT 0
 #define UART_CTS_BIT 1
 */
-
+//#define TWISTER_MUL_TABLE
 #define CLI_AUTO_HELP 
 
 #endif

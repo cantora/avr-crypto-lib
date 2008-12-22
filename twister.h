@@ -35,7 +35,10 @@ typedef struct {
 	uint64_t length_counter_b;
 } twister_state_t;
 
-void blank_round(twister_state_t* ctx);
-void mini_round(twister_state_t* ctx, void* msg);	
+typedef uint8_t twister_checksum_t[8][8];
+
+void twister_blank_round(twister_state_t* ctx);
+void twister_mini_round(twister_state_t* ctx, void* msg);	
+void twister_ctx2hash(void* dest, twister_state_t* ctx, uint16_t hashsize_b);
 
 #endif /* TWISTER_H_ */
