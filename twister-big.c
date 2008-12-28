@@ -9,6 +9,9 @@
 #undef DEBUG
 #define DEBUG
 
+/*********************************************************************/
+/*********************************************************************/
+
 #ifdef DEBUG
 #include <avr/pgmspace.h>
 #include "uart.h"
@@ -24,6 +27,8 @@ void print_checksum(twister_big_ctx_t* ctx, PGM_P s){
 	}
 }
 
+/*********************************************************************/
+
 void print_matrix(void* m, PGM_P s){
 	uint8_t i;
 	uart_putstr_P(PSTR("\r\n"));
@@ -35,6 +40,8 @@ void print_matrix(void* m, PGM_P s){
 		uart_putstr_P(PSTR("]\r\n"));
 	}
 }
+
+/*********************************************************************/
 
 #define DEBUG_CHKSUM(a,s) print_checksum((a),PSTR(s)) 
 #else
@@ -49,6 +56,8 @@ void print_matrix(void* m, PGM_P s){
 #endif 
 
 #ifdef DEBUG
+
+/*********************************************************************/
 
 void print_twister_state(twister_state_t* ctx){
 	uint8_t i;
@@ -66,6 +75,8 @@ void print_twister_state(twister_state_t* ctx){
 	uart_putstr_P(PSTR("\r\n"));
 } 
 
+/*********************************************************************/
+
 void debug_print(twister_state_t* ctx, PGM_P msg){
 	uart_putstr_P(PSTR("\r\n"));
 	uart_putstr_P(msg);
@@ -74,14 +85,7 @@ void debug_print(twister_state_t* ctx, PGM_P msg){
 
 #endif
 
-void transp_matrix(void* dest, void* src){
-	uint8_t i,j;
-	for(i=0; i<8; i++){
-		for(j=0; j<8; ++j){
-			((uint8_t*)dest)[i*8+j] = ((uint8_t*)src)[j*8+i];
-		}
-	}
-}
+/*********************************************************************/
 
 static
 void checksum_update(twister_big_ctx_t* ctx, uint8_t col){
@@ -103,6 +107,8 @@ void checksum_update(twister_big_ctx_t* ctx, uint8_t col){
 //	DEBUG_CHKSUM(ctx, "post run");
 }
 
+/*********************************************************************/
+
 void twister_big_init(twister_big_ctx_t* ctx, uint16_t hashsize_b){
 	memset(ctx->state.s,  0, 64);
 	memset(ctx->checksum, 0, 64);
@@ -111,6 +117,8 @@ void twister_big_init(twister_big_ctx_t* ctx, uint16_t hashsize_b){
 	ctx->state.s[1][7] = hashsize_b&0xff;
 	ctx->state.length_counter_b = 0;
 }
+
+/*********************************************************************/
 
 void twister_big_nextBlock(twister_big_ctx_t* ctx, void* msg){
 	uint8_t tmp[8][8];
@@ -161,10 +169,14 @@ void twister_big_nextBlock(twister_big_ctx_t* ctx, void* msg){
 	ctx->state.length_counter_b += 512;
 }
 
+/*********************************************************************/
+
 void twister_inject_chksum(twister_big_ctx_t* ctx, uint8_t col){
 	*((uint64_t*)(&ctx->state.s[7][0])) ^= *((uint64_t*)(&ctx->checksum[col][0]));
 	twister_blank_round(&ctx->state);
 }
+
+/*********************************************************************/
 
 void twister_big_lastBlock(twister_big_ctx_t* ctx, void* msg, uint16_t length_b){
 	uint8_t tmp[64];	
@@ -204,28 +216,38 @@ void twister_big_lastBlock(twister_big_ctx_t* ctx, void* msg, uint16_t length_b)
 //	DEBUG_PRINT(&(ctx->state), "post check-round");
 }
 
+/*********************************************************************/
+
 void twister_big_ctx2hash(void* dest, twister_big_ctx_t* ctx, uint16_t hashsize_b){
 	twister_ctx2hash(dest, &(ctx->state), hashsize_b);
 }
 
-/******************************************************************************/
-/******************************************************************************/
+/*********************************************************************/
+/*********************************************************************/
 
 void twister384_init(twister384_ctx_t* ctx){
 	twister_big_init(ctx, 384);
 }
 
+/*********************************************************************/
+
 void twister384_nextBlock(twister384_ctx_t* ctx, void* msg){
 	twister_big_nextBlock(ctx, msg);
 }
+
+/*********************************************************************/
 
 void twister384_lastBlock(twister384_ctx_t* ctx, void* msg, uint16_t length_b){
 	twister_big_lastBlock(ctx, msg, length_b);
 }
 
+/*********************************************************************/
+
 void twister384_ctx2hash(void* dest, twister384_ctx_t* ctx){
 	twister_big_ctx2hash(dest, ctx, 384);
 }
+
+/*********************************************************************/
 
 void twister384(void* dest, void* msg, uint32_t msg_length_b){
 	twister_big_ctx_t ctx;
@@ -239,23 +261,33 @@ void twister384(void* dest, void* msg, uint32_t msg_length_b){
 	twister_big_ctx2hash(dest, &ctx, 384);
 }
 
-/******************************************************************************/
+/*********************************************************************/
+/*********************************************************************/
+
 
 void twister512_init(twister512_ctx_t* ctx){
 	twister_big_init(ctx, 512);
 }
 
+/*********************************************************************/
+
 void twister512_nextBlock(twister512_ctx_t* ctx, void* msg){
 	twister_big_nextBlock(ctx, msg);
 }
+
+/*********************************************************************/
 
 void twister512_lastBlock(twister512_ctx_t* ctx, void* msg, uint16_t length_b){
 	twister_big_lastBlock(ctx, msg, length_b);
 }
 
+/*********************************************************************/
+
 void twister512_ctx2hash(void* dest, twister512_ctx_t* ctx){
 	twister_big_ctx2hash(dest, ctx, 512);
 }
+
+/*********************************************************************/
 
 void twister512(void* dest, void* msg, uint32_t msg_length_b){
 	twister_big_ctx_t ctx;

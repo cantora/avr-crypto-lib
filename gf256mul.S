@@ -31,17 +31,17 @@
 
 /*
  * param a: r24
- * param b; r22
+ * param b: r22
  * param reducer: r20
  */
-A = 21
+A = 23
 B = 22
 P = 24
 .global gf256mul
 
 #ifdef OPTIMIZE_SMALL_A
 gf256mul:
-	mov r21, r24
+	mov A, r24
 	clr r24
 1:	
 	lsr A

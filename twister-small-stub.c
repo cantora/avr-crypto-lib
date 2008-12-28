@@ -6,7 +6,7 @@
 #include "twister-small.h"
 
 /*********************************************************************/
-
+#if 0
 void twister_small_init(twister_state_t* ctx, uint16_t hashsize_b){
 	memset(ctx->s, 0, 64);
 	ctx->counter=0xffffffffffffffffLL;
@@ -48,12 +48,11 @@ void twister_small_nextBlock(twister_state_t* ctx, void* msg){
 	memxor(ctx->s, tmp, 64);
 	ctx->length_counter_b += 512;
 }
-
+#endif
 /*********************************************************************/
-
+#if 0
 void twister_small_lastBlock(twister_state_t* ctx, void* msg, uint16_t length_b){
 	uint8_t tmp[64];	
-	uint8_t i;
 	while(length_b>512){
 		twister_small_nextBlock(ctx, msg);
 		msg = ((uint8_t*)msg)+64;
@@ -64,11 +63,22 @@ void twister_small_lastBlock(twister_state_t* ctx, void* msg, uint16_t length_b)
 	tmp[length_b/8] |= 0x80 >> (length_b&0x07);
 	twister_small_nextBlock(ctx, tmp);
 	ctx->length_counter_b -= 512 - length_b;
-
 	twister_mini_round(ctx, &(ctx->length_counter_b));
 	twister_blank_round(ctx);
 }
 
+
+void twister256_lastBlock(twister256_ctx_t* ctx, void* msg, uint16_t length_b){
+	twister_small_lastBlock(ctx, msg, length_b);
+}
+
+
+void twister224_lastBlock(twister224_ctx_t* ctx, void* msg, uint16_t length_b){
+	twister_small_lastBlock(ctx, msg, length_b);
+}
+
+#endif
+#if 0
 /*********************************************************************/
 
 void twister_small_ctx2hash(void* dest, twister_state_t* ctx, uint16_t hashsize_b){
@@ -91,10 +101,6 @@ void twister256_nextBlock(twister256_ctx_t* ctx, void* msg){
 }
 
 /*********************************************************************/
-
-void twister256_lastBlock(twister256_ctx_t* ctx, void* msg, uint16_t length_b){
-	twister_small_lastBlock(ctx, msg, length_b);
-}
 
 /*********************************************************************/
 
@@ -137,10 +143,6 @@ void twister224_nextBlock(twister224_ctx_t* ctx, void* msg){
 
 /*********************************************************************/
 
-void twister224_lastBlock(twister224_ctx_t* ctx, void* msg, uint16_t length_b){
-	twister_small_lastBlock(ctx, msg, length_b);
-}
-
 /*********************************************************************/
 
 void twister224_ctx2hash(void* dest, twister224_ctx_t* ctx){
@@ -162,4 +164,4 @@ void twister224(void* dest, void* msg, uint32_t msg_length_b){
 }
 
 #endif
-
+#endif

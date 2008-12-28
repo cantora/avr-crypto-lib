@@ -107,6 +107,18 @@
 	out _SFR_IO_ADDR(SPL), \reg1
 .endm
 
+.macro stack_free_large2 size:req, reg1=r30, reg2=r31
+	in r0, _SFR_IO_ADDR(SREG)
+	in \reg1, _SFR_IO_ADDR(SPL)
+	in \reg2, _SFR_IO_ADDR(SPH)
+	adiw \reg1, 63
+	adiw \reg1, 63
+	adiw \reg1, (\size-63*2) 
+	cli
+	out _SFR_IO_ADDR(SPH), \reg2
+	out _SFR_IO_ADDR(SREG), r0
+	out _SFR_IO_ADDR(SPL), \reg1
+.endm
 
 
 /*******************************************************************************

@@ -128,7 +128,7 @@ void twister_mini_round(twister_state_t* ctx, void* msg){
 	}
 	twister_blank_round(ctx);
 }
-
+#if 0
 void twister_ctx2hash(void* dest, twister_state_t* ctx, uint16_t hashsize_b){
 	uint8_t tmp[8][8];
 	uint8_t j;
@@ -156,4 +156,4 @@ void twister_ctx2hash(void* dest, twister_state_t* ctx, uint16_t hashsize_b){
 	}
 }
 
-
+#endif

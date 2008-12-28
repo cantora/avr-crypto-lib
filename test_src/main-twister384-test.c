@@ -1,4 +1,4 @@
-/* main-twister224-test.c */
+/* main-twister384-test.c */
 /*
     This file is part of the Crypto-avr-lib/microcrypt-lib.
     Copyright (C) 2008  Daniel Otte (daniel.otte@rub.de)
@@ -26,58 +26,63 @@
 #include "uart.h"
 #include "debug.h"
 
-#include "twister-small.h"
+#include "twister-big.h"
 #include "nessie_hash_test.h"
 #include "performance_test.h"
-
-#include <util/delay.h>
 
 #include <stdint.h>
 #include <string.h>
 #include <stdlib.h>
 #include "cli.h"
 
-char* algo_name = "TWISTER-224";
+char* algo_name = "TWISTER-384";
 
 /*****************************************************************************
  *  additional validation-functions											 *
  *****************************************************************************/
-void twister224_init_dummy(void* ctx){
-	twister_small_init(ctx, 224);
+void twister384_init_dummy(void* ctx){
+	twister_big_init(ctx, 384);
 }
 
-void twister224_next_dummy(void* buffer, void* ctx){
-	twister_small_nextBlock(ctx, buffer);
+void twister384_next_dummy(void* buffer, void* ctx){
+	twister_big_nextBlock(ctx, buffer);
 }
 
-void twister224_last_dummy(void* buffer, uint16_t size_b, void* ctx){
-	twister_small_lastBlock(ctx, buffer, size_b);
+void twister384_last_dummy(void* buffer, uint16_t size_b, void* ctx){
+	twister_big_lastBlock(ctx, buffer, size_b);
 }
 
-void twister224_ctx2hash_dummy(void* buffer, void* ctx){
-	twister_small_ctx2hash(buffer, ctx, 224);
+void twister384_ctx2hash_dummy(void* buffer, void* ctx){
+	twister_big_ctx2hash(buffer, ctx, 384);
 }
 
 
-void testrun_nessie_twister224(void){
-	nessie_hash_ctx.hashsize_b  = 224;
+void testrun_nessie_twister384(void){
+	nessie_hash_ctx.hashsize_b  = 384;
 	nessie_hash_ctx.blocksize_B = 512/8;
-	nessie_hash_ctx.ctx_size_B  = sizeof(twister_state_t);
+	nessie_hash_ctx.ctx_size_B  = sizeof(twister_big_ctx_t);
 	nessie_hash_ctx.name = algo_name;
-	nessie_hash_ctx.hash_init = (nessie_hash_init_fpt)twister224_init_dummy;
-	nessie_hash_ctx.hash_next = (nessie_hash_next_fpt)twister224_next_dummy;
-	nessie_hash_ctx.hash_last = (nessie_hash_last_fpt)twister224_last_dummy;
-	nessie_hash_ctx.hash_conv = (nessie_hash_conv_fpt)twister224_ctx2hash_dummy;
+	nessie_hash_ctx.hash_init = (nessie_hash_init_fpt)twister384_init_dummy;
+	nessie_hash_ctx.hash_next = (nessie_hash_next_fpt)twister384_next_dummy;
+	nessie_hash_ctx.hash_last = (nessie_hash_last_fpt)twister384_last_dummy;
+	nessie_hash_ctx.hash_conv = (nessie_hash_conv_fpt)twister384_ctx2hash_dummy;
 	
 	nessie_hash_run();
 }
 
-/*****************************************************************************
- *  self tests																 *
- *****************************************************************************/
+/******************************************************************************   
+ * selftests
+ ******************************************************************************/
 
-void testrun_twister224(void){
-	twister224_hash_t hash;
+void print_hash(void* hash){
+	uart_hexdump(hash, 256/8);
+	uart_putstr_P(PSTR("\r\n\t"));
+	uart_hexdump((uint8_t*)hash+256/8, 128/8);
+	
+}
+
+void testrun_twister384(void){
+	twister384_hash_t hash;
 	char* testv[]={
 		"", 
 		"a", 
@@ -88,104 +93,93 @@ void testrun_twister224(void){
 		"12345678901234567890123456789012345678901234567890123456789012345678901234567890"};
 	uint32_t i;
 	
-	uart_putstr_P(PSTR("\r\n=== TWISTER-224 test suit (MD5 test values) ==="));
+	uart_putstr_P(PSTR("\r\n=== TWISTER-384 test suit (MD5 test values) ==="));
 	for(i=0; i<7; ++i){
-		uart_putstr_P(PSTR("\r\n TWISTER-224 (\""));
+		uart_putstr_P(PSTR("\r\n TWISTER-384 (\""));
 		uart_putstr(testv[i]);
 		uart_putstr_P(PSTR("\") = \r\n\t"));
-		twister224(&hash, testv[i], strlen(testv[i])*8);
-		uart_hexdump(hash, 224/8);
+		twister384(&hash, testv[i], strlen(testv[i])*8);
+		print_hash(hash);
+	//	return;
 	}
 	
-	uart_putstr_P(PSTR("\r\n\r\n=== TWISTER-224 test suit (short test values) ==="));
+	uart_putstr_P(PSTR("\r\n\r\n=== TWISTER-384 test suit (short test values) ==="));
 	uint8_t stestv[]= {0x00, 0x00, 0xC0, 0xC0, 0x80, 0x48, 0x50};
 	uint8_t stestl[]= {   0,    1,    2,    3,    4,    5,    6};	
 	for(i=0; i<7; ++i){
-		uart_putstr_P(PSTR("\r\n TWISTER-224 (\""));
+		uart_putstr_P(PSTR("\r\n TWISTER-384 (\""));
 		uart_hexdump(&(stestv[i]), 1);
 		uart_putstr_P(PSTR("\") = \r\n\t"));
-		twister224(&hash, &(stestv[i]), stestl[i]);
-		uart_hexdump(hash, 224/8);
+		twister384(hash, &(stestv[i]), stestl[i]);
+		print_hash(hash);
 	}
+	
 #ifdef TWISTER_LONGTEST
-	uart_putstr_P(PSTR("\r\n\r\n=== TWISTER-224 test suit (long test) ==="));
+	uart_putstr_P(PSTR("\r\n\r\n=== TWISTER-384 test suit (long test) ==="));
 	char* ltest= "abcdefghbcdefghicdefghijdefghijk"
                            "efghijklfghijklmghijklmnhijklmno";	
-	twister224_ctx_t ctx;
-	twister224_init(&ctx);	
-	uart_putstr_P(PSTR("\r\n TWISTER-224 ( 16777216 x \""));
+	twister384_ctx_t ctx;
+	twister384_init(&ctx);	
+	uart_putstr_P(PSTR("\r\n TWISTER-384 ( 16777216 x \""));
 	uart_putstr(ltest);	
 	uart_putstr_P(PSTR("\") = \r\n\t"));
 	for(i=0; i<16777216; ++i){
-		twister224_nextBlock(&ctx, ltest);
+		twister384_nextBlock(&ctx, ltest);
 	}
-	twister224_ctx2hash(hash, &ctx);
-	uart_hexdump(hash, 224/8);
+	twister384_ctx2hash(hash, &ctx);
+	print_hash(hash);
 #endif
 }
 
 
-void testrun_performance_twister224(void){
+void testrun_performance_twister384(void){
 	uint64_t t;
 	char str[16];
 	uint8_t data[64];
-	twister_state_t ctx;
-	volatile uint16_t i;
+	twister_big_ctx_t ctx;
+	
 	calibrateTimer();
 	print_overhead();
 	
 	memset(data, 0, 64);
 	
 	startTimer(1);
-	twister_small_init(&ctx, 224);
+	twister_big_init(&ctx, 384);
 	t = stopTimer();
 	uart_putstr_P(PSTR("\r\n\tctx-gen time: "));
 	ultoa((unsigned long)t, str, 10);
 	uart_putstr(str);
 	
-	i=3000;
-	while(i--)
-		_delay_ms(1);
 	
 	startTimer(1);
-	twister_small_nextBlock(&ctx, data);
+	twister_big_nextBlock(&ctx, data);
 	t = stopTimer();
 	uart_putstr_P(PSTR("\r\n\tone-block time: "));
 	ultoa((unsigned long)t, str, 10);
 	uart_putstr(str);
 	
-	i=3000;
-	while(i--)
-		_delay_ms(1);
 	
 	startTimer(1);
-	twister_small_lastBlock(&ctx, data, 0);
+	twister_big_lastBlock(&ctx, data, 0);
 	t = stopTimer();
 	uart_putstr_P(PSTR("\r\n\tlast block time: "));
 	ultoa((unsigned long)t, str, 10);
 	uart_putstr(str);
-
-	i=3000;
-	while(i--)
-		_delay_ms(1);
-
+	
 	startTimer(1);
-	twister_small_ctx2hash(data, &ctx, 224);
+	twister_big_ctx2hash(data, &ctx, 384);
 	t = stopTimer();
 	uart_putstr_P(PSTR("\r\n\tctx2hash time: "));
 	ultoa((unsigned long)t, str, 10);
 	uart_putstr(str);
 
-	i=3000;
-	while(i--)
-		_delay_ms(1);
-	
 	uart_putstr_P(PSTR("\r\n"));
 }
 
 
 /*****************************************************************************
- * main																	 *
+ * main
+ *
  *****************************************************************************/
 
 int main (void){
@@ -199,9 +193,9 @@ int main (void){
 	uart_putstr(algo_name);
 	uart_putstr_P(PSTR(")\r\nloaded and running\r\n"));
 	PGM_P    u   = PSTR("nessie\0test\0performance\0");
-	void_fpt v[] = { testrun_nessie_twister224, 
-                         testrun_twister224, 
-                         testrun_performance_twister224 };
+	void_fpt v[] = { testrun_nessie_twister384, 
+                         testrun_twister384, 
+                         testrun_performance_twister384 };
 
 	while(1){ 
 		if (!getnextwordn(str,20)){DEBUG_S("DBG: W1\r\n"); goto error;}

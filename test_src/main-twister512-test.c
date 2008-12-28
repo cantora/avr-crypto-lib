@@ -113,7 +113,8 @@ void testrun_twister512(void){
 		twister512(hash, &(stestv[i]), stestl[i]);
 		print_hash(hash);
 	}
-
+	
+#ifdef TWISTER_LONGTEST
 	uart_putstr_P(PSTR("\r\n\r\n=== TWISTER-512 test suit (long test) ==="));
 	char* ltest= "abcdefghbcdefghicdefghijdefghijk"
                            "efghijklfghijklmghijklmnhijklmno";	
@@ -127,6 +128,7 @@ void testrun_twister512(void){
 	}
 	twister512_ctx2hash(hash, &ctx);
 	print_hash(hash);
+#endif
 }
 
 

@@ -110,7 +110,8 @@ void testrun_twister256(void){
 		twister256(&hash, &(stestv[i]), stestl[i]);
 		print_hash(hash);
 	}
-
+	
+#ifdef TWISTER_LONGTEST
 	uart_putstr_P(PSTR("\r\n\r\n=== TWISTER-256 test suit (long test) ==="));
 	char* ltest= "abcdefghbcdefghicdefghijdefghijk"
                            "efghijklfghijklmghijklmnhijklmno";	
@@ -124,6 +125,7 @@ void testrun_twister256(void){
 	}
 	twister256_ctx2hash(hash, &ctx);
 	print_hash(hash);
+#endif
 }
 
 
