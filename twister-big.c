@@ -6,85 +6,6 @@
 #include "twister.h"
 #include "twister-big.h"
 
-#undef DEBUG
-#define DEBUG
-
-/*********************************************************************/
-/*********************************************************************/
-
-#ifdef DEBUG
-#include <avr/pgmspace.h>
-#include "uart.h"
-void print_checksum(twister_big_ctx_t* ctx, PGM_P s){
-	uint8_t i;
-	uart_putstr_P(PSTR("\r\n"));
-	uart_putstr_P(s);
-	uart_putstr_P(PSTR("\r\n checksum:\r\n"));
-	for(i=0; i<8; ++i){
-		uart_putstr_P(PSTR("  [ "));
-		uart_hexdump(&(ctx->checksum[i][0]), 8);
-		uart_putstr_P(PSTR("]\r\n"));
-	}
-}
-
-/*********************************************************************/
-
-void print_matrix(void* m, PGM_P s){
-	uint8_t i;
-	uart_putstr_P(PSTR("\r\n"));
-	uart_putstr_P(s);
-	uart_putstr_P(PSTR("\r\n matrix:\r\n"));
-	for(i=0; i<8; ++i){
-		uart_putstr_P(PSTR("  [ "));
-		uart_hexdump(((uint8_t*)m)+i*8, 8);
-		uart_putstr_P(PSTR("]\r\n"));
-	}
-}
-
-/*********************************************************************/
-
-#define DEBUG_CHKSUM(a,s) print_checksum((a),PSTR(s)) 
-#else
-#define DEBUG_CHKSUM(a,s) 
-#endif
-
-
-#ifdef DEBUG
-# define DEBUG_PRINT(ctx, msg) debug_print((ctx), PSTR(msg)) 
-#else
-# define DEBUG_PRINT(ctx, msg) 
-#endif 
-
-#ifdef DEBUG
-
-/*********************************************************************/
-
-void print_twister_state(twister_state_t* ctx){
-	uint8_t i;
-	uart_putstr_P(PSTR("\r\nState:\r\n matrix:\r\n"));
-	for(i=0; i<8; ++i){
-		uart_putstr_P(PSTR("\t[ "));
-		uart_hexdump(&(ctx->s[i][0]), 8);
-		uart_putstr_P(PSTR("]\r\n"));
-	}
-	uart_putstr_P(PSTR("counter: "));
-	uart_hexdump(&(ctx->counter), 8);
-
-	uart_putstr_P(PSTR("\r\nlength_counter_b: "));
-	uart_hexdump(&(ctx->length_counter_b), 8);
-	uart_putstr_P(PSTR("\r\n"));
-} 
-
-/*********************************************************************/
-
-void debug_print(twister_state_t* ctx, PGM_P msg){
-	uart_putstr_P(PSTR("\r\n"));
-	uart_putstr_P(msg);
-	print_twister_state(ctx);
-}
-
-#endif
-
 /*********************************************************************/
 
 static
@@ -104,7 +25,6 @@ void checksum_update(twister_big_ctx_t* ctx, uint8_t col){
 		carry = sum>>8;
 
  	}
-//	DEBUG_CHKSUM(ctx, "post run");
 }
 
 /*********************************************************************/
@@ -192,8 +112,6 @@ void twister_big_lastBlock(twister_big_ctx_t* ctx, void* msg, uint16_t length_b)
 	ctx->state.length_counter_b -= 512 - length_b;
 	twister_mini_round(&(ctx->state), &(ctx->state.length_counter_b));
 
-//	DEBUG_PRINT(&(ctx->state), "pre check-round");
-
 	memcpy(tmp, ctx->state.s, 64);
 	twister_inject_chksum(ctx, 0);
 	twister_inject_chksum(ctx, 1);
@@ -212,8 +130,6 @@ void twister_big_lastBlock(twister_big_ctx_t* ctx, void* msg, uint16_t length_b)
 	twister_blank_round(&(ctx->state));
 	memxor(ctx->state.s, tmp, 64);
 
-
-//	DEBUG_PRINT(&(ctx->state), "post check-round");
 }
 
 /*********************************************************************/

@@ -28,45 +28,7 @@
 #ifndef TWISTER_MUL_TABLE
 # include "gf256mul.h"
 #endif
-
-#undef DEBUG
-
-#ifdef DEBUG
-# include "uart.h"
-#endif
-
-#ifdef DEBUG
-# define DEBUG_PRINT(ctx, msg) debug_print((ctx), PSTR(msg)) 
-#else
-# define DEBUG_PRINT(ctx, msg) 
-#endif 
-
-#ifdef DEBUG
-
-void print_twister_state(twister_state_t* ctx){
-	uint8_t i;
-	uart_putstr_P(PSTR("\r\nState:\r\n matrix:\r\n"));
-	for(i=0; i<8; ++i){
-		uart_putstr_P(PSTR("\t[ "));
-		uart_hexdump(&(ctx->s[i][0]), 8);
-		uart_putstr_P(PSTR("]\r\n"));
-	}
-	uart_putstr_P(PSTR("counter: "));
-	uart_hexdump(&(ctx->counter), 8);
-
-	uart_putstr_P(PSTR("\r\nlength_counter_b: "));
-	uart_hexdump(&(ctx->length_counter_b), 8);
-	uart_putstr_P(PSTR("\r\n"));
-} 
-
-void debug_print(twister_state_t* ctx, PGM_P msg){
-	uart_putstr_P(PSTR("\r\n"));
-	uart_putstr_P(msg);
-	print_twister_state(ctx);
-}
-
-#endif
-
+																																
 static
 void shiftrow(void* row, uint8_t shift){
 	*((uint64_t*)row) = *((uint64_t*)row)>>(8*shift) | *((uint64_t*)row)<<(64-8*shift);
@@ -82,13 +44,11 @@ void shiftrow(void* row, uint8_t shift){
 void twister_blank_round(twister_state_t* ctx){
 	uint8_t i,j,k=0;
 	uint8_t tmp[8][8];
-	DEBUG_PRINT(ctx, "blank init");
 	/* add twist counter */
 	for(i=0; i<8; ++i){
 		ctx->s[i][1] ^= ((uint8_t*)&(ctx->counter))[7-i];
 	}
 	ctx->counter--;
-//	DEBUG_PRINT(ctx, "counter added");
 	/* sub bytes */
 	for(i=0; i<8; ++i){
 		for(j=0;j<8;++j){
@@ -116,7 +76,6 @@ void twister_blank_round(twister_state_t* ctx){
 				
 		}	
 	}
-	DEBUG_PRINT(ctx, "post MDS");
 }
 
 void twister_mini_round(twister_state_t* ctx, void* msg){
