@@ -28,19 +28,15 @@
 #ifndef TWISTER_MUL_TABLE
 # include "gf256mul.h"
 #endif
-																																
-static
-void shiftrow(void* row, uint8_t shift){
-	*((uint64_t*)row) = *((uint64_t*)row)>>(8*shift) | *((uint64_t*)row)<<(64-8*shift);
-}
 
 #define MDS(a,b)  pgm_read_byte(&(twister_mds[(a)][(b)]))
 
 #ifdef TWISTER_MUL_TABLE
-# define MULT(a,b) pgm_read_byte(&(twister_multab[a][b]))
+# define MULT(a,b) pgm_read_byte(&(twister_multab[(a)][(b)]))
 #else
 # define MULT(a,b) gf256mul((a),(b), 0x4D)
 #endif
+
 void twister_blank_round(twister_state_t* ctx){
 	uint8_t i,j,k=0;
 	uint8_t tmp[8][8];
@@ -55,11 +51,7 @@ void twister_blank_round(twister_state_t* ctx){
 			tmp[i][j] = pgm_read_byte(twister_sbox+ctx->s[i][j]);
 		}
 	}
-	/* shift rows */
-//	for(i=1;i<8; ++i){
-//		shiftrow(&(tmp[i][0]), i);
-//	}
-	/* mix columns */
+	/* mix columns with integrates shift rows */
 	for( i=0; i<8; i++ ){
 		// multiply with mds matrix
 		for( j=0; j<8; j++ ){

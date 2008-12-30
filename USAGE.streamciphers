@@ -7,29 +7,29 @@ email:  daniel.otte@rub.de
  
  
 0. Foreword
- This file will describe how to use the streramcipher implementations provided
+ This file will describe how to use the streamcipher implementations provided
  by this library. It will not only show how to call the cryptographic functions
  but also discuss a little how to build security mechanisms from that.
 
 1. What a streamcipher does
- A streamcipher normaly generates a deterministic, random looking stream of 
+ A streamcipher normally generates a deterministic, random looking stream of 
  bits, known as keystream. For encryption purpose this keystream is XORed with
  the data stream. So decryption is exactly the same as encryption. The 
- datastream is XORed with the keystream giving the plaintext. So both sides need
- exactly the same streamcipher in the same state.
+ data-stream is XORed with the keystream giving the plaintext. So both sides 
+ need exactly the same streamcipher in the same state.
   
 1.1. high frequent parameters:
-	outputsize: 8 bit, 1 bit
+	output-size: 8 bit, 1 bit
 	keysize: 64 bit, 80 bit, 128 bit
 	IVsize: 64 bit
 
 2. Parts of a streamcipher
   * generation algorithm
-  * initialisation algorithm
+  * initialization algorithm
   * state
  As we can see all streamciphers seem to utilize an internal state which
- determines the output. This state is initialized by the initialisation 
- algorithm with a key and an IV (initialisation vector). It is very important
+ determines the output. This state is initialized by the initialization 
+ algorithm with a key and an IV (initialization vector). It is very important
  for security that _never_ the same key with the same IV is used again. The
  IV is not required to be kept secret.
  
@@ -39,7 +39,7 @@ email:  daniel.otte@rub.de
  components).
  Generally the API of the implemented streamciphers consists of:
  
- *_init function, which implements the initialisation
+ *_init function, which implements the initialization
  *_gen  function, which implements the streamcipher algorithm and generates a 
         keystream output
  *_ctx_t context type, which contains internal state information
@@ -51,8 +51,8 @@ email:  daniel.otte@rub.de
 3.1.2 sizes in bits and bytes
  Working with cryptographical functions involves working with different lengths.
  Some times you want to know it in bits and sometimes in bytes. To reduce
- frustration and to avoid bugs we suffix a length parameter with either _b or _B
- depending on the meaning. _b means in bits and _B means in bytes 
+ frustration and to avoid bugs we suffix a length parameter with either _b or
+ _B depending on the meaning. _b means in bits and _B means in bytes 
  (big b big word).  
  
 3.2. *_init function
