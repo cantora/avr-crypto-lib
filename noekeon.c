@@ -93,9 +93,9 @@ void noekeon_round(uint32_t* key, uint32_t* state, uint8_t const1, uint8_t const
 	((uint8_t*)state)[RC_POS] ^= const1;
 	theta(key, state);
 	((uint8_t*)state)[RC_POS] ^= const2;
+	pi1(state);
 	gamma(state);
 	pi2(state);
-	pi1(state);
 }
 
 uint8_t rc_tab[]
