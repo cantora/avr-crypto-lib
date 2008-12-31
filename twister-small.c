@@ -53,7 +53,6 @@ void twister_small_nextBlock(twister_state_t* ctx, void* msg){
 
 void twister_small_lastBlock(twister_state_t* ctx, void* msg, uint16_t length_b){
 	uint8_t tmp[64];	
-	uint8_t i;
 	while(length_b>512){
 		twister_small_nextBlock(ctx, msg);
 		msg = ((uint8_t*)msg)+64;
