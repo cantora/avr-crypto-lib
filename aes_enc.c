@@ -47,8 +47,6 @@ void aes_shiftrow(void* data, uint8_t shift){
 #define GF256MUL_2(a) (gf256mul(2, (a), 0x1b))
 #define GF256MUL_3(a) (gf256mul(3, (a), 0x1b))
 
-
-
 static
 void aes_enc_round(aes_cipher_state_t* state, const aes_roundkey_t* k){
 	uint8_t tmp[16];

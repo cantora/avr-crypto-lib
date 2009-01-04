@@ -113,7 +113,7 @@ void testrun_testkey_aes(void){
 	}
 }
 
-void testrun_performance_aes(void){
+void testrun_performance_aes128(void){
 	uint64_t t;
 	char str[16];
 	uint8_t key[32], data[16];
@@ -149,6 +149,94 @@ void testrun_performance_aes(void){
 	uart_putstr(str);
 	
 	uart_putstr_P(PSTR("\r\n"));
+}
+
+
+void testrun_performance_aes192(void){
+	uint64_t t;
+	char str[16];
+	uint8_t key[32], data[16];
+	aes192_ctx_t ctx;
+	
+	calibrateTimer();
+	print_overhead();
+	
+	memset(key,  0, 32);
+	memset(data, 0, 16);
+	
+	startTimer(1);
+	aes192_init(key, &ctx);
+	t = stopTimer();
+	uart_putstr_P(PSTR("\r\n\tctx-gen time: "));
+	ultoa((unsigned long)t, str, 10);
+	uart_putstr(str);
+	
+	
+	startTimer(1);
+	aes192_enc(data, &ctx);
+	t = stopTimer();
+	uart_putstr_P(PSTR("\r\n\tencrypt time: "));
+	ultoa((unsigned long)t, str, 10);
+	uart_putstr(str);
+	
+	
+	startTimer(1);
+	aes192_dec(data, &ctx);
+	t = stopTimer();
+	uart_putstr_P(PSTR("\r\n\tdecrypt time: "));
+	ultoa((unsigned long)t, str, 10);
+	uart_putstr(str);
+	
+	uart_putstr_P(PSTR("\r\n"));
+}
+
+
+void testrun_performance_aes256(void){
+	uint64_t t;
+	char str[16];
+	uint8_t key[32], data[16];
+	aes256_ctx_t ctx;
+	
+	calibrateTimer();
+	print_overhead();
+	
+	memset(key,  0, 32);
+	memset(data, 0, 16);
+	
+	startTimer(1);
+	aes256_init(key, &ctx);
+	t = stopTimer();
+	uart_putstr_P(PSTR("\r\n\tctx-gen time: "));
+	ultoa((unsigned long)t, str, 10);
+	uart_putstr(str);
+	
+	
+	startTimer(1);
+	aes256_enc(data, &ctx);
+	t = stopTimer();
+	uart_putstr_P(PSTR("\r\n\tencrypt time: "));
+	ultoa((unsigned long)t, str, 10);
+	uart_putstr(str);
+	
+	
+	startTimer(1);
+	aes256_dec(data, &ctx);
+	t = stopTimer();
+	uart_putstr_P(PSTR("\r\n\tdecrypt time: "));
+	ultoa((unsigned long)t, str, 10);
+	uart_putstr(str);
+	
+	uart_putstr_P(PSTR("\r\n"));
+}
+
+void testrun_performance_aes(void){
+	uart_putstr_P(PSTR("\r\n -=AES Performance Test=-\r\n"));
+	uart_putstr_P(PSTR("\r\n       AES-128\r\n"));
+	testrun_performance_aes128();
+	uart_putstr_P(PSTR("\r\n       AES-192\r\n"));
+	testrun_performance_aes192();
+	uart_putstr_P(PSTR("\r\n       AES-256\r\n"));
+	testrun_performance_aes256();
 }
 /*****************************************************************************
  *  main																	 *
