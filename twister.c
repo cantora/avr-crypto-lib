@@ -38,7 +38,7 @@
 #endif
 
 void twister_blank_round(twister_state_t* ctx){
-	uint8_t i,j,k=0;
+	uint8_t i,j,k;
 	uint8_t tmp[8][8];
 	/* add twist counter */
 	for(i=0; i<8; ++i){
@@ -70,7 +70,7 @@ void twister_blank_round(twister_state_t* ctx){
 	}
 }
 
-void twister_mini_round(twister_state_t* ctx, void* msg){
+void twister_mini_round(twister_state_t* ctx, const void* msg){
 	/* inject message */
 	uint8_t i;
 	for(i=0; i<8; ++i){

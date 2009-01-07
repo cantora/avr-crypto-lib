@@ -1,7 +1,7 @@
 /* aes.c */
 /*
     This file is part of the Crypto-avr-lib/microcrypt-lib.
-    Copyright (C) 2008  Daniel Otte (daniel.otte@rub.de)
+    Copyright (C) 2008, 2009  Daniel Otte (daniel.otte@rub.de)
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

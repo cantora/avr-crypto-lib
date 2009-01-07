@@ -43,8 +43,6 @@ void aes_rotword(void* a){
 	((uint8_t*)a)[3] = t;
 }
 
-#include "uart.h"
-
 void aes_init(const void* key, uint16_t keysize_b, aes_genctx_t* ctx){
 	uint8_t hi,i,nk, next_nk;
 	uint8_t rc=1;
