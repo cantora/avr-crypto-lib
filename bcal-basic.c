@@ -1,0 +1,98 @@
+/* bcal-basic.c */
+/*
+    This file is part of the Crypto-avr-lib/microcrypt-lib.
+    Copyright (C) 2009  Daniel Otte (daniel.otte@rub.de)
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+#include <stdlib.h>
+#include <stdint.h>
+#include <string.h>
+#include "blockcipher_descriptor.h"
+#include "keysize_descriptor.h"
+
+
+uint8_t bcal_cipher_init(const bcdesc_t* cipher_descriptor,
+                         const void* key, uint16_t keysize, bcgen_ctx_t* ctx){
+	if(!is_valid_keysize_P((PGM_VOID_P)(pgm_read_word(cipher_descriptor->valid_keysize_desc)),
+	                       keysize))
+		return 1;
+		
+	uint8_t flags;
+	bc_init_fpt init_fpt;
+	ctx->desc_ptr = (bcdesc_t*)cipher_descriptor;
+	ctx->keysize  = keysize;
+	flags = pgm_read_byte(cipher_descriptor->flags);
+	init_fpt.initvoid = (void_fpt)(pgm_read_word(cipher_descriptor->init.initvoid));
+	if(init_fpt.initvoid == NULL){
+		if(!(ctx->ctx = malloc(keysize/8)))
+			return 2;
+		memcpy(ctx->ctx, key, keysize/8);
+		return 0;
+	}
+	if(!(ctx->ctx = malloc(pgm_read_word(cipher_descriptor->ctxsize_B))))
+		return 3;
+	if((flags&BC_INIT_TYPE)==BC_INIT_TYPE_1){
+		init_fpt.init1((void*)key, ctx->ctx);
+	}else{
+		init_fpt.init2((void*)key, keysize, ctx->ctx);
+	}
+	return 0;
+}
+
+void bcal_cipher_free(bcgen_ctx_t* ctx){
+	if(!ctx)
+		return;
+	bc_free_fpt free_fpt;
+	free_fpt = (bc_free_fpt)(pgm_read_word(ctx->desc_ptr->free));
+	if(free_fpt)
+		free_fpt(ctx->ctx);
+	free(ctx->ctx);
+}
+
+void bcal_cipher_enc(void* block, const bcgen_ctx_t* ctx){
+	uint8_t flags;
+	bc_enc_fpt enc_fpt;
+	flags = pgm_read_byte(ctx->desc_ptr->flags);
+	enc_fpt.encvoid = (void_fpt)pgm_read_word(ctx->desc_ptr->enc.encvoid);
+	if(!enc_fpt.encvoid){
+		/* very bad error, no enciphering function specified */
+		return;
+	}
+	if((flags&BC_ENC_TYPE)==BC_ENC_TYPE_1){
+		enc_fpt.enc1(block, ctx->ctx);
+	}else{
+		enc_fpt.enc2(block, block, ctx->ctx);
+	}
+}
+
+void bcal_cipher_dec(void* block, const bcgen_ctx_t* ctx){
+	uint8_t flags;
+	bc_dec_fpt dec_fpt;
+	flags = pgm_read_byte(ctx->desc_ptr->flags);
+	dec_fpt.decvoid = (void_fpt)pgm_read_word(ctx->desc_ptr->dec.decvoid);
+	if(!dec_fpt.decvoid){
+		/* very bad error, no deciphering function specified */
+		return;
+	}
+	if((flags&BC_DEC_TYPE)==BC_DEC_TYPE_1){
+		dec_fpt.dec1(block, ctx->ctx);
+	}else{
+		dec_fpt.dec2(block, block, ctx->ctx);
+	}
+}
+
+
+
