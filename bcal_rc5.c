@@ -45,7 +45,7 @@ void rc5_dummy_init(void* key, uint16_t keysize_b, void* ctx){
 
 const bcdesc_t rc5_desc PROGMEM = {
 	BCDESC_TYPE_BLOCKCIPHER,
-	BC_INIT_TYPE_4,
+	BC_INIT_TYPE_2,
 	rc5_str,
 	sizeof(rc5_ctx_t),
 	128,
