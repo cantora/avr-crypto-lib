@@ -28,13 +28,4 @@
 #include <stdint.h>
 #include "aes.h"
 
-void aes_buffer2state(void* dest, void* src){
-	uint8_t i,j;
-	for(i=0;i<4;++i){
-		for(j=0;j<4;++j){
-			((uint8_t*)dest)[i*4+j] = ((uint8_t*)src)[j*4+i];
-		}
-	}
-}
-
 

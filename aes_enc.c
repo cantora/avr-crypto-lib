@@ -33,14 +33,16 @@
 #include "aes_enc.h"
 #include <avr/pgmspace.h>
 
-
-void aes_shiftrow(void* data, uint8_t shift){
+void aes_shiftcol(void* data, uint8_t shift){
 	uint8_t tmp[4];
-	tmp[0] = ((uint8_t*)data)[(0+shift)&3];
-	tmp[1] = ((uint8_t*)data)[(1+shift)&3];
-	tmp[2] = ((uint8_t*)data)[(2+shift)&3];
-	tmp[3] = ((uint8_t*)data)[(3+shift)&3];
-	memcpy(data, tmp, 4);
+	tmp[0] = ((uint8_t*)data)[ 0];
+	tmp[1] = ((uint8_t*)data)[ 4];
+	tmp[2] = ((uint8_t*)data)[ 8];
+	tmp[3] = ((uint8_t*)data)[12];
+	((uint8_t*)data)[ 0] = tmp[(shift+0)&3];
+	((uint8_t*)data)[ 4] = tmp[(shift+1)&3];
+	((uint8_t*)data)[ 8] = tmp[(shift+2)&3];
+	((uint8_t*)data)[12] = tmp[(shift+3)&3];
 }
 
 #define GF256MUL_1(a) (a)
@@ -56,31 +58,31 @@ void aes_enc_round(aes_cipher_state_t* state, const aes_roundkey_t* k){
 		tmp[i] = pgm_read_byte(aes_sbox+state->s[i]);
 	}
 	/* shiftRows */
-	aes_shiftrow(tmp+4, 1);
-	aes_shiftrow(tmp+8, 2);
-	aes_shiftrow(tmp+12, 3);
+	aes_shiftcol(tmp+1, 1);
+	aes_shiftcol(tmp+2, 2);
+	aes_shiftcol(tmp+3, 3);
 	/* mixColums */
 	for(i=0; i<4; ++i){
-		state->s[4*0+i] =
-			  GF256MUL_2(tmp[4*0+i])
-			^ GF256MUL_3(tmp[4*1+i])
-			^ GF256MUL_1(tmp[4*2+i])
-			^ GF256MUL_1(tmp[4*3+i]);
-		state->s[4*1+i] =
-			  GF256MUL_1(tmp[4*0+i])
-			^ GF256MUL_2(tmp[4*1+i])
-			^ GF256MUL_3(tmp[4*2+i])
-			^ GF256MUL_1(tmp[4*3+i]);
-		state->s[4*2+i] =
-			  GF256MUL_1(tmp[4*0+i])
-			^ GF256MUL_1(tmp[4*1+i])
-			^ GF256MUL_2(tmp[4*2+i])
-			^ GF256MUL_3(tmp[4*3+i]);
-		state->s[4*3+i] =
-			  GF256MUL_3(tmp[4*0+i])
-			^ GF256MUL_1(tmp[4*1+i])
-			^ GF256MUL_1(tmp[4*2+i])
-			^ GF256MUL_2(tmp[4*3+i]);		
+		state->s[4*i+0] =
+			  GF256MUL_2(tmp[4*i+0])
+			^ GF256MUL_3(tmp[4*i+1])
+			^ GF256MUL_1(tmp[4*i+2])
+			^ GF256MUL_1(tmp[4*i+3]);
+		state->s[4*i+1] =
+			  GF256MUL_1(tmp[4*i+0])
+			^ GF256MUL_2(tmp[4*i+1])
+			^ GF256MUL_3(tmp[4*i+2])
+			^ GF256MUL_1(tmp[4*i+3]);
+		state->s[4*i+2] =
+			  GF256MUL_1(tmp[4*i+0])
+			^ GF256MUL_1(tmp[4*i+1])
+			^ GF256MUL_2(tmp[4*i+2])
+			^ GF256MUL_3(tmp[4*i+3]);
+		state->s[4*i+3] =
+			  GF256MUL_3(tmp[4*i+0])
+			^ GF256MUL_1(tmp[4*i+1])
+			^ GF256MUL_1(tmp[4*i+2])
+			^ GF256MUL_2(tmp[4*i+3]);		
 	}
 
 	/* addKey */
@@ -98,9 +100,9 @@ void aes_enc_lastround(aes_cipher_state_t* state,const aes_roundkey_t* k){
 		state->s[i] = pgm_read_byte(aes_sbox+state->s[i]);
 	}
 	/* shiftRows */
-	aes_shiftrow(state->s+4, 1);
-	aes_shiftrow(state->s+8, 2);
-	aes_shiftrow(state->s+12, 3);
+	aes_shiftcol(state->s+1, 1);
+	aes_shiftcol(state->s+2, 2);
+	aes_shiftcol(state->s+3, 3);
 	/* keyAdd */
 	for(i=0; i<16; ++i){
 		state->s[i] ^= k->ks[i];

@@ -34,6 +34,17 @@ void aes_invshiftrow(void* data, uint8_t shift){
 	memcpy(data, tmp, 4);
 }
 
+void aes_invshiftcol(void* data, uint8_t shift){
+	uint8_t tmp[4];
+	tmp[0] = ((uint8_t*)data)[ 0];
+	tmp[1] = ((uint8_t*)data)[ 4];
+	tmp[2] = ((uint8_t*)data)[ 8];
+	tmp[3] = ((uint8_t*)data)[12];
+	((uint8_t*)data)[ 0] = tmp[(4-shift+0)&3];
+	((uint8_t*)data)[ 4] = tmp[(4-shift+1)&3];
+	((uint8_t*)data)[ 8] = tmp[(4-shift+2)&3];
+	((uint8_t*)data)[12] = tmp[(4-shift+3)&3];
+}
 static
 void aes_dec_round(aes_cipher_state_t* state, const aes_roundkey_t* k){
 	uint8_t tmp[16];
@@ -44,31 +55,31 @@ void aes_dec_round(aes_cipher_state_t* state, const aes_roundkey_t* k){
 	}
 	/* mixColums */
 	for(i=0; i<4; ++i){
-		state->s[4*0+i] =
-			  gf256mul(0xe, tmp[4*0+i], 0x1b)
-			^ gf256mul(0xb, tmp[4*1+i], 0x1b)
-			^ gf256mul(0xd, tmp[4*2+i], 0x1b)
-			^ gf256mul(0x9, tmp[4*3+i], 0x1b);
-		state->s[4*1+i] =
-			  gf256mul(0x9, tmp[4*0+i], 0x1b)
-			^ gf256mul(0xe, tmp[4*1+i], 0x1b)
-			^ gf256mul(0xb, tmp[4*2+i], 0x1b)
-			^ gf256mul(0xd, tmp[4*3+i], 0x1b);
-		state->s[4*2+i] =
-			  gf256mul(0xd, tmp[4*0+i], 0x1b)
-			^ gf256mul(0x9, tmp[4*1+i], 0x1b)
-			^ gf256mul(0xe, tmp[4*2+i], 0x1b)
-			^ gf256mul(0xb, tmp[4*3+i], 0x1b);
-		state->s[4*3+i] =
-			  gf256mul(0xb, tmp[4*0+i], 0x1b)
-			^ gf256mul(0xd, tmp[4*1+i], 0x1b)
-			^ gf256mul(0x9, tmp[4*2+i], 0x1b)
-			^ gf256mul(0xe, tmp[4*3+i], 0x1b);
+		state->s[4*i+0] =
+			  gf256mul(0xe, tmp[4*i+0], 0x1b)
+			^ gf256mul(0xb, tmp[4*i+1], 0x1b)
+			^ gf256mul(0xd, tmp[4*i+2], 0x1b)
+			^ gf256mul(0x9, tmp[4*i+3], 0x1b);
+		state->s[4*i+1] =
+			  gf256mul(0x9, tmp[4*i+0], 0x1b)
+			^ gf256mul(0xe, tmp[4*i+1], 0x1b)
+			^ gf256mul(0xb, tmp[4*i+2], 0x1b)
+			^ gf256mul(0xd, tmp[4*i+3], 0x1b);
+		state->s[4*i+2] =
+			  gf256mul(0xd, tmp[4*i+0], 0x1b)
+			^ gf256mul(0x9, tmp[4*i+1], 0x1b)
+			^ gf256mul(0xe, tmp[4*i+2], 0x1b)
+			^ gf256mul(0xb, tmp[4*i+3], 0x1b);
+		state->s[4*i+3] =
+			  gf256mul(0xb, tmp[4*i+0], 0x1b)
+			^ gf256mul(0xd, tmp[4*i+1], 0x1b)
+			^ gf256mul(0x9, tmp[4*i+2], 0x1b)
+			^ gf256mul(0xe, tmp[4*i+3], 0x1b);
 	}	
 	/* shiftRows */
-	aes_invshiftrow(state->s+4, 1);
-	aes_invshiftrow(state->s+8, 2);
-	aes_invshiftrow(state->s+12, 3);		
+	aes_invshiftcol(state->s+1, 1);
+	aes_invshiftcol(state->s+2, 2);
+	aes_invshiftcol(state->s+3, 3);		
 	/* subBytes */
 	for(i=0; i<16; ++i){
 		state->s[i] = pgm_read_byte(aes_invsbox+state->s[i]);
@@ -84,9 +95,9 @@ void aes_dec_firstround(aes_cipher_state_t* state, const aes_roundkey_t* k){
 		state->s[i] ^= k->ks[i];
 	}
 	/* shiftRows */
-	aes_invshiftrow(state->s+4, 1);
-	aes_invshiftrow(state->s+8, 2);
-	aes_invshiftrow(state->s+12, 3);		
+	aes_invshiftcol(state->s+1, 1);
+	aes_invshiftcol(state->s+2, 2);
+	aes_invshiftcol(state->s+3, 3);		
 	/* subBytes */
 	for(i=0; i<16; ++i){
 		state->s[i] = pgm_read_byte(aes_invsbox+state->s[i]);

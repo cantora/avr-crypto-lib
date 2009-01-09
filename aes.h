@@ -53,6 +53,4 @@ typedef struct{
 	uint8_t s[16];
 } aes_cipher_state_t;
 
-void aes_buffer2state(void* dest, void* src);
-
 #endif

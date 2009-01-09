@@ -73,12 +73,6 @@ void aes_init(const void* key, uint16_t keysize_b, aes_genctx_t* ctx){
 		((uint32_t*)(ctx->key[0].ks))[i] = ((uint32_t*)(ctx->key[0].ks))[i-nk]
 		                                   ^ *((uint32_t*)tmp);
 	}
-	
-	uint8_t buffer[16];
-	for(i=0; i<nk+7; ++i){
-		memcpy(buffer, ctx->key[i].ks, 16);
-		aes_buffer2state(ctx->key[i].ks, buffer);
-	}
 }
 
 void aes128_init(const void* key, aes128_ctx_t* ctx){
