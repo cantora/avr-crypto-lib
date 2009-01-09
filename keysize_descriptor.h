@@ -35,6 +35,7 @@
 #define KS_TYPE_RANGE      0x02
 #define KS_TYPE_ARG_RANGE  0x03
 
+#define KS_INT(a) ((a)&0xFF), ((a)>>8)
 
 typedef struct{ /* keysize is valid if listed in items */
 	uint8_t  n_items;  /* number of items (value 0 is reserved) */

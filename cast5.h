@@ -16,20 +16,11 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-/* 
- * File:	cast5.h
- * Author:	Daniel Otte
- * Date: 	2006-07-26
- * License: GPL
- * Description: Implementation of the CAST5 (aka CAST-128) cipher algorithm as described in RFC 2144
- * 
- */
-
 /** 
  * \file	cast5.h
  * \author	Daniel Otte
  * \date 	2006-07-26
- * \license GPL
+ * \license GPLv3 or later
  * \brief Implementation of the CAST5 (aka CAST-128) cipher algorithm as described in RFC 2144
  * 
  */
@@ -74,7 +65,7 @@ typedef struct cast5_ctx_st{
  * \param keylength_b length of the key in bits (maximum 128 bits)
  * \param s pointer to the context
  */
-void cast5_init(const void* key, uint8_t keylength_b, cast5_ctx_t* s);
+void cast5_init(const void* key, uint16_t keylength_b, cast5_ctx_t* s);
 
 /** \fn void cast5_enc(void* block, const cast5_ctx_t *s);
  * \brief encrypt a block with the CAST-5 algorithm

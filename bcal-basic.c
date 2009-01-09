@@ -63,35 +63,24 @@ void bcal_cipher_free(bcgen_ctx_t* ctx){
 }
 
 void bcal_cipher_enc(void* block, const bcgen_ctx_t* ctx){
-	uint8_t flags;
 	bc_enc_fpt enc_fpt;
-	flags = pgm_read_byte(ctx->desc_ptr->flags);
 	enc_fpt.encvoid = (void_fpt)pgm_read_word(ctx->desc_ptr->enc.encvoid);
 	if(!enc_fpt.encvoid){
 		/* very bad error, no enciphering function specified */
 		return;
 	}
-	if((flags&BC_ENC_TYPE)==BC_ENC_TYPE_1){
-		enc_fpt.enc1(block, ctx->ctx);
-	}else{
-		enc_fpt.enc2(block, block, ctx->ctx);
-	}
+	enc_fpt.enc1(block, ctx->ctx);
+	
 }
 
 void bcal_cipher_dec(void* block, const bcgen_ctx_t* ctx){
-	uint8_t flags;
 	bc_dec_fpt dec_fpt;
-	flags = pgm_read_byte(ctx->desc_ptr->flags);
 	dec_fpt.decvoid = (void_fpt)pgm_read_word(ctx->desc_ptr->dec.decvoid);
 	if(!dec_fpt.decvoid){
 		/* very bad error, no deciphering function specified */
 		return;
 	}
-	if((flags&BC_DEC_TYPE)==BC_DEC_TYPE_1){
-		dec_fpt.dec1(block, ctx->ctx);
-	}else{
-		dec_fpt.dec2(block, block, ctx->ctx);
-	}
+	dec_fpt.dec1(block, ctx->ctx);
 }
 
 

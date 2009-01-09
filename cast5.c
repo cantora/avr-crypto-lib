@@ -130,7 +130,7 @@ void cast5_init_rM(uint8_t *klo, uint8_t *khi, uint8_t offset, uint8_t *src, boo
 
 
 
-void cast5_init(const void* key, uint8_t keylength_b, cast5_ctx_t* s){
+void cast5_init(const void* key, uint16_t keylength_b, cast5_ctx_t* s){
  	 /* we migth return if the key is valid and if setup was sucessfull */
 	uint32_t x[4], z[4];
 	#define BPX ((uint8_t*)&(x[0]))
