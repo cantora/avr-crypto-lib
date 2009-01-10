@@ -1,7 +1,7 @@
 /* aes_keyschedule.c */
 /*
     This file is part of the Crypto-avr-lib/microcrypt-lib.
-    Copyright (C) 2008  Daniel Otte (daniel.otte@rub.de)
+    Copyright (C) 2008, 2009  Daniel Otte (daniel.otte@rub.de)
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -26,7 +26,6 @@
  */
 
 #include <stdint.h>
-#include "gf256mul.h"
 #include "aes.h"
 #include "aes_keyschedule.h"
 #include "aes_sbox.h"
@@ -43,9 +42,13 @@ void aes_rotword(void* a){
 	((uint8_t*)a)[3] = t;
 }
 
+uint8_t rc_tab[] PROGMEM = { 0x01, 0x02, 0x04, 0x08,
+                             0x10, 0x20, 0x40, 0x80,
+                             0x1b, 0x36 };
+
 void aes_init(const void* key, uint16_t keysize_b, aes_genctx_t* ctx){
 	uint8_t hi,i,nk, next_nk;
-	uint8_t rc=1;
+	uint8_t rc=0;
 	uint8_t tmp[4];
 	nk=keysize_b>>5; /* 4, 6, 8 */
 	hi=4*(nk+6+1);
@@ -67,8 +70,8 @@ void aes_init(const void* key, uint16_t keysize_b, aes_genctx_t* ctx){
 			tmp[1] = pgm_read_byte(aes_sbox+tmp[1]);
 			tmp[2] = pgm_read_byte(aes_sbox+tmp[2]);
 			tmp[3] = pgm_read_byte(aes_sbox+tmp[3]);
-			tmp[0] ^= rc;
-			rc = gf256mul(2,rc,0x1b);
+			tmp[0] ^= pgm_read_byte(rc_tab+rc);
+			rc++;
 		}
 		((uint32_t*)(ctx->key[0].ks))[i] = ((uint32_t*)(ctx->key[0].ks))[i-nk]
 		                                   ^ *((uint32_t*)tmp);

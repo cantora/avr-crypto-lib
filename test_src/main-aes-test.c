@@ -94,7 +94,7 @@ void testrun_test_aes(void){
 	
 }
 
-void testrun_testkey_aes(void){
+void testrun_testkey_aes128(void){
 	uint8_t key[16] = { 0x2b, 0x7e, 0x15, 0x16, 
 	                    0x28, 0xae, 0xd2, 0xa6,
 	                    0xab, 0xf7, 0x15, 0x88,
@@ -112,6 +112,60 @@ void testrun_testkey_aes(void){
 		uart_hexdump(ctx.key[i].ks, 16);
 	}
 }
+
+void testrun_testkey_aes192(void){
+	uint8_t key[24] = { 0x8e, 0x73, 0xb0, 0xf7, 
+	                    0xda, 0x0e, 0x64, 0x52,
+	                    0xc8, 0x10, 0xf3, 0x2b, 
+	                    0x80, 0x90, 0x79, 0xe5, 
+	                    0x62, 0xf8, 0xea, 0xd2, 
+	                    0x52, 0x2c, 0x6b, 0x7b};
+	aes192_ctx_t ctx;
+	uint8_t i;
+	memset(&ctx, 0, sizeof(aes192_ctx_t));
+	aes192_init(key, &ctx);
+	uart_putstr_P(PSTR("\r\n\r\n keyschedule test (FIPS 197):\r\n key:   "));
+	uart_hexdump(key, 24);
+	for(i=0; i<13; ++i){
+		uart_putstr_P(PSTR("\r\n index: "));
+		uart_putc('0'+i/10);
+		uart_putc('0'+i%10);
+		uart_putstr_P(PSTR(" roundkey "));
+		uart_hexdump(ctx.key[i].ks, 16);
+	}
+}
+
+
+void testrun_testkey_aes256(void){
+	uint8_t key[32] = { 0x60, 0x3d, 0xeb, 0x10, 
+	                    0x15, 0xca, 0x71, 0xbe, 
+	                    0x2b, 0x73, 0xae, 0xf0, 
+	                    0x85, 0x7d, 0x77, 0x81, 
+	                    0x1f, 0x35, 0x2c, 0x07, 
+	                    0x3b, 0x61, 0x08, 0xd7, 
+	                    0x2d, 0x98, 0x10, 0xa3, 
+	                    0x09, 0x14, 0xdf, 0xf4};
+	aes256_ctx_t ctx;
+	uint8_t i;
+	memset(&ctx, 0, sizeof(aes256_ctx_t));
+	aes256_init(key, &ctx);
+	uart_putstr_P(PSTR("\r\n\r\n keyschedule test (FIPS 197):\r\n key:   "));
+	uart_hexdump(key, 32);
+	for(i=0; i<15; ++i){
+		uart_putstr_P(PSTR("\r\n index: "));
+		uart_putc('0'+i/10);
+		uart_putc('0'+i%10);
+		uart_putstr_P(PSTR(" roundkey "));
+		uart_hexdump(ctx.key[i].ks, 16);
+	}
+}
+
+void testrun_testkey_aes(void){
+	testrun_testkey_aes128();
+	testrun_testkey_aes192();
+	testrun_testkey_aes256();
+}
+/*****************************************************************************/
 
 void testrun_performance_aes128(void){
 	uint64_t t;
