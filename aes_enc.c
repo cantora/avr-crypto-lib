@@ -51,7 +51,7 @@ void aes_shiftcol(void* data, uint8_t shift){
 
 static
 void aes_enc_round(aes_cipher_state_t* state, const aes_roundkey_t* k){
-	uint8_t tmp[16];
+	uint8_t tmp[16], t;
 	uint8_t i;
 	/* subBytes */
 	for(i=0; i<16; ++i){
@@ -63,26 +63,23 @@ void aes_enc_round(aes_cipher_state_t* state, const aes_roundkey_t* k){
 	aes_shiftcol(tmp+3, 3);
 	/* mixColums */
 	for(i=0; i<4; ++i){
+		t = tmp[4*i+0] ^ tmp[4*i+1] ^ tmp[4*i+2] ^ tmp[4*i+3];
 		state->s[4*i+0] =
-			  GF256MUL_2(tmp[4*i+0])
-			^ GF256MUL_3(tmp[4*i+1])
-			^ GF256MUL_1(tmp[4*i+2])
-			^ GF256MUL_1(tmp[4*i+3]);
+			  GF256MUL_2(tmp[4*i+0]^tmp[4*i+1])
+			^ tmp[4*i+0]
+			^ t;
 		state->s[4*i+1] =
-			  GF256MUL_1(tmp[4*i+0])
-			^ GF256MUL_2(tmp[4*i+1])
-			^ GF256MUL_3(tmp[4*i+2])
-			^ GF256MUL_1(tmp[4*i+3]);
+			  GF256MUL_2(tmp[4*i+1]^tmp[4*i+2])
+			^ tmp[4*i+1]
+			^ t;
 		state->s[4*i+2] =
-			  GF256MUL_1(tmp[4*i+0])
-			^ GF256MUL_1(tmp[4*i+1])
-			^ GF256MUL_2(tmp[4*i+2])
-			^ GF256MUL_3(tmp[4*i+3]);
+			  GF256MUL_2(tmp[4*i+2]^tmp[4*i+3])
+			^ tmp[4*i+2]
+			^ t;
 		state->s[4*i+3] =
-			  GF256MUL_3(tmp[4*i+0])
-			^ GF256MUL_1(tmp[4*i+1])
-			^ GF256MUL_1(tmp[4*i+2])
-			^ GF256MUL_2(tmp[4*i+3]);		
+			  GF256MUL_2(tmp[4*i+3]^tmp[4*i+0])
+			^ tmp[4*i+3]
+			^ t;
 	}
 
 	/* addKey */

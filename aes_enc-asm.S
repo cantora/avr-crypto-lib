@@ -52,9 +52,9 @@ gf256mul:
 3:
 	rjmp 1b
 4:
-	brcc 2f
+	brcc 5f
 	eor P, B
-2:
+5:
 	ret
 
 .global aes256_enc
@@ -118,6 +118,10 @@ aes_encrypt_core:
 	.irp param,ST00, ST01, ST02, ST03, ST10, ST11, ST12, ST13, ST20, ST21, ST22, ST23, ST30, ST31, ST32, ST33
 		ld \param, Z+
 	.endr
+	
+	ldi xREDUCER, 0x1b /* load reducer */
+	ldi r31, hi8(aes_sbox)
+	
 	/* key whitening */
 1:
 	.irp param,ST00, ST01, ST02, ST03, ST10, ST11, ST12, ST13, ST20, ST21, ST22, ST23, ST30, ST31, ST32, ST33
@@ -132,81 +136,46 @@ aes_encrypt_core:
 	set
 3:
 
-	ldi r30, lo8(aes_sbox)
-	ldi r31, hi8(aes_sbox)
-	movw SBOX_SAVE0, r30
 	/* encryption loop */ 
 
 	/* SBOX substitution and shifting */
-	movw r30, SBOX_SAVE0
-	add r30, ST00
-	adc r31, r1
+	mov r30, ST00
 	lpm ST00, Z
-	movw r30, SBOX_SAVE0
-	add r30, ST10
-	adc r31, r1
+	mov r30, ST10
 	lpm ST10, Z
-	movw r30, SBOX_SAVE0
-	add r30, ST20
-	adc r31, r1
+	mov r30, ST20
 	lpm ST20, Z
-	movw r30, SBOX_SAVE0
-	add r30, ST30
-	adc r31, r1
+	mov r30, ST30
 	lpm ST30, Z
 
-	movw r30, SBOX_SAVE0
-	add r30, ST01
-	adc r31, r1
+	mov r30, ST01
 	lpm T0, Z
-	movw r30, SBOX_SAVE0
-	add r30, ST11
-	adc r31, r1
+	mov r30, ST11
 	lpm ST01, Z
-	movw r30, SBOX_SAVE0
-	add r30, ST21
-	adc r31, r1
+	mov r30, ST21
 	lpm ST11, Z
-	movw r30, SBOX_SAVE0
-	add r30, ST31
-	adc r31, r1
+	mov r30, ST31
 	lpm ST21, Z
 	mov ST31, T0
 
-	movw r30, SBOX_SAVE0
-	add r30, ST02
-	adc r31, r1
+	mov r30, ST02
 	lpm T0, Z
-	movw r30, SBOX_SAVE0
-	add r30, ST12
-	adc r31, r1
+	mov r30, ST12
 	lpm T1, Z
-	movw r30, SBOX_SAVE0
-	add r30, ST22
-	adc r31, r1
+	mov r30, ST22
 	lpm ST02, Z
-	movw r30, SBOX_SAVE0
-	add r30, ST32
-	adc r31, r1
+	mov r30, ST32
 	lpm ST12, Z
 	mov ST22, T0
 	mov ST32, T1
 
-	movw r30, SBOX_SAVE0
-	add r30, ST03
-	adc r31, r1
+	mov r30, ST03
 	lpm T0, Z
-	movw r30, SBOX_SAVE0
-	add r30, ST13
-	adc r31, r1
+	mov r30, ST13
 	lpm T1, Z
-	movw r30, SBOX_SAVE0
-	add r30, ST23
-	adc r31, r1
+	mov r30, ST23
 	lpm T2, Z
-	movw r30, SBOX_SAVE0
-	add r30, ST33
-	adc r31, r1
+	mov r30, ST33
 	lpm ST03, Z
 	mov ST13, T0
 	mov ST23, T1
@@ -216,199 +185,187 @@ aes_encrypt_core:
 	brtc 2f
 	rjmp 1b
 2:	
-	ldi xREDUCER, 0x1b /* load reducer */
 	
-	ldi A, 2
-	mov B, ST00
-	rcall gf256mul
-	mov T0, r0
-	ldi A, 3
-	mov B, ST01
-	rcall gf256mul
-	eor T0, r0
-	eor T0, ST02
-	eor T0, ST03
+	mov r1, ST00
+	eor r1, ST01
+	eor r1, ST02
+	eor r1, ST03
+		
+	mov T0, ST00
+	eor T0, ST01
+	lsl T0
+	brcc 3f
+	eor T0, xREDUCER
+3:	
+	eor T0, r1
+	eor T0, ST00
 	
-	mov T1, ST00
-	ldi A, 2
-	mov B, ST01
-	rcall gf256mul
-	eor T1, r0
-	ldi A, 3
-	mov B, ST02
-	rcall gf256mul
-	eor T1, r0
-	eor T1, ST03
+	mov T1, ST01
+	eor T1, ST02
+	lsl T1
+	brcc 3f
+	eor T1, xREDUCER
+3:			
+	eor T1, r1
+	eor T1, ST01
 	
-	mov T2, ST00
-	eor T2, ST01
-	ldi A, 2
-	mov B, ST02
-	rcall gf256mul
-	eor T2, r0
-	ldi A, 3
-	mov B, ST03
-	rcall gf256mul
-	eor T2, r0
+	mov T2, ST02
+	eor T2, ST03
+	lsl T2
+	brcc 3f
+	eor T2, xREDUCER
+3:
+	eor T2, r1
+	eor T2, ST02
 	
-	ldi A, 3
-	mov B, ST00
-	rcall gf256mul
-	mov T3, r0
-	eor T3, ST01
-	eor T3, ST02
-	ldi A, 2
-	mov B, ST03
-	rcall gf256mul
-	eor T3, r0
-	
+	mov T3, ST03
+	eor T3, ST00
+	lsl T3
+	brcc 3f
+	eor T3, xREDUCER
+3:	
+	eor T3, r1
+	eor T3, ST03
+		
 	mov ST00, T0
 	mov ST01, T1
 	mov ST02, T2
 	mov ST03, T3
-			
-	ldi A, 2
-	mov B, ST10
-	rcall gf256mul
-	mov T0, r0
-	ldi A, 3
-	mov B, ST11
-	rcall gf256mul
-	eor T0, r0
-	eor T0, ST12
-	eor T0, ST13
+
+
+	mov r1, ST10
+	eor r1, ST11
+	eor r1, ST12
+	eor r1, ST13
+		
+	mov T0, ST10
+	eor T0, ST11
+	lsl T0
+	brcc 3f
+	eor T0, xREDUCER
+3:	
+	eor T0, r1
+	eor T0, ST10
 	
-	mov T1, ST10
-	ldi A, 2
-	mov B, ST11
-	rcall gf256mul
-	eor T1, r0
-	ldi A, 3
-	mov B, ST12
-	rcall gf256mul
-	eor T1, r0
-	eor T1, ST13
+	mov T1, ST11
+	eor T1, ST12
+	lsl T1
+	brcc 3f
+	eor T1, xREDUCER
+3:			
+	eor T1, r1
+	eor T1, ST11
 	
-	mov T2, ST10
-	eor T2, ST11
-	ldi A, 2
-	mov B, ST12
-	rcall gf256mul
-	eor T2, r0
-	ldi A, 3
-	mov B, ST13
-	rcall gf256mul
-	eor T2, r0
+	mov T2, ST12
+	eor T2, ST13
+	lsl T2
+	brcc 3f
+	eor T2, xREDUCER
+3:
+	eor T2, r1
+	eor T2, ST12
 	
-	ldi A, 3
-	mov B, ST10
-	rcall gf256mul
-	mov T3, r0
-	eor T3, ST11
-	eor T3, ST12
-	ldi A, 2
-	mov B, ST13
-	rcall gf256mul
-	eor T3, r0
-	
+	mov T3, ST13
+	eor T3, ST10
+	lsl T3
+	brcc 3f
+	eor T3, xREDUCER
+3:	
+	eor T3, r1
+	eor T3, ST13
+		
 	mov ST10, T0
 	mov ST11, T1
 	mov ST12, T2
 	mov ST13, T3
 
-	ldi A, 2
-	mov B, ST20
-	rcall gf256mul
-	mov T0, r0
-	ldi A, 3
-	mov B, ST21
-	rcall gf256mul
-	eor T0, r0
-	eor T0, ST22
-	eor T0, ST23
+	mov r1, ST20
+	eor r1, ST21
+	eor r1, ST22
+	eor r1, ST23
+		
+	mov T0, ST20
+	eor T0, ST21
+	lsl T0
+	brcc 3f
+	eor T0, xREDUCER
+3:	
+	eor T0, r1
+	eor T0, ST20
 	
-	mov T1, ST20
-	ldi A, 2
-	mov B, ST21
-	rcall gf256mul
-	eor T1, r0
-	ldi A, 3
-	mov B, ST22
-	rcall gf256mul
-	eor T1, r0
-	eor T1, ST23
+	mov T1, ST21
+	eor T1, ST22
+	lsl T1
+	brcc 3f
+	eor T1, xREDUCER
+3:			
+	eor T1, r1
+	eor T1, ST21
 	
-	mov T2, ST20
-	eor T2, ST21
-	ldi A, 2
-	mov B, ST22
-	rcall gf256mul
-	eor T2, r0
-	ldi A, 3
-	mov B, ST23
-	rcall gf256mul
-	eor T2, r0
+	mov T2, ST22
+	eor T2, ST23
+	lsl T2
+	brcc 3f
+	eor T2, xREDUCER
+3:
+	eor T2, r1
+	eor T2, ST22
 	
-	ldi A, 3
-	mov B, ST20
-	rcall gf256mul
-	mov T3, r0
-	eor T3, ST21
-	eor T3, ST22
-	ldi A, 2
-	mov B, ST23
-	rcall gf256mul
-	eor T3, r0
-	
+	mov T3, ST23
+	eor T3, ST20
+	lsl T3
+	brcc 3f
+	eor T3, xREDUCER
+3:	
+	eor T3, r1
+	eor T3, ST23
+		
 	mov ST20, T0
 	mov ST21, T1
 	mov ST22, T2
 	mov ST23, T3
 
-	ldi A, 2
-	mov B, ST30
-	rcall gf256mul
-	mov T0, r0
-	ldi A, 3
-	mov B, ST31
-	rcall gf256mul
-	eor T0, r0
-	eor T0, ST32
-	eor T0, ST33
+	mov r1, ST30
+	eor r1, ST31
+	eor r1, ST32
+	eor r1, ST33
+		
+	mov T0, ST30
+	eor T0, ST31
+	lsl T0
+	brcc 3f
+	eor T0, xREDUCER
+3:	
+	eor T0, r1
+	eor T0, ST30
 	
-	mov T1, ST30
-	ldi A, 2
-	mov B, ST31
-	rcall gf256mul
-	eor T1, r0
-	ldi A, 3
-	mov B, ST32
-	rcall gf256mul
-	eor T1, r0
-	eor T1, ST33
+	mov T1, ST31
+	eor T1, ST32
+	lsl T1
+	brcc 3f
+	eor T1, xREDUCER
+3:			
+	eor T1, r1
+	eor T1, ST31
 	
-	mov T2, ST30
-	eor T2, ST31
-	ldi A, 2
-	mov B, ST32
-	rcall gf256mul
-	eor T2, r0
-	ldi A, 3
-	mov B, ST33
-	rcall gf256mul
-	eor T2, r0
+	mov T2, ST32
+	eor T2, ST33
+	lsl T2
+	brcc 3f
+	eor T2, xREDUCER
+3:
+	eor T2, r1
+	eor T2, ST32
 	
-	ldi A, 3
-	mov B, ST30
-	rcall gf256mul
-	mov T3, r0
-	eor T3, ST31
-	eor T3, ST32
-	ldi A, 2
-	mov B, ST33
-	rcall gf256mul
-	eor T3, r0
-	
+	mov T3, ST33
+	eor T3, ST30
+	lsl T3
+	brcc 3f
+	eor T3, xREDUCER
+3:	
+	eor T3, r1
+	eor T3, ST33
+		
 	mov ST30, T0
 	mov ST31, T1
 	mov ST32, T2
@@ -438,7 +395,7 @@ exit:
 	st Z+, ST31
 	st Z+, ST32
 	st Z+, ST33
-	
+	clr r1
 	pop r29
 	pop r28
 	pop_range 2, 17
