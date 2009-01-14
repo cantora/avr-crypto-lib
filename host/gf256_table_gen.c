@@ -43,6 +43,23 @@ char* fmt_strings[]={"%d", "%3d",
                      "0x%X", "0x%2.2X",
                      "0%o", "0%3o"};
                      
+void print_help(void){
+	puts(
+"gf256_table_gen [-cCbBdhoaApP] [-l min] [-u max]\n"
+"                [-f formatstring] [-o file] -r reducer value {values} \n"
+"\n"
+" -c/-C turn C-header on/off (default: on)\n"
+" -b/-B turn braces on/off (defaul: on)\n"
+" -d/-h/-8 print values in decimal/hexadecimal/octal (default: hexadecimal)\n"
+" -a/-a  turn alignment on/off (default: on)\n"
+" -p/-P  turn base prefix on/off (default: on)\n"
+" -r reducer reducer is the reduction polynomial represented as numeric value\n"
+" -l min starting value for multiplication table (default: 0)\n"
+" -u max upper limit value for multiplication table (default: 255)\n"		
+" -f formatstring string for formating the output of a singel multiplicxation\n"
+" -o file outputfile\n"
+}
+                     
 int main(int argc, char** argv){
 	int i,j;
 	int c;
@@ -65,6 +82,7 @@ int main(int argc, char** argv){
                
                /* These options don't set a flag.
                   We distinguish them by their indices. */
+               {"help",    no_argument      , 0, '?'},     
                {"reducer", required_argument, 0, 'r'},
                {"min",     required_argument, 0, 'l'},
                {"max",     required_argument, 0, 'u'},
@@ -76,7 +94,7 @@ int main(int argc, char** argv){
 	
 	unsigned long ul_a;
 	int columns=8;
-	unsigned long ul_reducer=0x1b, max=0xff, min=0x00;
+	unsigned long ul_reducer=0x00, max=0xff, min=0x00;
 	uint8_t reducer, a;
 	char** eptr;
 	FILE* of = stdout;
@@ -90,7 +108,7 @@ int main(int argc, char** argv){
 			case 'B': print_braces=0; break;
 			case 'h': print_base = 1; break;
 			case 'd': print_base = 0; break;
-			case 'o': print_base = 2; break;
+			case '8': print_base = 2; break;
 			case 'a': print_align =1; break;
 			case 'A': print_align =0; break;
 			case 'p': print_prefix=1; break;
@@ -117,10 +135,16 @@ int main(int argc, char** argv){
 					  }
 					  break;
 			case 'f': fmt = optarg; break;
-			default: break;
+			case '?': 
+			default: 
+				print_help();
+				break;
 		}
 	}
-	reducer = ul_reducer&0xff;
+	if(!reducer = ul_reducer&0xff){
+			fprintf(stderr, "You must specify a reductionpolynomial!\n", argv[i]);
+			return -1;
+	}
 	if(!fmt)
 		fmt = fmt_strings[print_prefix*6+print_base*2+print_align];
 	

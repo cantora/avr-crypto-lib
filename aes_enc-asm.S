@@ -207,7 +207,7 @@ aes_encrypt_core:
 	eor T1, xREDUCER
 3:			
 	eor T1, r1
-	eor T1, ST01
+	eor ST01, T1
 	
 	mov T2, ST02
 	eor T2, ST03
@@ -216,7 +216,7 @@ aes_encrypt_core:
 	eor T2, xREDUCER
 3:
 	eor T2, r1
-	eor T2, ST02
+	eor ST02, T2
 	
 	mov T3, ST03
 	eor T3, ST00
@@ -225,13 +225,9 @@ aes_encrypt_core:
 	eor T3, xREDUCER
 3:	
 	eor T3, r1
-	eor T3, ST03
+	eor ST03, T3
 		
 	mov ST00, T0
-	mov ST01, T1
-	mov ST02, T2
-	mov ST03, T3
-
 
 	mov r1, ST10
 	eor r1, ST11
@@ -254,7 +250,7 @@ aes_encrypt_core:
 	eor T1, xREDUCER
 3:			
 	eor T1, r1
-	eor T1, ST11
+	eor ST11, T1
 	
 	mov T2, ST12
 	eor T2, ST13
@@ -263,7 +259,7 @@ aes_encrypt_core:
 	eor T2, xREDUCER
 3:
 	eor T2, r1
-	eor T2, ST12
+	eor ST12, T2
 	
 	mov T3, ST13
 	eor T3, ST10
@@ -272,12 +268,9 @@ aes_encrypt_core:
 	eor T3, xREDUCER
 3:	
 	eor T3, r1
-	eor T3, ST13
+	eor ST13, T3
 		
 	mov ST10, T0
-	mov ST11, T1
-	mov ST12, T2
-	mov ST13, T3
 
 	mov r1, ST20
 	eor r1, ST21
@@ -300,7 +293,7 @@ aes_encrypt_core:
 	eor T1, xREDUCER
 3:			
 	eor T1, r1
-	eor T1, ST21
+	eor ST21, T1
 	
 	mov T2, ST22
 	eor T2, ST23
@@ -309,7 +302,7 @@ aes_encrypt_core:
 	eor T2, xREDUCER
 3:
 	eor T2, r1
-	eor T2, ST22
+	eor ST22, T2
 	
 	mov T3, ST23
 	eor T3, ST20
@@ -318,12 +311,9 @@ aes_encrypt_core:
 	eor T3, xREDUCER
 3:	
 	eor T3, r1
-	eor T3, ST23
+	eor ST23, T3
 		
 	mov ST20, T0
-	mov ST21, T1
-	mov ST22, T2
-	mov ST23, T3
 
 	mov r1, ST30
 	eor r1, ST31
@@ -346,7 +336,7 @@ aes_encrypt_core:
 	eor T1, xREDUCER
 3:			
 	eor T1, r1
-	eor T1, ST31
+	eor ST31, T1
 	
 	mov T2, ST32
 	eor T2, ST33
@@ -355,7 +345,7 @@ aes_encrypt_core:
 	eor T2, xREDUCER
 3:
 	eor T2, r1
-	eor T2, ST32
+	eor ST32, T2
 	
 	mov T3, ST33
 	eor T3, ST30
@@ -364,12 +354,9 @@ aes_encrypt_core:
 	eor T3, xREDUCER
 3:	
 	eor T3, r1
-	eor T3, ST33
+	eor ST33, T3
 		
 	mov ST30, T0
-	mov ST31, T1
-	mov ST32, T2
-	mov ST33, T3
 
 	/* mix colums (rows) done */
 
