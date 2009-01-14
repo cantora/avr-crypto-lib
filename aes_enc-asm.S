@@ -185,28 +185,25 @@ aes_encrypt_core:
 	brtc 2f
 	rjmp 1b
 2:	
-	
-	mov r1, ST00
-	eor r1, ST01
-	eor r1, ST02
+ /* mixrow 1*/
+	mov r1, ST02
 	eor r1, ST03
 		
 	mov T0, ST00
-	eor T0, ST01
-	lsl T0
+	eor ST00, ST01
+	eor r1, ST00
+	lsl ST00
 	brcc 3f
-	eor T0, xREDUCER
-3:	
-	eor T0, r1
-	eor T0, ST00
+	eor ST00, xREDUCER
+3:	eor ST00, r1
+	eor ST00, T0
 	
 	mov T1, ST01
 	eor T1, ST02
 	lsl T1
 	brcc 3f
 	eor T1, xREDUCER
-3:			
-	eor T1, r1
+3:	eor T1, r1
 	eor ST01, T1
 	
 	mov T2, ST02
@@ -214,42 +211,36 @@ aes_encrypt_core:
 	lsl T2
 	brcc 3f
 	eor T2, xREDUCER
-3:
-	eor T2, r1
+3:  eor T2, r1
 	eor ST02, T2
 	
 	mov T3, ST03
-	eor T3, ST00
+	eor T3, T0
 	lsl T3
 	brcc 3f
 	eor T3, xREDUCER
-3:	
-	eor T3, r1
+3:	eor T3, r1
 	eor ST03, T3
 		
-	mov ST00, T0
-
-	mov r1, ST10
-	eor r1, ST11
-	eor r1, ST12
+ /* mixrow 2 */
+	mov r1, ST12
 	eor r1, ST13
 		
 	mov T0, ST10
-	eor T0, ST11
-	lsl T0
+	eor ST10, ST11
+	eor r1, ST10
+	lsl ST10
 	brcc 3f
-	eor T0, xREDUCER
-3:	
-	eor T0, r1
-	eor T0, ST10
+	eor ST10, xREDUCER
+3:	eor ST10, r1
+	eor ST10, T0
 	
 	mov T1, ST11
 	eor T1, ST12
 	lsl T1
 	brcc 3f
 	eor T1, xREDUCER
-3:			
-	eor T1, r1
+3:	eor T1, r1
 	eor ST11, T1
 	
 	mov T2, ST12
@@ -257,42 +248,36 @@ aes_encrypt_core:
 	lsl T2
 	brcc 3f
 	eor T2, xREDUCER
-3:
-	eor T2, r1
+3:  eor T2, r1
 	eor ST12, T2
 	
 	mov T3, ST13
-	eor T3, ST10
+	eor T3, T0
 	lsl T3
 	brcc 3f
 	eor T3, xREDUCER
-3:	
-	eor T3, r1
+3:	eor T3, r1
 	eor ST13, T3
 		
-	mov ST10, T0
-
-	mov r1, ST20
-	eor r1, ST21
-	eor r1, ST22
+ /* mixrow 3*/
+	mov r1, ST22
 	eor r1, ST23
 		
 	mov T0, ST20
-	eor T0, ST21
-	lsl T0
+	eor ST20, ST21
+	eor r1, ST20
+	lsl ST20
 	brcc 3f
-	eor T0, xREDUCER
-3:	
-	eor T0, r1
-	eor T0, ST20
+	eor ST20, xREDUCER
+3:	eor ST20, r1
+	eor ST20, T0
 	
 	mov T1, ST21
 	eor T1, ST22
 	lsl T1
 	brcc 3f
 	eor T1, xREDUCER
-3:			
-	eor T1, r1
+3:	eor T1, r1
 	eor ST21, T1
 	
 	mov T2, ST22
@@ -300,42 +285,36 @@ aes_encrypt_core:
 	lsl T2
 	brcc 3f
 	eor T2, xREDUCER
-3:
-	eor T2, r1
+3:  eor T2, r1
 	eor ST22, T2
 	
 	mov T3, ST23
-	eor T3, ST20
+	eor T3, T0
 	lsl T3
 	brcc 3f
 	eor T3, xREDUCER
-3:	
-	eor T3, r1
+3:	eor T3, r1
 	eor ST23, T3
 		
-	mov ST20, T0
-
-	mov r1, ST30
-	eor r1, ST31
-	eor r1, ST32
+ /* mixrow 4 */
+	mov r1, ST32
 	eor r1, ST33
 		
 	mov T0, ST30
-	eor T0, ST31
-	lsl T0
+	eor ST30, ST31
+	eor r1, ST30
+	lsl ST30
 	brcc 3f
-	eor T0, xREDUCER
-3:	
-	eor T0, r1
-	eor T0, ST30
+	eor ST30, xREDUCER
+3:	eor ST30, r1
+	eor ST30, T0
 	
 	mov T1, ST31
 	eor T1, ST32
 	lsl T1
 	brcc 3f
 	eor T1, xREDUCER
-3:			
-	eor T1, r1
+3:	eor T1, r1
 	eor ST31, T1
 	
 	mov T2, ST32
@@ -343,20 +322,17 @@ aes_encrypt_core:
 	lsl T2
 	brcc 3f
 	eor T2, xREDUCER
-3:
-	eor T2, r1
+3:  eor T2, r1
 	eor ST32, T2
 	
 	mov T3, ST33
-	eor T3, ST30
+	eor T3, T0
 	lsl T3
 	brcc 3f
 	eor T3, xREDUCER
-3:	
-	eor T3, r1
+3:	eor T3, r1
 	eor ST33, T3
 		
-	mov ST30, T0
 
 	/* mix colums (rows) done */
 
