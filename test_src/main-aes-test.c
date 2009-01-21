@@ -90,6 +90,9 @@ void testrun_test_aes(void){
 	aes128_enc(data, &ctx);
 	uart_putstr_P(PSTR("\r\n ciphertext: "));
 	uart_hexdump(data, 16);
+	aes128_dec(data, &ctx);
+	uart_putstr_P(PSTR("\r\n plaintext:  "));
+	uart_hexdump(data, 16);
 	
 	
 }

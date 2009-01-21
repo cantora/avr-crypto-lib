@@ -38,25 +38,6 @@ B = 29
 P = 0
 xREDUCER = 25
 
-gf256mul:
-	clr P
-1:	
-	lsr A
-	breq 4f
-	brcc 2f
-	eor P, B
-2:
-	lsl B
-	brcc 3f
-	eor B, xREDUCER	
-3:
-	rjmp 1b
-4:
-	brcc 5f
-	eor P, B
-5:
-	ret
-
 .global aes256_enc
 aes256_enc:
 	ldi r20, 14
@@ -130,7 +111,30 @@ aes_encrypt_core:
 	.endr
 	
 	brtc 2f
-	rjmp exit
+exit:	
+	pop r31
+	pop r30
+	st Z+, ST00
+	st Z+, ST01
+	st Z+, ST02
+	st Z+, ST03
+	st Z+, ST10
+	st Z+, ST11
+	st Z+, ST12
+	st Z+, ST13
+	st Z+, ST20
+	st Z+, ST21
+	st Z+, ST22
+	st Z+, ST23
+	st Z+, ST30
+	st Z+, ST31
+	st Z+, ST32
+	st Z+, ST33
+	pop r29
+	pop r28
+	pop_range 2, 17
+	ret
+
 2:	dec CTR
 	brne 3f
 	set
@@ -171,31 +175,30 @@ aes_encrypt_core:
 
 	mov r30, ST03
 	lpm T0, Z
-	mov r30, ST13
-	lpm T1, Z
-	mov r30, ST23
-	lpm T2, Z
 	mov r30, ST33
 	lpm ST03, Z
+	mov r30, ST23
+	lpm ST33, Z
+	mov r30, ST13
+	lpm ST23, Z
 	mov ST13, T0
-	mov ST23, T1
-	mov ST33, T2
-	
+		
 	/* mixcols (or rows in our case) */
 	brtc 2f
 	rjmp 1b
 2:	
- /* mixrow 1*/
-	mov r1, ST02
-	eor r1, ST03
+ /* mixrow 1 */
+	mov r0, ST02
+	eor r0, ST03
+	mov T2, r0
 		
 	mov T0, ST00
 	eor ST00, ST01
-	eor r1, ST00
+	eor r0, ST00
 	lsl ST00
 	brcc 3f
 	eor ST00, xREDUCER
-3:	eor ST00, r1
+3:	eor ST00, r0
 	eor ST00, T0
 	
 	mov T1, ST01
@@ -203,36 +206,34 @@ aes_encrypt_core:
 	lsl T1
 	brcc 3f
 	eor T1, xREDUCER
-3:	eor T1, r1
+3:	eor T1, r0
 	eor ST01, T1
 	
-	mov T2, ST02
-	eor T2, ST03
 	lsl T2
 	brcc 3f
 	eor T2, xREDUCER
-3:  eor T2, r1
+3:  eor T2, r0
 	eor ST02, T2
 	
-	mov T3, ST03
-	eor T3, T0
-	lsl T3
+	eor T0, ST03
+	lsl T0
 	brcc 3f
-	eor T3, xREDUCER
-3:	eor T3, r1
-	eor ST03, T3
+	eor T0, xREDUCER
+3:	eor T0, r0
+	eor ST03, T0
 		
  /* mixrow 2 */
-	mov r1, ST12
-	eor r1, ST13
+	mov r0, ST12
+	eor r0, ST13
+	mov T2, r0
 		
 	mov T0, ST10
 	eor ST10, ST11
-	eor r1, ST10
+	eor r0, ST10
 	lsl ST10
 	brcc 3f
 	eor ST10, xREDUCER
-3:	eor ST10, r1
+3:	eor ST10, r0
 	eor ST10, T0
 	
 	mov T1, ST11
@@ -240,36 +241,34 @@ aes_encrypt_core:
 	lsl T1
 	brcc 3f
 	eor T1, xREDUCER
-3:	eor T1, r1
+3:	eor T1, r0
 	eor ST11, T1
 	
-	mov T2, ST12
-	eor T2, ST13
 	lsl T2
 	brcc 3f
 	eor T2, xREDUCER
-3:  eor T2, r1
+3:  eor T2, r0
 	eor ST12, T2
 	
-	mov T3, ST13
-	eor T3, T0
-	lsl T3
+	eor T0, ST13
+	lsl T0
 	brcc 3f
-	eor T3, xREDUCER
-3:	eor T3, r1
-	eor ST13, T3
+	eor T0, xREDUCER
+3:	eor T0, r0
+	eor ST13, T0
 		
- /* mixrow 3*/
-	mov r1, ST22
-	eor r1, ST23
+ /* mixrow 3 */
+	mov r0, ST22
+	eor r0, ST23
+	mov T2, r0
 		
 	mov T0, ST20
 	eor ST20, ST21
-	eor r1, ST20
+	eor r0, ST20
 	lsl ST20
 	brcc 3f
 	eor ST20, xREDUCER
-3:	eor ST20, r1
+3:	eor ST20, r0
 	eor ST20, T0
 	
 	mov T1, ST21
@@ -277,36 +276,34 @@ aes_encrypt_core:
 	lsl T1
 	brcc 3f
 	eor T1, xREDUCER
-3:	eor T1, r1
+3:	eor T1, r0
 	eor ST21, T1
 	
-	mov T2, ST22
-	eor T2, ST23
 	lsl T2
 	brcc 3f
 	eor T2, xREDUCER
-3:  eor T2, r1
+3:  eor T2, r0
 	eor ST22, T2
 	
-	mov T3, ST23
-	eor T3, T0
-	lsl T3
+	eor T0, ST23
+	lsl T0
 	brcc 3f
-	eor T3, xREDUCER
-3:	eor T3, r1
-	eor ST23, T3
+	eor T0, xREDUCER
+3:	eor T0, r0
+	eor ST23, T0
 		
  /* mixrow 4 */
-	mov r1, ST32
-	eor r1, ST33
+	mov r0, ST32
+	eor r0, ST33
+	mov T2, r0
 		
 	mov T0, ST30
 	eor ST30, ST31
-	eor r1, ST30
+	eor r0, ST30
 	lsl ST30
 	brcc 3f
 	eor ST30, xREDUCER
-3:	eor ST30, r1
+3:	eor ST30, r0
 	eor ST30, T0
 	
 	mov T1, ST31
@@ -314,55 +311,27 @@ aes_encrypt_core:
 	lsl T1
 	brcc 3f
 	eor T1, xREDUCER
-3:	eor T1, r1
+3:	eor T1, r0
 	eor ST31, T1
 	
-	mov T2, ST32
-	eor T2, ST33
 	lsl T2
 	brcc 3f
 	eor T2, xREDUCER
-3:  eor T2, r1
+3:  eor T2, r0
 	eor ST32, T2
 	
-	mov T3, ST33
-	eor T3, T0
-	lsl T3
+	eor T0, ST33
+	lsl T0
 	brcc 3f
-	eor T3, xREDUCER
-3:	eor T3, r1
-	eor ST33, T3
-		
-
+	eor T0, xREDUCER
+3:	eor T0, r0
+	eor ST33, T0
 	/* mix colums (rows) done */
 
 	/* add key*/
 	rjmp 1b
 	
-exit:	
-	pop r31
-	pop r30
-	st Z+, ST00
-	st Z+, ST01
-	st Z+, ST02
-	st Z+, ST03
-	st Z+, ST10
-	st Z+, ST11
-	st Z+, ST12
-	st Z+, ST13
-	st Z+, ST20
-	st Z+, ST21
-	st Z+, ST22
-	st Z+, ST23
-	st Z+, ST30
-	st Z+, ST31
-	st Z+, ST32
-	st Z+, ST33
-	clr r1
-	pop r29
-	pop r28
-	pop_range 2, 17
-	ret
+
 
 
 

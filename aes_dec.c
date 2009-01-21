@@ -49,12 +49,25 @@ static
 void aes_dec_round(aes_cipher_state_t* state, const aes_roundkey_t* k){
 	uint8_t tmp[16];
 	uint8_t i;
+	uint8_t t,u,v,w;
 	/* keyAdd */
 	for(i=0; i<16; ++i){
 		tmp[i] = state->s[i] ^ k->ks[i];
 	}
 	/* mixColums */
 	for(i=0; i<4; ++i){
+		t = tmp[4*i+3] ^ tmp[4*i+2];
+		u = tmp[4*i+1] ^ tmp[4*i+0];
+		v = t ^ u;
+		v ^= gf256mul(0x08, v, 0x1b);
+		w = v ^ gf256mul(0x04, tmp[4*i+2] ^ tmp[4*i+0], 0x1b);
+		v = v ^ gf256mul(0x04, tmp[4*i+3] ^ tmp[4*i+1], 0x1b);
+		state->s[4*i+3] = tmp[4*i+3] ^ v ^ gf256mul(0x02, tmp[4*i+0] ^ tmp[4*i+3], 0x1b);
+		state->s[4*i+2] = tmp[4*i+2] ^ w ^ gf256mul(0x02, t, 0x1b);
+		state->s[4*i+1] = tmp[4*i+1] ^ v ^ gf256mul(0x02, tmp[4*i+2] ^ tmp[4*i+1], 0x1b);
+		state->s[4*i+0] = tmp[4*i+0] ^ w ^ gf256mul(0x02, u, 0x1b);
+		
+		/*
 		state->s[4*i+0] =
 			  gf256mul(0xe, tmp[4*i+0], 0x1b)
 			^ gf256mul(0xb, tmp[4*i+1], 0x1b)
@@ -75,6 +88,7 @@ void aes_dec_round(aes_cipher_state_t* state, const aes_roundkey_t* k){
 			^ gf256mul(0xd, tmp[4*i+1], 0x1b)
 			^ gf256mul(0x9, tmp[4*i+2], 0x1b)
 			^ gf256mul(0xe, tmp[4*i+3], 0x1b);
+		*/
 	}	
 	/* shiftRows */
 	aes_invshiftcol(state->s+1, 1);
