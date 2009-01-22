@@ -58,6 +58,7 @@ void print_help(void){
 " -u max upper limit value for multiplication table (default: 255)\n"		
 " -f formatstring string for formating the output of a singel multiplicxation\n"
 " -o file outputfile\n"
+);
 }
                      
 int main(int argc, char** argv){
@@ -99,7 +100,7 @@ int main(int argc, char** argv){
 	char** eptr;
 	FILE* of = stdout;
 	while(c!=-1){
-		c = getopt_long(argc, argv,"cCbBdhoaApPr:l:u:f:", 
+		c = getopt_long(argc, argv,"cCbBdh8aApPr:l:u:f:", 
 		                long_options, &option_index);
 		switch(c){
 			case 'c': print_header=1; break;
@@ -135,13 +136,16 @@ int main(int argc, char** argv){
 					  }
 					  break;
 			case 'f': fmt = optarg; break;
+			case  -1: break;
 			case '?': 
 			default: 
+				printf ("unknown option '%c' (%2.2X) !\n\t", c, c);
 				print_help();
+				return 0;
 				break;
 		}
 	}
-	if(!reducer = ul_reducer&0xff){
+	if(!(reducer = ul_reducer&0xff)){
 			fprintf(stderr, "You must specify a reductionpolynomial!\n", argv[i]);
 			return -1;
 	}

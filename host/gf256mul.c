@@ -28,15 +28,16 @@
 #include "gf256mul.h"
 
 uint8_t gf256mul(uint8_t a, uint8_t b, uint8_t reducer){
-	uint8_t t,ret=0;
-	while(a){
-		if(a&1)
-			ret ^= b;
+	uint8_t i;
+	uint8_t p=0,t;
+	for(i=0; i<8; ++i){
+		if(b&1)
+			p ^= a;
 		t=a&0x80;
-		b<<=1;
+		a<<=1;
 		if(t)
-			b^=reducer;
-		a>>=1;
+			a ^= reducer;
+		b>>=1;
 	}
-	return ret;
+	return p;
 }
