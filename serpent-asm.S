@@ -706,7 +706,7 @@ serpent_dec:
 	
 	movw r24, r14
 	ldi r22, 31
-	rcall inv_sbox128
+	call inv_sbox128
 	
 	movw r24, r14
 	ldi r20, 16

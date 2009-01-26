@@ -10,7 +10,7 @@
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
@@ -92,13 +92,11 @@ aes_decrypt_core:
 	add r26, r20
 	adc r27, r1
 	clt
-;	ldi CTR, 2	
 	.irp param, ST00, ST01, ST02, ST03, ST10, ST11, ST12, ST13, ST20, ST21, ST22, ST23, ST30, ST31, ST32, ST33
 		ld \param, Z+
 	.endr
 	
 	ldi xREDUCER, 0x1b /* load reducer */
-	ldi r31, hi8(aes_invsbox)
 	
 
 	.irp param, ST33, ST32, ST31, ST30, ST23, ST22, ST21, ST20, ST13, ST12, ST11, ST10, ST03, ST02, ST01, ST00
@@ -110,6 +108,7 @@ aes_decrypt_core:
 	brne 2f
 	set
 2:	
+	ldi r31, hi8(aes_invsbox)
 	/* substitute and invShift */
 	.irp param, ST00, ST10, ST20, ST30
 		mov r30, \param
@@ -384,7 +383,6 @@ exit:
 3:  eor T1, T3
 	eor ST30, T1
 	
-	ldi r31, hi8(aes_invsbox)
 	rjmp 1b
 
 .balign 256
