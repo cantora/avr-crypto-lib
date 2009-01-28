@@ -5,7 +5,7 @@ ALGO_NAME := AES_C
 BLOCK_CIPHERS += $(ALGO_NAME)
 
 
-$(ALGO_NAME)_OBJ      := aes_enc.o aes_dec.o aes_sbox.o aes_invsbox.o aes.o \
+$(ALGO_NAME)_OBJ      := aes_enc.o aes_dec.o aes_sbox.o aes_invsbox.o \
                          aes_keyschedule.o gf256mul.o \
                          aes128_enc.o aes128_dec.o aes192_enc.o aes192_dec.o \
                          aes256_enc.o aes256_dec.o

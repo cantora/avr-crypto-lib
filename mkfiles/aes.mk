@@ -5,7 +5,7 @@ ALGO_NAME := AES
 BLOCK_CIPHERS += $(ALGO_NAME)
 
 
-$(ALGO_NAME)_OBJ      := aes_enc-asm.o aes_dec-asm.o aes_sboxes-asm.o  \
+$(ALGO_NAME)_OBJ      := aes_enc-asm.o aes_dec-asm.o aes_sbox-asm.o aes_invsbox.o  \
                          aes_keyschedule-asm.o  
 $(ALGO_NAME)_TEST_BIN := main-aes-test.o debug.o uart.o serial-tools.o \
                          nessie_bc_test.o nessie_common.o cli.o performance_test.o
