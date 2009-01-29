@@ -1,4 +1,4 @@
-/** \mainpage Documentation for microcrypt-lib
+/** \mainpage Documentation for AVR-Crypto-Lib
  \section Algorithms Available algorithms
  \subsection Stream-ciphers Stream ciphers
   A stream cipher generates a keystream which is normaly XORed with the

@@ -1,4 +1,4 @@
-# Makefile for the micro-crypt project
+# Makefile for the AVR-Crypto-Lib project
 # author: Daniel Otte
 
 BLOCK_CIPHERS  := 
@@ -65,7 +65,7 @@ $(foreach algo, $(ALGORITHMS), $(eval $(call MAIN_OBJ_TEMPLATE, \
 help: info
 
 info:
-	@echo "infos on micro-crypt:"
+	@echo "infos on AVR-Crypto-lib:"
 	@echo "  block ciphers:"
 	@echo "    $(BLOCK_CIPHERS)"
 	@echo "  stream ciphers:"
