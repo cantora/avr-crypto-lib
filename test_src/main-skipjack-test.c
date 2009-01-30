@@ -1,6 +1,6 @@
 /* main-skipjack-test.c */
 /*
-    This file is part of the This file is part of the AVR-Crypto-Lib.
+    This file is part of the AVR-Crypto-Lib.
     Copyright (C) 2008  Daniel Otte (daniel.otte@rub.de)
 
     This program is free software: you can redistribute it and/or modify
@@ -36,7 +36,7 @@
 #include <stdlib.h>
 
 
-char* cipher_name = "Skipjack";
+char* algo_name = "Skipjack";
 
 /*****************************************************************************
  *  additional validation-functions											 *
@@ -48,7 +48,7 @@ void skipjack_genctx_dummy(uint8_t* key, uint16_t keysize, void* ctx){
 void testrun_nessie_skipjack(void){
 	nessie_bc_ctx.blocksize_B =   8;
 	nessie_bc_ctx.keysize_b   =  80;
-	nessie_bc_ctx.name        = cipher_name;
+	nessie_bc_ctx.name        = algo_name;
 	nessie_bc_ctx.ctx_size_B  = 10;
 	nessie_bc_ctx.cipher_enc  = (nessie_bc_enc_fpt)skipjack_enc;
 	nessie_bc_ctx.cipher_dec  = (nessie_bc_dec_fpt)skipjack_dec;
@@ -137,26 +137,28 @@ void testrun_skipjack(void){
  *  main																	 *
  *****************************************************************************/
 
-int main (void){
-	char str[20];
+const char nessie_str[]      PROGMEM = "nessie";
+const char test_str[]        PROGMEM = "test";
+const char performance_str[] PROGMEM = "performance";
+const char echo_str[]        PROGMEM = "echo";
 
+cmdlist_entry_t cmdlist[] PROGMEM = {
+	{ nessie_str,      NULL, testrun_nessie_skipjack},
+	{ test_str,        NULL, testrun_skipjack},
+	{ performance_str, NULL, testrun_performance_skipjack},
+	{ echo_str,    (void*)1, (void_fpt)echo_ctrl},
+	{ NULL,            NULL, NULL}
+};
+
+int main (void){
 	DEBUG_INIT();
 	uart_putstr("\r\n");
-
-	uart_putstr("\r\n\r\nCrypto-VS (skipjack)\r\nloaded and running\r\n");
-
-	PGM_P    u   = PSTR("nessie\0test\0performance\0");
-	void_fpt v[] = {testrun_nessie_skipjack, testrun_skipjack, testrun_performance_skipjack};
-
-	while(1){ 
-		if (!getnextwordn(str,20)){DEBUG_S("DBG: W1\r\n"); goto error;}
-		if(execcommand_d0_P(str, u, v)<0){
-			uart_putstr_P(PSTR("\r\nunknown command\r\n"));
-		}
-		continue;
-	error:
-		uart_putstr("ERROR\r\n");
+	cli_rx = uart_getc;
+	cli_tx = uart_putc;	 	
+	for(;;){
+		uart_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
+		uart_putstr(algo_name);
+		uart_putstr_P(PSTR(")\r\nloaded and running\r\n"));
+		cmd_interface(cmdlist);
 	}
-	
 }
-

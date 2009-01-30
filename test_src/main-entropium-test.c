@@ -1,6 +1,6 @@
 /* main-entropium-test.c */
 /*
-    This file is part of the This file is part of the AVR-Crypto-Lib.
+    This file is part of the AVR-Crypto-Lib.
     Copyright (C) 2008  Daniel Otte (daniel.otte@rub.de)
 
     This program is free software: you can redistribute it and/or modify
@@ -35,7 +35,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-char* cipher_name = "Entropium";
+char* algo_name = "Entropium";
 
 /*****************************************************************************
  *  additional validation-functions											 *
@@ -90,27 +90,29 @@ void testrun_performance_entropium(void){
  *  main																	 *
  *****************************************************************************/
 
+const char nessie_str[]      PROGMEM = "nessie";
+const char test_str[]        PROGMEM = "test";
+const char performance_str[] PROGMEM = "performance";
+const char echo_str[]        PROGMEM = "echo";
+
+cmdlist_entry_t cmdlist[] PROGMEM = {
+	{ nessie_str,      NULL, testrun_entropium},
+	{ test_str,        NULL, testrun_entropium},
+	{ performance_str, NULL, testrun_performance_entropium},
+	{ echo_str,    (void*)1, (void_fpt)echo_ctrl},
+	{ NULL,            NULL, NULL}
+};
+ 
+
 int main (void){
-	char  str[20];
 	DEBUG_INIT();
 	uart_putstr("\r\n");
-
-	uart_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
-	uart_putstr(cipher_name);
-	uart_putstr_P(PSTR(")\r\nloaded and running\r\n"));
-
-	PGM_P    u   = PSTR("nessie\0test\0performance\0");
-	void_fpt v[] = {testrun_entropium, testrun_entropium, testrun_performance_entropium};
-
-	while(1){ 
-		if (!getnextwordn(str,20)){DEBUG_S("DBG: W1\r\n"); goto error;}
-		if(execcommand_d0_P(str, u, v)<0){
-			uart_putstr_P(PSTR("\r\nunknown command\r\n"));
-		}
-		continue;
-	error:
-		uart_putstr("ERROR\r\n");
+	cli_rx = uart_getc;
+	cli_tx = uart_putc;	 	
+	for(;;){
+		uart_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
+		uart_putstr(algo_name);
+		uart_putstr_P(PSTR(")\r\nloaded and running\r\n"));
+		cmd_interface(cmdlist);
 	}
-	
 }
-

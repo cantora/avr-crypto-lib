@@ -1,6 +1,6 @@
 /* cli.c */
 /*
-    This file is part of the This file is part of the AVR-Crypto-Lib.
+    This file is part of the AVR-Crypto-Lib.
     Copyright (C) 2008  Daniel Otte (daniel.otte@rub.de)
 
     This program is free software: you can redistribute it and/or modify
@@ -26,9 +26,12 @@
  * 
  **/
  
+#include <stdlib.h> 
 #include <stdint.h>
+#include <ctype.h>
 #include <string.h>
 #include <avr/pgmspace.h>
+#include "cli.h"
 #include "config.h"
 
 int16_t findstring_d0(const char* str, const char* v){
@@ -43,6 +46,8 @@ int16_t findstring_d0(const char* str, const char* v){
 	}
 	return -1;
 }
+
+#ifdef CLI_OLD
  
 int16_t findstring_d0_P(const char* str, PGM_P v){
 	uint8_t i=0;
@@ -72,8 +77,6 @@ void cli_auto_help_P(PGM_P dbzstr){
 	uart_putstr_P(PSTR("\r\n"));
 }
 
-#endif
-
 int16_t execcommand_d0_P(const char* str, PGM_P v, void(*fpt[])(void) ){
 	int16_t i=0;
 	i=findstring_d0_P(str, v);
@@ -87,4 +90,299 @@ int16_t execcommand_d0_P(const char* str, PGM_P v, void(*fpt[])(void) ){
 	}
 }
 
+#endif
+
+#else /* CLI_OLD */
+
+cli_rx_fpt cli_rx = NULL;
+cli_tx_fpt cli_tx = NULL;
+uint8_t cli_echo=1;
+
+void cli_putstr(char* s){
+	if(!cli_tx)
+		return;
+	while(*s)
+		cli_tx(*s++);
+}
+
+void cli_putstr_P(PGM_P s){
+	char c;
+	if(!cli_tx)
+		return;
+	for(;;){
+		c = pgm_read_byte(s++);
+		if(!c)
+			return;
+		cli_tx(c);
+	}
+}
+
+void cli_hexdump(void* data, uint16_t length){
+	char hex_tab[] = {'0', '1', '2', '3', 
+	                  '4', '5', '6', '7', 
+					  '8', '9', 'A', 'B', 
+					  'C', 'D', 'E', 'F'};
+	if(!cli_tx)
+		return;
+	while(length--){
+		cli_tx(hex_tab[(*((uint8_t*)data))>>4]);
+		cli_tx(hex_tab[(*((uint8_t*)data))&0xf]);
+		data = (uint8_t*)data +1;
+	}
+}
+
+void cli_auto_help(uint16_t maxcmdlength, PGM_VOID_P cmdlist){
+	cmdlist_entry_t item;
+	uint16_t i;
+	if(!cli_tx)
+		return;
+	
+	cli_putstr_P(PSTR("\r\n[auto help] available commands:\r\n"
+	                  " <command> - <params> - <address>\r\n"));
+	for(;;){
+		item.cmd_name      = (void*)pgm_read_word(cmdlist+0);
+		item.cmd_param_str = (void*)pgm_read_word(cmdlist+2);
+		item.cmd_function  = (void_fpt)pgm_read_word(cmdlist+4);
+		cmdlist = (uint8_t*)cmdlist+6;
+		if(item.cmd_name==NULL){
+			return;
+		}
+		cli_tx(' ');
+		cli_putstr_P(item.cmd_name);
+		i=maxcmdlength-strlen_P(item.cmd_name);
+		while(i--)
+			cli_tx(' ');
+		cli_putstr_P(PSTR(" - "));
+		if(item.cmd_param_str==NULL){
+			cli_putstr_P(PSTR("none \t- 0x"));
+		} else {
+			if(item.cmd_param_str==(void*)1){
+				cli_putstr_P(PSTR("yes  \t- 0x"));
+			} else {
+				cli_putstr_P(item.cmd_param_str);
+				cli_putstr_P(PSTR(" \t- 0x"));
+			}
+		}
+		cli_hexdump(&item.cmd_function, 2);	
+		cli_putstr_P(PSTR("\r\n"));
+	}
+}
+
+uint16_t firstword_length(char* s){
+	uint16_t ret=0;
+	while(isalnum(*s++))
+		ret++;
+	return ret; 
+}
+
+void echo_ctrl(char* s){
+	if(s==NULL || *s=='\0'){
+		cli_putstr_P(PSTR("\r\necho is "));
+		cli_putstr_P(cli_echo?PSTR("on"):PSTR("off"));
+		cli_putstr_P(PSTR("\r\n"));		
+	}
+	strlwr(s);
+	if(!strcmp_P(s, PSTR("true")) || !strcmp_P(s, PSTR("on")) || *s=='1'){
+		cli_echo=1;
+	}
+	if(!strcmp_P(s, PSTR("false")) || !strcmp_P(s, PSTR("off")) || *s=='0'){
+		cli_echo=0;
+	}
+}
+
+typedef void(*str_fpt)(char*);
+#define CLI_ENTER     13
+#define CLI_BACKSPACE  8
+#define CLI_TABULATOR  9
+
+int8_t search_and_call(char* cmd, uint16_t maxcmdlength, PGM_VOID_P cmdlist){
+	PGM_VOID_P cmdlist_orig = cmdlist;
+	if(*cmd=='\0' || *cmd=='#')
+		return 1;
+	if(!strcmp_P(cmd, PSTR("exit")))
+		return 0;
+	if((!strcmp_P(cmd, PSTR("help"))) || (!strcmp_P(cmd, PSTR("?")))){
+		cli_auto_help(maxcmdlength, cmdlist);
+		return 1;
+	}
+	uint16_t fwlength=firstword_length(cmd);
+	char fw[fwlength+1];
+	memcpy(fw, cmd, fwlength);
+	fw[fwlength] = '\0';
+	cmdlist_entry_t item;
+	do{
+		item.cmd_name =      (void*)pgm_read_word(cmdlist+0);
+		item.cmd_param_str = (void*)pgm_read_word(cmdlist+2);
+		item.cmd_function =  (void_fpt)pgm_read_word(cmdlist+4);
+		cmdlist = (uint8_t*)cmdlist+6;
+	}while(item.cmd_name!=NULL && strcmp_P(fw, item.cmd_name));
+	if(item.cmd_name==NULL){
+		cli_auto_help(maxcmdlength, cmdlist_orig);
+	} else {
+		if(item.cmd_function==NULL)
+			return 2;
+		switch((uint16_t)item.cmd_param_str){
+			case 0:
+				item.cmd_function();
+				break;
+			case 1:
+				if(cmd[fwlength]=='\0'){
+					((str_fpt)item.cmd_function)(cmd+fwlength);
+				} else {
+					((str_fpt)item.cmd_function)(cmd+fwlength+1);
+				}
+				break;
+			default:
+				cli_putstr_P(PSTR("\r\nparam parsing currently not implemented!\r\n"));
+				break;
+		}	
+		
+	}	
+	return 1;	 
+}
+
+uint16_t max_cmd_length(PGM_VOID_P cmdlist){
+	uint16_t t,ret=0;
+	char* str;
+	for(;;){
+		str = (char*)pgm_read_word(cmdlist);
+		cmdlist = (uint8_t*)cmdlist + 6;
+		if(str==NULL)
+			return ret;
+		t = strlen_P(str);
+		if(t>ret)
+			ret=t;
+	}
+}
+
+uint16_t stridentcnt_P(char* a, PGM_P b){
+	uint16_t i=0;
+	char c;
+	for(;;){
+		c = pgm_read_byte(b++);
+		if(*a != c || c=='\0')
+			return i;
+		i++;
+		a++;
+	}
+}
+
+uint8_t cli_completion(char* buffer, uint16_t maxcmdlength, PGM_VOID_P cmdlist){
+	uint8_t i=0;
+	char ref[maxcmdlength+1];
+	char* itemstr;
+	ref[0]='\0';
+	/* check if we are behind the first word */
+	while(buffer[i]){
+		if(!isalnum(buffer[i++]))
+			return 0;
+	}
+	for(;;){
+		itemstr = (char*)pgm_read_word(cmdlist);
+		if(itemstr==NULL)
+			break;
+		cmdlist = (uint8_t*)cmdlist +6;
+		if(!strncmp_P(buffer, itemstr, i)){
+			if(!ref[0]){
+				strcpy_P(ref, itemstr);
+			}else{
+				ref[stridentcnt_P(ref, itemstr)]='\0';
+			}
+		}
+	}
+	i = strcmp(buffer, ref);
+	if(i)
+		strcpy(buffer, ref);
+	return ~i;
+}
+
+void cli_option_listing(char* buffer, PGM_VOID_P cmdlist){
+	char* itemstr;
+	uint16_t len=strlen(buffer);
+	for(;;){
+		itemstr = (char*)pgm_read_word(cmdlist);
+		if(itemstr==NULL){
+			cli_putstr_P(PSTR("\r\n>"));
+			cli_putstr(buffer);
+			return;
+		}
+		cmdlist = (uint8_t*)cmdlist +6;
+		if(!strncmp_P(buffer, itemstr, len)){
+			cli_putstr_P(PSTR("\r\n    "));
+			cli_putstr_P(itemstr);
+		}
+	}
+}
+
+int8_t cmd_interface(PGM_VOID_P cmd_desc){
+	uint16_t cli_buffer_size;
+	uint16_t cli_buffer_index;
+	int8_t exit_code;
+	uint8_t completion_failed=0;
+	char* cli_buffer;
+	char c;
+	uint16_t maxcmdlength = max_cmd_length(cmd_desc);
+	cli_buffer = calloc(1,cli_buffer_size=maxcmdlength+2);
+	cli_buffer_index=0;
+	if(!cli_rx)
+		return -1;
+	if(cli_tx)
+		cli_tx('>');
+	for(;;){
+		c = cli_rx();
+		switch (c){
+		case CLI_ENTER:
+			if((exit_code=search_and_call(cli_buffer, maxcmdlength, cmd_desc))<=0){
+				free(cli_buffer);
+				return exit_code;
+			}
+			memset(cli_buffer, 0, cli_buffer_size);
+			cli_buffer_index=0;
+			cli_putstr_P(PSTR("\r\n>"));
+			completion_failed=0;
+			break;
+		case CLI_BACKSPACE:
+			completion_failed=0;
+			if(cli_buffer_index==0)
+				break;
+			cli_buffer_index--;
+			cli_buffer[cli_buffer_index] = '\0';
+			if(cli_echo && cli_tx){
+				cli_tx(c);
+			}
+			break;
+		case CLI_TABULATOR:
+			if(completion_failed || cli_buffer_index==0){
+				if(cli_tx)
+					cli_option_listing(cli_buffer, cmd_desc);
+			} else {
+				uint16_t old_idx = cli_buffer_index;
+				completion_failed = 
+					~cli_completion(cli_buffer, maxcmdlength, cmd_desc);
+				cli_buffer_index = strlen(cli_buffer);
+				if(cli_echo && cli_tx){
+					while(old_idx<cli_buffer_index){
+						cli_tx(cli_buffer[old_idx++]);
+					}
+				}
+			}
+			break;
+		default:
+			completion_failed=0;
+			if(cli_echo && cli_tx){
+				cli_tx(c);
+			}
+			if(cli_buffer_index+1==cli_buffer_size){
+				cli_buffer = realloc(cli_buffer, cli_buffer_size+=CLI_BUFFER_BS);
+				if(!cli_buffer){
+					return -2;
+				}
+				memset(cli_buffer+cli_buffer_index+1, 0, CLI_BUFFER_BS);
+			}
+			cli_buffer[cli_buffer_index++] = c;
+		}
+	}
+}
+
+#endif
 

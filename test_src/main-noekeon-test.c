@@ -1,6 +1,6 @@
 /* main-noekeon-test.c */
 /*
-    This file is part of the This file is part of the AVR-Crypto-Lib.
+    This file is part of the AVR-Crypto-Lib.
     Copyright (C) 2008  Daniel Otte (daniel.otte@rub.de)
 
     This program is free software: you can redistribute it and/or modify
@@ -35,7 +35,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-char* cipher_name = "Noekeon";
+char* algo_name = "Noekeon";
 
 /*****************************************************************************
  *  additional validation-functions											 *
@@ -45,8 +45,8 @@ void noekeon_genctx_dummy(uint8_t* key, uint16_t keysize, void* ctx){
 }
 
 void testrun_nessie_noekeon_indirect(void){
-	char str[strlen(cipher_name)+10];
-	strcpy(str, cipher_name);
+	char str[strlen(algo_name)+10];
+	strcpy(str, algo_name);
 	strcat(str, "-indirect");
 	
 	nessie_bc_ctx.blocksize_B =  16;
@@ -65,8 +65,8 @@ void noekeon_genctx_dummy_direct(uint8_t* key, uint16_t keysize, void* ctx){
 }
 
 void testrun_nessie_noekeon_direct(void){
-	char str[strlen(cipher_name)+10];
-	strcpy(str, cipher_name);
+	char str[strlen(algo_name)+10];
+	strcpy(str, algo_name);
 	strcat(str, "-Direct");
 	
 	nessie_bc_ctx.blocksize_B =  16;
@@ -211,31 +211,32 @@ void testrun_performance_noekeon(void){
  *  main																	 *
  *****************************************************************************/
 
+const char nessie_str[]      PROGMEM = "nessie";
+const char test_str[]        PROGMEM = "test";
+const char direct_str[]      PROGMEM = "direct";
+const char indirect_str[]    PROGMEM = "indirect";
+const char performance_str[] PROGMEM = "performance";
+const char echo_str[]        PROGMEM = "echo";
+
+cmdlist_entry_t cmdlist[] PROGMEM = {
+	{ nessie_str,      NULL, testrun_nessie_noekeon},
+	{ test_str,        NULL, testrun_stdtest_noekeon},
+	{ direct_str,      NULL, testrun_nessie_noekeon_direct},
+	{ indirect_str,    NULL, testrun_nessie_noekeon_indirect},
+	{ performance_str, NULL, testrun_performance_noekeon},
+	{ echo_str,    (void*)1, (void_fpt)echo_ctrl},
+	{ NULL,            NULL, NULL}
+};
+
 int main (void){
-	char  str[20];
 	DEBUG_INIT();
 	uart_putstr("\r\n");
-
-	uart_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
-	uart_putstr(cipher_name);
-	uart_putstr_P(PSTR(")\r\nloaded and running\r\n"));
-
-	PGM_P    u   = PSTR("nessie\0test\0direct\0indirect\0performance\0");
-	void_fpt v[] = {testrun_nessie_noekeon, 
-		            testrun_stdtest_noekeon,
-		            testrun_nessie_noekeon_direct, 
-		            testrun_nessie_noekeon_indirect,  
-		            testrun_performance_noekeon};
-
-	while(1){ 
-		if (!getnextwordn(str,20)){DEBUG_S("DBG: W1\r\n"); goto error;}
-		if(execcommand_d0_P(str, u, v)<0){
-			uart_putstr_P(PSTR("\r\nunknown command\r\n"));
-		}
-		continue;
-	error:
-		uart_putstr("ERROR\r\n");
+	cli_rx = uart_getc;
+	cli_tx = uart_putc;	 	
+	for(;;){
+		uart_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
+		uart_putstr(algo_name);
+		uart_putstr_P(PSTR(")\r\nloaded and running\r\n"));
+		cmd_interface(cmdlist);
 	}
-	
 }
-
