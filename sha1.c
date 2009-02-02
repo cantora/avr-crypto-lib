@@ -170,13 +170,13 @@ void sha1_lastBlock(sha1_ctx_t *state, void* block, uint16_t length){
 	memcpy (&(lb[0]), block, length/8);
 	
 	/* set the final one bit */
-	if (length & 0x3){ /* if we have single bits at the end */
+	if (length & 0x7){ /* if we have single bits at the end */
 		lb[length/8] = ((uint8_t*)(block))[length/8];
 	} else {
 		lb[length/8] = 0;
 	}
 	lb[length/8] |= 0x80>>(length & 0x3);
-	length =(length >> 3) + 1; /* from now on length contains the number of BYTES in lb*/
+	length =(length >> 7) + 1; /* from now on length contains the number of BYTES in lb*/
 	/* pad with zeros */
 	if (length>64-8){ /* not enouth space for 64bit length value */
 		memset((void*)(&(lb[length])), 0, 64-length);

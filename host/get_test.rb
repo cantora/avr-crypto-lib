@@ -2,24 +2,6 @@
 
 require 'serialport'
 
-if ARGV.size < 5
-  STDERR.print <<EOF
-  Usage: ruby #{$0} port bps nbits stopb command [target_dir] [additional specifier]
-EOF
-  exit(1)
-end
-
-command=ARGV[4]+" ";
-$dir=(ARGV.size>=6)?ARGV[5]:"";
-param=(ARGV.size>=7)?ARGV[6]:"";
-
-puts("\nPort: "+ARGV[0]+ "@"+ARGV[1]+" "+ARGV[2]+"N"+ARGV[3]+"\n");
-$linewidth = 16
-$sp = SerialPort.new(ARGV[0], ARGV[1].to_i, ARGV[2].to_i, ARGV[3].to_i, SerialPort::NONE);
-$sp.read_timeout=1*60*1000; # 5 minutes
-$extended_wait=10;
-$sp.write(command);
-
 def readTestVector(param)
   fname=$dir;
   lb="";
@@ -97,6 +79,25 @@ def readTestVector(param)
   file.close();
   return true
 end
+
+
+if ARGV.size < 5
+  STDERR.print <<EOF
+  Usage: ruby #{$0} port bps nbits stopb command [target_dir] [additional specifier]
+EOF
+  exit(1)
+end
+
+command=ARGV[4]+"\r";
+$dir=(ARGV.size>=6)?ARGV[5]:"";
+param=(ARGV.size>=7)?ARGV[6]:"";
+
+puts("\nPort: "+ARGV[0]+ "@"+ARGV[1]+" "+ARGV[2]+"N"+ARGV[3]+"\n");
+$linewidth = 16
+$sp = SerialPort.new(ARGV[0], ARGV[1].to_i, ARGV[2].to_i, ARGV[3].to_i, SerialPort::NONE);
+$sp.read_timeout=1*60*1000; # 5 minutes
+$extended_wait=100;
+$sp.write(command);
 
 if(readTestVector(param)==false)
   puts("ERROR: test seems not to be implemented");

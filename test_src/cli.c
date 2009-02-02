@@ -34,66 +34,6 @@
 #include "cli.h"
 #include "config.h"
 
-int16_t findstring_d0(const char* str, const char* v){
-	uint8_t i=0;
-	while(*v){	
-		if(!strcmp(str, v)){
-			return i;
-		}
-		while(*v++) /* go to the next string */
-		;
-		++i;
-	}
-	return -1;
-}
-
-#ifdef CLI_OLD
- 
-int16_t findstring_d0_P(const char* str, PGM_P v){
-	uint8_t i=0;
-	while(pgm_read_byte(v)){	
-		if(!strcmp_P(str, v)){
-			return i;
-		}
-		while(pgm_read_byte(v++)) /* go to the next string */
-		;
-		++i;
-	}
-	return -1;
-} 
-
-#ifdef CLI_AUTO_HELP
-#include "uart.h"
-
-void cli_auto_help_P(PGM_P dbzstr){
-	char c;
-	uart_putstr_P(PSTR("\r\n[auto help] available commands are:\r\n\t"));
-	do{
-		while((c=pgm_read_byte(dbzstr++))!=0){
-			uart_putc(c);
-		}
-		uart_putstr_P(PSTR("\r\n\t"));
-	}while((c=pgm_read_byte(dbzstr))!=0);
-	uart_putstr_P(PSTR("\r\n"));
-}
-
-int16_t execcommand_d0_P(const char* str, PGM_P v, void(*fpt[])(void) ){
-	int16_t i=0;
-	i=findstring_d0_P(str, v);
-	if(i!=-1){
-		if(fpt[i])
-			fpt[i]();
-		return i;
-	}else{
-		cli_auto_help_P(v);
-		return -1;
-	}
-}
-
-#endif
-
-#else /* CLI_OLD */
-
 cli_rx_fpt cli_rx = NULL;
 cli_tx_fpt cli_tx = NULL;
 uint8_t cli_echo=1;
@@ -131,6 +71,7 @@ void cli_hexdump(void* data, uint16_t length){
 	}
 }
 
+static
 void cli_auto_help(uint16_t maxcmdlength, PGM_VOID_P cmdlist){
 	cmdlist_entry_t item;
 	uint16_t i;
@@ -168,6 +109,7 @@ void cli_auto_help(uint16_t maxcmdlength, PGM_VOID_P cmdlist){
 	}
 }
 
+static
 uint16_t firstword_length(char* s){
 	uint16_t ret=0;
 	while(isalnum(*s++))
@@ -383,6 +325,3 @@ int8_t cmd_interface(PGM_VOID_P cmd_desc){
 		}
 	}
 }
-
-#endif
-

@@ -23,16 +23,6 @@
 #include <avr/pgmspace.h>
 
 typedef void(*void_fpt)(void);
-
-#ifdef CLI_OLD
-
-int16_t findstring_d0(const char* str, const char* v);
-int16_t findstring_d0_P(const char* str, PGM_P v);
-
-int16_t execcommand_d0_P(const char* str, PGM_P v, void(*fpt[])(void) );
-
-#else
-
 typedef char (*cli_rx_fpt)(void);
 typedef void (*cli_tx_fpt)(char);
 
@@ -48,11 +38,11 @@ extern cli_rx_fpt cli_rx;
 extern cli_tx_fpt cli_tx;
 extern uint8_t cli_echo;
 
+void cli_putstr(char* s);
+void cli_putstr_P(PGM_P s);
+void cli_hexdump(void* data, uint16_t length);
 void echo_ctrl(char* s);
 int8_t cmd_interface(PGM_VOID_P cmd_desc);
-
-#endif
-
 
 
 #endif /*CLI_H_*/

@@ -164,12 +164,12 @@ void sha256_lastBlock(sha256_ctx_t *state, const void* block, uint16_t length){
 	memcpy (&(lb[0]), block, length/8);
 	
 	/* set the final one bit */
-	if (length & 0x3){ // if we have single bits at the end
+	if (length & 0x7){ // if we have single bits at the end
 		lb[length/8] = ((uint8_t*)(block))[length/8];
 	} else {
 		lb[length/8] = 0;
 	}
-	lb[length/8] |= 0x80>>(length & 0x3);
+	lb[length/8] |= 0x80>>(length & 0x7);
 	length =(length >> 3) + 1; /* from now on length contains the number of BYTES in lb*/
 	/* pad with zeros */
 	if (length>64-8){ /* not enouth space for 64bit length value */
