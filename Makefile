@@ -43,7 +43,7 @@ all: $(foreach algo, $(ALGORITHMS), $(algo)_OBJ)
 
 define MAIN_OBJ_TEMPLATE
 $(2): $(3) $(4)
-	@echo "[ld]: $$@"
+	@echo "[ld] : $$@"
 #	echo $$^
 	@$(CC) $(CFLAGS) $(LDFLAGS)$(patsubst %.elf,%.map,$(2)) -o \
 	$(2) \
@@ -119,6 +119,15 @@ $(TESTBIN_DIR)%.o: $(TESTSRC_DIR)%.c
 $(TESTBIN_DIR)%.o: $(TESTSRC_DIR)%.S
 	@echo "[as] :  $@"
 	@$(CC) $(ASFLAGS) -c -o $@ $<
+
+$(TESTBIN_DIR)%.o: %.c
+	@echo "[gcc]:  $@"
+	@$(CC) $(CFLAGS)  -c -o $@ $<
+
+$(TESTBIN_DIR)%.o: %.S
+	@echo "[as] :  $@"
+	@$(CC) $(ASFLAGS) -c -o $@ $<
+
 
 
 %.o: %.c

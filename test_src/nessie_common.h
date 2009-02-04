@@ -29,8 +29,34 @@
 #ifndef NESSIE_COMMON_H_
 #define NESSIE_COMMON_H_
 
+#define NESSIE_ALIVE_CHAR 0x06
+#define NESSIE_ALIVE
+#define NESSIE_USE_CLI
 
 #include <stdint.h>
+
+#ifdef NESSIE_ALIVE
+#define NESSIE_SEND_ALIVE nessie_send_alive()
+void nessie_send_alive(void);
+#define NESSIE_SEND_ALIVE_A(i) nessie_send_alive_a(i)
+void nessie_send_alive_a(uint16_t i);
+#else
+#define NESSIE_SEND_ALIVE 
+#define NESSIE_SEND_ALIVE_A(i)  
+#endif
+
+
+#ifdef NESSIE_USE_CLI
+#include "cli.h"
+#define NESSIE_PUTC cli_putc
+#define NESSIE_PUTSTR cli_putstr
+#define NESSIE_PUTSTR_P cli_putstr_P
+#else
+#include "uart.h"
+#define NESSIE_PUTC uart_putc
+#define NESSIE_PUTSTR uart_putstr
+#define NESSIE_PUTSTR_P uart_putstr_P
+#endif
 
 void nessie_print_block(uint8_t* block, uint16_t blocksize_bit);
 void nessie_print_item(char* name, uint8_t* buffer, uint16_t size_B);

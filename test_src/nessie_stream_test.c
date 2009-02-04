@@ -118,6 +118,7 @@ void nessie_stream_enc_large(uint8_t* key){
 	for(i=0; i<((65472-0)/BLOCKSIZE_B-1); ++i){
 		nessie_gen_block(ctx, buffer);
 		memxor(xorbuffer, buffer, BLOCKSIZE_B);
+		NESSIE_SEND_ALIVE_A(i);
 	}
 	
 	nessie_gen_block(ctx, buffer);
@@ -131,6 +132,7 @@ void nessie_stream_enc_large(uint8_t* key){
 	for(i=0; i<((131008-65536)/BLOCKSIZE_B-1); ++i){
 		nessie_gen_block(ctx, buffer);
 		memxor(xorbuffer, buffer, BLOCKSIZE_B);
+		NESSIE_SEND_ALIVE_A(i);
 	}
 	
 	nessie_gen_block(ctx, buffer);

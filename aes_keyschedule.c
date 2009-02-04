@@ -1,6 +1,6 @@
 /* aes_keyschedule.c */
 /*
-    This file is part of the This file is part of the AVR-Crypto-Lib.
+    This file is part of the AVR-Crypto-Lib.
     Copyright (C) 2008, 2009  Daniel Otte (daniel.otte@rub.de)
 
     This program is free software: you can redistribute it and/or modify

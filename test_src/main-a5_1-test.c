@@ -69,10 +69,10 @@ const char performance_str[] PROGMEM = "performance";
 const char echo_str[]        PROGMEM = "echo";
 
 cmdlist_entry_t cmdlist[] PROGMEM = {
-	{ nessie_str,      NULL, testrun_nessie_a51 },
-/*	{ performance_str, NULL, testrun_performance_a51}, */
-	{ echo_str,    (void*)1, (void_fpt)echo_ctrl},
-	{ NULL,            NULL, NULL}
+	{ nessie_str,      NULL, testrun_nessie_a51, NULL},
+/*	{ performance_str, NULL, testrun_performance_a51, NULL}, */
+	{ echo_str,    (void*)1, (void_fpt)echo_ctrl, NULL},
+	{ NULL,            NULL, NULL, NULL}
 };
 
 int main (void){

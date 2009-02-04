@@ -39,8 +39,8 @@ void ascii_hash(char* data, char* desc){
 	uint8_t hash[(nessie_hash_ctx.hashsize_b+7)/8];
 	uint16_t sl;
 	
-	uart_putstr_P(PSTR("\r\n                       message="));
-	uart_putstr(desc);
+	NESSIE_PUTSTR_P(PSTR("\r\n                       message="));
+	NESSIE_PUTSTR(desc);
 	nessie_hash_ctx.hash_init(ctx);
 	sl = strlen(data);
 	while(sl>=nessie_hash_ctx.blocksize_B){
@@ -61,14 +61,16 @@ void amillion_hash(void){
 	uint8_t hash[(nessie_hash_ctx.hashsize_b+7)/8];
 	uint8_t block[nessie_hash_ctx.blocksize_B];
 	uint32_t n=1000000LL;
+	uint16_t i=0;
 	
-	uart_putstr_P(PSTR("\r\n                       message="));
-	uart_putstr_P(PSTR("1 million times \"a\""));
+	NESSIE_PUTSTR_P(PSTR("\r\n                       message="));
+	NESSIE_PUTSTR_P(PSTR("1 million times \"a\""));
 	memset(block, 'a', nessie_hash_ctx.blocksize_B);
 	nessie_hash_ctx.hash_init(ctx);
 	while(n>=nessie_hash_ctx.blocksize_B){
 		nessie_hash_ctx.hash_next(block, ctx);
 		n    -= nessie_hash_ctx.blocksize_B;
+		NESSIE_SEND_ALIVE_A(i++);
 	}
 	nessie_hash_ctx.hash_last(block, n*8, ctx);
 	nessie_hash_ctx.hash_conv(hash, ctx);
@@ -82,17 +84,17 @@ void zero_hash(uint16_t n){
 	uint8_t hash[(nessie_hash_ctx.hashsize_b+7)/8];
 	uint8_t block[nessie_hash_ctx.blocksize_B];
 	
-	uart_putstr_P(PSTR("\r\n                       message="));
+	NESSIE_PUTSTR_P(PSTR("\r\n                       message="));
 	if(n>=10000)
-		uart_putc('0'+n/10000);
+		NESSIE_PUTC('0'+n/10000);
 	if(n>=1000)
-		uart_putc('0'+(n/1000)%10);
+		NESSIE_PUTC('0'+(n/1000)%10);
 	if(n>=100)
-		uart_putc('0'+(n/100)%10);
+		NESSIE_PUTC('0'+(n/100)%10);
 	if(n>=10)
-		uart_putc('0'+(n/10)%10);
-	uart_putc('0'+n%10);
-	uart_putstr_P(PSTR(" zero bits"));
+		NESSIE_PUTC('0'+(n/10)%10);
+	NESSIE_PUTC('0'+n%10);
+	NESSIE_PUTSTR_P(PSTR(" zero bits"));
 	
 	memset(block, 0, nessie_hash_ctx.blocksize_B); 
 	nessie_hash_ctx.hash_init(ctx);
@@ -115,24 +117,24 @@ void one_in512_hash(uint16_t pos){
 	              "08", "04", "02", "01" };
 
 	pos&=511;
-	uart_putstr_P(PSTR("\r\n                       message="));
-	uart_putstr_P(PSTR("512-bit string: "));
+	NESSIE_PUTSTR_P(PSTR("\r\n                       message="));
+	NESSIE_PUTSTR_P(PSTR("512-bit string: "));
 	if((pos/8) >=10){
-		uart_putc('0'+(pos/8/10)%10);
+		NESSIE_PUTC('0'+(pos/8/10)%10);
 	} else {
-		uart_putc(' ');
+		NESSIE_PUTC(' ');
 	}
-	uart_putc('0'+(pos/8)%10);
-	uart_putstr_P(PSTR("*00,"));
-	uart_putstr(tab[pos&7]);
-	uart_putc(',');
+	NESSIE_PUTC('0'+(pos/8)%10);
+	NESSIE_PUTSTR_P(PSTR("*00,"));
+	NESSIE_PUTSTR(tab[pos&7]);
+	NESSIE_PUTC(',');
 	if(63-(pos/8) >=10){
-		uart_putc('0'+((63-pos/8)/10)%10);
+		NESSIE_PUTC('0'+((63-pos/8)/10)%10);
 	} else {
-		uart_putc(' ');
+		NESSIE_PUTC(' ');
 	}
-	uart_putc('0'+(63-pos/8)%10);
-	uart_putstr_P(PSTR("*00"));
+	NESSIE_PUTC('0'+(63-pos/8)%10);
+	NESSIE_PUTSTR_P(PSTR("*00"));
 	
 	/* now the real stuff */
 	memset(block, 0, 512/8);
@@ -155,18 +157,18 @@ void tv4_hash(void){
 	uint16_t n=nessie_hash_ctx.hashsize_b;
 	uint32_t i;
 	
-	uart_putstr_P(PSTR("\r\n                       message="));
+	NESSIE_PUTSTR_P(PSTR("\r\n                       message="));
 	if(nessie_hash_ctx.hashsize_b>=10000)
-		uart_putc('0' + (nessie_hash_ctx.hashsize_b/10000)%10);
+		NESSIE_PUTC('0' + (nessie_hash_ctx.hashsize_b/10000)%10);
 	if(nessie_hash_ctx.hashsize_b>=1000)
-		uart_putc('0' + (nessie_hash_ctx.hashsize_b/1000)%10);
+		NESSIE_PUTC('0' + (nessie_hash_ctx.hashsize_b/1000)%10);
 	if(nessie_hash_ctx.hashsize_b>=100)
-		uart_putc('0' + (nessie_hash_ctx.hashsize_b/100)%10);
+		NESSIE_PUTC('0' + (nessie_hash_ctx.hashsize_b/100)%10);
 	if(nessie_hash_ctx.hashsize_b>=10)
-		uart_putc('0' + (nessie_hash_ctx.hashsize_b/10)%10);
-	uart_putc('0' + nessie_hash_ctx.hashsize_b%10);
+		NESSIE_PUTC('0' + (nessie_hash_ctx.hashsize_b/10)%10);
+	NESSIE_PUTC('0' + nessie_hash_ctx.hashsize_b%10);
 
-	uart_putstr_P(PSTR(" zero bits"));
+	NESSIE_PUTSTR_P(PSTR(" zero bits"));
 	memset(block, 0, 256/8);
 	
 	nessie_hash_ctx.hash_init(ctx);
@@ -181,6 +183,7 @@ void tv4_hash(void){
 		nessie_hash_ctx.hash_init(ctx);
 		nessie_hash_ctx.hash_last(hash, nessie_hash_ctx.hashsize_b, ctx);
 		nessie_hash_ctx.hash_conv(hash, ctx);
+		NESSIE_SEND_ALIVE_A(i);
 	}
 	nessie_print_item("iterated 100000 times", hash, (nessie_hash_ctx.hashsize_b+7)/8);
 }

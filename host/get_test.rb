@@ -2,6 +2,15 @@
 
 require 'serialport'
 
+def read_line
+  s = $sp.gets()
+  if s==nil
+    puts "ERROR: read timeout!\n";
+	return nil
+  end	
+  s.gsub(/\006/, '');	
+end
+
 def readTestVector(param)
   fname=$dir;
   lb="";
@@ -9,11 +18,8 @@ def readTestVector(param)
   set=0;
   vector=0;
   begin
-    ctr=$extended_wait;
-    while((lb=$sp.gets())==nil && ctr>=0)do
-      ctr -= 1;
-    end
-    if (m=/unknown command/.match(lb) || m=/[Ee][Rr]{2}[Oo][Rr]/.match(lb))
+    lb = read_line()
+	if (m=/unknown command/.match(lb) || m=/[Ee][Rr]{2}[Oo][Rr]/.match(lb))
       puts("ERROR: "+lb);
       exit(2);
     end
@@ -24,10 +30,7 @@ def readTestVector(param)
   
   buffer += lb;
   begin
-    ctr=$extended_wait;
-    while((lb=$sp.gets())==nil && ctr>=0)do
-      ctr -= 1;
-    end
+    lb = read_line()
     if(lb==nil)
       return false;
     end
@@ -40,10 +43,7 @@ def readTestVector(param)
       fname+=m[1]+".";
     end
     buffer+=lb;
-    ctr=$extended_wait;
-    while((lb=$sp.gets())==nil && ctr>=0)do
-      ctr -= 1;
-    end
+	lb = read_line();
   end
   if(param!="")
     fname+=param+".";
@@ -65,10 +65,7 @@ def readTestVector(param)
 	end
         printf(" %4u", vector);
       end
-      ctr=$extended_wait;
-      while((lb=$sp.gets())==nil && ctr>=0)do
-        ctr -= 1;
-      end
+      lb=read_line();
       if(lb==nil)
         file.close();
         return false;

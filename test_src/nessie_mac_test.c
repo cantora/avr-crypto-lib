@@ -45,8 +45,8 @@ void ascii_mac(char* data, char* desc, uint8_t* key){
 	uint8_t mac[MACSIZE_B];
 	uint16_t sl;
 	
-	uart_putstr_P(PSTR("\r\n                       message="));
-	uart_putstr(desc);
+	NESSIE_PUTSTR_P(PSTR("\r\n                       message="));
+	NESSIE_PUTSTR(desc);
 	PRINTKEY;
 	nessie_mac_ctx.mac_init(key, nessie_mac_ctx.keysize_b, ctx);
 	sl = strlen(data);
@@ -68,9 +68,10 @@ void amillion_mac(uint8_t* key){
 	uint8_t mac[MACSIZE_B];
 	uint8_t block[nessie_mac_ctx.blocksize_B];
 	uint32_t n=1000000LL;
+	uint16_t i=0;
 	
-	uart_putstr_P(PSTR("\r\n                       message="));
-	uart_putstr_P(PSTR("1 million times \"a\""));
+	NESSIE_PUTSTR_P(PSTR("\r\n                       message="));
+	NESSIE_PUTSTR_P(PSTR("1 million times \"a\""));
 	PRINTKEY;
 	
 	memset(block, 'a', nessie_mac_ctx.blocksize_B);
@@ -78,6 +79,7 @@ void amillion_mac(uint8_t* key){
 	while(n>nessie_mac_ctx.blocksize_B){
 		nessie_mac_ctx.mac_next(block, ctx);
 		n    -= nessie_mac_ctx.blocksize_B;
+		NESSIE_SEND_ALIVE_A(i++);
 	}
 	nessie_mac_ctx.mac_last(block, n*8, key, nessie_mac_ctx.keysize_b, ctx);
 	nessie_mac_ctx.mac_conv(mac, ctx);
@@ -91,17 +93,17 @@ void zero_mac(uint16_t n, uint8_t* key){
 	uint8_t mac[MACSIZE_B];
 	uint8_t block[nessie_mac_ctx.blocksize_B];
 	
-	uart_putstr_P(PSTR("\r\n                       message="));
+	NESSIE_PUTSTR_P(PSTR("\r\n                       message="));
 	if(n>=10000)
-		uart_putc('0'+n/10000);
+		NESSIE_PUTC('0'+n/10000);
 	if(n>=1000)
-		uart_putc('0'+(n/1000)%10);
+		NESSIE_PUTC('0'+(n/1000)%10);
 	if(n>=100)
-		uart_putc('0'+(n/100)%10);
+		NESSIE_PUTC('0'+(n/100)%10);
 	if(n>=10)
-		uart_putc('0'+(n/10)%10);
-	uart_putc('0'+n%10);
-	uart_putstr_P(PSTR(" zero bits"));
+		NESSIE_PUTC('0'+(n/10)%10);
+	NESSIE_PUTC('0'+n%10);
+	NESSIE_PUTSTR_P(PSTR(" zero bits"));
 	PRINTKEY;
 	
 	memset(block, 0, nessie_mac_ctx.blocksize_B); 
@@ -125,24 +127,24 @@ void one_in512_mac(uint16_t pos, uint8_t* key){
 	              "08", "04", "02", "01" };
 
 	pos&=511;
-	uart_putstr_P(PSTR("\r\n                       message="));
-	uart_putstr_P(PSTR("512-bit string: "));
+	NESSIE_PUTSTR_P(PSTR("\r\n                       message="));
+	NESSIE_PUTSTR_P(PSTR("512-bit string: "));
 	if((pos/8) >=10){
-		uart_putc('0'+(pos/8/10)%10);
+		NESSIE_PUTC('0'+(pos/8/10)%10);
 	} else {
-		uart_putc(' ');
+		NESSIE_PUTC(' ');
 	}
-	uart_putc('0'+(pos/8)%10);
-	uart_putstr_P(PSTR("*00,"));
-	uart_putstr(tab[pos&7]);
-	uart_putc(',');
+	NESSIE_PUTC('0'+(pos/8)%10);
+	NESSIE_PUTSTR_P(PSTR("*00,"));
+	NESSIE_PUTSTR(tab[pos&7]);
+	NESSIE_PUTC(',');
 	if(63-(pos/8) >=10){
-		uart_putc('0'+((63-pos/8)/10)%10);
+		NESSIE_PUTC('0'+((63-pos/8)/10)%10);
 	} else {
-		uart_putc(' ');
+		NESSIE_PUTC(' ');
 	}
-	uart_putc('0'+(63-pos/8)%10);
-	uart_putstr_P(PSTR("*00"));
+	NESSIE_PUTC('0'+(63-pos/8)%10);
+	NESSIE_PUTSTR_P(PSTR("*00"));
 	PRINTKEY;
 	
 	/* now the real stuff */
@@ -169,8 +171,8 @@ void tv4_mac(uint8_t* key){
 	uint16_t n=256;
 	uint32_t i;
 	
-	uart_putstr_P(PSTR("\r\n                       message="));
-	uart_putstr(PSTR("256 zero bits"));
+	NESSIE_PUTSTR_P(PSTR("\r\n                       message="));
+	NESSIE_PUTSTR(PSTR("256 zero bits"));
 	memset(block, 0, 256/8);
 	
 	nessie_mac_ctx.mac_init(key, nessie_mac_ctx.keysize_b, ctx);;
@@ -185,6 +187,7 @@ void tv4_mac(uint8_t* key){
 		nessie_mac_ctx.mac_init(key, nessie_mac_ctx.keysize_b, ctx);;
 		nessie_mac_ctx.mac_last(mac, nessie_mac_ctx.macsize_b, key, nessie_mac_ctx.keysize_b, ctx);
 		nessie_mac_ctx.mac_conv(mac, ctx);
+		NESSIE_SEND_ALIVE_A(i);
 	}
 	nessie_print_item("iterated 100000 times", mac, MACSIZE_B);
 }

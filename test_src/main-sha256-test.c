@@ -34,6 +34,9 @@
 #include <string.h>
 #include <stdlib.h>
 #include "cli.h"
+#include "shavs.h"
+#include "hfal_sha256.h"
+#include "dump.h"
 
 char* algo_name = "SHA-256";
 
@@ -106,13 +109,24 @@ const char nessie_str[]      PROGMEM = "nessie";
 const char test_str[]        PROGMEM = "test";
 const char performance_str[] PROGMEM = "performance";
 const char echo_str[]        PROGMEM = "echo";
+const char shavs_list_str[]  PROGMEM = "shavs_list";
+const char shavs_set_str[]   PROGMEM = "shavs_set";
+const char dump_str[]        PROGMEM = "dump";
+
+const hfdesc_t* algo_list[] PROGMEM = {
+	(hfdesc_t*)&sha256_desc,
+	NULL
+};
 
 cmdlist_entry_t cmdlist[] PROGMEM = {
-	{ nessie_str,      NULL, testrun_nessie_sha256},
-	{ test_str,        NULL, testrun_nessie_sha256},
-	{ performance_str, NULL, testrun_performance_sha256},
-	{ echo_str,    (void*)1, (void_fpt)echo_ctrl},
-	{ NULL,            NULL, NULL}
+	{ nessie_str,          NULL, testrun_nessie_sha256},
+	{ test_str,            NULL, testrun_nessie_sha256},
+	{ performance_str,     NULL, testrun_performance_sha256},
+	{ echo_str,        (void*)1, (void_fpt)echo_ctrl},
+	{ shavs_list_str,      NULL, shavs_listalgos},
+	{ shavs_set_str,   (void*)1, (void_fpt)shavs_setalgo},
+	{ dump_str,        (void*)1, (void_fpt)dump},
+	{ NULL,                NULL, NULL}
 };
 
 int main (void){
@@ -120,6 +134,7 @@ int main (void){
 	uart_putstr("\r\n");
 	cli_rx = uart_getc;
 	cli_tx = uart_putc;	 	
+	algolist=algo_list;
 	for(;;){
 		uart_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
 		uart_putstr(algo_name);

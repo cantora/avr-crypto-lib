@@ -1,6 +1,6 @@
 /* twister.c */
 /*
-    This file is part of the This file is part of the AVR-Crypto-Lib.
+    This file is part of the AVR-Crypto-Lib.
     Copyright (C) 2008  Daniel Otte (daniel.otte@rub.de)
 
     This program is free software: you can redistribute it and/or modify
@@ -25,17 +25,17 @@
 #include "twister_tables.h"
 #include "memxor.h"
 
-#ifndef TWISTER_MUL_TABLE
+//#ifndef TWISTER_MUL_TABLE
 # include "gf256mul.h"
-#endif
+//#endif
 
 #define MDS(a,b)  pgm_read_byte(&(twister_mds[(a)][(b)]))
 
-#ifdef TWISTER_MUL_TABLE
-# define MULT(a,b) pgm_read_byte(&(twister_multab[(a)][(b)]))
-#else
+//#ifdef TWISTER_MUL_TABLE
+//# define MULT(a,b) pgm_read_byte(&(twister_multab[(a)][(b)]))
+//#else
 # define MULT(a,b) gf256mul((a),(b), 0x4D)
-#endif
+//#endif
 
 void twister_blank_round(twister_state_t* ctx){
 	uint8_t i,j,k;
@@ -57,19 +57,25 @@ void twister_blank_round(twister_state_t* ctx){
 		for( j=0; j<8; j++ ){
 			k=(i+1)&7;
 			ctx->s[j][i] =
-				MULT( MDS(j,0), tmp[0][i] ) ^
-				MULT( MDS(j,1), tmp[1][k] ) ^
-				MULT( MDS(j,2), tmp[2][(++k)&7] ) ^
-				MULT( MDS(j,3), tmp[3][(++k)&7] ) ^
-				MULT( MDS(j,4), tmp[4][(++k)&7] ) ^
-				MULT( MDS(j,5), tmp[5][(++k)&7] ) ^
-				MULT( MDS(j,6), tmp[6][(++k)&7] ) ^
-				MULT( MDS(j,7), tmp[7][(++k)&7] ) ;
+				MULT( MDS(j,0), (tmp[0][i]) );
+			ctx->s[j][i] ^=	 
+				MULT( MDS(j,1), (tmp[1][k]) );
+			ctx->s[j][i] ^=	 
+				MULT( MDS(j,2), (tmp[2][((++k)&7)]) );
+			ctx->s[j][i] ^=	 
+				MULT( MDS(j,3), (tmp[3][((++k)&7)]) );
+			ctx->s[j][i] ^=	 
+				MULT( MDS(j,4), (tmp[4][((++k)&7)]) );
+			ctx->s[j][i] ^=	 
+				MULT( MDS(j,5), (tmp[5][((++k)&7)]) );
+			ctx->s[j][i] ^=	 
+				MULT( MDS(j,6), (tmp[6][((++k)&7)]) );
+			ctx->s[j][i] ^=	 
+				MULT( MDS(j,7), (tmp[7][((++k)&7)]) );
 				
 		}	
 	}
 }
-
 void twister_mini_round(twister_state_t* ctx, const void* msg){
 	/* inject message */
 	uint8_t i;

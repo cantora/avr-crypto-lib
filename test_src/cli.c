@@ -31,12 +31,36 @@
 #include <ctype.h>
 #include <string.h>
 #include <avr/pgmspace.h>
+#include "string-extras.h"
 #include "cli.h"
 #include "config.h"
 
 cli_rx_fpt cli_rx = NULL;
 cli_tx_fpt cli_tx = NULL;
 uint8_t cli_echo=1;
+
+void cli_putc(char c){
+	if(cli_tx)
+		cli_tx(c);
+}
+
+uint16_t cli_getc(void){
+	if(cli_rx)
+		return cli_rx();
+	return ((uint16_t)-1);
+}
+
+
+uint16_t cli_getc_cecho(void){
+	char c;
+	if(cli_rx){
+		c = cli_rx();
+		if(cli_tx && cli_echo)
+			cli_tx(c);
+		return c;
+	}
+	return ((uint16_t)-1);
+}
 
 void cli_putstr(char* s){
 	if(!cli_tx)
@@ -71,6 +95,21 @@ void cli_hexdump(void* data, uint16_t length){
 	}
 }
 
+void cli_hexdump2(void* data, uint16_t length){
+	char hex_tab[] = {'0', '1', '2', '3', 
+	                  '4', '5', '6', '7', 
+					  '8', '9', 'A', 'B', 
+					  'C', 'D', 'E', 'F'};
+	if(!cli_tx)
+		return;
+	while(length--){
+		cli_tx(hex_tab[(*((uint8_t*)data))>>4]);
+		cli_tx(hex_tab[(*((uint8_t*)data))&0xf]);
+		cli_tx(' ');
+		data = (uint8_t*)data +1;
+	}
+}
+
 static
 void cli_auto_help(uint16_t maxcmdlength, PGM_VOID_P cmdlist){
 	cmdlist_entry_t item;
@@ -84,7 +123,7 @@ void cli_auto_help(uint16_t maxcmdlength, PGM_VOID_P cmdlist){
 		item.cmd_name      = (void*)pgm_read_word(cmdlist+0);
 		item.cmd_param_str = (void*)pgm_read_word(cmdlist+2);
 		item.cmd_function  = (void_fpt)pgm_read_word(cmdlist+4);
-		cmdlist = (uint8_t*)cmdlist+6;
+		cmdlist = (uint8_t*)cmdlist+CMDLIST_ENTRY_SIZE;
 		if(item.cmd_name==NULL){
 			return;
 		}
@@ -109,15 +148,8 @@ void cli_auto_help(uint16_t maxcmdlength, PGM_VOID_P cmdlist){
 	}
 }
 
-static
-uint16_t firstword_length(char* s){
-	uint16_t ret=0;
-	while(isalnum(*s++))
-		ret++;
-	return ret; 
-}
-
 void echo_ctrl(char* s){
+	s = strstrip(s);
 	if(s==NULL || *s=='\0'){
 		cli_putstr_P(PSTR("\r\necho is "));
 		cli_putstr_P(cli_echo?PSTR("on"):PSTR("off"));
@@ -156,7 +188,7 @@ int8_t search_and_call(char* cmd, uint16_t maxcmdlength, PGM_VOID_P cmdlist){
 		item.cmd_name =      (void*)pgm_read_word(cmdlist+0);
 		item.cmd_param_str = (void*)pgm_read_word(cmdlist+2);
 		item.cmd_function =  (void_fpt)pgm_read_word(cmdlist+4);
-		cmdlist = (uint8_t*)cmdlist+6;
+		cmdlist = (uint8_t*)cmdlist+CMDLIST_ENTRY_SIZE;
 	}while(item.cmd_name!=NULL && strcmp_P(fw, item.cmd_name));
 	if(item.cmd_name==NULL){
 		cli_auto_help(maxcmdlength, cmdlist_orig);
@@ -188,24 +220,12 @@ uint16_t max_cmd_length(PGM_VOID_P cmdlist){
 	char* str;
 	for(;;){
 		str = (char*)pgm_read_word(cmdlist);
-		cmdlist = (uint8_t*)cmdlist + 6;
+		cmdlist = (uint8_t*)cmdlist + CMDLIST_ENTRY_SIZE;
 		if(str==NULL)
 			return ret;
 		t = strlen_P(str);
 		if(t>ret)
 			ret=t;
-	}
-}
-
-uint16_t stridentcnt_P(char* a, PGM_P b){
-	uint16_t i=0;
-	char c;
-	for(;;){
-		c = pgm_read_byte(b++);
-		if(*a != c || c=='\0')
-			return i;
-		i++;
-		a++;
 	}
 }
 
@@ -216,14 +236,14 @@ uint8_t cli_completion(char* buffer, uint16_t maxcmdlength, PGM_VOID_P cmdlist){
 	ref[0]='\0';
 	/* check if we are behind the first word */
 	while(buffer[i]){
-		if(!isalnum(buffer[i++]))
+		if(!isgraph(buffer[i++]))
 			return 0;
 	}
 	for(;;){
 		itemstr = (char*)pgm_read_word(cmdlist);
 		if(itemstr==NULL)
 			break;
-		cmdlist = (uint8_t*)cmdlist +6;
+		cmdlist = (uint8_t*)cmdlist +CMDLIST_ENTRY_SIZE;
 		if(!strncmp_P(buffer, itemstr, i)){
 			if(!ref[0]){
 				strcpy_P(ref, itemstr);
@@ -248,7 +268,7 @@ void cli_option_listing(char* buffer, PGM_VOID_P cmdlist){
 			cli_putstr(buffer);
 			return;
 		}
-		cmdlist = (uint8_t*)cmdlist +6;
+		cmdlist = (uint8_t*)cmdlist +CMDLIST_ENTRY_SIZE;
 		if(!strncmp_P(buffer, itemstr, len)){
 			cli_putstr_P(PSTR("\r\n    "));
 			cli_putstr_P(itemstr);

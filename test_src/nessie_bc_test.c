@@ -63,12 +63,14 @@ void nessie_bc_enc(uint8_t* key, uint8_t* pt){
 	memcpy(buffer, pt, nessie_bc_ctx.blocksize_B);
 	for(i=0; i<100; ++i){
 		nessie_bc_ctx.cipher_enc(buffer, ctx);
+		NESSIE_SEND_ALIVE_A(i);
 	}
 	nessie_print_item("Iterated 100 times", buffer, nessie_bc_ctx.blocksize_B);
 #ifndef NESSIE_NO1KTEST	
 	/* 1000 times test, we use the 100 precedig steps to fasten things a bit */
 	for(; i<1000; ++i){
 		nessie_bc_ctx.cipher_enc(buffer, ctx);
+		NESSIE_SEND_ALIVE_A(i);
 	}
 	nessie_print_item("Iterated 1000 times", buffer, nessie_bc_ctx.blocksize_B);
 #endif

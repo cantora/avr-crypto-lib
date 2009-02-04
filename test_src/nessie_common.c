@@ -30,7 +30,19 @@
 #include <stdint.h>
 #include <avr/pgmspace.h>
 #include <stdlib.h> /* utoa() */
-#include "uart.h"
+#include "nessie_common.h"
+
+
+#ifdef NESSIE_ALIVE
+void nessie_send_alive(void){
+	NESSIE_PUTC(NESSIE_ALIVE_CHAR);
+}
+
+void nessie_send_alive_a(uint16_t i){
+	if((i&63)==63)
+		NESSIE_PUTC(NESSIE_ALIVE_CHAR);
+}
+#endif
 
 void nessie_print_block(uint8_t* block, uint16_t blocksize_bit){
 	char tab [] = {'0', '1', '2', '3', 
@@ -39,8 +51,8 @@ void nessie_print_block(uint8_t* block, uint16_t blocksize_bit){
 				   'C', 'D', 'E', 'F'};
 	uint16_t i;
 	for(i=0; i<(blocksize_bit+7)/8; ++i){
-		uart_putc(tab[(block[i])>>4]);
-		uart_putc(tab[(block[i])&0xf]);
+		NESSIE_PUTC(tab[(block[i])>>4]);
+		NESSIE_PUTC(tab[(block[i])&0xf]);
 	}				   
 }
 
@@ -52,15 +64,15 @@ void nessie_print_item(char* name, uint8_t* buffer, uint16_t size_B){
 	uint8_t i;
 	name_len=strlen(name);
 	if(name_len>SPACES-1){
-		uart_putstr_P(PSTR("\r\n!!! formatting error !!!\r\n"));
+		NESSIE_PUTSTR_P(PSTR("\r\n!!! formatting error !!!\r\n"));
 		return;
 	}
-	uart_putstr_P(PSTR("\r\n"));
+	NESSIE_PUTSTR_P(PSTR("\r\n"));
 	for(i=0; i<SPACES-name_len-1; ++i){
-		uart_putc(' ');
+		NESSIE_PUTC(' ');
 	}
-	uart_putstr(name);
-	uart_putc('=');
+	NESSIE_PUTSTR(name);
+	NESSIE_PUTC('=');
 	/* now the data printing begins */
 	if(size_B<=BYTESPERLINE){
 		/* one line seems sufficient */
@@ -71,9 +83,9 @@ void nessie_print_item(char* name, uint8_t* buffer, uint16_t size_B){
 		int16_t toprint = size_B - BYTESPERLINE;
 		buffer += BYTESPERLINE;
 		while(toprint > 0){
-			uart_putstr_P(PSTR("\r\n"));
+			NESSIE_PUTSTR_P(PSTR("\r\n"));
 			for(i=0; i<SPACES; ++i){
-				uart_putc(' ');
+				NESSIE_PUTC(' ');
 			}
 			nessie_print_block(buffer, ((toprint>BYTESPERLINE)?BYTESPERLINE:toprint)*8);
 			buffer  += BYTESPERLINE;
@@ -84,14 +96,14 @@ void nessie_print_item(char* name, uint8_t* buffer, uint16_t size_B){
 
 
 void nessie_print_set_vector(uint8_t set, uint16_t vector){
-	uart_putstr_P(PSTR("\r\n\r\nSet "));
-	uart_putc('0'+set%10);
-	uart_putstr_P(PSTR(", vector#"));
-	uart_putc((vector<1000)?' ':'0'+vector/1000);
-	uart_putc((vector<100)?' ':'0'+(vector/100)%10);
-	uart_putc((vector<10 )?' ':'0'+(vector/10)%10);
-	uart_putc('0'+vector%10);
-	uart_putc(':');
+	NESSIE_PUTSTR_P(PSTR("\r\n\r\nSet "));
+	NESSIE_PUTC('0'+set%10);
+	NESSIE_PUTSTR_P(PSTR(", vector#"));
+	NESSIE_PUTC((vector<1000)?' ':'0'+vector/1000);
+	NESSIE_PUTC((vector<100)?' ':'0'+(vector/100)%10);
+	NESSIE_PUTC((vector<10 )?' ':'0'+(vector/10)%10);
+	NESSIE_PUTC('0'+vector%10);
+	NESSIE_PUTC(':');
 }
 
 /* example:
@@ -99,9 +111,9 @@ Test vectors -- set 3
 =====================
  */ 
 void nessie_print_setheader(uint8_t set){
-	uart_putstr_P(PSTR("\r\n\r\nTest vectors -- set "));
-	uart_putc('0'+set%10);
-	uart_putstr_P(PSTR("\r\n====================="));
+	NESSIE_PUTSTR_P(PSTR("\r\n\r\nTest vectors -- set "));
+	NESSIE_PUTC('0'+set%10);
+	NESSIE_PUTSTR_P(PSTR("\r\n====================="));
 }
 
 /* example:
@@ -122,58 +134,58 @@ void nessie_print_header(char* name,
                          uint16_t macsize_b,
                          uint16_t ivsize_b ){
 	uint16_t i;
-	uart_putstr_P(PSTR("\r\n\r\n"
+	NESSIE_PUTSTR_P(PSTR("\r\n\r\n"
 	"********************************************************************************\r\n"
 	"* micro-crypt - crypto primitives for microcontrolles by Daniel Otte           *\r\n"
 	"********************************************************************************\r\n"
 	"\r\n"));
-	uart_putstr_P(PSTR("Primitive Name: "));
-	uart_putstr(name);
-	uart_putstr_P(PSTR("\r\n"));
+	NESSIE_PUTSTR_P(PSTR("Primitive Name: "));
+	NESSIE_PUTSTR(name);
+	NESSIE_PUTSTR_P(PSTR("\r\n"));
 	/* underline */	
 	for(i=0; i<16+strlen(name); ++i){
-		uart_putc('=');
+		NESSIE_PUTC('=');
 	}
 	char str[6]; /* must catch numbers up to 65535 + terminatin \0 */
 	if(keysize_b){
-		uart_putstr_P(PSTR("\r\nKey size: "));
+		NESSIE_PUTSTR_P(PSTR("\r\nKey size: "));
 		utoa(keysize_b, str, 10);
-		uart_putstr(str);
-		uart_putstr_P(PSTR(" bits"));
+		NESSIE_PUTSTR(str);
+		NESSIE_PUTSTR_P(PSTR(" bits"));
 	}
 	if(blocksize_b){
-		uart_putstr_P(PSTR("\r\nBlock size: "));
+		NESSIE_PUTSTR_P(PSTR("\r\nBlock size: "));
 		utoa(blocksize_b, str, 10);
-		uart_putstr(str);
-		uart_putstr_P(PSTR(" bits"));
+		NESSIE_PUTSTR(str);
+		NESSIE_PUTSTR_P(PSTR(" bits"));
 	}
 	if(hashsize_b){
-		uart_putstr_P(PSTR("\r\nHash size: "));
+		NESSIE_PUTSTR_P(PSTR("\r\nHash size: "));
 		utoa(hashsize_b, str, 10);
-		uart_putstr(str);
-		uart_putstr_P(PSTR(" bits"));
+		NESSIE_PUTSTR(str);
+		NESSIE_PUTSTR_P(PSTR(" bits"));
 	}
 	if(macsize_b){
-		uart_putstr_P(PSTR("\r\nMac size: "));
+		NESSIE_PUTSTR_P(PSTR("\r\nMac size: "));
 		utoa(macsize_b, str, 10);
-		uart_putstr(str);
-		uart_putstr_P(PSTR(" bits"));
+		NESSIE_PUTSTR(str);
+		NESSIE_PUTSTR_P(PSTR(" bits"));
 	}
 	if(ivsize_b){
 		if(ivsize_b==(uint16_t)-1){
-			uart_putstr_P(PSTR("\r\nNo initial value (IV) mode"));
+			NESSIE_PUTSTR_P(PSTR("\r\nNo initial value (IV) mode"));
 		}
 		{
-			uart_putstr_P(PSTR("\r\nIV size: "));
+			NESSIE_PUTSTR_P(PSTR("\r\nIV size: "));
 			utoa(ivsize_b, str, 10);
-			uart_putstr(str);
-			uart_putstr_P(PSTR(" bits"));
+			NESSIE_PUTSTR(str);
+			NESSIE_PUTSTR_P(PSTR(" bits"));
 		}
 	}
-	uart_putstr_P(PSTR("\r\n"));
+	NESSIE_PUTSTR_P(PSTR("\r\n"));
 }
 
 void nessie_print_footer(void){
-	uart_putstr_P(PSTR("\r\n\r\n\r\n\r\nEnd of test vectors\r\n\r\n"));
+	NESSIE_PUTSTR_P(PSTR("\r\n\r\n\r\n\r\nEnd of test vectors\r\n\r\n"));
 }
 
