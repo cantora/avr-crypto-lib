@@ -134,7 +134,7 @@ int main (void){
 	uart_putstr("\r\n");
 	cli_rx = uart_getc;
 	cli_tx = uart_putc;	 	
-	algolist=algo_list;
+	algolist=(hfdesc_t**)algo_list;
 	for(;;){
 		uart_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
 		uart_putstr(algo_name);
