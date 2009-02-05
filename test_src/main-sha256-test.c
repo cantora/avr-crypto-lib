@@ -111,9 +111,10 @@ const char performance_str[] PROGMEM = "performance";
 const char echo_str[]        PROGMEM = "echo";
 const char shavs_list_str[]  PROGMEM = "shavs_list";
 const char shavs_set_str[]   PROGMEM = "shavs_set";
+const char shavs_test1_str[] PROGMEM = "shavs_test1";
 const char dump_str[]        PROGMEM = "dump";
 
-const hfdesc_t* algo_list[] PROGMEM = {
+const hfdesc_t* algolist[] PROGMEM = {
 	(hfdesc_t*)&sha256_desc,
 	NULL
 };
@@ -125,6 +126,7 @@ cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ echo_str,        (void*)1, (void_fpt)echo_ctrl},
 	{ shavs_list_str,      NULL, shavs_listalgos},
 	{ shavs_set_str,   (void*)1, (void_fpt)shavs_setalgo},
+	{ shavs_test1_str,     NULL, shavs_test1},
 	{ dump_str,        (void*)1, (void_fpt)dump},
 	{ NULL,                NULL, NULL}
 };
@@ -134,7 +136,8 @@ int main (void){
 	uart_putstr("\r\n");
 	cli_rx = uart_getc;
 	cli_tx = uart_putc;	 	
-	algolist=(hfdesc_t**)algo_list;
+	shavs_algolist=(hfdesc_t**)algolist;
+	shavs_algo=(hfdesc_t*)&sha256_desc;
 	for(;;){
 		uart_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
 		uart_putstr(algo_name);

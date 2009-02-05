@@ -81,6 +81,17 @@ void cli_putstr_P(PGM_P s){
 	}
 }
 
+uint8_t cli_getsn(char* s, uint16_t n){
+	char c;
+	if(n==0)
+		return 2;
+	while((c=cli_getc_cecho())!='\0' && c!='\r' && n--){
+		*s++=c;
+	}
+	*s='\0';
+	return (c=='\r')?0:1;
+}
+
 void cli_hexdump(void* data, uint16_t length){
 	char hex_tab[] = {'0', '1', '2', '3', 
 	                  '4', '5', '6', '7', 

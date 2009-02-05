@@ -30,10 +30,11 @@
 #include <stdlib.h>
 #include "hashfunction_descriptor.h"
 
-extern hfdesc_t*  algo;
-extern hfdesc_t** algolist;
+extern hfdesc_t*  shavs_algo;
+extern hfdesc_t** shavs_algolist;
 
 void shavs_listalgos(void);
 void shavs_setalgo(char* param);
+void shavs_test1(void);
 
 #endif /* SHAVS */

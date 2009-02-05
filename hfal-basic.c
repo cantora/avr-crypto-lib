@@ -27,7 +27,7 @@ uint8_t hfal_hash_init(const hfdesc_t* hash_descriptor, hfgen_ctx_t* ctx){
 	ctx->desc_ptr = (hfdesc_t*)hash_descriptor;
 	if(!(ctx->ctx=malloc(pgm_read_word(&(hash_descriptor->ctxsize_B)))))
 		return 3;
-	f= (hf_init_fpt)pgm_read_word(hash_descriptor->init);
+	f= (hf_init_fpt)pgm_read_word(&(hash_descriptor->init));
 	f(ctx->ctx);
 	return 0;
 }

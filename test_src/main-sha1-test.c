@@ -104,6 +104,24 @@ void testrun_sha1(void){
 	uart_putstr("\r\nx");
 }
 
+
+void testrun_sha1_2(void){
+	sha1_ctx_t ctx;
+	sha1_hash_t hash;
+	sha1(&hash,"",0);
+	uart_putstr("\r\nsha1(NULL) = \r\n\t");
+	uart_hexdump(hash,SHA1_HASH_BYTES);
+
+	memset(hash, 0, SHA1_HASH_BYTES);
+
+	sha1_init(&ctx);
+	sha1_lastBlock(&ctx, "", 0);
+	sha1_ctx2hash(hash, &ctx); 
+	uart_putstr("\r\nsha1(NULL) = \r\n\t");
+	uart_hexdump(hash,SHA1_HASH_BYTES);
+}
+
+
 void testrun_performance_sha1(void){
 	uint64_t t;
 	char str[16];
@@ -148,12 +166,14 @@ void testrun_performance_sha1(void){
 
 const char nessie_str[]      PROGMEM = "nessie";
 const char test_str[]        PROGMEM = "test";
+const char test2_str[]       PROGMEM = "test2";
 const char performance_str[] PROGMEM = "performance";
 const char echo_str[]        PROGMEM = "echo";
 
 cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ nessie_str,      NULL, testrun_nessie_sha1},
 	{ test_str,        NULL, testrun_sha1},
+	{ test2_str,       NULL, testrun_sha1_2},
 	{ performance_str, NULL, testrun_performance_sha1},
 	{ echo_str,    (void*)1, (void_fpt)echo_ctrl},
 	{ NULL,            NULL, NULL}
