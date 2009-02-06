@@ -177,7 +177,9 @@ void shavs_test1(void){
 		cli_putstr_P(PSTR("\r\n"));
 		while((c=cli_getc_cecho())!='M' && c!='m'){
 			if(!isblank(c)){
-				cli_putstr_P(PSTR("\r\nERROR: wrong input (1)!\r\n"));
+				cli_putstr_P(PSTR("\r\nERROR: wrong input (1) [0x"));
+				cli_hexdump(&c, 1);
+				cli_putstr_P(PSTR("]!\r\n"));
 				return;
 			}
 		}
@@ -212,7 +214,7 @@ void shavs_test1(void){
 		}
 		
 		uint8_t diggest[pgm_read_word(shavs_algo->hashsize_b)/8];
-		if(length%(buffersize_B*8)==0)
+		if(length && length%(buffersize_B*8)==0)
 			hfal_hash_nextBlock(&ctx, buffer);
 		hfal_hash_lastBlock(&ctx, buffer, length%(buffersize_B*8));
 		hfal_hash_ctx2hash(diggest, &ctx);

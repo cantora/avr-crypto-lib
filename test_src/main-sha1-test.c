@@ -34,6 +34,9 @@
 #include <string.h>
 #include <stdlib.h>
 #include "cli.h"
+#include "shavs.h"
+#include "hfal_sha1.h"
+#include "dump.h"
 
 char* algo_name = "SHA-1";
 
@@ -116,7 +119,7 @@ void testrun_sha1_2(void){
 
 	sha1_init(&ctx);
 	sha1_lastBlock(&ctx, "", 0);
-	sha1_ctx2hash(hash, &ctx); 
+	sha1_ctx2hash(&hash, &ctx); 
 	uart_putstr("\r\nsha1(NULL) = \r\n\t");
 	uart_hexdump(hash,SHA1_HASH_BYTES);
 }
@@ -169,21 +172,37 @@ const char test_str[]        PROGMEM = "test";
 const char test2_str[]       PROGMEM = "test2";
 const char performance_str[] PROGMEM = "performance";
 const char echo_str[]        PROGMEM = "echo";
+const char shavs_list_str[]  PROGMEM = "shavs_list";
+const char shavs_set_str[]   PROGMEM = "shavs_set";
+const char shavs_test1_str[] PROGMEM = "shavs_test1";
+const char dump_str[]        PROGMEM = "dump";
+
 
 cmdlist_entry_t cmdlist[] PROGMEM = {
-	{ nessie_str,      NULL, testrun_nessie_sha1},
-	{ test_str,        NULL, testrun_sha1},
-	{ test2_str,       NULL, testrun_sha1_2},
-	{ performance_str, NULL, testrun_performance_sha1},
-	{ echo_str,    (void*)1, (void_fpt)echo_ctrl},
-	{ NULL,            NULL, NULL}
+	{ nessie_str,          NULL, testrun_nessie_sha1},
+	{ test_str,            NULL, testrun_sha1},
+	{ test2_str,           NULL, testrun_sha1_2},
+	{ performance_str,     NULL, testrun_performance_sha1},
+	{ echo_str,        (void*)1, (void_fpt)echo_ctrl},
+	{ shavs_list_str,      NULL, shavs_listalgos},
+	{ shavs_set_str,   (void*)1, (void_fpt)shavs_setalgo},
+	{ shavs_test1_str,     NULL, shavs_test1},
+	{ dump_str,        (void*)1, (void_fpt)dump},
+	{ NULL,                NULL, NULL}
+};
+
+const hfdesc_t* algolist[] PROGMEM = {
+	(hfdesc_t*)&sha1_desc,
+	NULL
 };
 
 int main (void){
 	DEBUG_INIT();
 	uart_putstr("\r\n");
 	cli_rx = uart_getc;
-	cli_tx = uart_putc;	 	
+	cli_tx = uart_putc;	 
+	shavs_algolist=(hfdesc_t**)algolist;
+	shavs_algo=(hfdesc_t*)&sha1_desc;	
 	for(;;){
 		uart_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
 		uart_putstr(algo_name);

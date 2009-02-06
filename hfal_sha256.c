@@ -30,7 +30,7 @@
 #include "hashfunction_descriptor.h"
 #include "sha256.h"
 
-const char sha256_str[]   PROGMEM = "SHA-256";
+static const char sha256_str[]   PROGMEM = "SHA-256";
 
 const hfdesc_t sha256_desc PROGMEM = {
 	HFDESC_TYPE_HASHFUNCTION,
