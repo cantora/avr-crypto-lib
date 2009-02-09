@@ -33,15 +33,24 @@ typedef void (*cli_tx_fpt)(char);
 #define CMDLIST_ENTRY_SIZE 8
 
 typedef struct {
-	PGM_P      cmd_name;      /* string containing the function name */
-	PGM_P      cmd_param_str; /* param descriptor string */
-	void_fpt   cmd_function;  /* function pointer */
-	void_fpt   options;
+	uint16_t   option_flags;
+	PGM_VOID_P options[];
+} cmdoption_t;
+
+#define CLI_OPTION_DESC 0x01
+#define CLI_OPTION_MANP 0x02
+
+typedef struct {
+	PGM_P        cmd_name;      /* string containing the function name */
+	PGM_P        cmd_param_str; /* param descriptor string */
+	void_fpt     cmd_function;  /* function pointer */
+	cmdoption_t* options;
 } cmdlist_entry_t;
 
 extern cli_rx_fpt cli_rx;
 extern cli_tx_fpt cli_tx;
 extern uint8_t cli_echo;
+
 
 
 void cli_putc(char c);

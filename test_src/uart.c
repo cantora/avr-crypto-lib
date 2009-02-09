@@ -58,6 +58,27 @@
 #define RXC RXC0
 #endif
 
+#ifdef AT90USB162
+#define UCSRB UCSR1B
+#define UCSRC UCSR1C
+#define UDR UDR1
+#define UBRRH UBRR1H
+#define UBRRL UBRR1L
+#define URSEL UMSEL10
+#define USART_UDRE_vect USART1_UDRE_vect
+#define USART_RXC_vect USART1_RX_vect
+#define UDRIE UDRIE1
+#define TXEN TXEN1
+#define UMSEL UMSEL1
+#define RXEN RXEN1
+#define RXCIE RXCIE1
+#define UCSZ0 UCSZ10
+#define UCSRA UCSR1A
+#define UDRE UDRE1
+#define RXC RXC1
+#endif
+
+
 
 #ifdef UART_XON_XOFF
  #ifdef UART_INTERRUPT

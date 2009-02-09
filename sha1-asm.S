@@ -659,7 +659,7 @@ sha1_nextBlock_mainloop_core:	/* ther core function; T=ROTL5(a) ....*/
 	adc T4, tmp1
 			/* T = ROTL(a,5) + e + kt + w[s] */
 	
-	/* wo Z-4 gerade auf kt zeigt ... */
+	/* Z-4 is just pointing to kt ... */
 	movw r28, r26 /* copy X in Y */
 	adiw r30, 3*4 /* now Z points to the rigth locatin in our jump-vector-table */
 	lsr r31
@@ -887,7 +887,6 @@ sha1_init_vloop:
 	dec r22
 	brne sha1_init_vloop
 	ldi r22, 8
-	clr r1 /* this should not be needed */
 sha1_init_lloop:
 	st X+, r1
 	dec r22
@@ -900,96 +899,4 @@ sha1_init_vector:
 .int 0x98badcfe;
 .int 0x10325476;
 .int 0xc3d2e1f0;
-/*
-;###########################################################	
 
-.global rotl32
-; === ROTL32 ===
-; function that rotates a 32 bit word to the left
-;  param1: the 32-bit word to rotate
-;	given in r25,r24,r23,r22 (r25 is most significant)
-;  param2: an 8-bit value telling how often to rotate
-;	given in r20
-; modifys: r21, r22
-rotl32:
-	cpi r20, 8
-	brlo bitrotl
-	mov r21, r25
-	mov r25, r24
-	mov r24, r23
-	mov r23, r22
-	mov r22, r21
-	subi r20, 8
-	rjmp rotr32
-bitrotl:
-	clr r21
-	clc
-bitrotl_loop:	
-	tst r20
-	breq fixrotl
-	rol r22
-	rol r23
-	rol r24
-	rol r25
-	rol r21
-	dec r20
-	rjmp bitrotl_loop
-fixrotl:
-	or r22, r21
-	ret
-	
-
-;###########################################################	
-
-.global rotr32
-; === ROTR32 ===
-; function that rotates a 32 bit word to the right
-;  param1: the 32-bit word to rotate
-;	given in r25,r24,r23,22 (r25 is most significant)
-;  param2: an 8-bit value telling how often to rotate
-;	given in r20
-; modifys: r21, r22
-rotr32:
-	cpi r20, 8
-	brlo bitrotr
-	mov r21, r22
-	mov r22, r23
-	mov r23, r24
-	mov r24, r25
-	mov r25, r21
-	subi r20, 8
-	rjmp rotr32
-bitrotr:
-	clr r21
-	clc
-bitrotr_loop:	
-	tst r20
-	breq fixrotr
-	ror r25
-	ror r24
-	ror r23
-	ror r22
-	ror r21
-	dec r20
-	rjmp bitrotr_loop
-fixrotr:
-	or r25, r21
-	ret
-	
-	
-;###########################################################	
-	
-.global change_endian32
-; === change_endian32 ===
-; function that changes the endianess of a 32-bit word
-;  param1: the 32-bit word
-;	given in r25,r24,r23,22 (r25 is most significant)
-;  modifys: r21, r22
-change_endian32:
-	movw r20,  r22 ; (r22,r23) --> (r20,r21)
-	mov r22, r25
-	mov r23, r24
-	mov r24, r21
-	mov r25, r20 
-	ret
-*/

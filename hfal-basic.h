@@ -25,9 +25,11 @@
 
 uint8_t hfal_hash_init(const hfdesc_t* hash_descriptor, hfgen_ctx_t* ctx);
 void hfal_hash_nextBlock(hfgen_ctx_t* ctx, const void* block);
-void hfal_hash_lastBlock(hfgen_ctx_t* ctx, const void* block, uint16_t size);
+void hfal_hash_lastBlock(hfgen_ctx_t* ctx, const void* block, uint16_t length_b);
 void hfal_hash_ctx2hash(void* dest, hfgen_ctx_t* ctx);
 void hfal_hash_free(hfgen_ctx_t* ctx);
 void hfal_hash_mem(const hfdesc_t* hash_descriptor, void* dest, const void* msg, uint32_t length_b);
+uint16_t hfal_hash_getBlocksize(const* hash_descriptor);
+uint16_t hfal_hash_getHashsize(const* hash_descriptor);
 
 #endif /* HFAL_BASIC_H_ */

@@ -1,4 +1,4 @@
-/* hfal_sha256.c */
+/* hfal_twister512.c */
 /*
     This file is part of the AVR-Crypto-Lib.
     Copyright (C) 2008  Daniel Otte (daniel.otte@rub.de)
@@ -17,10 +17,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * \file     hfal_sha256.c
+ * \file     hfal_twister512.c
  * \email    daniel.otte@rub.de
  * \author   Daniel Otte 
- * \date     2009-02-04
+ * \date     2009-02-09
  * \license  GPLv3 or later
  * 
  */
@@ -28,22 +28,22 @@
 #include <avr/pgmspace.h>
 #include <stdlib.h>
 #include "hashfunction_descriptor.h"
-#include "sha256.h"
+#include "twister-big.h"
 
-static const char sha256_str[]   PROGMEM = "SHA-256";
+static const char twister512_str[]   PROGMEM = "Twister-512";
 
-const hfdesc_t sha256_desc PROGMEM = {
+const hfdesc_t twister512_desc PROGMEM = {
 	HFDESC_TYPE_HASHFUNCTION,
 	0,
-	sha256_str,
-	sizeof(sha256_ctx_t),
+	twister512_str,
+	sizeof(twister512_ctx_t),
 	512,
-	256,
-	(hf_init_fpt)sha256_init,
-	(hf_nextBlock_fpt)sha256_nextBlock,
-	(hf_lastBlock_fpt)sha256_lastBlock,
-	(hf_ctx2hash_fpt)sha256_ctx2hash,
+	512,
+	(hf_init_fpt)twister512_init,
+	(hf_nextBlock_fpt)twister512_nextBlock,
+	(hf_lastBlock_fpt)twister512_lastBlock,
+	(hf_ctx2hash_fpt)twister512_ctx2hash,
 	(hf_free_fpt)NULL,
-	(hf_mem_fpt)sha256
+	(hf_mem_fpt)twister512
 };
 

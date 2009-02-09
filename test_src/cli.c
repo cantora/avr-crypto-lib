@@ -39,18 +39,32 @@ cli_rx_fpt cli_rx = NULL;
 cli_tx_fpt cli_tx = NULL;
 uint8_t cli_echo=1;
 
+/**
+ * \brief output a character to the console
+ * 
+ */
+
 void cli_putc(char c){
 	if(cli_tx)
 		cli_tx(c);
 }
 
+/**
+ * \brief get a character from the console
+ * Gets a character from the console input and blocks
+ * until a character is recieved
+ */
 uint16_t cli_getc(void){
 	if(cli_rx)
 		return cli_rx();
 	return ((uint16_t)-1);
 }
 
-
+/**
+ * \brief get a character from the console
+ * Gets a char from the console input (like cli_getc())
+ * and echos it back to the console if echo is enabled.
+ */
 uint16_t cli_getc_cecho(void){
 	char c;
 	if(cli_rx){
@@ -62,6 +76,9 @@ uint16_t cli_getc_cecho(void){
 	return ((uint16_t)-1);
 }
 
+/**
+ * \brief ouputs a zero-terminated string from ram to the console 
+ */
 void cli_putstr(char* s){
 	if(!cli_tx)
 		return;
@@ -69,6 +86,10 @@ void cli_putstr(char* s){
 		cli_tx(*s++);
 }
 
+
+/**
+ * \brief ouputs a zero-terminated string from flash to the console 
+ */
 void cli_putstr_P(PGM_P s){
 	char c;
 	if(!cli_tx)
@@ -81,6 +102,13 @@ void cli_putstr_P(PGM_P s){
 	}
 }
 
+/**
+ * \brief reads a line or max n characters from the console
+ * Writes characters from the console into the supplyed buffer until a '\r'
+ * character is recieved or until n character a read (whatever happens first).
+ * The string will always be terminated by a '\0' character, so the buffer
+ * should have at least a size of n+1. 
+ */
 uint8_t cli_getsn(char* s, uint16_t n){
 	char c;
 	if(n==0)
@@ -92,6 +120,11 @@ uint8_t cli_getsn(char* s, uint16_t n){
 	return (c=='\r')?0:1;
 }
 
+/**
+ * \brief dumps the contents of a buffer to the console
+ * Dumps length bytes from data to the console ouput. The dump
+ * will have 2*n continous hexadecimal characters.
+ */
 void cli_hexdump(void* data, uint16_t length){
 	char hex_tab[] = {'0', '1', '2', '3', 
 	                  '4', '5', '6', '7', 
@@ -106,6 +139,11 @@ void cli_hexdump(void* data, uint16_t length){
 	}
 }
 
+/**
+ * \brief dumps the contents of a buffer to the console
+ * Like cli_hexdump but bytes are seperated with a single space
+ * on the console output.
+ */
 void cli_hexdump2(void* data, uint16_t length){
 	char hex_tab[] = {'0', '1', '2', '3', 
 	                  '4', '5', '6', '7', 
@@ -120,6 +158,7 @@ void cli_hexdump2(void* data, uint16_t length){
 		data = (uint8_t*)data +1;
 	}
 }
+
 
 static
 void cli_auto_help(uint16_t maxcmdlength, PGM_VOID_P cmdlist){

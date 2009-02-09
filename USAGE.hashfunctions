@@ -56,7 +56,7 @@ email:  daniel.otte@rub.de
  This function initializes the context with algorithm specific values.
  
 3.3. *_nexBlock function
- The *nextBlock function is the core of each hash function. It updates the hash 
+ The *_nextBlock function is the core of each hash function. It updates the hash 
  state with a given message block. So this function uses a context pointer and 
  a message pointer as parameters. The size of a message block is fixed for each
  hash function (mostly 512 bit). For the last block of a messages which may be
