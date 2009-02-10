@@ -60,6 +60,7 @@ uint8_t cli_getsn(char* s, uint16_t n);
 void cli_putstr(char* s);
 void cli_putstr_P(PGM_P s);
 void cli_hexdump(void* data, uint16_t length);
+void cli_hexdump_rev(void* data, uint16_t length);
 void cli_hexdump2(void* data, uint16_t length);
 void echo_ctrl(char* s);
 int8_t cmd_interface(PGM_VOID_P cmd_desc);

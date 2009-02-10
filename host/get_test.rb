@@ -60,8 +60,9 @@ def readTestVector(param)
     if(m) 
       fname+=m[1]+".";
     end
+    return false if lb==nil
     buffer+=lb;
-	lb = read_line();
+    lb = read_line();
   end
   if(param!="")
     fname+=param+".";

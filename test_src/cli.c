@@ -34,6 +34,7 @@
 #include "string-extras.h"
 #include "cli.h"
 #include "config.h"
+#include "hexdigit_tab.h"
 
 cli_rx_fpt cli_rx = NULL;
 cli_tx_fpt cli_tx = NULL;
@@ -126,16 +127,29 @@ uint8_t cli_getsn(char* s, uint16_t n){
  * will have 2*n continous hexadecimal characters.
  */
 void cli_hexdump(void* data, uint16_t length){
-	char hex_tab[] = {'0', '1', '2', '3', 
-	                  '4', '5', '6', '7', 
-					  '8', '9', 'A', 'B', 
-					  'C', 'D', 'E', 'F'};
 	if(!cli_tx)
 		return;
 	while(length--){
-		cli_tx(hex_tab[(*((uint8_t*)data))>>4]);
-		cli_tx(hex_tab[(*((uint8_t*)data))&0xf]);
+		cli_tx(pgm_read_byte(hexdigit_tab_P +((*((uint8_t*)data))>>4)));
+		cli_tx(pgm_read_byte(hexdigit_tab_P +((*((uint8_t*)data))&0xf)));
 		data = (uint8_t*)data +1;
+	}
+}
+
+/**
+ * \brief dumps the contents of a buffer to the console
+ * This function behaves like cli_hexdump except that the
+ * bytes are dumped in reverse order. This is usefull to dump
+ * integers which ar e in little endian order.
+ */
+void cli_hexdump_rev(void* data, uint16_t length){
+	if(!cli_tx)
+		return;
+	data = (uint8_t*)data + length -1;
+	while(length--){
+		cli_tx(pgm_read_byte(hexdigit_tab_P +((*((uint8_t*)data))>>4)));
+		cli_tx(pgm_read_byte(hexdigit_tab_P +((*((uint8_t*)data))&0xf)));
+		data = (uint8_t*)data -1;
 	}
 }
 
@@ -145,15 +159,11 @@ void cli_hexdump(void* data, uint16_t length){
  * on the console output.
  */
 void cli_hexdump2(void* data, uint16_t length){
-	char hex_tab[] = {'0', '1', '2', '3', 
-	                  '4', '5', '6', '7', 
-					  '8', '9', 'A', 'B', 
-					  'C', 'D', 'E', 'F'};
 	if(!cli_tx)
 		return;
 	while(length--){
-		cli_tx(hex_tab[(*((uint8_t*)data))>>4]);
-		cli_tx(hex_tab[(*((uint8_t*)data))&0xf]);
+		cli_tx(pgm_read_byte(hexdigit_tab_P +((*((uint8_t*)data))>>4)));
+		cli_tx(pgm_read_byte(hexdigit_tab_P +((*((uint8_t*)data))&0xf)));
 		cli_tx(' ');
 		data = (uint8_t*)data +1;
 	}
@@ -193,7 +203,7 @@ void cli_auto_help(uint16_t maxcmdlength, PGM_VOID_P cmdlist){
 				cli_putstr_P(PSTR(" \t- 0x"));
 			}
 		}
-		cli_hexdump(&item.cmd_function, 2);	
+		cli_hexdump_rev(&item.cmd_function, 2);	
 		cli_putstr_P(PSTR("\r\n"));
 	}
 }

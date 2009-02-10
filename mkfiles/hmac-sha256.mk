@@ -5,7 +5,7 @@ ALGO_NAME := HMAC-SHA256
 MACS += $(ALGO_NAME)
 
 $(ALGO_NAME)_OBJ      := hmac-sha256.o sha256-asm.o
-$(ALGO_NAME)_TEST_BIN := main-hmac-sha256-test.o debug.o uart.o serial-tools.o \
+$(ALGO_NAME)_TEST_BIN := main-hmac-sha256-test.o debug.o uart.o hexdigit_tab.o serial-tools.o \
                          nessie_mac_test.o nessie_common.o cli.o string-extras.o
 $(ALGO_NAME)_NESSIE_TEST      := "nessie"
 $(ALGO_NAME)_PERFORMANCE_TEST := "performance"

@@ -23,7 +23,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <stdlib.h>
-
+#include "hexdigit_tab.h"
 #include "uart.h"
 
 #ifdef ATMEGA128
@@ -279,11 +279,9 @@ void uart_putstr_P(PGM_P str) {
 
 void uart_hexdump(const void* buf, int len)
 {
-	unsigned char table[]={'0','1','2','3','4','5','6','7',
-		                   '8','9','a','b','c','d','e','f'};
 	while(len--){
-		uart_putc(table[((*((char*)buf))>>4)&0xf]);
-		uart_putc(table[(*((char*)buf))&0xf]);
+		uart_putc(pgm_read_byte(hexdigit_tab_P + ((*((uint8_t*)buf))>>4)));
+		uart_putc(pgm_read_byte(hexdigit_tab_P + ((*((uint8_t*)buf))&0xf)));
 		uart_putc(' ');
 		buf=(uint8_t*)buf+1;
 	}

@@ -799,10 +799,13 @@ sha1_nextBlock_KTable:
 .int	0x8f1bbcdc 
 .int	0xca62c1d6
 sha1_nextBlock_JumpTable:
-jmp sha1_nextBlock_Ch	
-jmp sha1_nextBlock_Parity
-jmp sha1_nextBlock_Maj
-jmp sha1_nextBlock_Parity
+rjmp sha1_nextBlock_Ch
+	nop	
+rjmp sha1_nextBlock_Parity
+	nop
+rjmp sha1_nextBlock_Maj
+	nop
+rjmp sha1_nextBlock_Parity
 
 	 /* X and Y still point at a[1] aka b ; return value in tmp1 */
 sha1_nextBlock_Ch:
@@ -814,13 +817,6 @@ sha1_nextBlock_Ch:
 	ldd tmp3, Y+7	/* load from d */
 	and tmp2, tmp3
 	eor tmp1, tmp2
-	/**
-	precall
-	ldi r24, lo8(ch_str)
-	ldi r25, hi8(ch_str)
-	call uart_putstr_P
-	postcall
-	/**/
 	ret
 	
 sha1_nextBlock_Maj:
@@ -833,13 +829,6 @@ sha1_nextBlock_Maj:
 	eor tmp1, tmp2
 	and tmp3, tmp4
 	eor tmp1, tmp3
-	/**
-	precall
-	ldi r24, lo8(maj_str)
-	ldi r25, hi8(maj_str)
-	call uart_putstr_P
-	postcall
-	/**/
 	ret
 
 sha1_nextBlock_Parity:
@@ -848,14 +837,6 @@ sha1_nextBlock_Parity:
 	eor tmp1, tmp2
 	ldd tmp2, Y+7	/* load from d */
 	eor tmp1, tmp2
-	
-	/**
-	precall
-	ldi r24, lo8(parity_str)
-	ldi r25, hi8(parity_str)
-	call uart_putstr_P
-	postcall
-	/**/
 	ret
 /*	
 ch_str:			.asciz "\r\nCh"

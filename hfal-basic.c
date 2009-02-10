@@ -88,13 +88,13 @@ void hfal_hash_mem(const hfdesc_t* hash_descriptor, void* dest, const void* msg,
 	}
 } 
 
-uint16_t hfal_hash_getBlocksize(const* hash_descriptor){
+uint16_t hfal_hash_getBlocksize(const hfdesc_t* hash_descriptor){
 	uint16_t ret;
 	ret = pgm_read_word(&(hash_descriptor->blocksize_b));
 	return ret;
 }
 
-uint16_t hfal_hash_getHashsize(const* hash_descriptor){
+uint16_t hfal_hash_getHashsize(const hfdesc_t* hash_descriptor){
 	uint16_t ret;
 	ret = pgm_read_word(&(hash_descriptor->hashsize_b));
 	return ret;

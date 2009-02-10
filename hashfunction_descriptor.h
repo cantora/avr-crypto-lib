@@ -15,7 +15,7 @@ typedef void(*hf_nextBlock_fpt)(void*, const void*);
 typedef void(*hf_lastBlock_fpt)(void*, const void*, uint16_t);
 typedef void(*hf_ctx2hash_fpt)(void*, void*);
 typedef void(*hf_free_fpt)(void*);
-typedef void(*hf_mem_fpt)(void*, void*, uint32_t);
+typedef void(*hf_mem_fpt)(void*, const void*, uint32_t);
 
 
 #define HFDESC_TYPE_HASHFUNCTION 0x02
