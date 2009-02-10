@@ -732,7 +732,7 @@ sha1_nextBlock_update_a:
 	inc LoopC
 	cpi LoopC, 80
 	brge 1f
-	jmp sha1_nextBlock_mainloop
+	rjmp sha1_nextBlock_mainloop
 /**************************************/
 1:	
    /* littel patch */

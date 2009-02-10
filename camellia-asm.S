@@ -209,36 +209,36 @@ camellia_s4:
 camellia_s:
 	movw r26, r24	; backup r24,r25 -> X
 	clr r25
-	call camellia_s2
+	rcall camellia_s2
 	mov r26, r24
 
 	mov r24, r27
-	call camellia_s1
+	rcall camellia_s1
 	mov r27, r24
 	 
 	mov r24, r23
-	call camellia_s3
+	rcall camellia_s3
 	mov r23, r24
 	
 	mov r24, r22
-	call camellia_s4
+	rcall camellia_s4
 	mov r22, r24
 
 	mov r24, r21
-	call camellia_s2
+	rcall camellia_s2
 	mov r21, r24
 	
 	mov r24, r20
-	call camellia_s3
+	rcall camellia_s3
 	mov r20, r24
 	
 	mov r24, r19
-	call camellia_s4
+	rcall camellia_s4
 	mov r19, r24
 
 
 	mov r24, r18
-	call camellia_s1
+	rcall camellia_s1
 	mov r18, r24
 		
 	movw r24, r26
@@ -300,8 +300,8 @@ camellia_f:
 	eor r23, r15
 	eor r24, r16
 	eor r25, r17
-	call camellia_s
-	call camellia_p
+	rcall camellia_s
+	rcall camellia_p
 	ret
 	
 ;##############################################################################
@@ -802,15 +802,15 @@ main_loop:
 	 neg r22
 	SBRS xro_sec, 2 // KEY_DIR
 	 rjmp 2f
-	call camellia128_keyop_inv
+	rcall camellia128_keyop_inv
 	rjmp 3f 
-2:	call camellia128_keyop
+2:	rcall camellia128_keyop
 3:	/* loop back */
 	SWAP_R br1_sec, bl1_sec
 	SWAP_R br2_sec, bl2_sec
 	dec loop_cnt
 	breq 2f
-	jmp main_loop
+	rjmp main_loop
 2:
 	pop r7
 	pop r8
@@ -937,18 +937,18 @@ camellia128_init:
 //	/ * step 1 * /
 	ldi r26, lo8(camellia_sigma)
 	ldi r27, hi8(camellia_sigma)
-	call X64_xor_in
-	call camellia_s
-	call camellia_p	// / * f(x,k) is done * /
+	rcall X64_xor_in
+	rcall camellia_s
+	rcall camellia_p	// / * f(x,k) is done * /
 	sbiw r30, 128/8
 	movw r28, r30 ; Z&Y point on kar now
 	call Y64_load_xor_store
 
 //	/ * step 2 now * /
-	call X64_xor_in
-	call camellia_s
-	call camellia_p	// / * f(x,k) is done * /
-	call Y64_load_xor_store
+	rcall X64_xor_in
+	rcall camellia_s
+	rcall camellia_p	// / * f(x,k) is done * /
+	rcall Y64_load_xor_store
 	
 //	/ * now the xor part (kl and kr) * /
 	sbiw r30, 128/8 	; Z points to klr
@@ -961,23 +961,23 @@ camellia128_init:
 	brne 1b
 	
 //	/ * now s->kar ^= camellia_f(s->kal, camellia_sigma[2]); * /	
-	call X64_load 		; load sigma[2]
+	rcall X64_load 		; load sigma[2]
 	movw r26, r28		; X&Y point at kal
-	call X64_xor_in
-	call camellia_s
-	call camellia_p
+	rcall X64_xor_in
+	rcall camellia_s
+	rcall camellia_p
 	sbiw r28, 128/8/2	; Y points at kar
-	call Y64_load_xor_store
+	rcall Y64_load_xor_store
 	
 //	/ * now s->kal ^= camellia_f(s->kar, camellia_sigma[3]); * /
 	sbiw r26, 128/8		;
-	call X64_load 		; load kar
+	rcall X64_load 		; load kar
 	ldi r26, lo8(camellia_sigma+3*8)
 	ldi r27, hi8(camellia_sigma+3*8)
-	call X64_xor_in		; xor sigma[3] in
-	call camellia_s
-	call camellia_p
-	call Y64_load_xor_store
+	rcall X64_xor_in		; xor sigma[3] in
+	rcall camellia_s
+	rcall camellia_p
+	rcall Y64_load_xor_store
 	
 	pop r28
 	pop r29
@@ -993,3 +993,4 @@ camellia128_init:
 
 
 
+	
