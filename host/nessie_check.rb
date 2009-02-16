@@ -22,19 +22,15 @@ def skip_header(file)
   begin
     l = file.gets().strip
   end until /[*]{10,}.*/.match(l)
-  puts("DBG 0.0: "+l)
   begin
     l = file.gets().strip
   end until /[*]{10,}.*/.match(l)
-  puts("DBG 0.1: "+l)
   begin
     l = file.gets().strip
   end until /[=]{5,}.*/.match(l)
-  puts("DBG 0.2: "+l)
   begin
     l = file.gets().strip
   end until /[=]{5,}.*/.match(l)
-  puts("DBG 0.3: "+l)	
 end
 
 def get_next_assign(file, i)
@@ -82,17 +78,16 @@ def compare(fname1, fname2)
     a = get_next_assign(file1, 0)
     b = get_next_assign(file2, 1)
 	return if(a==nil or b==nil)
-	puts("") if pos%$linewidth==0 and pos!=0
-	putc((a==b)?'*':'!')
-#	puts("a == nil") if a==nil
-#	puts("b == nil") if b==nil
-	
+	if not $quiet
+      puts("") if pos%$linewidth==0 and pos!=0
+	  putc((a==b)?'*':'!')
+      pos +=1
+	end
 	if(a!=b and a!=nil and b!=nil)
 	  $error = 1
 	  puts("a key: "+a[0]+" value: "+a[1])
 	  puts("b key: "+b[0]+" value: "+b[1])
 	end	
-	pos +=1
   end until a==nil or b==nil
 end
 
@@ -100,14 +95,26 @@ $error = 0
 $linewidth=64
 $last_assign=[nil, nil]
 
-if ARGV.size!=2
+if ARGV.size<2 or ARGV.size>3
   STDERR.print <<EOF
-  Usage: ruby #{$0} file1 file2
+  Usage: ruby #{$0} [-q|-v] file1 file2
 EOF
   exit(1)
 end
-puts("compare("+ARGV[1]+", "+ARGV[0]+")")
-compare(ARGV[1], ARGV[0])
+$quiet = false
+if ARGV.size==3
+  f1 = ARGV[1]
+  f2 = ARGV[2]
+  if ARGV[0]=="-q"
+    $quiet=true
+  end
+else
+  f1 = ARGV[1]
+  f2 = ARGV[2]
+end
+  
+puts("compare("+f1+", "+f2+")")
+compare(f1, f2)
 puts($error==0?"[ok]":"[failed]")
 
 exit($error)

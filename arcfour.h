@@ -64,7 +64,7 @@ typedef struct arcfour_ctx_st {
 } arcfour_ctx_t;
 
 
-/** \fn void arcfour_init(arcfour_ctx_t *ctx, void *key, uint8_t length_B)
+/** \fn void arcfour_init(const void *key, uint8_t length_B, arcfour_ctx_t *ctx)
  * \brief setup a context with a key
  *
  * This function sets up a ::arcfour_ctx_t context using

@@ -42,7 +42,7 @@ typedef struct{
 
 /******************************************************************************/
 
-/** \fn void seed_init(void * key, seed_ctx_t * ctx)
+/** \fn void seed_init(const void * key, seed_ctx_t * ctx)
  * \brief initializes context for SEED operation
  * 
  * This function copys the key material into a context variable.
@@ -52,7 +52,7 @@ typedef struct{
  */
 void seed_init(const void * key, seed_ctx_t * ctx);
 
-/** \fn void seed_enc(void * buffer, seed_ctx_t * ctx)
+/** \fn void seed_enc(void * buffer,const seed_ctx_t * ctx)
  * \brief encrypt a block with SEED
  * 
  * This function encrypts a block of 64 bits (8 bytes) with the SEED algorithm.
@@ -65,7 +65,7 @@ void seed_init(const void * key, seed_ctx_t * ctx);
 void seed_enc(void * buffer, const seed_ctx_t * ctx);
 
 
-/** \fn void seed_dec(void * buffer, seed_ctx_t * ctx)
+/** \fn void seed_dec(void * buffer, const seed_ctx_t * ctx)
  * \brief decrypt a block with SEED
  * 
  * This function decrypts a block of 64 bits (8 bytes) with the SEED algorithm.

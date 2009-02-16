@@ -22,7 +22,7 @@
  * \author   Daniel Otte 
  * \date     2008-12-30
  * \license  GPLv3 or later
- * 
+ * \ingroup  AES
  */
 
 #ifndef AES128_ENC_H_
@@ -31,6 +31,15 @@
 #include "aes.h"
 #include "aes_enc.h"
 
+
+/** \fn void aes128_enc(void* buffer, aes128_ctx_t* ctx)
+ * \brief encrypt with 128 bit key.
+ * 
+ * This function encrypts one block with the AES algorithm under control of
+ * a keyschedule produced from a 128 bit key.
+ * \param buffer pointer to the block to encrypt
+ * \param ctx    pointer to the key schedule 
+ */
 void aes128_enc(void* buffer, aes128_ctx_t* ctx);
 
 

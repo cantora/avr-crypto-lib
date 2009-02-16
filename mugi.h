@@ -1,4 +1,4 @@
-/* aes192_dec.h */
+/* mugi.h */
 /*
     This file is part of the AVR-Crypto-Lib.
     Copyright (C) 2008  Daniel Otte (daniel.otte@rub.de)
@@ -17,30 +17,25 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * \file     aes192_dec.h
- * \email    daniel.otte@rub.de
- * \author   Daniel Otte 
- * \date     2008-12-31
- * \license  GPLv3 or later
- * \ingroup  AES
+ * \file	mugi.h
+ * \author	Daniel Otte 
+ * \date	2009-02-15
+ * \brief 	implementation of the MUGI key stream generator
+ * \license	GPLv3 or later
  */
+ 
+#ifndef MUGI_H_
+#define MUGI_H_ 
 
-#ifndef AES192_DEC_H_
-#define AES192_DEC_H_
+#include <stdint.h>
 
-#include "aes.h"
-#include "aes_dec.h"
+typedef struct{
+	uint64_t a[3];
+	uint64_t b[16];
+}mugi_ctx_t; /* 152 bytes in total */
 
-/** \fn void aes192_dec(void* buffer, aes192_ctx_t* ctx)
- * \brief decrypt with 192 bit key.
- * 
- * This function decrypts one block with the AES algorithm under control of
- * a keyschedule produced from a 192 bit key.
- * \param buffer pointer to the block to decrypt
- * \param ctx    pointer to the key schedule 
- */
-void aes192_dec(void* buffer, aes192_ctx_t* ctx);
+void mugi_init(const void* key, const void* iv, mugi_ctx_t* ctx);
+uint64_t mugi_gen(mugi_ctx_t* ctx);
 
 
-
-#endif /* AES192_DEC_H_ */
+#endif /* MUGI_H_ */

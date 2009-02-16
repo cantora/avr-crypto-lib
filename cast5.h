@@ -56,7 +56,7 @@ typedef struct cast5_ctx_st{
 } cast5_ctx_t;
 
 
-/** \fn void cast5_init(void* key, uint8_t keylength_b, cast5_ctx_t* s);
+/** \fn void cast5_init(const void* key, uint16_t keylength_b, cast5_ctx_t* s);
  * \brief generate keyschedule/contex for CAST-5
  * 
  * This function generates the keyschedule from the supplied key for the 
@@ -67,7 +67,7 @@ typedef struct cast5_ctx_st{
  */
 void cast5_init(const void* key, uint16_t keylength_b, cast5_ctx_t* s);
 
-/** \fn void cast5_enc(void* block, const cast5_ctx_t *s);
+/** \fn void cast5_enc(void* block, const cast5_ctx_t* s);
  * \brief encrypt a block with the CAST-5 algorithm
  * 
  * This function encrypts a block of 64 bits (8 bytes) with the CAST-5 algorithm.
@@ -76,9 +76,9 @@ void cast5_init(const void* key, uint16_t keylength_b, cast5_ctx_t* s);
  * \param block pointer to the block which gets encrypted
  * \param s pointer to the keyschedule/context
  */
-void cast5_enc(void* block, const cast5_ctx_t *s);
+void cast5_enc(void* block, const cast5_ctx_t* s);
 
-/** \fn void cast5_dec(void* block, const cast5_ctx_t *s);
+/** \fn void cast5_dec(void* block, const cast5_ctx_t* s);
  * \brief decrypt a block with the CAST-5 algorithm
  * 
  * This function decrypts a block of 64 bits (8 bytes) with the CAST-5 algorithm.
@@ -87,7 +87,7 @@ void cast5_enc(void* block, const cast5_ctx_t *s);
  * \param block pointer to the block which gets decrypted
  * \param s pointer to the keyschedule/context
  */
-void cast5_dec(void* block, const cast5_ctx_t *s);
+void cast5_dec(void* block, const cast5_ctx_t* s);
 
 
 

@@ -111,7 +111,7 @@ param=(ARGV.size>=7)?ARGV[6]:"";
 puts("\nPort: "+ARGV[0]+ "@"+ARGV[1]+" "+ARGV[2]+"N"+ARGV[3]+"\n");
 $linewidth = 16
 $sp = SerialPort.new(ARGV[0], ARGV[1].to_i, ARGV[2].to_i, ARGV[3].to_i, SerialPort::NONE);
-$sp.read_timeout=1*60*1000; # 5 minutes
+$sp.read_timeout=1000; # 1 secound
 $extended_wait=100;
 $sp.write(command);
 

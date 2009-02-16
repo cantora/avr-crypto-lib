@@ -22,7 +22,7 @@
  * \author   Daniel Otte 
  * \date     2008-12-31
  * \license  GPLv3 or later
- * 
+ * \ingroup  AES
  */
 
 #ifndef AES256_ENC_H_
@@ -31,6 +31,15 @@
 #include "aes.h"
 #include "aes_enc.h"
 
+
+/** \fn void aes256_enc(void* buffer, aes256_ctx_t* ctx)
+ * \brief encrypt with 256 bit key.
+ * 
+ * This function encrypts one block with the AES algorithm under control of
+ * a keyschedule produced from a 256 bit key.
+ * \param buffer pointer to the block to encrypt
+ * \param ctx    pointer to the key schedule 
+ */
 void aes256_enc(void* buffer, aes256_ctx_t* ctx);
 
 
