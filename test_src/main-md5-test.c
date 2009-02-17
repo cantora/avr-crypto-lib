@@ -93,15 +93,26 @@ void testrun_md5(void){
 		"abcdefghijklmnopqrstuvwxyz", 
 		"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", 
 		"12345678901234567890123456789012345678901234567890123456789012345678901234567890"};
-	uint8_t i;
+	uint16_t i;
 	
 	uart_putstr("\r\n=== MD5 test suit ===");
 	for(i=0; i<7; ++i){
-		uart_putstr("\r\n MD5 (\"");
-		uart_putstr(testv[i]);
-		uart_putstr("\") = \r\n\t");
+		cli_putstr("\r\n MD5 (\"");
+		cli_putstr(testv[i]);
+		cli_putstr("\") = \r\n\t");
 		md5(&hash, testv[i], strlen(testv[i])*8);
-		uart_hexdump(hash, 16);
+		cli_hexdump(hash, 16);
+	}
+	uint8_t buffer[512/8];
+	char str[5];
+	for(i=505; i<512; ++i){
+		memset(buffer, 0, 512/8);
+		cli_putstr_P(PSTR("\r\nMD5("));
+		utoa(i, str, 10);
+		cli_putstr(str);
+		cli_putstr_P(PSTR(" zero bits) = "));
+		md5(&hash, buffer, i);
+		cli_hexdump(hash, 16);
 	}
 }
 

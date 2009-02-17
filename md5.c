@@ -80,7 +80,8 @@ void md5_core(uint32_t* a, void* block, uint8_t as, uint8_t s, uint8_t i, uint8_
 	uart_hexdump(&s, 1); uart_putc(' ');
 	uart_hexdump(&i, 1); uart_putc(']');
 #endif	
-	t = a[as] + funcs[fi](a[(as+1)&3], a[(as+2)&3], a[(as+3)&3]) + *((uint32_t*)block) + md5_T[i] ;
+	t = a[as] + funcs[fi](a[(as+1)&3], a[(as+2)&3], a[(as+3)&3]) 
+	    + *((uint32_t*)block) + pgm_read_dword(md5_T+i) ;
 	a[as]=a[(as+1)&3] + ROTL32(t, s);
 }
 

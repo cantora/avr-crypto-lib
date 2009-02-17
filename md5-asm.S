@@ -785,6 +785,7 @@ md5_lastBlock:
 	movw r16, r20 /* length_b  */ 
 	movw r14, r22 /* block_ptr */
 	movw r12, r24 /* state_ptr */
+	ldi r18, 64
 2:
 	cpi r17, 2 /* hi8(512) */	
 	brlo 2f
@@ -792,7 +793,6 @@ md5_lastBlock:
 	movw r24, r12
 	movw r22, r14
 	rcall md5_nextBlock
-	ldi r18, 64
 	add r14, r18
 	adc r15, r1
 	subi r17, 2
@@ -801,58 +801,59 @@ md5_lastBlock:
 	pop r31
 	pop r30
 
-	adiw r30, 1
+	adiw r30, 1 /* adjust Z to point to buffer */
 	movw r26, r14
 	movw r24, r16
 	adiw r24, 7
 
 	lsr r25
 	ror r24
-	lsr r24
+	lsr r25
+	ror r24
 	lsr r24 /* r24 now holds how many bytes are to copy */
-	ldi r18, 64
-	sub r18, r24
+    ldi r18, 64
+	sub r18, r24 /* r18 will hold the amount of used bytes in buffer */
 	tst r24
 4:
 	breq 5f
 	ld r0, X+
-	st Z+, r0
+	st Z+, r0 
 	dec r24
-	rjmp 4b
+	rjmp 4b /* Z points to the byte after msg in buffer */
 5:	/* append 1-bit */
 	mov r20, r16
+	ldi r19, 0x80
 	andi r20, 0x07
 	brne bit_fucking
-	ldi r19, 0x80
 	st Z+, r19
-	dec r18
+	dec r18 /* 'allocate' another byte in buffer */
 	rjmp after_bit_fucking
 bit_fucking:
-	ldi r19, 0x80
 1:
 	lsr r19
 	dec r20
 	brne 1b
 	or r0, r19
 	st -Z, r0
-	adiw r30, 1
+    adiw r30, 1
 after_bit_fucking:
 	clt	
 	cpi r18, 8
 	brmi 2f
-	set         /* store in t if the counter will also fit in this block */
+	set         /* store in t if the counter will also fit in this block (1 if fit)*/
 2:
 	tst r18
 	breq 2f
-1:
+1: /* fill remaning buffer with zeros */
 	st Z+, r1
 	dec r18
 	brne 1b
 2:
 	sbiw r30, 63
 	sbiw r30,  1
-	movw r14, r30	
+	movw r14, r30 /* r14:r15 now points to buffer */	
 	brts load_counter
+	/* counter does not fit, finalize this block */
 	movw r24, r12
 	movw r22, r14
 	rcall md5_nextBlock
@@ -864,13 +865,14 @@ after_bit_fucking:
 	brne 3b
 	
 load_counter:		
-	movw r26, r12
+	movw r26, r12 /* X points to state */
 	adiw r26, 16
 	ld r19, X+
 	ld r20, X+
 	ld r21, X+
 	ld r22, X+
-	brts post_counter_decrement	
+	brts post_counter_decrement	/* do not decremen because counter fits */
+counter_decrement:
 	subi r19, 1
 	sbci r20, 0
 	sbci r21, 0
@@ -883,8 +885,8 @@ post_counter_decrement:
 	rol r21
 	rol r22
 	rol r23
-	add r18, r16
-	adc r19, r17
+	mov r18, r16 /* r16:r17 length_b */
+	add r19, r17
 	adc r20, r1
 	adc r21, r1
 	adc r22, r1
