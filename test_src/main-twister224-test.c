@@ -88,39 +88,39 @@ void testrun_twister224(void){
 		"12345678901234567890123456789012345678901234567890123456789012345678901234567890"};
 	uint32_t i;
 	
-	uart_putstr_P(PSTR("\r\n=== TWISTER-224 test suit (MD5 test values) ==="));
+	cli_putstr_P(PSTR("\r\n=== TWISTER-224 test suit (MD5 test values) ==="));
 	for(i=0; i<7; ++i){
-		uart_putstr_P(PSTR("\r\n TWISTER-224 (\""));
-		uart_putstr(testv[i]);
-		uart_putstr_P(PSTR("\") = \r\n\t"));
+		cli_putstr_P(PSTR("\r\n TWISTER-224 (\""));
+		cli_putstr(testv[i]);
+		cli_putstr_P(PSTR("\") = \r\n\t"));
 		twister224(&hash, testv[i], strlen(testv[i])*8);
-		uart_hexdump(hash, 224/8);
+		cli_hexdump(hash, 224/8);
 	}
 	
-	uart_putstr_P(PSTR("\r\n\r\n=== TWISTER-224 test suit (short test values) ==="));
+	cli_putstr_P(PSTR("\r\n\r\n=== TWISTER-224 test suit (short test values) ==="));
 	uint8_t stestv[]= {0x00, 0x00, 0xC0, 0xC0, 0x80, 0x48, 0x50};
 	uint8_t stestl[]= {   0,    1,    2,    3,    4,    5,    6};	
 	for(i=0; i<7; ++i){
-		uart_putstr_P(PSTR("\r\n TWISTER-224 (\""));
-		uart_hexdump(&(stestv[i]), 1);
-		uart_putstr_P(PSTR("\") = \r\n\t"));
+		cli_putstr_P(PSTR("\r\n TWISTER-224 (\""));
+		cli_hexdump(&(stestv[i]), 1);
+		cli_putstr_P(PSTR("\") = \r\n\t"));
 		twister224(&hash, &(stestv[i]), stestl[i]);
-		uart_hexdump(hash, 224/8);
+		cli_hexdump(hash, 224/8);
 	}
 #ifdef TWISTER_LONGTEST
-	uart_putstr_P(PSTR("\r\n\r\n=== TWISTER-224 test suit (long test) ==="));
+	cli_putstr_P(PSTR("\r\n\r\n=== TWISTER-224 test suit (long test) ==="));
 	char* ltest= "abcdefghbcdefghicdefghijdefghijk"
                            "efghijklfghijklmghijklmnhijklmno";	
 	twister224_ctx_t ctx;
 	twister224_init(&ctx);	
-	uart_putstr_P(PSTR("\r\n TWISTER-224 ( 16777216 x \""));
-	uart_putstr(ltest);	
-	uart_putstr_P(PSTR("\") = \r\n\t"));
+	cli_putstr_P(PSTR("\r\n TWISTER-224 ( 16777216 x \""));
+	cli_putstr(ltest);	
+	cli_putstr_P(PSTR("\") = \r\n\t"));
 	for(i=0; i<16777216; ++i){
 		twister224_nextBlock(&ctx, ltest);
 	}
 	twister224_ctx2hash(hash, &ctx);
-	uart_hexdump(hash, 224/8);
+	cli_hexdump(hash, 224/8);
 #endif
 }
 
@@ -139,9 +139,9 @@ void testrun_performance_twister224(void){
 	startTimer(1);
 	twister_small_init(&ctx, 224);
 	t = stopTimer();
-	uart_putstr_P(PSTR("\r\n\tctx-gen time: "));
+	cli_putstr_P(PSTR("\r\n\tctx-gen time: "));
 	ultoa((unsigned long)t, str, 10);
-	uart_putstr(str);
+	cli_putstr(str);
 	
 	i=3000;
 	while(i--)
@@ -150,9 +150,9 @@ void testrun_performance_twister224(void){
 	startTimer(1);
 	twister_small_nextBlock(&ctx, data);
 	t = stopTimer();
-	uart_putstr_P(PSTR("\r\n\tone-block time: "));
+	cli_putstr_P(PSTR("\r\n\tone-block time: "));
 	ultoa((unsigned long)t, str, 10);
-	uart_putstr(str);
+	cli_putstr(str);
 	
 	i=3000;
 	while(i--)
@@ -161,9 +161,9 @@ void testrun_performance_twister224(void){
 	startTimer(1);
 	twister_small_lastBlock(&ctx, data, 0);
 	t = stopTimer();
-	uart_putstr_P(PSTR("\r\n\tlast block time: "));
+	cli_putstr_P(PSTR("\r\n\tlast block time: "));
 	ultoa((unsigned long)t, str, 10);
-	uart_putstr(str);
+	cli_putstr(str);
 
 	i=3000;
 	while(i--)
@@ -172,15 +172,15 @@ void testrun_performance_twister224(void){
 	startTimer(1);
 	twister_small_ctx2hash(data, &ctx, 224);
 	t = stopTimer();
-	uart_putstr_P(PSTR("\r\n\tctx2hash time: "));
+	cli_putstr_P(PSTR("\r\n\tctx2hash time: "));
 	ultoa((unsigned long)t, str, 10);
-	uart_putstr(str);
+	cli_putstr(str);
 
 	i=3000;
 	while(i--)
 		_delay_ms(1);
 	
-	uart_putstr_P(PSTR("\r\n"));
+	cli_putstr_P(PSTR("\r\n"));
 }
 
 
@@ -203,13 +203,13 @@ cmdlist_entry_t cmdlist[] PROGMEM = {
 
 int main (void){
 	DEBUG_INIT();
-	uart_putstr("\r\n");
+	
 	cli_rx = uart_getc;
 	cli_tx = uart_putc;	 	
 	for(;;){
-		uart_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
-		uart_putstr(algo_name);
-		uart_putstr_P(PSTR(")\r\nloaded and running\r\n"));
+		cli_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
+		cli_putstr(algo_name);
+		cli_putstr_P(PSTR(")\r\nloaded and running\r\n"));
 		cmd_interface(cmdlist);
 	}
 }

@@ -58,23 +58,23 @@ void testrun_nessie_present(void){
 
 void testrun_selfenc(uint8_t* key, uint8_t* buffer){
 	present_ctx_t ctx;
-	uart_putstr_P(PSTR("\r\nkey   : "));
-	uart_hexdump(key, 10);
-	uart_putstr_P(PSTR("\r\nplain : "));
-	uart_hexdump(buffer, 8);
+	cli_putstr_P(PSTR("\r\nkey   : "));
+	cli_hexdump(key, 10);
+	cli_putstr_P(PSTR("\r\nplain : "));
+	cli_hexdump(buffer, 8);
 	present_init(key, 80, &ctx);
 	present_enc(buffer, &ctx);
-	uart_putstr_P(PSTR("\r\ncipher: "));
-	uart_hexdump(buffer, 8);
+	cli_putstr_P(PSTR("\r\ncipher: "));
+	cli_hexdump(buffer, 8);
 	present_dec(buffer, &ctx);
-	uart_putstr_P(PSTR("\r\nplain : "));
-	uart_hexdump(buffer, 8);
-	uart_putstr_P(PSTR("\r\n"));
+	cli_putstr_P(PSTR("\r\nplain : "));
+	cli_hexdump(buffer, 8);
+	cli_putstr_P(PSTR("\r\n"));
 }
 
 void testrun_self_present(void){
 	uint8_t buffer[8], key[10];
-	uart_putstr_P(PSTR("\r\n\r\n=== Testvectors from the paper ===\r\n"));
+	cli_putstr_P(PSTR("\r\n\r\n=== Testvectors from the paper ===\r\n"));
 	
 	memset(buffer, 0, 8);
 	memset(key, 0, 10);
@@ -120,7 +120,7 @@ void testrun_performance_present(void){
 	t = stopTimer();
 	print_time_P(PSTR("\tdecrypt time: "), t);
 	
-	uart_putstr_P(PSTR("\r\n"));
+	cli_putstr_P(PSTR("\r\n"));
 }
 
 /*****************************************************************************
@@ -142,13 +142,13 @@ cmdlist_entry_t cmdlist[] PROGMEM = {
 
 int main (void){
 	DEBUG_INIT();
-	uart_putstr("\r\n");
+	
 	cli_rx = uart_getc;
 	cli_tx = uart_putc;	 	
 	for(;;){
-		uart_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
-		uart_putstr(algo_name);
-		uart_putstr_P(PSTR(")\r\nloaded and running\r\n"));
+		cli_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
+		cli_putstr(algo_name);
+		cli_putstr_P(PSTR(")\r\nloaded and running\r\n"));
 		cmd_interface(cmdlist);
 	}
 }

@@ -47,17 +47,17 @@ void testrun_entropium(void){
 	uint32_t i=0;
 	while(!uart_getc_nb(&c)){
 		entropium_getRandomBlock(data);
-		uart_putstr_P(PSTR("\r\n "));
+		cli_putstr_P(PSTR("\r\n "));
 		ultoa(i, str, 10);
 		for(c=strlen(str); c<11; ++c){
-			uart_putc(' ');
+			cli_putc(' ');
 		}
-		uart_putstr(str);
+		cli_putstr(str);
 		++i;
-		uart_putstr_P(PSTR(" : "));
-		uart_hexdump(data, 32);
+		cli_putstr_P(PSTR(" : "));
+		cli_hexdump(data, 32);
 	}
-	uart_putstr_P(PSTR("\r\n\r\n"));
+	cli_putstr_P(PSTR("\r\n\r\n"));
 }
 
 
@@ -72,19 +72,19 @@ void testrun_performance_entropium(void){
 	startTimer(1);
 	entropium_addEntropy(128, data);
 	t = stopTimer();
-	uart_putstr_P(PSTR("\r\n\tadd entropy time: "));
+	cli_putstr_P(PSTR("\r\n\tadd entropy time: "));
 	ultoa((unsigned long)t, str, 10);
-	uart_putstr(str);
+	cli_putstr(str);
 	
 	
 	startTimer(1);
 	entropium_getRandomBlock(data);
 	t = stopTimer();
-	uart_putstr_P(PSTR("\r\n\tget random time:  "));
+	cli_putstr_P(PSTR("\r\n\tget random time:  "));
 	ultoa((unsigned long)t, str, 10);
-	uart_putstr(str);
+	cli_putstr(str);
 	
-	uart_putstr_P(PSTR("\r\n"));
+	cli_putstr_P(PSTR("\r\n"));
 }
 /*****************************************************************************
  *  main																	 *
@@ -106,13 +106,13 @@ cmdlist_entry_t cmdlist[] PROGMEM = {
 
 int main (void){
 	DEBUG_INIT();
-	uart_putstr("\r\n");
 	cli_rx = uart_getc;
 	cli_tx = uart_putc;	 	
+
 	for(;;){
-		uart_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
-		uart_putstr(algo_name);
-		uart_putstr_P(PSTR(")\r\nloaded and running\r\n"));
+		cli_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
+		cli_putstr(algo_name);
+		cli_putstr_P(PSTR(")\r\nloaded and running\r\n"));
 		cmd_interface(cmdlist);
 	}
 }

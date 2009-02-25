@@ -14046,7 +14046,8 @@ Set 3, vector#511:
 Test vectors -- set 4
 =====================
 
-Iterated message digest computation (100000 times): Set 4, vector#  0:
+Iterated message digest computation (100000 times):
+Set 4, vector#  0:
                        message=256 zero bits
                            key=00112233445566778899AABBCCDDEEFF
                                0123456789ABCDEF0011223344556677

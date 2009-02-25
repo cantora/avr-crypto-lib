@@ -84,19 +84,19 @@ void testrun_performance_shabea(void){
 	startTimer(1);
 	shabea256(data, key, 256, 1, 16);
 	t = stopTimer();
-	uart_putstr_P(PSTR("\r\n\tencrypt time: "));
+	cli_putstr_P(PSTR("\r\n\tencrypt time: "));
 	ultoa((unsigned long)t, str, 10);
-	uart_putstr(str);
+	cli_putstr(str);
 	
 	
 	startTimer(1);
 	shabea256(data, key, 256, 0, 16);
 	t = stopTimer();
-	uart_putstr_P(PSTR("\r\n\tdecrypt time: "));
+	cli_putstr_P(PSTR("\r\n\tdecrypt time: "));
 	ultoa((unsigned long)t, str, 10);
-	uart_putstr(str);
+	cli_putstr(str);
 	
-	uart_putstr_P(PSTR("\r\n"));
+	cli_putstr_P(PSTR("\r\n"));
 }
 
 /*****************************************************************************
@@ -104,24 +104,24 @@ void testrun_performance_shabea(void){
  *****************************************************************************/
 
 void testencrypt(uint8_t* block, uint8_t* key){
-	uart_putstr("\r\n==testy-encrypt==\r\n key: ");
-	uart_hexdump(key,16);
-	uart_putstr("\r\n plain: ");
-	uart_hexdump(block,32);
+	cli_putstr("\r\n==testy-encrypt==\r\n key: ");
+	cli_hexdump(key,16);
+	cli_putstr("\r\n plain: ");
+	cli_hexdump(block,32);
 	shabea256(block,key,128,1,16);
-	uart_putstr("\r\n crypt: ");
-	uart_hexdump(block,32);
+	cli_putstr("\r\n crypt: ");
+	cli_hexdump(block,32);
 }
 
 void testdecrypt(uint8_t* block, uint8_t* key){
 
-	uart_putstr("\r\n==testy-decrypt==\r\n key: ");
-	uart_hexdump(key,16);
-	uart_putstr("\r\n crypt: ");
-	uart_hexdump(block,32);
+	cli_putstr("\r\n==testy-decrypt==\r\n key: ");
+	cli_hexdump(key,16);
+	cli_putstr("\r\n crypt: ");
+	cli_hexdump(block,32);
 	shabea256(block,key,128,0,16);
-	uart_putstr("\r\n plain: ");
-	uart_hexdump(block,32);
+	cli_putstr("\r\n plain: ");
+	cli_hexdump(block,32);
 }
 
 void testrun_shabea(void){
@@ -181,13 +181,13 @@ cmdlist_entry_t cmdlist[] PROGMEM = {
 
 int main (void){
 	DEBUG_INIT();
-	uart_putstr("\r\n");
+	
 	cli_rx = uart_getc;
 	cli_tx = uart_putc;	 	
 	for(;;){
-		uart_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
-		uart_putstr(algo_name);
-		uart_putstr_P(PSTR(")\r\nloaded and running\r\n"));
+		cli_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
+		cli_putstr(algo_name);
+		cli_putstr_P(PSTR(")\r\nloaded and running\r\n"));
 		cmd_interface(cmdlist);
 	}
 }

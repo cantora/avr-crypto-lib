@@ -59,18 +59,18 @@ void testrun_nessie_cast5(void){
 
 void cast5_ctx_dump(cast5_ctx_t *s){
 	uint8_t i;
-	uart_putstr("\r\n==== cast5_ctx_dump ====\r\n shortkey: ");
-	uart_putstr(s->shortkey?"yes":"no");
+	cli_putstr("\r\n==== cast5_ctx_dump ====\r\n shortkey: ");
+	cli_putstr(s->shortkey?"yes":"no");
 	for(i=0;i<16;++i){
 		uint8_t r;
-		uart_putstr("\r\n Km"); uart_hexdump(&i, 1); uart_putc(':');
-		uart_hexdump(&(s->mask[i]), 4);
-		uart_putstr("\r\n Kr"); uart_hexdump(&i, 1); uart_putc(':');
+		cli_putstr("\r\n Km"); cli_hexdump(&i, 1); cli_putc(':');
+		cli_hexdump(&(s->mask[i]), 4);
+		cli_putstr("\r\n Kr"); cli_hexdump(&i, 1); cli_putc(':');
 		r = (s->rotl[i/2]);
 		if (i&0x01) r >>= 4;
 		r &= 0xf;
 		r += (s->roth[i>>3]&(1<<(i&0x7)))?0x10:0x00;
-		uart_hexdump(&r, 1);
+		cli_hexdump(&r, 1);
 	}
 }
 
@@ -78,32 +78,32 @@ void cast5_ctx_dump(cast5_ctx_t *s){
 void test_encrypt(uint8_t *block, uint8_t *key, uint8_t keylength, bool print){
 	cast5_ctx_t s;
 	if (print){
-		uart_putstr("\r\nCAST5:\r\n key:\t");
-		uart_hexdump(key, keylength/8);
-		uart_putstr("\r\n plaintext:\t");
-		uart_hexdump(block, 8);
+		cli_putstr("\r\nCAST5:\r\n key:\t");
+		cli_hexdump(key, keylength/8);
+		cli_putstr("\r\n plaintext:\t");
+		cli_hexdump(block, 8);
 	}
 	cast5_init(key, keylength, &s);
 	cast5_enc(block, &s);
 	if (print){
-		uart_putstr("\r\n ciphertext:\t");
-		uart_hexdump(block, 8);
+		cli_putstr("\r\n ciphertext:\t");
+		cli_hexdump(block, 8);
 	}
 } 
 
 void test_decrypt(uint8_t *block, uint8_t *key, uint8_t keylength, bool print){
 	cast5_ctx_t s;
 	if (print){
-		uart_putstr("\r\nCAST5:\r\n key:\t");
-		uart_hexdump(key, keylength/8);
-		uart_putstr("\r\n ciphertext:\t");
-		uart_hexdump(block, 8);
+		cli_putstr("\r\nCAST5:\r\n key:\t");
+		cli_hexdump(key, keylength/8);
+		cli_putstr("\r\n ciphertext:\t");
+		cli_hexdump(block, 8);
 	}
 	cast5_init(key, keylength, &s);
 	cast5_dec(block, &s);
 	if (print){
-		uart_putstr("\r\n plaintext:\t");
-		uart_hexdump(block, 8);
+		cli_putstr("\r\n plaintext:\t");
+		cli_hexdump(block, 8);
 	}
 } 
 
@@ -126,7 +126,7 @@ void testrun_cast5(void){
 	test_decrypt(block, key, 40, true);
 	
 /**** long test *****/
-	uart_putstr("\r\nmaintance-test");
+	cli_putstr("\r\nmaintance-test");
 	uint8_t a[16]= {0x01, 0x23, 0x45, 0x67, 0x12,
 				    0x34, 0x56, 0x78, 0x23, 0x45, 
 				    0x67, 0x89, 0x34, 0x56, 0x78, 
@@ -142,12 +142,12 @@ void testrun_cast5(void){
 		test_encrypt(&(b[0]), &(a[0]), 128, false);
 		test_encrypt(&(b[8]), &(a[0]), 128, false);
 		if ((i&0x000000ff) == 0){
-			uart_putstr("\r\n");
-			uart_hexdump(&i, 4);
+			
+			cli_hexdump(&i, 4);
 		}
 	}
-	uart_putstr("\r\na = "); uart_hexdump(a, 16);
-	uart_putstr("\r\nb = "); uart_hexdump(b, 16);
+	cli_putstr("\r\na = "); cli_hexdump(a, 16);
+	cli_putstr("\r\nb = "); cli_hexdump(b, 16);
 
 }
 
@@ -166,27 +166,27 @@ void testrun_performance_cast5(void){
 	startTimer(1);
 	cast5_init(key, 128, &ctx);
 	t = stopTimer();
-	uart_putstr_P(PSTR("\r\n\tctx-gen time: "));
+	cli_putstr_P(PSTR("\r\n\tctx-gen time: "));
 	ultoa((unsigned long)t, str, 10);
-	uart_putstr(str);
+	cli_putstr(str);
 	
 	
 	startTimer(1);
 	cast5_enc(data, &ctx);
 	t = stopTimer();
-	uart_putstr_P(PSTR("\r\n\tencrypt time: "));
+	cli_putstr_P(PSTR("\r\n\tencrypt time: "));
 	ultoa((unsigned long)t, str, 10);
-	uart_putstr(str);
+	cli_putstr(str);
 	
 	
 	startTimer(1);
 	cast5_dec(data, &ctx);
 	t = stopTimer();
-	uart_putstr_P(PSTR("\r\n\tdecrypt time: "));
+	cli_putstr_P(PSTR("\r\n\tdecrypt time: "));
 	ultoa((unsigned long)t, str, 10);
-	uart_putstr(str);
+	cli_putstr(str);
 	
-	uart_putstr_P(PSTR("\r\n"));
+	cli_putstr_P(PSTR("\r\n"));
 }
 
 /*****************************************************************************
@@ -208,13 +208,13 @@ cmdlist_entry_t cmdlist[] PROGMEM = {
 
 int main (void){
 	DEBUG_INIT();
-	uart_putstr("\r\n");
+	
 	cli_rx = uart_getc;
 	cli_tx = uart_putc;	 	
 	for(;;){
-		uart_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
-		uart_putstr(algo_name);
-		uart_putstr_P(PSTR(")\r\nloaded and running\r\n"));
+		cli_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
+		cli_putstr(algo_name);
+		cli_putstr_P(PSTR(")\r\nloaded and running\r\n"));
 		cmd_interface(cmdlist);
 	}
 }

@@ -45,16 +45,16 @@ char* algo_name = "OMAC-Noekeon";
 
 void test_mac(void* key, void* data, uint16_t datalength_b){
 	uint8_t mac[16];
-	uart_putstr_P(PSTR("\r\n-----------\r\n msg length (bit): 0x"));
-	uart_hexdump(((uint8_t*)&datalength_b)+1, 1);
-	uart_hexdump(((uint8_t*)&datalength_b)+0, 1);	
-	uart_putstr_P(PSTR("\r\n msg: "));
-	uart_hexdump(data, (datalength_b+7)/8);
-	uart_putstr_P(PSTR("\r\n key: "));
-	uart_hexdump(key, 16);
+	cli_putstr_P(PSTR("\r\n-----------\r\n msg length (bit): 0x"));
+	cli_hexdump(((uint8_t*)&datalength_b)+1, 1);
+	cli_hexdump(((uint8_t*)&datalength_b)+0, 1);	
+	cli_putstr_P(PSTR("\r\n msg: "));
+	cli_hexdump(data, (datalength_b+7)/8);
+	cli_putstr_P(PSTR("\r\n key: "));
+	cli_hexdump(key, 16);
 	omac_noekeon(mac, data, datalength_b, key, (uint8_t)-1);
-	uart_putstr_P(PSTR("\r\n mac: "));
-	uart_hexdump(mac, 16);
+	cli_putstr_P(PSTR("\r\n mac: "));
+	cli_hexdump(mac, 16);
 	
 }
 
@@ -125,27 +125,27 @@ void testrun_performance_omac_noekeon(void){
 	startTimer(1);
 	omac_noekeon_init(&ctx);
 	t = stopTimer();
-	uart_putstr_P(PSTR("\r\n\tctx-gen time: "));
+	cli_putstr_P(PSTR("\r\n\tctx-gen time: "));
 	ultoa((unsigned long)t, str, 10);
-	uart_putstr(str);
+	cli_putstr(str);
 	
 	
 	startTimer(1);
 	omac_noekeon_next(data, key, &ctx);
 	t = stopTimer();
-	uart_putstr_P(PSTR("\r\n\tone-block time: "));
+	cli_putstr_P(PSTR("\r\n\tone-block time: "));
 	ultoa((unsigned long)t, str, 10);
-	uart_putstr(str);
+	cli_putstr(str);
 	
 	
 	startTimer(1);
 	omac_noekeon_last(data, 128, key, &ctx);
 	t = stopTimer();
-	uart_putstr_P(PSTR("\r\n\tlast block time: "));
+	cli_putstr_P(PSTR("\r\n\tlast block time: "));
 	ultoa((unsigned long)t, str, 10);
-	uart_putstr(str);
+	cli_putstr(str);
 	
-	uart_putstr_P(PSTR("\r\n"));
+	cli_putstr_P(PSTR("\r\n"));
 }
 
 /*****************************************************************************
@@ -167,13 +167,13 @@ cmdlist_entry_t cmdlist[] PROGMEM = {
 
 int main (void){
 	DEBUG_INIT();
-	uart_putstr("\r\n");
+	
 	cli_rx = uart_getc;
 	cli_tx = uart_putc;	 	
 	for(;;){
-		uart_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
-		uart_putstr(algo_name);
-		uart_putstr_P(PSTR(")\r\nloaded and running\r\n"));
+		cli_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
+		cli_putstr(algo_name);
+		cli_putstr_P(PSTR(")\r\nloaded and running\r\n"));
 		cmd_interface(cmdlist);
 	}
 }

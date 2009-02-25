@@ -6,13 +6,14 @@ STREAM_CIPHERS :=
 HASHES         :=
 MACS           :=
 PRNGS          := 
+ENCODINGS      :=
 
 # we use the gnu make standard library
 include gmsl
 include avr-makefile.inc
 include mkfiles/*.mk
 
-ALGORITHMS = $(BLOCK_CIPHERS) $(STREAM_CIPHERS) $(HASHES) $(PRNGS) $(MACS)
+ALGORITHMS = $(BLOCK_CIPHERS) $(STREAM_CIPHERS) $(HASHES) $(PRNGS) $(MACS) $(ENCODINGS)
 ALGORITHMS_OBJ = $(patsubst %,%_OBJ, $(ALGORITHMS))
 ALGORITHMS_TEST_BIN = $(patsubst %,%_TEST_BIN, $(ALGORITHMS))
 
@@ -76,6 +77,8 @@ info:
 	@echo "    $(MACS)"
 	@echo "  PRNG functions:"
 	@echo "    $(PRNGS)"
+	@echo "  encodings:"
+	@echo "    $(ENCODINGS)"
 #	@echo "  ALGORITHMS_TEST_BIN:"
 #	@echo "    $(ALGORITHMS_TEST_BIN)"
 #	@echo "  ALGORITHMS_TEST_TARGET_ELF:"
@@ -164,6 +167,7 @@ $(STREAM_CIPHERS_OBJ): $(patsubst %,%_OBJ, $(STREAM_CIPHERS))
 $(HASHES_OBJ): $(patsubst %,%_OBJ, $(HASHES))
 $(PRNGS_OBJ): $(patsubst %,%_OBJ, $(PRNGS))
 $(MACS_OBJ): $(patsubst %,%_OBJ, $(MACS))
+$(ENCODINGS_OBJ): $(patsubst %,%_OBJ, $(ENCODINGS))
 
 #-------------------------------------------------------------------------------
 
@@ -240,6 +244,9 @@ macs: $(patsubst %, %_OBJ, $(MACS))
 
 .PHONY:  prngs
 prngs: $(patsubst %, %_OBJ, $(PRNGS))
+
+.PHONY:  encodings
+encodings: $(patsubst %, %_OBJ, $(ENCODINGS))
 
 tests: $(ALGORITHMS_TEST_BIN) \
        $(ALGORITHMS_TEST_TARGET_ELF) \

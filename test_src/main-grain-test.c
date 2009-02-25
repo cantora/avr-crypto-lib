@@ -83,17 +83,17 @@ void testrun_std_grain(void){
 	/* 1 */
 	memset(key, 0, 10);
 	memset(iv, 0, 8);
-	uart_putstr_P(PSTR("\r\n=== std test ==="));
-	uart_putstr_P(PSTR("\r\n key: "));
-	uart_hexdump(key, 10);
-	uart_putstr_P(PSTR("\r\n iv:  "));
-	uart_hexdump(key, 8);
+	cli_putstr_P(PSTR("\r\n=== std test ==="));
+	cli_putstr_P(PSTR("\r\n key: "));
+	cli_hexdump(key, 10);
+	cli_putstr_P(PSTR("\r\n iv:  "));
+	cli_hexdump(key, 8);
 	grain_init(key, iv, &ctx);
 	for(i=0; i<10; ++i){
 		out[i] = grain_getbyte_dummy(&ctx);
 	}
-	uart_putstr_P(PSTR("\r\n out: "));
-	uart_hexdump(out, 10);
+	cli_putstr_P(PSTR("\r\n out: "));
+	cli_hexdump(out, 10);
 	
 	/* 2 */
 	for(i=0; i<8; ++i){
@@ -105,19 +105,19 @@ void testrun_std_grain(void){
 	for(i=0; i<8; ++i){
 		iv[i] = i*0x22+1;
 	}
-	uart_putstr_P(PSTR("\r\n\r\n key: "));
-	uart_hexdump(key, 10);
-	uart_putstr_P(PSTR("\r\n iv:  "));
-	uart_hexdump(key, 8);
+	cli_putstr_P(PSTR("\r\n\r\n key: "));
+	cli_hexdump(key, 10);
+	cli_putstr_P(PSTR("\r\n iv:  "));
+	cli_hexdump(key, 8);
 	grain_init(key, iv, &ctx);
 	for(i=0; i<10; ++i){
 		out[i] = grain_getbyte_dummy(&ctx);
 	}
-	uart_putstr_P(PSTR("\r\n out: "));
-	uart_hexdump(out, 10);
+	cli_putstr_P(PSTR("\r\n out: "));
+	cli_hexdump(out, 10);
 	
 	
-	uart_putstr_P(PSTR("\r\n\r\n"));
+	cli_putstr_P(PSTR("\r\n\r\n"));
 }
 
 void testrun_performance_grain(void){
@@ -135,18 +135,18 @@ void testrun_performance_grain(void){
 	startTimer(1);
 	grain_init(key, iv, &ctx);
 	t = stopTimer();
-	uart_putstr_P(PSTR("\r\n\tctx-gen time: "));
+	cli_putstr_P(PSTR("\r\n\tctx-gen time: "));
 	ultoa((unsigned long)t, str, 10);
-	uart_putstr(str);	
+	cli_putstr(str);	
 	
 	startTimer(1);
 	grain_enc(&ctx);
 	t = stopTimer();
-	uart_putstr_P(PSTR("\r\n\tencrypt time: "));
+	cli_putstr_P(PSTR("\r\n\tencrypt time: "));
 	ultoa((unsigned long)t, str, 10);
-	uart_putstr(str);	
+	cli_putstr(str);	
 	
-	uart_putstr_P(PSTR("\r\n"));
+	cli_putstr_P(PSTR("\r\n"));
 }
 
 /*****************************************************************************
@@ -168,13 +168,13 @@ cmdlist_entry_t cmdlist[] PROGMEM = {
 
 int main (void){
 	DEBUG_INIT();
-	uart_putstr("\r\n");
+	
 	cli_rx = uart_getc;
 	cli_tx = uart_putc;	 	
 	for(;;){
-		uart_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
-		uart_putstr(algo_name);
-		uart_putstr_P(PSTR(")\r\nloaded and running\r\n"));
+		cli_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
+		cli_putstr(algo_name);
+		cli_putstr_P(PSTR(")\r\nloaded and running\r\n"));
 		cmd_interface(cmdlist);
 	}
 }

@@ -47,7 +47,7 @@ def get_next_assign(file, i)
 	  return nil if file.eof
 	  l = file.gets().strip()
 	  if not /[^=]+=[^=]+/.match(l)
-	    value += l if /[0-9A-Fa-f]{5}/.match(l)
+	    value += l if /^[0-9A-Fa-f]{5}/.match(l)
 	  end
     end until /[^=]+=[^=]+/.match(l)
 	$last_assign[i] = l
@@ -59,7 +59,7 @@ def get_next_assign(file, i)
 	  return nil if file.eof
 	  l = file.gets().strip()
 	  if not /[^=]+=[^=]+/.match(l)
-	    value += l if /[0-9A-Fa-f]{5}/.match(l)
+	    value += l if /^[0-9A-Fa-f]{5}/.match(l)
 	  end
     end until /[^=]+=[^=]+/.match(l)
 	$last_assign[i] = l
@@ -109,8 +109,8 @@ if ARGV.size==3
     $quiet=true
   end
 else
-  f1 = ARGV[1]
-  f2 = ARGV[2]
+  f1 = ARGV[0]
+  f2 = ARGV[1]
 end
   
 puts("compare("+f1+", "+f2+")")

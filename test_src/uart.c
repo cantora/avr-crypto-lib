@@ -81,6 +81,9 @@
 
 
 #ifdef UART_XON_XOFF
+#define XON  0x11
+#define XOFF 0x13
+
  #ifdef UART_INTERRUPT
   void uart_insertc(char c);
  #else

@@ -1,4 +1,4 @@
-/* hmac-sha256.h */
+/* hmac-sha1.h */
 /*
     This file is part of the AVR-Crypto-Lib.
     Copyright (C) 2008  Daniel Otte (daniel.otte@rub.de)
@@ -22,14 +22,14 @@
 #include "sha1.h"
 
 #define HMACSHA1_BITS SHA1_HASH_BITS
-#define HMACSHA1_BYTES ((HMAC_BITS+7)/8)
+#define HMACSHA1_BYTES ((HMACSHA1_BITS+7)/8)
 
 typedef sha1_ctx_t hmac_sha1_ctx_t;
 
 
 void hmac_sha1_init(hmac_sha1_ctx_t *s, void* key, uint16_t keylength_b);
 void hmac_sha1_final(hmac_sha1_ctx_t *s, void* key, uint16_t keylength_b);
-void hmac_sha1(void* dest, void* key, uint16_t keylength_b, void* msg, uint64_t msglength_b);
+void hmac_sha1(void* dest, void* key, uint16_t keylength_b, void* msg, uint32_t msglength_b);
 
 
 #endif /*HMACSHA1_H_*/

@@ -72,18 +72,18 @@ void testrun_performance_arcfour(void){
 	startTimer(1);
 	arcfour_init(key, 16, &ctx);
 	t = stopTimer();
-	uart_putstr_P(PSTR("\r\n\tctx-gen time: "));
+	cli_putstr_P(PSTR("\r\n\tctx-gen time: "));
 	ultoa((unsigned long)t, str, 10);
-	uart_putstr(str);	
+	cli_putstr(str);	
 	
 	startTimer(1);
 	arcfour_gen(&ctx);
 	t = stopTimer();
-	uart_putstr_P(PSTR("\r\n\tencrypt time: "));
+	cli_putstr_P(PSTR("\r\n\tencrypt time: "));
 	ultoa((unsigned long)t, str, 10);
-	uart_putstr(str);	
+	cli_putstr(str);	
 	
-	uart_putstr_P(PSTR("\r\n"));	
+	cli_putstr_P(PSTR("\r\n"));	
 }
 
 
@@ -106,13 +106,13 @@ cmdlist_entry_t cmdlist[] PROGMEM = {
 
 int main (void){
 	DEBUG_INIT();
-	uart_putstr("\r\n");
+	
 	cli_rx = uart_getc;
 	cli_tx = uart_putc;	 	
 	for(;;){
-		uart_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
-		uart_putstr(algo_name);
-		uart_putstr_P(PSTR(")\r\nloaded and running\r\n"));
+		cli_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
+		cli_putstr(algo_name);
+		cli_putstr_P(PSTR(")\r\nloaded and running\r\n"));
 		cmd_interface(cmdlist);
 	}
 }

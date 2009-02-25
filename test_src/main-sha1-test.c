@@ -70,25 +70,25 @@ void testrun_nessie_sha1(void){
 
 void sha1_ctx_dump(sha1_ctx_t *s){
 	uint8_t i;
-	uart_putstr("\r\n==== sha1_ctx_dump ====");
+	cli_putstr("\r\n==== sha1_ctx_dump ====");
 	for(i=0;i<5;++i){
-		uart_putstr("\r\na["); uart_hexdump(&i, 1); uart_putstr("]: ");
-		uart_hexdump(&(s->h[i]), 4);
+		cli_putstr("\r\na["); cli_hexdump(&i, 1); cli_putstr("]: ");
+		cli_hexdump(&(s->h[i]), 4);
 	}
-	uart_putstr("\r\nlength"); uart_hexdump(&i, 8);
+	cli_putstr("\r\nlength"); cli_hexdump(&i, 8);
 } 
 
 void testrun_sha1(void){
 	sha1_hash_t hash;
 	sha1(&hash,"abc",3*8);
-	uart_putstr("\r\nsha1(\"abc\") = \r\n\t");
-	uart_hexdump(hash,SHA1_HASH_BITS/8);
+	cli_putstr("\r\nsha1(\"abc\") = \r\n\t");
+	cli_hexdump(hash,SHA1_HASH_BITS/8);
 	
 	sha1(&hash,"abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq",448);
-	uart_putstr("\r\nsha1(\"abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq\") = \r\n\t");
-	uart_hexdump(hash,SHA1_HASH_BITS/8);
+	cli_putstr("\r\nsha1(\"abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq\") = \r\n\t");
+	cli_hexdump(hash,SHA1_HASH_BITS/8);
 	
-	uart_putstr("\r\nsha1(1,000,000 * 'a') = \r\n\t");
+	cli_putstr("\r\nsha1(1,000,000 * 'a') = \r\n\t");
 	{
 		uint8_t block[SHA1_BLOCK_BITS/8];
 		uint16_t i;
@@ -101,10 +101,10 @@ void testrun_sha1(void){
 		sha1_lastBlock(&s,block,0);
 		sha1_ctx2hash(&hash, &s);
 	}
-	uart_hexdump(hash,SHA1_HASH_BITS/8);
+	cli_hexdump(hash,SHA1_HASH_BITS/8);
 	
 
-	uart_putstr("\r\nx");
+	cli_putstr("\r\nx");
 }
 
 
@@ -112,16 +112,16 @@ void testrun_sha1_2(void){
 	sha1_ctx_t ctx;
 	sha1_hash_t hash;
 	sha1(&hash,"",0);
-	uart_putstr("\r\nsha1(NULL) = \r\n\t");
-	uart_hexdump(hash,SHA1_HASH_BYTES);
+	cli_putstr("\r\nsha1(NULL) = \r\n\t");
+	cli_hexdump(hash,SHA1_HASH_BYTES);
 
 	memset(hash, 0, SHA1_HASH_BYTES);
 
 	sha1_init(&ctx);
 	sha1_lastBlock(&ctx, "", 0);
 	sha1_ctx2hash(&hash, &ctx); 
-	uart_putstr("\r\nsha1(NULL) = \r\n\t");
-	uart_hexdump(hash,SHA1_HASH_BYTES);
+	cli_putstr("\r\nsha1(NULL) = \r\n\t");
+	cli_hexdump(hash,SHA1_HASH_BYTES);
 }
 
 
@@ -139,27 +139,27 @@ void testrun_performance_sha1(void){
 	startTimer(1);
 	sha1_init(&ctx);
 	t = stopTimer();
-	uart_putstr_P(PSTR("\r\n\tctx-gen time: "));
+	cli_putstr_P(PSTR("\r\n\tctx-gen time: "));
 	ultoa((unsigned long)t, str, 10);
-	uart_putstr(str);
+	cli_putstr(str);
 	
 	
 	startTimer(1);
 	sha1_nextBlock(&ctx, data);
 	t = stopTimer();
-	uart_putstr_P(PSTR("\r\n\tone-block time: "));
+	cli_putstr_P(PSTR("\r\n\tone-block time: "));
 	ultoa((unsigned long)t, str, 10);
-	uart_putstr(str);
+	cli_putstr(str);
 	
 	
 	startTimer(1);
 	sha1_lastBlock(&ctx, data, 0);
 	t = stopTimer();
-	uart_putstr_P(PSTR("\r\n\tlast block time: "));
+	cli_putstr_P(PSTR("\r\n\tlast block time: "));
 	ultoa((unsigned long)t, str, 10);
-	uart_putstr(str);
+	cli_putstr(str);
 	
-	uart_putstr_P(PSTR("\r\n"));
+	cli_putstr_P(PSTR("\r\n"));
 }
 
 
@@ -198,15 +198,15 @@ const hfdesc_t* algolist[] PROGMEM = {
 
 int main (void){
 	DEBUG_INIT();
-	uart_putstr("\r\n");
+	
 	cli_rx = uart_getc;
 	cli_tx = uart_putc;	 
 	shavs_algolist=(hfdesc_t**)algolist;
 	shavs_algo=(hfdesc_t*)&sha1_desc;	
 	for(;;){
-		uart_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
-		uart_putstr(algo_name);
-		uart_putstr_P(PSTR(")\r\nloaded and running\r\n"));
+		cli_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
+		cli_putstr(algo_name);
+		cli_putstr_P(PSTR(")\r\nloaded and running\r\n"));
 		cmd_interface(cmdlist);
 	}
 }

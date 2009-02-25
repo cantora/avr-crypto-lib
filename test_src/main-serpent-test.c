@@ -69,10 +69,10 @@ void testrun_test_serpent(void){
 	memset(key, 0, 16);
 	serpent_init(key, 128, &ctx);
 	for(i=0; i<33; ++i){
-		uart_putstr_P(PSTR("\r\n subkekey "));	
-		uart_hexdump(&i, 1);
-		uart_putstr_P(PSTR(" : "));	
-		uart_hexdump(ctx.k[i], 16);
+		cli_putstr_P(PSTR("\r\n subkekey "));	
+		cli_hexdump(&i, 1);
+		cli_putstr_P(PSTR(" : "));	
+		cli_hexdump(ctx.k[i], 16);
 	}
 }
 
@@ -91,27 +91,27 @@ void testrun_performance_serpent(void){
 	startTimer(1);
 	serpent_init(key, 0, &ctx);
 	t = stopTimer();
-	uart_putstr_P(PSTR("\r\n\tctx-gen time: "));
+	cli_putstr_P(PSTR("\r\n\tctx-gen time: "));
 	ultoa((unsigned long)t, str, 10);
-	uart_putstr(str);
+	cli_putstr(str);
 	
 	
 	startTimer(1);
 	serpent_enc(data, &ctx);
 	t = stopTimer();
-	uart_putstr_P(PSTR("\r\n\tencrypt time: "));
+	cli_putstr_P(PSTR("\r\n\tencrypt time: "));
 	ultoa((unsigned long)t, str, 10);
-	uart_putstr(str);
+	cli_putstr(str);
 	
 	
 	startTimer(1);
 	serpent_dec(data, &ctx);
 	t = stopTimer();
-	uart_putstr_P(PSTR("\r\n\tdecrypt time: "));
+	cli_putstr_P(PSTR("\r\n\tdecrypt time: "));
 	ultoa((unsigned long)t, str, 10);
-	uart_putstr(str);
+	cli_putstr(str);
 	
-	uart_putstr_P(PSTR("\r\n"));
+	cli_putstr_P(PSTR("\r\n"));
 }
 /*****************************************************************************
  *  main																	 *
@@ -132,13 +132,13 @@ cmdlist_entry_t cmdlist[] PROGMEM = {
 
 int main (void){
 	DEBUG_INIT();
-	uart_putstr("\r\n");
+	
 	cli_rx = uart_getc;
 	cli_tx = uart_putc;	 	
 	for(;;){
-		uart_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
-		uart_putstr(algo_name);
-		uart_putstr_P(PSTR(")\r\nloaded and running\r\n"));
+		cli_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
+		cli_putstr(algo_name);
+		cli_putstr_P(PSTR(")\r\nloaded and running\r\n"));
 		cmd_interface(cmdlist);
 	}
 }

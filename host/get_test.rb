@@ -20,10 +20,10 @@
 
 require 'serialport'
 
-def read_line
+def read_line(error_msg=true)
   s = $sp.gets()
   if s==nil
-    puts "ERROR: read timeout!\n";
+    puts("ERROR: read timeout!\n") if error_msg
 	return nil
   end	
   s.gsub(/\006/, '');	
@@ -36,7 +36,7 @@ def readTestVector(param)
   set=0;
   vector=0;
   begin
-    lb = read_line()
+    lb = read_line(false)
 	if (m=/unknown command/.match(lb) || m=/[Ee][Rr]{2}[Oo][Rr]/.match(lb))
       puts("ERROR: "+lb);
       exit(2);

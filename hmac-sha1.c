@@ -32,11 +32,11 @@
 #include <string.h>
 #include "config.h"
 #include "sha1.h"
+#include "hmac-sha1.h"
 
 #define IPAD 0x36
 #define OPAD 0x5C
 
-typedef sha1_ctx_t hmac_sha1_ctx_t;
 
 #ifndef HMAC_SHORTONLY
 
@@ -58,7 +58,7 @@ void hmac_sha1_init(hmac_sha1_ctx_t *s, void* key, uint16_t keylength_b){
 	sha1_init(s);
 	sha1_nextBlock(s, buffer);
 #if defined SECURE_WIPE_BUFFER
-	memset(buffer, 0, SHA256_BLOCK_BITS/8);
+	memset(buffer, 0, SHA1_BLOCK_BYTES);
 #endif
 }
 
@@ -85,7 +85,7 @@ void hmac_sha1_final(hmac_sha1_ctx_t *s, void* key, uint16_t keylength_b){
 	memcpy(s, &a, sizeof(sha1_ctx_t));
 #if defined SECURE_WIPE_BUFFER
 	memset(buffer, 0, SHA1_BLOCK_BYTES);
-	memset(a.h, 0, 20);
+	memset(&a, 0, sizeof(sha1_ctx_t));
 #endif	
 }
 
@@ -100,7 +100,7 @@ void hmac_sha1_lastBlock()
  * keylength in bits!
  * message length in bits!
  */
-void hmac_sha1(void* dest, void* key, uint16_t keylength_b, void* msg, uint64_t msglength_b){ /* a one-shot*/
+void hmac_sha1(void* dest, void* key, uint16_t keylength_b, void* msg, uint32_t msglength_b){ /* a one-shot*/
 	sha1_ctx_t s;
 	uint8_t i;
 	uint8_t buffer[SHA1_BLOCK_BYTES];

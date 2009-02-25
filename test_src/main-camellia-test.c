@@ -75,27 +75,27 @@ void test_performance_camellia(void){
 	startTimer(1);
 	camellia128_init(key, &ctx);
 	t = stopTimer();
-	uart_putstr_P(PSTR("\r\n\tctx-gen time: "));
+	cli_putstr_P(PSTR("\r\n\tctx-gen time: "));
 	ultoa((unsigned long)t, str, 10);
-	uart_putstr(str);
+	cli_putstr(str);
 	
 	
 	startTimer(1);
 	camellia128_enc(data, &ctx);
 	t = stopTimer();
-	uart_putstr_P(PSTR("\r\n\tencrypt time: "));
+	cli_putstr_P(PSTR("\r\n\tencrypt time: "));
 	ultoa((unsigned long)t, str, 10);
-	uart_putstr(str);
+	cli_putstr(str);
 	
 	
 	startTimer(1);
 	camellia128_dec(data, &ctx);
 	t = stopTimer();
-	uart_putstr_P(PSTR("\r\n\tdecrypt time: "));
+	cli_putstr_P(PSTR("\r\n\tdecrypt time: "));
 	ultoa((unsigned long)t, str, 10);
-	uart_putstr(str);
+	cli_putstr(str);
 	
-	uart_putstr_P(PSTR("\r\n"));
+	cli_putstr_P(PSTR("\r\n"));
 }
 
 
@@ -124,16 +124,16 @@ void testrun_camellia(void){
 
   camellia128_ctx_t ctx;
   camellia128_init(key, &ctx);
-  uart_putstr_P(PSTR("\r\n key:        "));
-  uart_hexdump(data, 16);
-  uart_putstr_P(PSTR("\r\n plaintext:  "));
-  uart_hexdump(data, 16);
+  cli_putstr_P(PSTR("\r\n key:        "));
+  cli_hexdump(data, 16);
+  cli_putstr_P(PSTR("\r\n plaintext:  "));
+  cli_hexdump(data, 16);
   camellia128_enc(data, &ctx);
-  uart_putstr_P(PSTR("\r\n ciphertext: "));
-  uart_hexdump(data, 16);
+  cli_putstr_P(PSTR("\r\n ciphertext: "));
+  cli_hexdump(data, 16);
   camellia128_dec(data, &ctx);
-  uart_putstr_P(PSTR("\r\n decrypted:  "));
-  uart_hexdump(data, 16);
+  cli_putstr_P(PSTR("\r\n decrypted:  "));
+  cli_hexdump(data, 16);
 
 }
 
@@ -157,13 +157,13 @@ cmdlist_entry_t cmdlist[] PROGMEM = {
 
 int main (void){
 	DEBUG_INIT();
-	uart_putstr("\r\n");
+	
 	cli_rx = uart_getc;
 	cli_tx = uart_putc;	 	
 	for(;;){
-		uart_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
-		uart_putstr(algo_name);
-		uart_putstr_P(PSTR(")\r\nloaded and running\r\n"));
+		cli_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
+		cli_putstr(algo_name);
+		cli_putstr_P(PSTR(")\r\nloaded and running\r\n"));
 		cmd_interface(cmdlist);
 	}
 }

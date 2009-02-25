@@ -27,6 +27,7 @@
  * */
 #include <stdint.h>
 #include <string.h>
+#include <stdlib.h>
 #include "nessie_mac_test.h"
 #include "nessie_common.h"
 #include "uart.h"
@@ -164,18 +165,29 @@ void one_in512_mac(uint16_t pos, uint8_t* key){
 }
 
 static
-void tv4_mac(uint8_t* key){
+void tv4_mac(void){
 	uint8_t ctx[nessie_mac_ctx.ctx_size_B];
 	uint8_t mac[MACSIZE_B];
-	uint8_t block[256/8];
-	uint16_t n=256;
+	uint8_t block[MACSIZE_B];
+	uint8_t core_key[] = {
+		0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77,
+		0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF,
+        0x01, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF
+	};	
+	uint8_t key[KEYSIZE_B];
+	uint16_t n=MACSIZE_B*8;
 	uint32_t i;
+	char str[6];
 	
 	NESSIE_PUTSTR_P(PSTR("\r\n                       message="));
-	NESSIE_PUTSTR(PSTR("256 zero bits"));
-	memset(block, 0, 256/8);
-	
-	nessie_mac_ctx.mac_init(key, nessie_mac_ctx.keysize_b, ctx);;
+	utoa(MACSIZE_B*8, str, 10);
+	NESSIE_PUTSTR(str);
+	NESSIE_PUTSTR_P(PSTR(" zero bits"));
+	memset(block, 0, MACSIZE_B);
+	for(i=0; i<KEYSIZE_B; ++i)
+		key[i] = core_key[i%(3*8)];
+	nessie_print_item("key", key, KEYSIZE_B);
+	nessie_mac_ctx.mac_init(key, nessie_mac_ctx.keysize_b, ctx);
 	while(n>nessie_mac_ctx.blocksize_B*8){
 		nessie_mac_ctx.mac_next(block, ctx);
 		n    -= nessie_mac_ctx.blocksize_B*8;
@@ -265,8 +277,10 @@ void nessie_mac_run(void){
 	nessie_print_setheader(set);
 	/* we use the same key as above */
 	nessie_print_set_vector(set, 0);
-	tv4_mac(key);
+	tv4_mac();
 	/* test set 5 */
+	set=5;
+	nessie_print_setheader(set);
 	for(i=0; i<nessie_mac_ctx.keysize_b; ++i){
 		nessie_print_set_vector(set, i);
 		memset(key, 0, KEYSIZE_B);

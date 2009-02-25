@@ -84,16 +84,16 @@ void testrun_test_aes(void){
 	                     0xe0, 0x37, 0x07, 0x34 };
 	aes128_ctx_t ctx;
 	aes128_init(key, &ctx);
-	uart_putstr_P(PSTR("\r\n\r\n cipher test (FIPS 197):\r\n key:        "));
-	uart_hexdump(key, 16);
-	uart_putstr_P(PSTR("\r\n plaintext:  "));
-	uart_hexdump(data, 16);
+	cli_putstr_P(PSTR("\r\n\r\n cipher test (FIPS 197):\r\n key:        "));
+	cli_hexdump(key, 16);
+	cli_putstr_P(PSTR("\r\n plaintext:  "));
+	cli_hexdump(data, 16);
 	aes128_enc(data, &ctx);
-	uart_putstr_P(PSTR("\r\n ciphertext: "));
-	uart_hexdump(data, 16);
+	cli_putstr_P(PSTR("\r\n ciphertext: "));
+	cli_hexdump(data, 16);
 	aes128_dec(data, &ctx);
-	uart_putstr_P(PSTR("\r\n plaintext:  "));
-	uart_hexdump(data, 16);
+	cli_putstr_P(PSTR("\r\n plaintext:  "));
+	cli_hexdump(data, 16);
 	
 	
 }
@@ -106,14 +106,14 @@ void testrun_testkey_aes128(void){
 	aes128_ctx_t ctx;
 	uint8_t i;
 	aes128_init(key, &ctx);
-	uart_putstr_P(PSTR("\r\n\r\n keyschedule test (FIPS 197):\r\n key:   "));
-	uart_hexdump(key, 16);
+	cli_putstr_P(PSTR("\r\n\r\n keyschedule test (FIPS 197):\r\n key:   "));
+	cli_hexdump(key, 16);
 	for(i=0; i<11; ++i){
-		uart_putstr_P(PSTR("\r\n index: "));
-		uart_putc('0'+i/10);
-		uart_putc('0'+i%10);
-		uart_putstr_P(PSTR(" roundkey "));
-		uart_hexdump(ctx.key[i].ks, 16);
+		cli_putstr_P(PSTR("\r\n index: "));
+		cli_putc('0'+i/10);
+		cli_putc('0'+i%10);
+		cli_putstr_P(PSTR(" roundkey "));
+		cli_hexdump(ctx.key[i].ks, 16);
 	}
 }
 
@@ -128,14 +128,14 @@ void testrun_testkey_aes192(void){
 	uint8_t i;
 	memset(&ctx, 0, sizeof(aes192_ctx_t));
 	aes192_init(key, &ctx);
-	uart_putstr_P(PSTR("\r\n\r\n keyschedule test (FIPS 197):\r\n key:   "));
-	uart_hexdump(key, 24);
+	cli_putstr_P(PSTR("\r\n\r\n keyschedule test (FIPS 197):\r\n key:   "));
+	cli_hexdump(key, 24);
 	for(i=0; i<13; ++i){
-		uart_putstr_P(PSTR("\r\n index: "));
-		uart_putc('0'+i/10);
-		uart_putc('0'+i%10);
-		uart_putstr_P(PSTR(" roundkey "));
-		uart_hexdump(ctx.key[i].ks, 16);
+		cli_putstr_P(PSTR("\r\n index: "));
+		cli_putc('0'+i/10);
+		cli_putc('0'+i%10);
+		cli_putstr_P(PSTR(" roundkey "));
+		cli_hexdump(ctx.key[i].ks, 16);
 	}
 }
 
@@ -153,14 +153,14 @@ void testrun_testkey_aes256(void){
 	uint8_t i;
 	memset(&ctx, 0, sizeof(aes256_ctx_t));
 	aes256_init(key, &ctx);
-	uart_putstr_P(PSTR("\r\n\r\n keyschedule test (FIPS 197):\r\n key:   "));
-	uart_hexdump(key, 32);
+	cli_putstr_P(PSTR("\r\n\r\n keyschedule test (FIPS 197):\r\n key:   "));
+	cli_hexdump(key, 32);
 	for(i=0; i<15; ++i){
-		uart_putstr_P(PSTR("\r\n index: "));
-		uart_putc('0'+i/10);
-		uart_putc('0'+i%10);
-		uart_putstr_P(PSTR(" roundkey "));
-		uart_hexdump(ctx.key[i].ks, 16);
+		cli_putstr_P(PSTR("\r\n index: "));
+		cli_putc('0'+i/10);
+		cli_putc('0'+i%10);
+		cli_putstr_P(PSTR(" roundkey "));
+		cli_hexdump(ctx.key[i].ks, 16);
 	}
 }
 
@@ -186,27 +186,27 @@ void testrun_performance_aes128(void){
 	startTimer(1);
 	aes128_init(key, &ctx);
 	t = stopTimer();
-	uart_putstr_P(PSTR("\r\n\tctx-gen time: "));
+	cli_putstr_P(PSTR("\r\n\tctx-gen time: "));
 	ultoa((unsigned long)t, str, 10);
-	uart_putstr(str);
+	cli_putstr(str);
 	
 	
 	startTimer(1);
 	aes128_enc(data, &ctx);
 	t = stopTimer();
-	uart_putstr_P(PSTR("\r\n\tencrypt time: "));
+	cli_putstr_P(PSTR("\r\n\tencrypt time: "));
 	ultoa((unsigned long)t, str, 10);
-	uart_putstr(str);
+	cli_putstr(str);
 	
 	
 	startTimer(1);
 	aes128_dec(data, &ctx);
 	t = stopTimer();
-	uart_putstr_P(PSTR("\r\n\tdecrypt time: "));
+	cli_putstr_P(PSTR("\r\n\tdecrypt time: "));
 	ultoa((unsigned long)t, str, 10);
-	uart_putstr(str);
+	cli_putstr(str);
 	
-	uart_putstr_P(PSTR("\r\n"));
+	cli_putstr_P(PSTR("\r\n"));
 }
 
 
@@ -225,27 +225,27 @@ void testrun_performance_aes192(void){
 	startTimer(1);
 	aes192_init(key, &ctx);
 	t = stopTimer();
-	uart_putstr_P(PSTR("\r\n\tctx-gen time: "));
+	cli_putstr_P(PSTR("\r\n\tctx-gen time: "));
 	ultoa((unsigned long)t, str, 10);
-	uart_putstr(str);
+	cli_putstr(str);
 	
 	
 	startTimer(1);
 	aes192_enc(data, &ctx);
 	t = stopTimer();
-	uart_putstr_P(PSTR("\r\n\tencrypt time: "));
+	cli_putstr_P(PSTR("\r\n\tencrypt time: "));
 	ultoa((unsigned long)t, str, 10);
-	uart_putstr(str);
+	cli_putstr(str);
 	
 	
 	startTimer(1);
 	aes192_dec(data, &ctx);
 	t = stopTimer();
-	uart_putstr_P(PSTR("\r\n\tdecrypt time: "));
+	cli_putstr_P(PSTR("\r\n\tdecrypt time: "));
 	ultoa((unsigned long)t, str, 10);
-	uart_putstr(str);
+	cli_putstr(str);
 	
-	uart_putstr_P(PSTR("\r\n"));
+	cli_putstr_P(PSTR("\r\n"));
 }
 
 
@@ -264,36 +264,36 @@ void testrun_performance_aes256(void){
 	startTimer(1);
 	aes256_init(key, &ctx);
 	t = stopTimer();
-	uart_putstr_P(PSTR("\r\n\tctx-gen time: "));
+	cli_putstr_P(PSTR("\r\n\tctx-gen time: "));
 	ultoa((unsigned long)t, str, 10);
-	uart_putstr(str);
+	cli_putstr(str);
 	
 	
 	startTimer(1);
 	aes256_enc(data, &ctx);
 	t = stopTimer();
-	uart_putstr_P(PSTR("\r\n\tencrypt time: "));
+	cli_putstr_P(PSTR("\r\n\tencrypt time: "));
 	ultoa((unsigned long)t, str, 10);
-	uart_putstr(str);
+	cli_putstr(str);
 	
 	
 	startTimer(1);
 	aes256_dec(data, &ctx);
 	t = stopTimer();
-	uart_putstr_P(PSTR("\r\n\tdecrypt time: "));
+	cli_putstr_P(PSTR("\r\n\tdecrypt time: "));
 	ultoa((unsigned long)t, str, 10);
-	uart_putstr(str);
+	cli_putstr(str);
 	
-	uart_putstr_P(PSTR("\r\n"));
+	cli_putstr_P(PSTR("\r\n"));
 }
 
 void testrun_performance_aes(void){
-	uart_putstr_P(PSTR("\r\n -=AES Performance Test=-\r\n"));
-	uart_putstr_P(PSTR("\r\n       AES-128\r\n"));
+	cli_putstr_P(PSTR("\r\n -=AES Performance Test=-\r\n"));
+	cli_putstr_P(PSTR("\r\n       AES-128\r\n"));
 	testrun_performance_aes128();
-	uart_putstr_P(PSTR("\r\n       AES-192\r\n"));
+	cli_putstr_P(PSTR("\r\n       AES-192\r\n"));
 	testrun_performance_aes192();
-	uart_putstr_P(PSTR("\r\n       AES-256\r\n"));
+	cli_putstr_P(PSTR("\r\n       AES-256\r\n"));
 	testrun_performance_aes256();
 }
 /*****************************************************************************
@@ -318,13 +318,13 @@ cmdlist_entry_t cmdlist[] PROGMEM = {
 
 int main (void){
 	DEBUG_INIT();
-	uart_putstr("\r\n");
+	
 	cli_rx = uart_getc;
 	cli_tx = uart_putc;	 	
 	for(;;){
-		uart_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
-		uart_putstr(algo_name);
-		uart_putstr_P(PSTR(")\r\nloaded and running\r\n"));
+		cli_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
+		cli_putstr(algo_name);
+		cli_putstr_P(PSTR(")\r\nloaded and running\r\n"));
 		cmd_interface(cmdlist);
 	}
 }
