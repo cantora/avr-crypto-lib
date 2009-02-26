@@ -253,21 +253,24 @@ sha256_lastBlock_localSpace = (SHA256_BLOCK_BITS/8+1)
 
 
 sha256_lastBlock:
-	tst r20
-	brne sha256_lastBlock_prolog
 	cpi r21, 0x02
-	brne sha256_lastBlock_prolog
+	brlo sha256_lastBlock_prolog
 	push r25
 	push r24
 	push r23
 	push r22
+	push r21
+	push r20
 	rcall sha256_nextBlock
+	pop r20
+	pop r21
 	pop r22
 	pop r23
 	pop r24
 	pop r25
-	clr r21
-	clr r22
+	subi r21, 0x02
+	subi r23, -2
+	rjmp sha256_lastBlock	
 sha256_lastBlock_prolog:
 	/* allocate space on stack */
 	in r30, SPL

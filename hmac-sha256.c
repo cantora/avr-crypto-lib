@@ -32,80 +32,73 @@
 #include <string.h>
 #include "config.h"
 #include "sha256.h"
+#include "hmac-sha256.h"
 
 #define IPAD 0x36
 #define OPAD 0x5C
 
-typedef sha256_ctx_t hmac_sha256_ctx_t;
+#ifndef HMAC_SHA256_SHORTONLY
 
-#ifndef HMAC_SHORTONLY
-
-void hmac_sha256_init(hmac_sha256_ctx_t *s, void* key, uint16_t keylength_b){
-	uint8_t buffer[SHA256_HASH_BYTES];
+void hmac_sha256_init(hmac_sha256_ctx_t *s, const void* key, uint16_t keylength_b){
+	uint8_t buffer[HMAC_SHA256_BLOCK_BYTES];
 	uint8_t i;
 	
-	memset(buffer, 0, SHA256_HASH_BYTES);
-	if (keylength_b > SHA256_BLOCK_BITS){
+	memset(buffer, 0, HMAC_SHA256_BLOCK_BYTES);
+	if (keylength_b > HMAC_SHA256_BLOCK_BITS){
 		sha256((void*)buffer, key, keylength_b);
 	} else {
 		memcpy(buffer, key, (keylength_b+7)/8);
 	}
 	
-	for (i=0; i<SHA256_HASH_BYTES; ++i){
+	for (i=0; i<HMAC_SHA256_BLOCK_BYTES; ++i){
 		buffer[i] ^= IPAD;
 	}
 	
-	sha256_init(s);
-	sha256_nextBlock(s, buffer);
+	sha256_init(&(s->a));
+	sha256_nextBlock(&(s->a), buffer);
+	
+	for (i=0; i<HMAC_SHA256_BLOCK_BYTES; ++i){
+		buffer[i] ^= IPAD^OPAD;
+	}
+	sha256_init(&(s->b));
+	sha256_nextBlock(&(s->b), buffer);
+	
 #if defined SECURE_WIPE_BUFFER
-	memset(buffer, 0, SHA256_HASH_BYTES);
+	memset(buffer, 0, SHA256_BLOCK_BYTES);
 #endif
 }
 
-void hmac_sha256_final(hmac_sha256_ctx_t *s, void* key, uint16_t keylength_b){
-	uint8_t buffer[SHA256_HASH_BYTES];
-	uint8_t i;
-	sha256_ctx_t a;
-	
-	memset(buffer, 0, SHA256_HASH_BYTES);
-	if (keylength_b > SHA256_BLOCK_BITS){
-		sha256((void*)buffer, key, keylength_b);
-	} else {
-		memcpy(buffer, key, (keylength_b+7)/8);
+void hmac_sha256_nextBlock(hmac_sha256_ctx_t *s, const void* block){
+	sha256_nextBlock(&(s->a), block);
+}
+
+void hmac_sha256_lastBlock(hmac_sha256_ctx_t *s, const void* block, uint16_t length_b){
+/*	while(length_b>=SHA256_BLOCK_BITS){
+		sha256_nextBlock(&(s->a), block);
+		block = (uint8_t*)block + SHA256_BLOCK_BYTES;
+		length_b -= SHA256_BLOCK_BITS;
 	}
-	
-	for (i=0; i<SHA256_HASH_BYTES; ++i){
-		buffer[i] ^= OPAD;
-	}
-	
-	sha256_init(&a);
-	sha256_nextBlock(&a, buffer); /* hash key ^ opad */
-	sha256_ctx2hash((void*)buffer, s);  /* copy hash(key ^ ipad, msg) to buffer */
-	sha256_lastBlock(&a, buffer, SHA256_HASH_BITS);
-	memcpy(s, &a, sizeof(sha256_ctx_t));
-#if defined SECURE_WIPE_BUFFER
-	memset(buffer, 0, SHA256_HASH_BYTES);
-	memset(a.h, 0, 8*4);
-#endif	
+*/	sha256_lastBlock(&(s->a), block, length_b);
+}
+
+void hmac_sha256_final(void* dest, hmac_sha256_ctx_t *s){
+	sha256_ctx2hash((sha256_hash_t*)dest, &(s->a));
+	sha256_lastBlock(&(s->b), dest, SHA256_HASH_BITS);
+	sha256_ctx2hash((sha256_hash_t*)dest, &(s->b));			
 }
 
 #endif
-
-/*
-void hmac_sha256_nextBlock()
-void hmac_sha256_lastBlock()
-*/
 
 /*
  * keylength in bits!
  * message length in bits!
  */
-void hmac_sha256(void* dest, void* key, uint16_t keylength_b, void* msg, uint64_t msglength_b){ /* a one-shot*/
+void hmac_sha256(void* dest, const void* key, uint16_t keylength_b, const void* msg, uint32_t msglength_b){ /* a one-shot*/
 	sha256_ctx_t s;
 	uint8_t i;
-	uint8_t buffer[SHA256_HASH_BYTES];
+	uint8_t buffer[HMAC_SHA256_BLOCK_BYTES];
 	
-	memset(buffer, 0, SHA256_HASH_BYTES);
+	memset(buffer, 0, HMAC_SHA256_BLOCK_BYTES);
 	
 	/* if key is larger than a block we have to hash it*/
 	if (keylength_b > SHA256_BLOCK_BITS){
@@ -114,19 +107,19 @@ void hmac_sha256(void* dest, void* key, uint16_t keylength_b, void* msg, uint64_
 		memcpy(buffer, key, (keylength_b+7)/8);
 	}
 	
-	for (i=0; i<SHA256_HASH_BYTES; ++i){
+	for (i=0; i<SHA256_BLOCK_BYTES; ++i){
 		buffer[i] ^= IPAD;
 	}
 	sha256_init(&s);
 	sha256_nextBlock(&s, buffer);
-	while (msglength_b >= SHA256_BLOCK_BITS){
+	while (msglength_b >= HMAC_SHA256_BLOCK_BITS){
 		sha256_nextBlock(&s, msg);
-		msg = (uint8_t*)msg + SHA256_HASH_BYTES;
-		msglength_b -=  SHA256_BLOCK_BITS;
+		msg = (uint8_t*)msg + HMAC_SHA256_BLOCK_BYTES;
+		msglength_b -=  HMAC_SHA256_BLOCK_BITS;
 	}
 	sha256_lastBlock(&s, msg, msglength_b);
 	/* since buffer still contains key xor ipad we can do ... */
-	for (i=0; i<SHA256_HASH_BYTES; ++i){
+	for (i=0; i<HMAC_SHA256_BLOCK_BYTES; ++i){
 		buffer[i] ^= IPAD ^ OPAD;
 	}
 	sha256_ctx2hash(dest, &s); /* save inner hash temporary to dest */

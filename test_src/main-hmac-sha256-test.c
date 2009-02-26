@@ -40,29 +40,34 @@ char* algo_name = "HMAC-SHA256";
 /*****************************************************************************
  *  additional validation-functions											 *
  *****************************************************************************/
-void hmacsha256_next_dummy(void* buffer, void* ctx){
-	sha256_nextBlock(ctx, buffer);
-}
 
-void hmacsha256_init_dummy(void* key, uint16_t keysize_b, void* ctx){
-	hmac_sha256_init(ctx, key, keysize_b);
-}
-
-void hmacsha256_last_dummy(void* buffer, uint16_t size_b, void* key, uint16_t keysize_b, void* ctx){
-	sha256_lastBlock(ctx, buffer, size_b);
-	hmac_sha256_final(ctx, key, keysize_b);
+void testrun_hmacsha256(void){
+	uint8_t key[] = { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77,
+	                  0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF,
+                      0x01, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF, 
+					  0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77,
+                      0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF, 
+					  0x01, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF,
+                      0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 
+					  0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF };
+	uint8_t msg[] = { 0x00 };
+	uint8_t mac[HMAC_SHA256_BYTES];
+	hmac_sha256(mac, key, 512, msg, 0);
+	cli_putstr_P(PSTR("\r\n quick hmac = "));
+	cli_hexdump(mac, HMAC_SHA256_BYTES);
+	cli_putstr_P(PSTR("\r\n"));
 }
 
 void testrun_nessie_hmacsha256(void){
-	nessie_mac_ctx.macsize_b   = 256;
-	nessie_mac_ctx.keysize_b   = 512;
-	nessie_mac_ctx.blocksize_B = 512/8;
+	nessie_mac_ctx.macsize_b   = HMAC_SHA256_BITS;
+	nessie_mac_ctx.keysize_b   = HMAC_SHA256_BLOCK_BITS;
+	nessie_mac_ctx.blocksize_B = HMAC_SHA256_BLOCK_BYTES;
 	nessie_mac_ctx.ctx_size_B  = sizeof(hmac_sha256_ctx_t);
 	nessie_mac_ctx.name = algo_name;
-	nessie_mac_ctx.mac_init = (nessie_mac_init_fpt)hmacsha256_init_dummy;
-	nessie_mac_ctx.mac_next = (nessie_mac_next_fpt)hmacsha256_next_dummy;
-	nessie_mac_ctx.mac_last = (nessie_mac_last_fpt)hmacsha256_last_dummy;
-	nessie_mac_ctx.mac_conv = (nessie_mac_conv_fpt)sha256_ctx2hash;
+	nessie_mac_ctx.mac_init = (nessie_mac_init_fpt)hmac_sha256_init;
+	nessie_mac_ctx.mac_next = (nessie_mac_next_fpt)hmac_sha256_nextBlock;
+	nessie_mac_ctx.mac_last = (nessie_mac_last_fpt)hmac_sha256_lastBlock;
+	nessie_mac_ctx.mac_conv = (nessie_mac_conv_fpt)hmac_sha256_final;
 	
 	nessie_mac_run();
 }
@@ -80,7 +85,7 @@ const char echo_str[]        PROGMEM = "echo";
 
 cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ nessie_str,      NULL, testrun_nessie_hmacsha256},
-	{ test_str,        NULL, testrun_nessie_hmacsha256},
+	{ test_str,        NULL, testrun_hmacsha256},
 /*	{ performance_str, NULL, testrun_performance_hmacsha256}, */
 	{ echo_str,    (void*)1, (void_fpt)echo_ctrl},
 	{ NULL,            NULL, NULL}

@@ -40,33 +40,20 @@ char* algo_name = "HMAC-SHA1";
 /*****************************************************************************
  *  additional validation-functions											 *
  *****************************************************************************/
-void hmacsha1_next_dummy(void* buffer, void* ctx){
-	sha1_nextBlock(ctx, buffer);
-}
-
-void hmacsha1_init_dummy(void* key, uint16_t keysize_b, void* ctx){
-	hmac_sha1_init(ctx, key, keysize_b);
-}
-
-void hmacsha1_last_dummy(void* buffer, uint16_t size_b, void* key, uint16_t keysize_b, void* ctx){
-	sha1_lastBlock(ctx, buffer, size_b);
-	hmac_sha1_final(ctx, key, keysize_b);
-}
 
 void testrun_nessie_hmacsha1(void){
-	nessie_mac_ctx.macsize_b   = 160;
-	nessie_mac_ctx.keysize_b   = 512;
-	nessie_mac_ctx.blocksize_B = 512/8;
+	nessie_mac_ctx.macsize_b   = HMAC_SHA1_BITS;
+	nessie_mac_ctx.keysize_b   = HMAC_SHA1_BLOCK_BITS;
+	nessie_mac_ctx.blocksize_B = HMAC_SHA1_BLOCK_BYTES;
 	nessie_mac_ctx.ctx_size_B  = sizeof(hmac_sha1_ctx_t);
 	nessie_mac_ctx.name = algo_name;
-	nessie_mac_ctx.mac_init = (nessie_mac_init_fpt)hmacsha1_init_dummy;
-	nessie_mac_ctx.mac_next = (nessie_mac_next_fpt)hmacsha1_next_dummy;
-	nessie_mac_ctx.mac_last = (nessie_mac_last_fpt)hmacsha1_last_dummy;
-	nessie_mac_ctx.mac_conv = (nessie_mac_conv_fpt)sha1_ctx2hash;
+	nessie_mac_ctx.mac_init = (nessie_mac_init_fpt)hmac_sha1_init;
+	nessie_mac_ctx.mac_next = (nessie_mac_next_fpt)hmac_sha1_nextBlock;
+	nessie_mac_ctx.mac_last = (nessie_mac_last_fpt)hmac_sha1_lastBlock;
+	nessie_mac_ctx.mac_conv = (nessie_mac_conv_fpt)hmac_sha1_final;
 	
 	nessie_mac_run();
 }
-
 
 
 /*****************************************************************************

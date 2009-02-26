@@ -75,16 +75,16 @@ typedef uint8_t sha1_hash_t[SHA1_HASH_BITS/8];
  */
 void sha1_init(sha1_ctx_t *state);
 
-/** \fn sha1_nextBlock(sha1_ctx_t *state, void* block)
+/** \fn sha1_nextBlock(sha1_ctx_t *state, const void* block)
  *  \brief process one input block
  * This function processes one input block and updates the hash context 
  * accordingly
  * \param state pointer to the state variable to update
  * \param block pointer to the message block to process
  */
-void sha1_nextBlock (sha1_ctx_t *state, void* block);
+void sha1_nextBlock (sha1_ctx_t *state, const void* block);
 
-/** \fn sha1_lastBlock(sha1_ctx_t *state, void* block, uint16_t length_b)
+/** \fn sha1_lastBlock(sha1_ctx_t *state, const void* block, uint16_t length_b)
  * \brief processes the given block and finalizes the context
  * This function processes the last block in a SHA-1 hashing process.
  * The block should have a maximum length of a single input block.
@@ -92,7 +92,7 @@ void sha1_nextBlock (sha1_ctx_t *state, void* block);
  * \param block pointer to themessage block to process
  * \param length_b length of the message block in bits  
  */
-void sha1_lastBlock (sha1_ctx_t *state, void* block, uint16_t length_b);
+void sha1_lastBlock (sha1_ctx_t *state, const void* block, uint16_t length_b);
 
 /** \fn sha1_ctx2hash(sha1_hash_t *dest, sha1_ctx_t *state)
  * \brief convert a state variable into an actual hash value
@@ -102,7 +102,7 @@ void sha1_lastBlock (sha1_ctx_t *state, void* block, uint16_t length_b);
  */ 
 void sha1_ctx2hash (sha1_hash_t *dest, sha1_ctx_t *state);
 
-/** \fn sha1(sha1_hash_t *dest, void* msg, uint32_t length_b)
+/** \fn sha1(sha1_hash_t *dest, const void* msg, uint32_t length_b)
  * \brief hashing a message which in located entirely in RAM
  * This function automatically hashes a message which is entirely in RAM with
  * the SHA-1 hashing algorithm.
@@ -110,7 +110,7 @@ void sha1_ctx2hash (sha1_hash_t *dest, sha1_ctx_t *state);
  * \param msg  pointer to the message which should be hashed
  * \param length_b length of the message in bits
  */ 
-void sha1(sha1_hash_t *dest, void* msg, uint32_t length_b);
+void sha1(sha1_hash_t *dest, const void* msg, uint32_t length_b);
 
 
 

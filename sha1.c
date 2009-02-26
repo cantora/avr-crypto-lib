@@ -88,7 +88,7 @@ uint32_t parity(uint32_t x, uint32_t y, uint32_t z){
 
 typedef uint32_t (*pf_t)(uint32_t x, uint32_t y, uint32_t z);
 
-void sha1_nextBlock (sha1_ctx_t *state, void* block){
+void sha1_nextBlock (sha1_ctx_t *state, const void* block){
 	uint32_t a[5];
 	uint32_t w[16];
 	uint32_t temp;
@@ -164,7 +164,7 @@ void sha1_nextBlock (sha1_ctx_t *state, void* block){
 
 /********************************************************************************************************/
 
-void sha1_lastBlock(sha1_ctx_t *state, void* block, uint16_t length){
+void sha1_lastBlock(sha1_ctx_t *state, const void* block, uint16_t length){
 	uint8_t lb[SHA1_BLOCK_BITS/8]; /* local block */
 	state->length += length;
 	memcpy (&(lb[0]), block, length/8);
@@ -219,7 +219,7 @@ void sha1_ctx2hash (sha1_hash_t *dest, sha1_ctx_t *state){
  * 
  * 
  */
-void sha1 (sha1_hash_t *dest, void* msg, uint32_t length){
+void sha1 (sha1_hash_t *dest, const void* msg, uint32_t length){
 	sha1_ctx_t s;
 	DEBUG_S("\r\nBLA BLUB");
 	sha1_init(&s);

@@ -49,14 +49,14 @@ void ascii_mac(char* data, char* desc, uint8_t* key){
 	NESSIE_PUTSTR_P(PSTR("\r\n                       message="));
 	NESSIE_PUTSTR(desc);
 	PRINTKEY;
-	nessie_mac_ctx.mac_init(key, nessie_mac_ctx.keysize_b, ctx);
+	nessie_mac_ctx.mac_init(ctx, key, nessie_mac_ctx.keysize_b);
 	sl = strlen(data);
 	while(sl>nessie_mac_ctx.blocksize_B){
-		nessie_mac_ctx.mac_next(data, ctx);
+		nessie_mac_ctx.mac_next(ctx, data);
 		data += nessie_mac_ctx.blocksize_B;
 		sl   -= nessie_mac_ctx.blocksize_B;
 	}
-	nessie_mac_ctx.mac_last(data, sl*8, key, nessie_mac_ctx.keysize_b, ctx);
+	nessie_mac_ctx.mac_last(ctx, data, sl*8);
 	nessie_mac_ctx.mac_conv(mac, ctx);
 	PRINTMAC;
 }
@@ -76,13 +76,13 @@ void amillion_mac(uint8_t* key){
 	PRINTKEY;
 	
 	memset(block, 'a', nessie_mac_ctx.blocksize_B);
-	nessie_mac_ctx.mac_init(key, nessie_mac_ctx.keysize_b, ctx);
-	while(n>nessie_mac_ctx.blocksize_B){
-		nessie_mac_ctx.mac_next(block, ctx);
+	nessie_mac_ctx.mac_init(ctx, key, nessie_mac_ctx.keysize_b);
+	while(n>=nessie_mac_ctx.blocksize_B){
+		nessie_mac_ctx.mac_next(ctx, block);
 		n    -= nessie_mac_ctx.blocksize_B;
 		NESSIE_SEND_ALIVE_A(i++);
 	}
-	nessie_mac_ctx.mac_last(block, n*8, key, nessie_mac_ctx.keysize_b, ctx);
+	nessie_mac_ctx.mac_last(ctx, block, n*8);
 	nessie_mac_ctx.mac_conv(mac, ctx);
 	PRINTMAC;
 }
@@ -108,12 +108,12 @@ void zero_mac(uint16_t n, uint8_t* key){
 	PRINTKEY;
 	
 	memset(block, 0, nessie_mac_ctx.blocksize_B); 
-	nessie_mac_ctx.mac_init(key, nessie_mac_ctx.keysize_b,ctx);;
+	nessie_mac_ctx.mac_init(ctx, key, nessie_mac_ctx.keysize_b);
 	while(n>nessie_mac_ctx.blocksize_B*8){
-		nessie_mac_ctx.mac_next(block, ctx);
+		nessie_mac_ctx.mac_next(ctx, block);
 		n   -= nessie_mac_ctx.blocksize_B*8;
 	}
-	nessie_mac_ctx.mac_last(block, n, key, nessie_mac_ctx.keysize_b, ctx);
+	nessie_mac_ctx.mac_last(ctx, block, n);
 	nessie_mac_ctx.mac_conv(mac, ctx);
 	PRINTMAC;
 }
@@ -153,13 +153,13 @@ void one_in512_mac(uint16_t pos, uint8_t* key){
 	block[pos>>3] = 0x80>>(pos&0x7);
 	uint8_t* bp;
 	bp = block;
-	nessie_mac_ctx.mac_init(key, nessie_mac_ctx.keysize_b, ctx);
+	nessie_mac_ctx.mac_init(ctx, key, nessie_mac_ctx.keysize_b);
 	while(n>nessie_mac_ctx.blocksize_B*8){
-		nessie_mac_ctx.mac_next(bp, ctx);
+		nessie_mac_ctx.mac_next(ctx, bp);
 		n   -= nessie_mac_ctx.blocksize_B*8;
 		bp  += nessie_mac_ctx.blocksize_B;
 	}
-	nessie_mac_ctx.mac_last(bp, n, key, nessie_mac_ctx.keysize_b, ctx);
+	nessie_mac_ctx.mac_last(ctx, bp, n);
 	nessie_mac_ctx.mac_conv(mac, ctx);
 	PRINTMAC;
 }
@@ -187,19 +187,20 @@ void tv4_mac(void){
 	for(i=0; i<KEYSIZE_B; ++i)
 		key[i] = core_key[i%(3*8)];
 	nessie_print_item("key", key, KEYSIZE_B);
-	nessie_mac_ctx.mac_init(key, nessie_mac_ctx.keysize_b, ctx);
+	nessie_mac_ctx.mac_init(ctx, key, nessie_mac_ctx.keysize_b);
 	while(n>nessie_mac_ctx.blocksize_B*8){
-		nessie_mac_ctx.mac_next(block, ctx);
+		nessie_mac_ctx.mac_next(ctx, block);
 		n    -= nessie_mac_ctx.blocksize_B*8;
 	}
-	nessie_mac_ctx.mac_last(block, n, key, nessie_mac_ctx.keysize_b, ctx);
+	nessie_mac_ctx.mac_last(ctx, block, n);
 	nessie_mac_ctx.mac_conv(mac, ctx);
 	PRINTMAC;
 	for(i=1; i<100000L; ++i){ /* this assumes BLOCKSIZE >= HASHSIZE */
-		nessie_mac_ctx.mac_init(key, nessie_mac_ctx.keysize_b, ctx);;
-		nessie_mac_ctx.mac_last(mac, nessie_mac_ctx.macsize_b, key, nessie_mac_ctx.keysize_b, ctx);
+		nessie_mac_ctx.mac_init(ctx, key, nessie_mac_ctx.keysize_b);
+		nessie_mac_ctx.mac_last(ctx, mac, nessie_mac_ctx.macsize_b);
 		nessie_mac_ctx.mac_conv(mac, ctx);
 		NESSIE_SEND_ALIVE_A(i);
+		NESSIE_SEND_ALIVE_A(i+32);
 	}
 	nessie_print_item("iterated 100000 times", mac, MACSIZE_B);
 }
