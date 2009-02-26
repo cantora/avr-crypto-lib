@@ -31,8 +31,9 @@
 
 #include "test_src/cli.h"
 
-#define USE_GCC_EXTENSION
-
+/*
+ #define USE_GCC_EXTENSION
+*/
 #if 1
 
 #ifdef USE_GCC_EXTENSION
