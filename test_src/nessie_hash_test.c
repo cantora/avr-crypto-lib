@@ -29,26 +29,32 @@
 #include <string.h>
 #include "nessie_hash_test.h"
 #include "nessie_common.h"
-#include "uart.h"
+#include "dbz_strings.h"
 
 nessie_hash_ctx_t nessie_hash_ctx;
 
+#define HASHSIZE_B ((nessie_hash_ctx.hashsize_b+7)/8)
+#define BLOCKSIZE_B (nessie_hash_ctx.blocksize_B)
+
 static
-void ascii_hash(char* data, char* desc){
+void ascii_hash_P(PGM_P data, PGM_P desc){
 	uint8_t ctx[nessie_hash_ctx.ctx_size_B];
-	uint8_t hash[(nessie_hash_ctx.hashsize_b+7)/8];
+	uint8_t hash[HASHSIZE_B];
 	uint16_t sl;
+	uint8_t buffer[BLOCKSIZE_B];
 	
 	NESSIE_PUTSTR_P(PSTR("\r\n                       message="));
-	NESSIE_PUTSTR(desc);
+	NESSIE_PUTSTR_P(desc);
 	nessie_hash_ctx.hash_init(ctx);
-	sl = strlen(data);
-	while(sl>=nessie_hash_ctx.blocksize_B){
-		nessie_hash_ctx.hash_next(data, ctx);
-		data += nessie_hash_ctx.blocksize_B;
-		sl   -= nessie_hash_ctx.blocksize_B;
+	sl = strlen_P(data);
+	while(sl>=BLOCKSIZE_B){
+		memcpy_P(buffer, data, BLOCKSIZE_B);
+		nessie_hash_ctx.hash_next(buffer, ctx);
+		data += BLOCKSIZE_B;
+		sl   -= BLOCKSIZE_B;
 	}
-	nessie_hash_ctx.hash_last(data, sl*8, ctx);
+	memcpy_P(buffer, data, sl);
+	nessie_hash_ctx.hash_last(buffer, sl*8, ctx);
 	nessie_hash_ctx.hash_conv(hash, ctx);
 	nessie_print_item("hash", hash, (nessie_hash_ctx.hashsize_b+7)/8);
 }
@@ -206,26 +212,34 @@ void nessie_hash_run(void){
 	
 	nessie_print_header(nessie_hash_ctx.name, 0, 0, nessie_hash_ctx.hashsize_b, 0, 0);
 	/* test set 1 */
-	char* challange[8][2]= {
-		{"", "\"\" (empty string)"},
-		{"a", "\"a\""},
-		{"abc", "\"abc\""},
-		{"message digest", "\"message digest\""},
-		{"abcdefghijklmnopqrstuvwxyz","\"abcdefghijklmnopqrstuvwxyz\""},
-		{"abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq",
-			"\"abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq\""},
-		{"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-		 "abcdefghijklmnopqrstuvwxyz"
-		 "0123456789"	, "\"A...Za...z0...9\""},
-		{"1234567890" "1234567890" "1234567890" "1234567890" 
-		 "1234567890" "1234567890" "1234567890" "1234567890",
-		 "8 times \"1234567890\""} 	
-	};
+	char* challange_dbz= PSTR(
+		  "\0"
+		"\"\" (empty string)\0"
+		  "a\0"
+		"\"a\"\0"
+		  "abc\0"
+		"\"abc\"\0"
+		  "message digest\0"
+		"\"message digest\"\0"
+		  "abcdefghijklmnopqrstuvwxyz\0"
+		"\"abcdefghijklmnopqrstuvwxyz\"\0"
+		  "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq\0"
+		"\"abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq\"\0"
+		  "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+		  "abcdefghijklmnopqrstuvwxyz"
+		  "0123456789\0"	 
+		 "\"A...Za...z0...9\"\0"
+		 "1234567890123456789012345678901234567890" 
+		 "1234567890123456789012345678901234567890\0"
+		 "8 times \"1234567890\"\0"
+	);
+	PGM_P challange[16];
 	set=1;
 	nessie_print_setheader(set);
+	dbz_splitup_P(challange_dbz, challange);
 	for(i=0; i<8; ++i){
 		nessie_print_set_vector(set, i);
-		ascii_hash(challange[i][0], challange[i][1]);
+		ascii_hash_P(challange[2*i], challange[2*i+1]);
 	}
 	nessie_print_set_vector(set, i);
 	amillion_hash();

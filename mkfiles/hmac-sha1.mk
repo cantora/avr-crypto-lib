@@ -6,7 +6,7 @@ MACS += $(ALGO_NAME)
 
 $(ALGO_NAME)_OBJ      := hmac-sha1.o sha1-asm.o
 $(ALGO_NAME)_TEST_BIN := main-hmac-sha1-test.o debug.o uart.o hexdigit_tab.o serial-tools.o cli.o string-extras.o \
-                         nessie_mac_test.o nessie_common.o
+                         nessie_mac_test.o dbz_strings.o nessie_common.o
 $(ALGO_NAME)_NESSIE_TEST      := "nessie"
 $(ALGO_NAME)_PERFORMANCE_TEST := "performance"
 

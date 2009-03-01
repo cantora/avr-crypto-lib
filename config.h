@@ -19,8 +19,8 @@
 #ifndef __CONFIG_H__
 #define __CONFIG_H__
 #include <avr/io.h>
-#define F_CPU 20000000
-// #define F_CPU 16000000         /* Oszillator-Frequenz in Hz */
+// #define F_CPU 20000000
+ #define F_CPU 16000000         /* Oszillator-Frequenz in Hz */
 // #define F_CPU 14745600
 
 

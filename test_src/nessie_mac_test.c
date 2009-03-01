@@ -28,35 +28,47 @@
 #include <stdint.h>
 #include <string.h>
 #include <stdlib.h>
+#include <avr/pgmspace.h>
 #include "nessie_mac_test.h"
 #include "nessie_common.h"
+#include "dbz_strings.h"
 #include "uart.h"
 
 nessie_mac_ctx_t nessie_mac_ctx;
 
-#define KEYSIZE_B ((nessie_mac_ctx.keysize_b+7)/8)
-#define MACSIZE_B ((nessie_mac_ctx.macsize_b+7)/8)
+#define KEYSIZE_B   ((nessie_mac_ctx.keysize_b+7)/8)
+#define MACSIZE_B   ((nessie_mac_ctx.macsize_b+7)/8)
+#define BLOCKSIZE_B (nessie_mac_ctx.blocksize_B)
 
 #define PRINTKEY nessie_print_item("key", key, KEYSIZE_B)
 #define PRINTMAC nessie_print_item("MAC", mac, MACSIZE_B)
 
+
+static	uint8_t keyproto[] PROGMEM = {
+		                  0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77,
+                          0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff,
+                          0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef };
+
 static
-void ascii_mac(char* data, char* desc, uint8_t* key){
+void ascii_mac_P(PGM_P data, PGM_P desc, uint8_t* key){
 	uint8_t ctx[nessie_mac_ctx.ctx_size_B];
 	uint8_t mac[MACSIZE_B];
 	uint16_t sl;
+	uint8_t buffer[BLOCKSIZE_B];
 	
 	NESSIE_PUTSTR_P(PSTR("\r\n                       message="));
-	NESSIE_PUTSTR(desc);
+	NESSIE_PUTSTR_P(desc);
 	PRINTKEY;
 	nessie_mac_ctx.mac_init(ctx, key, nessie_mac_ctx.keysize_b);
-	sl = strlen(data);
+	sl = strlen_P(data);
 	while(sl>nessie_mac_ctx.blocksize_B){
-		nessie_mac_ctx.mac_next(ctx, data);
-		data += nessie_mac_ctx.blocksize_B;
-		sl   -= nessie_mac_ctx.blocksize_B;
+		memcpy_P(buffer, data, BLOCKSIZE_B);
+		nessie_mac_ctx.mac_next(ctx, buffer);
+		data += BLOCKSIZE_B;
+		sl   -= BLOCKSIZE_B;
 	}
-	nessie_mac_ctx.mac_last(ctx, data, sl*8);
+	memcpy_P(buffer, data, sl);
+	nessie_mac_ctx.mac_last(ctx, buffer, sl*8);
 	nessie_mac_ctx.mac_conv(mac, ctx);
 	PRINTMAC;
 }
@@ -169,11 +181,6 @@ void tv4_mac(void){
 	uint8_t ctx[nessie_mac_ctx.ctx_size_B];
 	uint8_t mac[MACSIZE_B];
 	uint8_t block[MACSIZE_B];
-	uint8_t core_key[] = {
-		0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77,
-		0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF,
-        0x01, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF
-	};	
 	uint8_t key[KEYSIZE_B];
 	uint16_t n=MACSIZE_B*8;
 	uint32_t i;
@@ -185,7 +192,7 @@ void tv4_mac(void){
 	NESSIE_PUTSTR_P(PSTR(" zero bits"));
 	memset(block, 0, MACSIZE_B);
 	for(i=0; i<KEYSIZE_B; ++i)
-		key[i] = core_key[i%(3*8)];
+		key[i] = pgm_read_byte(&(keyproto[i%(3*8)]));
 	nessie_print_item("key", key, KEYSIZE_B);
 	nessie_mac_ctx.mac_init(ctx, key, nessie_mac_ctx.keysize_b);
 	while(n>nessie_mac_ctx.blocksize_B*8){
@@ -200,65 +207,70 @@ void tv4_mac(void){
 		nessie_mac_ctx.mac_last(ctx, mac, nessie_mac_ctx.macsize_b);
 		nessie_mac_ctx.mac_conv(mac, ctx);
 		NESSIE_SEND_ALIVE_A(i);
-		NESSIE_SEND_ALIVE_A(i+32);
 	}
 	nessie_print_item("iterated 100000 times", mac, MACSIZE_B);
 }
 
-
 void nessie_mac_run(void){
 	uint16_t i;
 	uint8_t set;
-	uint8_t keyproto[] = {0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77,
-                          0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff,
-                          0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef };
 	uint8_t key[KEYSIZE_B];
 	
 	nessie_print_header(nessie_mac_ctx.name, nessie_mac_ctx.keysize_b, 0, 0,
 	                    nessie_mac_ctx.macsize_b, 0);
 	/* test set 1 */
-	char* challange[10][2]= {
-		{"", "\"\" (empty string)"},
-		{"a", "\"a\""},
-		{"abc", "\"abc\""},
-		{"message digest", "\"message digest\""},
-		{"abcdefghijklmnopqrstuvwxyz","\"abcdefghijklmnopqrstuvwxyz\""},
-		{"abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq",
-			"\"abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq\""},
-		{"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-		 "abcdefghijklmnopqrstuvwxyz"
-		 "0123456789"	, "\"A...Za...z0...9\""},
-		{"1234567890" "1234567890" "1234567890" "1234567890" 
-		 "1234567890" "1234567890" "1234567890" "1234567890",
-		 "8 times \"1234567890\""},
-		{"Now is the time for all ", "\"Now is the time for all \""},
-		{"Now is the time for it", "\"Now is the time for it\""}
-	};
+	char* challange_dbz= PSTR(
+		  "\0"
+		"\"\" (empty string)\0"
+		  "a\0"
+		"\"a\"\0"
+		  "abc\0"
+		"\"abc\"\0"
+		  "message digest\0"
+		"\"message digest\"\0"
+		  "abcdefghijklmnopqrstuvwxyz\0"
+		"\"abcdefghijklmnopqrstuvwxyz\"\0"
+		  "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq\0"
+		"\"abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq\"\0"
+		  "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+		  "abcdefghijklmnopqrstuvwxyz"
+		  "0123456789\0"	 
+		 "\"A...Za...z0...9\"\0"
+		 "1234567890123456789012345678901234567890" 
+		 "1234567890123456789012345678901234567890\0"
+		 "8 times \"1234567890\"\0"
+		  "Now is the time for all \0"
+		"\"Now is the time for all \"\0"
+		  "Now is the time for it\0" 
+		"\"Now is the time for it\"\0"
+	);
 
 	set=1;
 	nessie_print_setheader(set);
 	for(i=0; i<KEYSIZE_B; ++i){
-		key[i] = keyproto[i%sizeof(keyproto)];
+		key[i] = pgm_read_byte(&(keyproto[i%sizeof(keyproto)]));
 	}
+	PGM_P challange[20];
+	dbz_splitup_P(challange_dbz, challange);
 	for(i=0; i<10; ++i){
 		nessie_print_set_vector(set, i);
-		ascii_mac(challange[i][0], challange[i][1], key);
+		ascii_mac_P(challange[2*i], challange[2*i+1], key);
 	}
 	nessie_print_set_vector(set, i);
 	amillion_mac(key);
 	for(i=0; i<KEYSIZE_B; ++i){
-		key[i] = keyproto[16+i%8];
+		key[i] = pgm_read_byte(&(keyproto[0x10+i%0x8]));
 	}
 	for(i=0; i<10; ++i){
 		nessie_print_set_vector(set, 11+i);
-		ascii_mac(challange[i][0], challange[i][1], key);
+		ascii_mac_P(challange[2*i], challange[2*i+1], key);
 	}
 	nessie_print_set_vector(set, 11+i);
 	amillion_mac(key);
 	/* test set 2 */
 	set=2;
 	for(i=0; i<KEYSIZE_B; ++i){
-		key[i] = keyproto[i%sizeof(keyproto)];
+		key[i] = pgm_read_byte(&(keyproto[i%sizeof(keyproto)]));
 	}
 	nessie_print_setheader(set);
 	for(i=0; i<1024; ++i){
@@ -286,7 +298,7 @@ void nessie_mac_run(void){
 		nessie_print_set_vector(set, i);
 		memset(key, 0, KEYSIZE_B);
 		key[i>>3]=0x80>>(i&0x7);
-		ascii_mac("ABC", "\"ABC\"", key);
+		ascii_mac_P(PSTR("ABC"), PSTR("\"ABC\""), key);
 	}
 	nessie_print_footer();
 }

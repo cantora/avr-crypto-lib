@@ -31,7 +31,7 @@
 #include <avr/pgmspace.h>
 #include <stdlib.h> /* utoa() */
 #include "nessie_common.h"
-
+#include "hexdigit_tab.h"
 
 #ifdef NESSIE_ALIVE
 void nessie_send_alive(void){
@@ -39,20 +39,16 @@ void nessie_send_alive(void){
 }
 
 void nessie_send_alive_a(uint16_t i){
-	if((i&63)==63)
+	if((i&31)==0)
 		NESSIE_PUTC(NESSIE_ALIVE_CHAR);
 }
 #endif
 
 void nessie_print_block(uint8_t* block, uint16_t blocksize_bit){
-	char tab [] = {'0', '1', '2', '3', 
-				   '4', '5', '6', '7', 
-				   '8', '9', 'A', 'B', 
-				   'C', 'D', 'E', 'F'};
 	uint16_t i;
 	for(i=0; i<(blocksize_bit+7)/8; ++i){
-		NESSIE_PUTC(tab[(block[i])>>4]);
-		NESSIE_PUTC(tab[(block[i])&0xf]);
+		NESSIE_PUTC(pgm_read_byte(hexdigit_tab_uc_P+((block[i])>>4)));
+		NESSIE_PUTC(pgm_read_byte(hexdigit_tab_uc_P+((block[i])&0xf)));
 	}				   
 }
 
@@ -136,7 +132,7 @@ void nessie_print_header(char* name,
 	uint16_t i;
 	NESSIE_PUTSTR_P(PSTR("\r\n\r\n"
 	"********************************************************************************\r\n"
-	"* micro-crypt - crypto primitives for microcontrolles by Daniel Otte           *\r\n"
+	"* AVR-Crypto-Lib - crypto primitives for AVR microcontrolles by Daniel Otte    *\r\n"
 	"********************************************************************************\r\n"
 	"\r\n"));
 	NESSIE_PUTSTR_P(PSTR("Primitive Name: "));
