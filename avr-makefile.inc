@@ -20,7 +20,7 @@ STAT_DIR       = stats/
 CC	       = avr-gcc
 CSTD           = c99
 
-override CFLAGS	= -MMD -MF$(DEP_DIR)$(patsubst %.c,%.d,$(patsubst $(TESTSRC_DIR)%,%,$<)) -I. -gdwarf-2 -pedantic -std=$(CSTD) -Wall -Wstrict-prototypes  $(OPTIMIZE) -mmcu=$(MCU_TARGET) $(DEFS)
+override CFLAGS	= -MMD -MF$(DEP_DIR)$(patsubst %.c,%.d,$(patsubst $(TESTSRC_DIR)%,%,$<)) -I. -Itest_src -gdwarf-2 -pedantic -std=$(CSTD) -Wall -Wstrict-prototypes  $(OPTIMIZE) -mmcu=$(MCU_TARGET) $(DEFS)
 
 override LDFLAGS       = -gdwarf-2 -Wl,-Map,
 override ASFLAGS	   = -mmcu=$(MCU_TARGET) -Wa,--gdwarf-2

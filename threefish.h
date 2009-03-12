@@ -1,6 +1,7 @@
+/* threefish.c */
 /*
     This file is part of the AVR-Crypto-Lib.
-    Copyright (C) 2008, 2009  Daniel Otte (daniel.otte@rub.de)
+    Copyright (C) 2009  Daniel Otte (daniel.otte@rub.de)
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,27 +19,40 @@
 /*
  * \author  Daniel Otte
  * \email   daniel.otte@rub.de
+ * \date    2009-03-12
  * \license GPLv3 or later
- * 
- * 
- * 
  */
 
-#ifndef NOEKEON_OMAC_H_
-#define NOEKEON_OMAC_H_
+#ifndef THREEFISH_H_
+#define THREEFISH_H_
 
-#include "noekeon.h"
 #include <stdint.h>
 
-typedef uint8_t omac_noekeon_ctx_t[16];
+typedef struct{
+	uint64_t k[5];
+	uint64_t t[3];
+} threefish256_ctx_t;
 
-void omac_noekeon_init(omac_noekeon_ctx_t* ctx);
-void omac_noekeon_tweak(uint8_t t, const void* key, omac_noekeon_ctx_t* ctx);
-void omac_noekeon_next(const void* buffer, const void* key, 
-                       omac_noekeon_ctx_t* ctx);
-void omac_noekeon_last(const void* buffer, uint8_t length_b, const void* key, 
-                       omac_noekeon_ctx_t* ctx);
-void omac_noekeon(void* dest, const void* msg, uint16_t msglength_b,
-                  const void* key, uint8_t t);
 
-#endif /*NOEKEON_OMAC_H_*/
+typedef struct{
+	uint64_t k[9];
+	uint64_t t[3];
+} threefish512_ctx_t;
+
+
+typedef struct{
+	uint64_t k[17];
+	uint64_t t[3];
+} threefish1024_ctx_t;
+
+
+
+void threefish256_init(void* key, void* tweak, threefish256_ctx_t* ctx);
+void threefish512_init(void* key, void* tweak, threefish512_ctx_t* ctx);
+void threefish1024_init(void* key, void* tweak, threefish1024_ctx_t* ctx);
+
+void threefish256_enc(void* data, threefish256_ctx_t* ctx);
+void threefish512_enc(void* data, threefish512_ctx_t* ctx);
+void threefish1024_enc(void* data, threefish1024_ctx_t* ctx);
+
+#endif /* THREEFISH_H_ */

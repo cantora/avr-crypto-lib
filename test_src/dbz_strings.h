@@ -37,7 +37,7 @@
 /** \fn uint8_t dbz_strcount(const char* str)
  * \brief count stings in dbz-terminated string
  * 
- * Count the single zero terminated string in a 
+ * Count the single zero terminated strings in a 
  * double terminated string
  * \param str pointer to the double-zero-terminated string
  */

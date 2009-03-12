@@ -5,7 +5,7 @@ ALGO_NAME := SHA1
 HASHES += $(ALGO_NAME)
 
 $(ALGO_NAME)_OBJ      := sha1-asm.o
-$(ALGO_NAME)_TEST_BIN := main-sha1-test.o debug.o uart.o hexdigit_tab.o serial-tools.o \
+$(ALGO_NAME)_TEST_BIN := main-sha1-test.o debug.o uart.o hexdigit_tab.o  \
                          nessie_hash_test.o dbz_strings.o nessie_common.o cli.o string-extras.o \
 						 performance_test.o hfal-basic.o hfal_sha1.o shavs.o dump.o
 $(ALGO_NAME)_NESSIE_TEST      := "nessie"

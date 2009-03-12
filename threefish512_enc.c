@@ -1,0 +1,119 @@
+/* threefish512_enc.c */
+/*
+    This file is part of the AVR-Crypto-Lib.
+    Copyright (C) 2009  Daniel Otte (daniel.otte@rub.de)
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/*
+ * \author  Daniel Otte
+ * \email   daniel.otte@rub.de
+ * \date    2009-03-12
+ * \license GPLv3 or later
+ * 
+ * 
+ * 
+ */
+
+#include <stdint.h>
+#include <string.h>
+#include "threefish.h"
+
+#define X0 (((uint64_t*)data)[0])
+#define X1 (((uint64_t*)data)[1])
+static
+void mix(void* data, uint8_t rot){
+	uint64_t x;
+	x = X1;
+	X0 += x;
+	X1 = ((x<<rot)|(x>>(64-rot))) ^ X0;
+}
+
+#define X(a) (((uint64_t*)data)[(a)])
+
+static
+void permute_8(void* data){
+	uint64_t t;
+	t = X(0);
+	X(0) = X(2);
+	X(2) = X(4);
+	X(4) = X(6);
+	X(6) = t;
+	t = X(3);
+	X(3) = X(7);
+	X(7) = t;
+}
+/*
+static
+void permute_inv8(void* data){
+	uint64_t t;
+	t = X(6);
+	X(6) = X(4);
+	X(4) = X(2);
+	X(2) = X(0);
+	X(0) = t;
+	t = X(7);
+	X(7) = X(3);
+	X(3) = t;
+}
+*/
+
+#define THREEFISH_KEY_CONST 0x5555555555555555LL /* 2**64/3 */
+
+#define K(s) (((uint64_t*)key)[(s)])
+#define T(s) (((uint64_t*)tweak)[(s)])
+
+void threefish512_init(void* key, void* tweak, threefish512_ctx_t* ctx){
+	memcpy(ctx->k, key, 8*8);
+	memcpy(ctx->t, tweak, 2*8);
+	uint8_t i;
+	ctx->k[8] = THREEFISH_KEY_CONST;
+	for(i=0; i<8; ++i){
+		ctx->k[8] ^= K(i);
+	}
+	ctx->t[2] = T(0) ^ T(1);
+}
+
+static
+void add_key_8(void* data, threefish512_ctx_t* ctx, uint8_t s){
+	uint8_t i;
+	for(i=0; i<5; ++i){
+		X(i) += ctx->k[(s+i)%9];
+	}
+	X(5) += ctx->k[(s+5)%9] + ctx->t[s%3];
+	X(6) += ctx->k[(s+6)%9] + ctx->t[(s+1)%3];
+	X(7) += ctx->k[(s+7)%9] + s;
+}
+
+void threefish512_enc(void* data, threefish512_ctx_t* ctx){
+	uint8_t i=0,s=0;
+	uint8_t r0[8] = {38, 48, 34, 26, 33, 39, 29, 33}; 
+	uint8_t r1[8] = {30, 20, 14, 12, 49, 27, 26, 51};
+	uint8_t r2[8] = {50, 43, 15, 58,  8, 41, 11, 39};
+	uint8_t r3[8] = {53, 31, 27,  7, 42, 14,  9, 35};
+	do{
+		if(i%4==0){
+			add_key_8(data, ctx, s);
+			++s;
+		}
+		mix((uint8_t*)data +  0, r0[i%8]);
+		mix((uint8_t*)data + 16, r1[i%8]);
+		mix((uint8_t*)data + 32, r2[i%8]);
+		mix((uint8_t*)data + 48, r3[i%8]);
+		permute_8(data);
+		++i;
+	}while(i!=72);
+	add_key_8(data, ctx, s);
+}
+
