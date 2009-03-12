@@ -169,6 +169,29 @@ void cli_hexdump2(void* data, uint16_t length){
 	}
 }
 
+/**
+ * \brief dumps the contents of a buffer to the console
+ * Like cli_hexdump but bytes are seperated with a single space
+ * on the console output.
+ */
+void cli_hexdump_block(void* data, uint16_t length, uint8_t indent, uint8_t width){
+	uint16_t i;
+	uint8_t  j;
+	if(!cli_tx)
+		return;
+	for(i=0; i<length; ++i){
+		if(i%width==0){
+			cli_putstr_P(PSTR("\r\n"));
+			for(j=0; j<indent; ++j){
+				cli_tx(' ');
+			}
+		}
+		cli_tx(pgm_read_byte(hexdigit_tab_P +((*((uint8_t*)data))>>4)));
+		cli_tx(pgm_read_byte(hexdigit_tab_P +((*((uint8_t*)data))&0xf)));
+		cli_tx(' ');
+		data = (uint8_t*)data +1;
+	}
+}
 
 static
 void cli_auto_help(uint16_t maxcmdlength, PGM_VOID_P cmdlist){

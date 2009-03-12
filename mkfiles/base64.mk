@@ -1,4 +1,4 @@
-# Makefile for noekeon
+# Makefile for Base64-encoding
 ALGO_NAME := BASE64
 
 # comment out the following line for removement of base64 from the build process

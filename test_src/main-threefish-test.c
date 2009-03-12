@@ -217,6 +217,112 @@ void testrun_stdtest_threefish(void){
 	testrun_stdtest_threefish512();
 	testrun_stdtest_threefish1024();
 }
+
+void testrun_performance_threefish256(void){
+	uint64_t t;
+	char str[16];
+	uint8_t key[THREEFISH256_BLOCKSIZE_B];
+	uint8_t data[THREEFISH256_BLOCKSIZE_B];
+	uint8_t tweak[16];
+	threefish256_ctx_t ctx;
+	
+	cli_putstr_P(PSTR("\r\nThreefish-256 performance:"));
+	
+	calibrateTimer();
+	print_overhead();	
+	
+//	memset(key,  0, THREEFISH256_BLOCKSIZE_B);
+//	memset(tweak, 0, 16);
+	
+	startTimer(1);
+	threefish256_init(key, tweak, &ctx);
+	t = stopTimer();
+	cli_putstr_P(PSTR("\r\n\tctx-gen time: "));
+	ultoa((unsigned long)t, str, 10);
+	cli_putstr(str);	
+	
+	startTimer(1);
+	threefish256_enc(data, &ctx);
+	t = stopTimer();
+	cli_putstr_P(PSTR("\r\n\tencrypt time: "));
+	ultoa((unsigned long)t, str, 10);
+	cli_putstr(str);	
+	
+	cli_putstr_P(PSTR("\r\n"));	
+}
+
+void testrun_performance_threefish512(void){
+	uint64_t t;
+	char str[16];
+	uint8_t key[THREEFISH512_BLOCKSIZE_B];
+	uint8_t data[THREEFISH512_BLOCKSIZE_B];
+	uint8_t tweak[16];
+	threefish512_ctx_t ctx;
+	
+	cli_putstr_P(PSTR("\r\nThreefish-512 performance:"));
+	
+	calibrateTimer();
+	print_overhead();	
+	
+//	memset(key,  0, THREEFISH512_BLOCKSIZE_B);
+//	memset(tweak, 0, 16);
+	
+	startTimer(1);
+	threefish512_init(key, tweak, &ctx);
+	t = stopTimer();
+	cli_putstr_P(PSTR("\r\n\tctx-gen time: "));
+	ultoa((unsigned long)t, str, 10);
+	cli_putstr(str);	
+	
+	startTimer(1);
+	threefish512_enc(data, &ctx);
+	t = stopTimer();
+	cli_putstr_P(PSTR("\r\n\tencrypt time: "));
+	ultoa((unsigned long)t, str, 10);
+	cli_putstr(str);	
+	
+	cli_putstr_P(PSTR("\r\n"));	
+}
+
+void testrun_performance_threefish1024(void){
+	uint64_t t;
+	char str[16];
+	uint8_t key[THREEFISH1024_BLOCKSIZE_B];
+	uint8_t data[THREEFISH1024_BLOCKSIZE_B];
+	uint8_t tweak[16];
+	threefish1024_ctx_t ctx;
+	
+	cli_putstr_P(PSTR("\r\nThreefish-1024 performance:"));
+	
+	calibrateTimer();
+	print_overhead();	
+	
+//	memset(key,  0, THREEFISH1024_BLOCKSIZE_B);
+//	memset(tweak, 0, 16);
+	
+	startTimer(1);
+	threefish1024_init(key, tweak, &ctx);
+	t = stopTimer();
+	cli_putstr_P(PSTR("\r\n\tctx-gen time: "));
+	ultoa((unsigned long)t, str, 10);
+	cli_putstr(str);	
+	
+	startTimer(1);
+	threefish1024_enc(data, &ctx);
+	t = stopTimer();
+	cli_putstr_P(PSTR("\r\n\tencrypt time: "));
+	ultoa((unsigned long)t, str, 10);
+	cli_putstr(str);	
+	
+	cli_putstr_P(PSTR("\r\n"));	
+}
+
+void testrun_performance_threefish(void){
+	testrun_performance_threefish256();
+	testrun_performance_threefish512();
+	testrun_performance_threefish1024();
+}
+
 /*****************************************************************************
  *  main																	 *
  *****************************************************************************/
@@ -229,7 +335,7 @@ const char echo_str[]        PROGMEM = "echo";
 cmdlist_entry_t cmdlist[] PROGMEM = {
 //	{ nessie_str,      NULL, testrun_nessie_noekeon},
 	{ test_str,        NULL, testrun_stdtest_threefish},
-//	{ performance_str, NULL, testrun_performance_noekeon},
+	{ performance_str, NULL, testrun_performance_threefish},
 	{ echo_str,    (void*)1, (void_fpt)echo_ctrl},
 	{ NULL,            NULL, NULL}
 };

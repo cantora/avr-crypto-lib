@@ -1,4 +1,4 @@
-# Makefile for noekeon
+# Makefile for threefish
 ALGO_NAME := THREEFISH_C
 
 # comment out the following line for removement of threefish from the build process
