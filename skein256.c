@@ -29,6 +29,7 @@
 #include "ubi.h"
 #include "skein.h"
 
+#include "cli.h"
 
 void skein256_init(skein256_ctx_t* ctx, uint16_t outsize_b){
 	skein_config_t conf;
@@ -47,11 +48,11 @@ void skein256_init(skein256_ctx_t* ctx, uint16_t outsize_b){
 	ubi256_init(&(ctx->ubictx), ctx->ubictx.g, UBI_TYPE_MSG);
 }
 
-void skein256_nextBlock(skein256_ctx_t* ctx, void* block){
+void skein256_nextBlock(skein256_ctx_t* ctx, const void* block){
 	ubi256_nextBlock(&(ctx->ubictx), block);
 }
 
-void skein256_lastBlock(skein256_ctx_t* ctx, void* block, uint16_t length_b){
+void skein256_lastBlock(skein256_ctx_t* ctx, const void* block, uint16_t length_b){
 	ubi256_lastBlock(&(ctx->ubictx), block, length_b);
 }
 
@@ -64,13 +65,13 @@ void skein256_ctx2hash(void* dest, skein256_ctx_t* ctx){
 	ubi256_init(&(ctx->ubictx), ctx->ubictx.g, UBI_TYPE_OUT);
 	
 	outsize_b = ctx->outsize_b;
-	while(outsize_b){
+	while(1){
 		memcpy(&uctx, &(ctx->ubictx), sizeof(ubi256_ctx_t));
 		ubi256_lastBlock(&uctx, &counter, 64);
 		ubi256_ctx2hash(outbuffer, &uctx);
-		if(outsize_b<=UBI256_BLOCKSIZE_B){
-			memcpy(dest, outbuffer, (ctx->outsize_b+7)/8);
-			outsize_b=0;
+		if(outsize_b<=UBI256_BLOCKSIZE){
+			memcpy(dest, outbuffer, (outsize_b+7)/8);
+			break;
 		}else{
 			memcpy(dest, outbuffer, UBI256_BLOCKSIZE_B);
 			dest = (uint8_t*)dest + UBI256_BLOCKSIZE_B;
@@ -80,4 +81,14 @@ void skein256_ctx2hash(void* dest, skein256_ctx_t* ctx){
 	}
 }
 
-
+void skein256(void* dest, uint16_t outlength_b,const void* msg, uint32_t length_b){
+	skein256_ctx_t ctx;
+	skein256_init(&ctx, outlength_b);
+	while(length_b>SKEIN256_BLOCKSIZE){
+		skein256_nextBlock(&ctx, msg);
+		msg = (uint8_t*)msg + SKEIN256_BLOCKSIZE_B;
+		length_b -= SKEIN256_BLOCKSIZE;
+	}
+	skein256_lastBlock(&ctx, msg, length_b);
+	skein256_ctx2hash(dest, &ctx);
+}

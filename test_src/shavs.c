@@ -88,6 +88,7 @@ void shavs_setalgo(char* param){
 
 static uint16_t buffer_idx=0;
 static uint8_t  in_byte=0;
+static uint16_t blocks=0;
 static uint8_t* buffer;
 static uint16_t buffersize_B;
 static hfgen_ctx_t ctx;
@@ -95,6 +96,12 @@ static hfgen_ctx_t ctx;
 static
 uint8_t buffer_add(char c){
 	uint8_t v,t;
+	if(buffer_idx==buffersize_B){
+		hfal_hash_nextBlock(&ctx, buffer);
+		++blocks;
+		buffer_idx=0;
+		in_byte=0;
+	}
 	if(c>='0' && c<='9'){
 		v=c-'0';
 	}else{
@@ -106,13 +113,7 @@ uint8_t buffer_add(char c){
 			}else{
 				return 1;
 			}
-		}
-			
-	}
-	if(buffer_idx==buffersize_B){
-		hfal_hash_nextBlock(&ctx, buffer);
-		buffer_idx=0;
-		in_byte=0;
+		}	
 	}
 
 	t=buffer[buffer_idx];
@@ -133,8 +134,8 @@ void shavs_test1(void){
 	char* len2;
 	uint32_t length=0;
 	uint8_t len_set=0;
-	if(!shavs_algo){
-		cli_putstr_P(PSTR("\r\nERROR: select algorithm first!"));
+	if(!shavs_algo){		
+			cli_putstr_P(PSTR("\r\nERROR: select algorithm first!"));
 		return;
 	}
 	
@@ -142,6 +143,7 @@ void shavs_test1(void){
 	buffer = malloc(buffersize_B);
 
 	for(;;){
+		blocks = 0;
 		do{	
 			cli_putstr_P(PSTR("\r\n"));
 			cli_getsn(lenstr, 20);
@@ -156,11 +158,12 @@ void shavs_test1(void){
 				}
 			} else {
 				if(!strncasecmp_P(len2, PSTR("EXIT"), 4)){
+					free(buffer);
 					return;
 				}
 			}		
 		}while(!len_set);
-		volatile int16_t expect_input;
+		volatile int32_t expect_input;
 		char c;
 				
 		if(length==0){
@@ -172,7 +175,7 @@ void shavs_test1(void){
 		buffer_idx = 0;
 		in_byte=0;
 		len_set = 0;
-
+		
 		hfal_hash_init(shavs_algo, &ctx);
 		cli_putstr_P(PSTR("\r\n"));
 		while((c=cli_getc_cecho())!='M' && c!='m'){
@@ -180,20 +183,24 @@ void shavs_test1(void){
 				cli_putstr_P(PSTR("\r\nERROR: wrong input (1) [0x"));
 				cli_hexdump(&c, 1);
 				cli_putstr_P(PSTR("]!\r\n"));
+				free(buffer);
 				return;
 			}
 		}
 		if((c=cli_getc_cecho())!='s' && c!='S'){
 				cli_putstr_P(PSTR("\r\nERROR: wrong input (2)!\r\n"));
+				free(buffer);
 				return;
 		}
 		if((c=cli_getc_cecho())!='g' && c!='G'){
 				cli_putstr_P(PSTR("\r\nERROR: wrong input (3)!\r\n"));
+				free(buffer);
 				return;
 		}
 		while((c=cli_getc_cecho())!='='){
 			if(!isblank(c)){
 				cli_putstr_P(PSTR("\r\nERROR: wrong input (4)!\r\n"));
+				free(buffer);
 				return;
 			}
 		}
@@ -202,27 +209,25 @@ void shavs_test1(void){
 		while(expect_input>0){
 			c=cli_getc_cecho();
 			if(buffer_add(c)==0){
-				--expect_input;
+				--expect_input;		
 			}else{
 				if(!isblank((uint16_t)c)){
 					cli_putstr_P(PSTR("\r\nERROR: wrong input (5) ("));
 					cli_putc(c);
 					cli_putstr_P(PSTR(")!\r\n"));
+					free(buffer);
 					return;
 				}
 			}
 		}
-		
 		uint8_t diggest[pgm_read_word(shavs_algo->hashsize_b)/8];
-		if(length && length%(buffersize_B*8)==0)
-			hfal_hash_nextBlock(&ctx, buffer);
-		hfal_hash_lastBlock(&ctx, buffer, length%(buffersize_B*8));
+		hfal_hash_lastBlock(&ctx, buffer, length-blocks*(buffersize_B*8));
 		hfal_hash_ctx2hash(diggest, &ctx);
 		hfal_hash_free(&ctx);
 		cli_putstr_P(PSTR("\r\n MD = "));
 		cli_hexdump(diggest, pgm_read_word(&(shavs_algo->hashsize_b))/8);
 		
 	}
-	
+	free(buffer);
 }
 

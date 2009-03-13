@@ -47,11 +47,11 @@ void skein512_init(skein512_ctx_t* ctx, uint16_t outsize_b){
 	ubi512_init(&(ctx->ubictx), ctx->ubictx.g, UBI_TYPE_MSG);
 }
 
-void skein512_nextBlock(skein512_ctx_t* ctx, void* block){
+void skein512_nextBlock(skein512_ctx_t* ctx, const void* block){
 	ubi512_nextBlock(&(ctx->ubictx), block);
 }
 
-void skein512_lastBlock(skein512_ctx_t* ctx, void* block, uint16_t length_b){
+void skein512_lastBlock(skein512_ctx_t* ctx, const void* block, uint16_t length_b){
 	ubi512_lastBlock(&(ctx->ubictx), block, length_b);
 }
 
@@ -64,13 +64,13 @@ void skein512_ctx2hash(void* dest, skein512_ctx_t* ctx){
 	ubi512_init(&(ctx->ubictx), ctx->ubictx.g, UBI_TYPE_OUT);
 	
 	outsize_b = ctx->outsize_b;
-	while(outsize_b){
+	while(1){
 		memcpy(&uctx, &(ctx->ubictx), sizeof(ubi512_ctx_t));
 		ubi512_lastBlock(&uctx, &counter, 64);
 		ubi512_ctx2hash(outbuffer, &uctx);
-		if(outsize_b<=UBI512_BLOCKSIZE_B){
+		if(outsize_b<=UBI512_BLOCKSIZE){
 			memcpy(dest, outbuffer, (ctx->outsize_b+7)/8);
-			outsize_b=0;
+			break;
 		}else{
 			memcpy(dest, outbuffer, UBI512_BLOCKSIZE_B);
 			dest = (uint8_t*)dest + UBI512_BLOCKSIZE_B;
@@ -78,5 +78,17 @@ void skein512_ctx2hash(void* dest, skein512_ctx_t* ctx){
 			counter++;
 		}
 	}
+}
+
+void skein512(void* dest, uint16_t outlength_b,const void* msg, uint32_t length_b){
+	skein512_ctx_t ctx;
+	skein512_init(&ctx, outlength_b);
+	while(length_b>SKEIN512_BLOCKSIZE){
+		skein512_nextBlock(&ctx, msg);
+		msg = (uint8_t*)msg + SKEIN512_BLOCKSIZE_B;
+		length_b -= SKEIN512_BLOCKSIZE;
+	}
+	skein512_lastBlock(&ctx, msg, length_b);
+	skein512_ctx2hash(dest, &ctx);
 }
 

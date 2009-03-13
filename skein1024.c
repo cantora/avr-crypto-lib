@@ -47,11 +47,11 @@ void skein1024_init(skein1024_ctx_t* ctx, uint16_t outsize_b){
 	ubi1024_init(&(ctx->ubictx), ctx->ubictx.g, UBI_TYPE_MSG);
 }
 
-void skein1024_nextBlock(skein1024_ctx_t* ctx, void* block){
+void skein1024_nextBlock(skein1024_ctx_t* ctx, const void* block){
 	ubi1024_nextBlock(&(ctx->ubictx), block);
 }
 
-void skein1024_lastBlock(skein1024_ctx_t* ctx, void* block, uint16_t length_b){
+void skein1024_lastBlock(skein1024_ctx_t* ctx, const void* block, uint16_t length_b){
 	ubi1024_lastBlock(&(ctx->ubictx), block, length_b);
 }
 
@@ -64,13 +64,13 @@ void skein1024_ctx2hash(void* dest, skein1024_ctx_t* ctx){
 	ubi1024_init(&(ctx->ubictx), ctx->ubictx.g, UBI_TYPE_OUT);
 	
 	outsize_b = ctx->outsize_b;
-	while(outsize_b){
+	while(1){
 		memcpy(&uctx, &(ctx->ubictx), sizeof(ubi1024_ctx_t));
 		ubi1024_lastBlock(&uctx, &counter, 64);
 		ubi1024_ctx2hash(outbuffer, &uctx);
-		if(outsize_b<=UBI1024_BLOCKSIZE_B){
+		if(outsize_b<=UBI1024_BLOCKSIZE){
 			memcpy(dest, outbuffer, (ctx->outsize_b+7)/8);
-			outsize_b=0;
+			break;
 		}else{
 			memcpy(dest, outbuffer, UBI1024_BLOCKSIZE_B);
 			dest = (uint8_t*)dest + UBI1024_BLOCKSIZE_B;
@@ -80,3 +80,14 @@ void skein1024_ctx2hash(void* dest, skein1024_ctx_t* ctx){
 	}
 }
 
+void skein1024(void* dest, uint16_t outlength_b, const void* msg, uint32_t length_b){
+	skein1024_ctx_t ctx;
+	skein1024_init(&ctx, outlength_b);
+	while(length_b>SKEIN1024_BLOCKSIZE){
+		skein1024_nextBlock(&ctx, msg);
+		msg = (uint8_t*)msg + SKEIN1024_BLOCKSIZE_B;
+		length_b -= SKEIN1024_BLOCKSIZE;
+	}
+	skein1024_lastBlock(&ctx, msg, length_b);
+	skein1024_ctx2hash(dest, &ctx);
+}

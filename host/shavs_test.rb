@@ -18,7 +18,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
-
+$debug = false
 
 require 'serialport'
 
@@ -29,7 +29,7 @@ def init_system
 #  print("DBG 0.0: ")
 #  print(line)
 #  sleep 1
-  $sp.print("shavs_set a \r")
+  $sp.print("shavs_set #{$algo_select} \r")
 #  line = $sp.readlines()
 #  print("DBG 0.1: ")
 #  print(line)
@@ -44,7 +44,7 @@ def get_md
   begin
     line = $sp.gets()
 	line = "" if line==nil
-#	puts("DBG g: "+line)
+	puts("DBG g: "+line) if $debug
   end while not /[\s]*MD[\s]*=.*/.match(line)
   return line	
 end
@@ -59,7 +59,7 @@ def run_test(filename)
     begin
       lb=file.gets()
     end while not (file.eof or (/[\s]*Len[\s]*=.*/.match(lb)))
-#    puts("DBG sending: "+lb);
+    puts("DBG sending: "+lb) if $debug
 	return if file.eof
 	$sp.print(lb.strip)
 	$sp.print("\r")
@@ -67,7 +67,7 @@ def run_test(filename)
 	  lb=file.gets()
     end while not (file.eof or (/[\s]*Msg[\s]*=.*/.match(lb)))
     return if file.eof
-#    puts("DBG sending: "+lb);
+    puts("DBG sending: "+lb) if $debug
 	$sp.print(lb.strip)
 	avr_md = get_md()
     begin
@@ -84,9 +84,9 @@ def run_test(filename)
   
 end
 
-if ARGV.size < 5
+if ARGV.size < 6
   STDERR.print <<EOF
-  Usage: ruby #{$0} port bps nbits stopb testfile ...
+  Usage: ruby #{$0} port bps nbits stopb algo_select testfile ...
 EOF
   exit(1)
 end
@@ -95,15 +95,16 @@ puts("\nPort: "+ARGV[0]+ "@"+ARGV[1]+" "+ARGV[2]+"N"+ARGV[3]+"\n");
 $linewidth = 64
 $sp = SerialPort.new(ARGV[0], ARGV[1].to_i, ARGV[2].to_i, ARGV[3].to_i, SerialPort::NONE);
 $sp.read_timeout=1000; # 5 minutes
-
+$algo_select = ARGV[4]
 #irb
 
 init_system()
 
-for i in (4..(ARGV.size-1))
+for i in (5..(ARGV.size-1))
   run_test(ARGV[i])
   puts("")
 end
+ $sp.print("EXIT\r");
 
 #exit(0);
 

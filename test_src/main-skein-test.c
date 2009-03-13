@@ -27,7 +27,11 @@
 #include "debug.h"
 
 #include "skein.h"
+#include "hfal_skein256.h"
+#include "hfal_skein512.h"
+#include "hfal_skein1024.h"
 #include "cli.h"
+#include "shavs.h"
 #include "performance_test.h"
 
 #include <stdint.h>
@@ -43,33 +47,23 @@ void testrun_stdtest_skein256(uint16_t outsize_b){
 	uint8_t message[64];
 	uint8_t hash[(outsize_b+7)/8];
 	uint8_t i;
-	skein256_ctx_t ctx;
 		
 	cli_putstr_P(PSTR("\r\n\r\nTest vectors for Skein (256 bits):"));
 	for(i=0; i<64; ++i)
 		message[i] = 0xFF-i;
 	
 	cli_putstr_P(PSTR("\r\nmessage:    "));
-	cli_hexdump(message, 1);
-	skein256_init(&ctx, outsize_b);
-	skein256_lastBlock(&ctx, message, 8);
-	skein256_ctx2hash(hash, &ctx);
+	skein256(hash, outsize_b, message, 8);
 	cli_putstr_P(PSTR("\r\nhash:"));
 	cli_hexdump_block(hash, (outsize_b+7)/8, 4, 16);
 	
 	cli_putstr_P(PSTR("\r\nmessage:"));
-	cli_hexdump_block(message, 32, 4, 16);
-	skein256_init(&ctx, outsize_b);
-	skein256_lastBlock(&ctx, message, 32*8);
-	skein256_ctx2hash(hash, &ctx);
+	skein256(hash, outsize_b, message, 32*8);
 	cli_putstr_P(PSTR("\r\nhash:"));
 	cli_hexdump_block(hash, (outsize_b+7)/8, 4, 16);
 	
 	cli_putstr_P(PSTR("\r\nmessage:"));
-	cli_hexdump_block(message, 64, 4, 16);
-	skein256_init(&ctx, outsize_b);
-	skein256_lastBlock(&ctx, message, 64*8);
-	skein256_ctx2hash(hash, &ctx);
+	skein256(hash, outsize_b, message, 64*8);
 	cli_putstr_P(PSTR("\r\nhash:"));
 	cli_hexdump_block(hash, (outsize_b+7)/8, 4, 16);
 }
@@ -78,7 +72,6 @@ void testrun_stdtest_skein512(uint16_t outsize_b){
 	uint8_t message[128];
 	uint8_t hash[(outsize_b+7)/8];
 	uint8_t i;
-	skein512_ctx_t ctx;
 		
 	cli_putstr_P(PSTR("\r\n\r\nTest vectors for Skein (512 bits):"));
 	for(i=0; i<128; ++i)
@@ -86,25 +79,17 @@ void testrun_stdtest_skein512(uint16_t outsize_b){
 	
 	cli_putstr_P(PSTR("\r\nmessage:    "));
 	cli_hexdump(message, 1);
-	skein512_init(&ctx, outsize_b);
-	skein512_lastBlock(&ctx, message, 8);
-	skein512_ctx2hash(hash, &ctx);
+	skein512(hash, outsize_b, message, 8);
 	cli_putstr_P(PSTR("\r\nhash:"));
 	cli_hexdump_block(hash, (outsize_b+7)/8, 4, 16);
 	
 	cli_putstr_P(PSTR("\r\nmessage:"));
-	cli_hexdump_block(message, 64, 4, 16);
-	skein512_init(&ctx, outsize_b);
-	skein512_lastBlock(&ctx, message, 64*8);
-	skein512_ctx2hash(hash, &ctx);
+	skein512(hash, outsize_b, message, 64*8);
 	cli_putstr_P(PSTR("\r\nhash:"));
 	cli_hexdump_block(hash, (outsize_b+7)/8, 4, 16);
 	
 	cli_putstr_P(PSTR("\r\nmessage:"));
-	cli_hexdump_block(message, 128, 4, 16);
-	skein512_init(&ctx, outsize_b);
-	skein512_lastBlock(&ctx, message, 128*8);
-	skein512_ctx2hash(hash, &ctx);
+	skein512(hash, outsize_b, message, 128*8);
 	cli_putstr_P(PSTR("\r\nhash:"));
 	cli_hexdump_block(hash, (outsize_b+7)/8, 4, 16);
 }
@@ -113,7 +98,6 @@ void testrun_stdtest_skein1024(uint16_t outsize_b){
 	uint8_t message[256];
 	uint8_t hash[(outsize_b+7)/8];
 	uint16_t i;
-	skein1024_ctx_t ctx;
 		
 	cli_putstr_P(PSTR("\r\n\r\nTest vectors for Skein (1024 bits):"));
 	for(i=0; i<256; ++i)
@@ -121,25 +105,18 @@ void testrun_stdtest_skein1024(uint16_t outsize_b){
 	
 	cli_putstr_P(PSTR("\r\nmessage:    "));
 	cli_hexdump(message, 1);
-	skein1024_init(&ctx, outsize_b);
-	skein1024_lastBlock(&ctx, message, 8);
-	skein1024_ctx2hash(hash, &ctx);
+	skein1024(hash, outsize_b, message, 8);
 	cli_putstr_P(PSTR("\r\nhash:"));
 	cli_hexdump_block(hash, (outsize_b+7)/8, 4, 16);
 	
 	cli_putstr_P(PSTR("\r\nmessage:"));
-	cli_hexdump_block(message, 128, 4, 16);
-	skein1024_init(&ctx, outsize_b);
-	skein1024_lastBlock(&ctx, message, 128*8);
-	skein1024_ctx2hash(hash, &ctx);
+	skein1024(hash, outsize_b, message, 128*8);
 	cli_putstr_P(PSTR("\r\nhash:"));
 	cli_hexdump_block(hash, (outsize_b+7)/8, 4, 16);
 	
 	cli_putstr_P(PSTR("\r\nmessage:"));
 	cli_hexdump_block(message, 256, 4, 16);
-	skein1024_init(&ctx, outsize_b);
-	skein1024_lastBlock(&ctx, message, 256*8);
-	skein1024_ctx2hash(hash, &ctx);
+	skein1024(hash, outsize_b, message, 256*8);
 	cli_putstr_P(PSTR("\r\nhash:"));
 	cli_hexdump_block(hash, (outsize_b+7)/8, 4, 16);
 }
@@ -149,127 +126,96 @@ void testrun_stdtest_skein(void){
 	testrun_stdtest_skein512(512);
 	testrun_stdtest_skein1024(1024);
 }
-/*
-void testrun_performance_threefish256(void){
-	uint64_t t;
-	char str[16];
-	uint8_t key[THREEFISH256_BLOCKSIZE_B];
-	uint8_t data[THREEFISH256_BLOCKSIZE_B];
-	uint8_t tweak[16];
-	threefish256_ctx_t ctx;
+
+void zeromsg_test_skein(uint16_t outsize_b){
+	char str[8];
+	uint8_t hash[(outsize_b+7)/8];
 	
-	cli_putstr_P(PSTR("\r\nThreefish-256 performance:"));
+	skein256(hash, outsize_b, NULL, 0);
+	cli_putstr_P(PSTR("\r\nskein256-"));
+	utoa(outsize_b, str, 10);
+	cli_putstr(str);
+	cli_putstr_P(PSTR(" :"));
+	cli_hexdump_block(hash, (outsize_b+7)/8, 4, 16);
 	
-	calibrateTimer();
-	print_overhead();	
+	skein512(hash, outsize_b, NULL, 0);
+	cli_putstr_P(PSTR("\r\nskein512-"));
+	utoa(outsize_b, str, 10);
+	cli_putstr(str);
+	cli_putstr_P(PSTR(" :"));
+	cli_hexdump_block(hash, (outsize_b+7)/8, 4, 16);
 	
-//	memset(key,  0, THREEFISH256_BLOCKSIZE_B);
-//	memset(tweak, 0, 16);
-	
-	startTimer(1);
-	threefish256_init(key, tweak, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tctx-gen time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);	
-	
-	startTimer(1);
-	threefish256_enc(data, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tencrypt time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);	
-	
-	cli_putstr_P(PSTR("\r\n"));	
+	skein1024(hash, outsize_b, NULL, 0);
+	cli_putstr_P(PSTR("\r\nskein1024-"));
+	utoa(outsize_b, str, 10);
+	cli_putstr(str);
+	cli_putstr_P(PSTR(" :"));
+	cli_hexdump_block(hash, (outsize_b+7)/8, 4, 16);
 }
 
-void testrun_performance_threefish512(void){
-	uint64_t t;
-	char str[16];
-	uint8_t key[THREEFISH512_BLOCKSIZE_B];
-	uint8_t data[THREEFISH512_BLOCKSIZE_B];
-	uint8_t tweak[16];
-	threefish512_ctx_t ctx;
-	
-	cli_putstr_P(PSTR("\r\nThreefish-512 performance:"));
-	
-	calibrateTimer();
-	print_overhead();	
-	
-//	memset(key,  0, THREEFISH512_BLOCKSIZE_B);
-//	memset(tweak, 0, 16);
-	
-	startTimer(1);
-	threefish512_init(key, tweak, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tctx-gen time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);	
-	
-	startTimer(1);
-	threefish512_enc(data, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tencrypt time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);	
-	
-	cli_putstr_P(PSTR("\r\n"));	
+void zeromsg_test_common(char* p){
+	uint8_t i;
+	uint16_t s=0;
+	uint16_t sizes[]={128, 160, 224, 256, 384, 512, 1024};
+	if(p){
+		s = strtoul(p, NULL, 0);
+	}
+	if(s){
+		zeromsg_test_skein(s);
+	}else{
+		for(i=0; i<7; ++i)
+			zeromsg_test_skein(sizes[i]);
+	}
 }
 
-void testrun_performance_threefish1024(void){
-	uint64_t t;
-	char str[16];
-	uint8_t key[THREEFISH1024_BLOCKSIZE_B];
-	uint8_t data[THREEFISH1024_BLOCKSIZE_B];
-	uint8_t tweak[16];
-	threefish1024_ctx_t ctx;
-	
-	cli_putstr_P(PSTR("\r\nThreefish-1024 performance:"));
-	
-	calibrateTimer();
-	print_overhead();	
-	
-//	memset(key,  0, THREEFISH1024_BLOCKSIZE_B);
-//	memset(tweak, 0, 16);
-	
-	startTimer(1);
-	threefish1024_init(key, tweak, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tctx-gen time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);	
-	
-	startTimer(1);
-	threefish1024_enc(data, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tencrypt time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);	
-	
-	cli_putstr_P(PSTR("\r\n"));	
-}
-
-void testrun_performance_threefish(void){
-	testrun_performance_threefish256();
-	testrun_performance_threefish512();
-	testrun_performance_threefish1024();
-}
-*/
 /*****************************************************************************
  *  main																	 *
  *****************************************************************************/
 
+const hfdesc_t* algolist[] PROGMEM = {
+	(hfdesc_t*)&skein256_128_desc,
+	(hfdesc_t*)&skein256_160_desc,
+	(hfdesc_t*)&skein256_224_desc,
+	(hfdesc_t*)&skein256_256_desc,
+	(hfdesc_t*)&skein256_384_desc,
+	(hfdesc_t*)&skein256_512_desc,
+	
+	(hfdesc_t*)&skein512_128_desc,
+	(hfdesc_t*)&skein512_160_desc,
+	(hfdesc_t*)&skein512_224_desc,
+	(hfdesc_t*)&skein512_256_desc,
+	(hfdesc_t*)&skein512_384_desc,
+	(hfdesc_t*)&skein512_512_desc,
+	(hfdesc_t*)&skein512_1024_desc,
+	
+	(hfdesc_t*)&skein1024_128_desc,
+	(hfdesc_t*)&skein1024_160_desc,
+	(hfdesc_t*)&skein1024_224_desc,
+	(hfdesc_t*)&skein1024_256_desc,
+	(hfdesc_t*)&skein1024_384_desc,
+	(hfdesc_t*)&skein1024_512_desc,
+	(hfdesc_t*)&skein1024_1024_desc,
+	NULL
+};
+
 const char nessie_str[]      PROGMEM = "nessie";
 const char test_str[]        PROGMEM = "test";
+const char ztest_str[]       PROGMEM = "zerotest";
 const char performance_str[] PROGMEM = "performance";
 const char echo_str[]        PROGMEM = "echo";
+const char shavs_list_str[]  PROGMEM = "shavs_list";
+const char shavs_set_str[]   PROGMEM = "shavs_set";
+const char shavs_test1_str[] PROGMEM = "shavs_test1";
 
 cmdlist_entry_t cmdlist[] PROGMEM = {
 //	{ nessie_str,      NULL, testrun_nessie_noekeon},
-	{ test_str,        NULL, testrun_stdtest_skein},
-//	{ performance_str, NULL, testrun_performance_threefish},
-	{ echo_str,    (void*)1, (void_fpt)echo_ctrl},
-	{ NULL,            NULL, NULL}
+	{ test_str,            NULL, testrun_stdtest_skein},
+	{ ztest_str,       (void*)1, (void_fpt)zeromsg_test_common},
+	{ shavs_list_str,      NULL, shavs_listalgos},
+	{ shavs_set_str,   (void*)1, (void_fpt)shavs_setalgo},
+	{ shavs_test1_str,     NULL, shavs_test1},
+	{ echo_str,        (void*)1, (void_fpt)echo_ctrl},
+	{ NULL,                NULL, NULL}
 };
 
 int main (void){
@@ -277,6 +223,8 @@ int main (void){
 	
 	cli_rx = uart_getc;
 	cli_tx = uart_putc;	 	
+	shavs_algolist=(hfdesc_t**)algolist;
+	shavs_algo=(hfdesc_t*)&skein256_256_desc;
 	for(;;){
 		cli_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
 		cli_putstr(algo_name);

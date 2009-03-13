@@ -30,13 +30,13 @@
 #include "memxor.h"
 #include "ubi.h"
 
-void ubi1024_init(ubi1024_ctx_t* ctx, void* g, uint8_t type){
+void ubi1024_init(ubi1024_ctx_t* ctx, const void* g, uint8_t type){
 	memset(ctx->tweak, 0, 15);
 	ctx->tweak[15] = 0x40+type;
 	memcpy(ctx->g, g, UBI1024_BLOCKSIZE_B);
 }
 
-void ubi1024_nextBlock(ubi1024_ctx_t* ctx, void* block){
+void ubi1024_nextBlock(ubi1024_ctx_t* ctx, const void* block){
 	threefish1024_ctx_t tfctx;
 	((uint64_t*)(ctx->tweak))[0] += UBI1024_BLOCKSIZE_B;
 	threefish1024_init(ctx->g, ctx->tweak, &tfctx);
@@ -47,7 +47,7 @@ void ubi1024_nextBlock(ubi1024_ctx_t* ctx, void* block){
 } 
 
 
-void ubi1024_lastBlock(ubi1024_ctx_t* ctx, void* block, uint16_t length_b){
+void ubi1024_lastBlock(ubi1024_ctx_t* ctx, const void* block, uint16_t length_b){
 	threefish1024_ctx_t tfctx;
 	while(length_b>UBI1024_BLOCKSIZE){
 		ubi1024_nextBlock(ctx, block);
@@ -65,9 +65,12 @@ void ubi1024_lastBlock(ubi1024_ctx_t* ctx, void* block, uint16_t length_b){
 		ctx->g[(length_b+7)/8-1] |= 0x80>>(length_b&7);
 	threefish1024_enc(ctx->g, &tfctx);
 	memxor(ctx->g, block, (length_b+7)/8);
+	if(length_b & 0x07){
+		ctx->g[((length_b+7)/8)-1] ^= 0x80>>(length_b&7);
+	}
 } 
 
-void ubi1024_ctx2hash(void* dest, ubi1024_ctx_t* ctx){
+void ubi1024_ctx2hash(void* dest, const ubi1024_ctx_t* ctx){
 	memcpy(dest, ctx->g, UBI1024_BLOCKSIZE_B);
 }
 
