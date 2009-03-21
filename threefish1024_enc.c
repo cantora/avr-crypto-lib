@@ -30,16 +30,6 @@
 #include <string.h>
 #include "threefish.h"
 
-#define X0 (((uint64_t*)data)[0])
-#define X1 (((uint64_t*)data)[1])
-static
-void mix(void* data, uint8_t rot){
-	uint64_t x;
-	x = X1;
-	X0 += x;
-	X1 = ((x<<rot)|(x>>(64-rot))) ^ X0;
-}
-
 #define X(a) (((uint64_t*)data)[(a)])
 
 static
@@ -108,14 +98,14 @@ void threefish1024_enc(void* data, threefish1024_ctx_t* ctx){
 			add_key_16(data, ctx, s);
 			++s;
 		}
-		mix((uint8_t*)data +  0, r0[i%8]);
-		mix((uint8_t*)data + 16, r1[i%8]);
-		mix((uint8_t*)data + 32, r2[i%8]);
-		mix((uint8_t*)data + 48, r3[i%8]);
-		mix((uint8_t*)data + 64, r4[i%8]);
-		mix((uint8_t*)data + 80, r5[i%8]);
-		mix((uint8_t*)data + 96, r6[i%8]);
-		mix((uint8_t*)data +112, r7[i%8]);
+		threefish_mix((uint8_t*)data +  0, r0[i%8]);
+		threefish_mix((uint8_t*)data + 16, r1[i%8]);
+		threefish_mix((uint8_t*)data + 32, r2[i%8]);
+		threefish_mix((uint8_t*)data + 48, r3[i%8]);
+		threefish_mix((uint8_t*)data + 64, r4[i%8]);
+		threefish_mix((uint8_t*)data + 80, r5[i%8]);
+		threefish_mix((uint8_t*)data + 96, r6[i%8]);
+		threefish_mix((uint8_t*)data +112, r7[i%8]);
 		permute_16(data);
 		++i;
 	}while(i!=80);

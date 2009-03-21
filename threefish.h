@@ -54,6 +54,8 @@ typedef struct{
 } threefish1024_ctx_t;
 
 
+void threefish_mix(void* data, uint8_t rot);
+void threefish256_init_c(void* key, void* tweak, threefish256_ctx_t* ctx);
 
 void threefish256_init(void* key, void* tweak, threefish256_ctx_t* ctx);
 void threefish512_init(void* key, void* tweak, threefish512_ctx_t* ctx);

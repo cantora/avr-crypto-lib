@@ -19,7 +19,7 @@
 =end
 
 $debug = false
-
+require 'rubygems'
 require 'serialport'
 
 def init_system
@@ -49,7 +49,18 @@ def get_md
   return line	
 end
 
+def send_md(md_string)
+  for i in 0..md_string.length-1
+    $sp.print(md_string[i].chr)
+#	print(md_string[i].chr)
+	if(i%20==19)
+		sleep(0.1)
+	end		
+  end
+end
+
 def run_test(filename)
+  errors = 0
   if not File.exist?(filename)
   	puts("ERROR file "+filename+" does not exist!")
   end
@@ -68,7 +79,7 @@ def run_test(filename)
     end while not (file.eof or (/[\s]*Msg[\s]*=.*/.match(lb)))
     return if file.eof
     puts("DBG sending: "+lb) if $debug
-	$sp.print(lb.strip)
+	send_md(lb.strip)
 	avr_md = get_md()
     begin
 	  lb=file.gets()
@@ -78,10 +89,16 @@ def run_test(filename)
 	a.upcase!
 	b.upcase!
 	puts("") if (pos%$linewidth==0 and $linewidth!=0)
-	putc((a==b)?'*':'!')
+	#putc((a==b)?'*':'!')
+	if(a==b)
+	  putc('*')
+	else
+	  putc('!')
+	  errors += 1;
+	end  
 	pos += 1
   end
-  
+  return errors
 end
 
 if ARGV.size < 6
@@ -92,17 +109,29 @@ EOF
 end
 
 puts("\nPort: "+ARGV[0]+ "@"+ARGV[1]+" "+ARGV[2]+"N"+ARGV[3]+"\n");
+puts("serial port interface version: " + SerialPort::VERSION);
 $linewidth = 64
-$sp = SerialPort.new(ARGV[0], ARGV[1].to_i, ARGV[2].to_i, ARGV[3].to_i, SerialPort::NONE);
+$params = { "baud"      => ARGV[1].to_i, 
+            "data_bits" => ARGV[2].to_i, 
+            "stop_bits" => ARGV[3].to_i, 
+            "parity"    => SerialPort::NONE }
+$sp = SerialPort.new(ARGV[0], $params)
+#$sp = SerialPort.new(ARGV[0], ARGV[1].to_i, ARGV[2].to_i, ARGV[3].to_i, SerialPort::NONE);
+
 $sp.read_timeout=1000; # 5 minutes
+$sp.flow_control = SerialPort::SOFT
 $algo_select = ARGV[4]
 #irb
 
 init_system()
 
 for i in (5..(ARGV.size-1))
-  run_test(ARGV[i])
-  puts("")
+  errors = run_test(ARGV[i])
+  if errors == 0
+    puts("[ok]")
+  else
+    puts("[errors: "+errors.to_s+"]")
+  end
 end
  $sp.print("EXIT\r");
 

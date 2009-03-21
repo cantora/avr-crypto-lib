@@ -30,16 +30,6 @@
 #include <string.h>
 #include "threefish.h"
 
-#define X0 (((uint64_t*)data)[0])
-#define X1 (((uint64_t*)data)[1])
-static
-void mix(void* data, uint8_t rot){
-	uint64_t x;
-	x = X1;
-	X0 += x;
-	X1 = ((x<<rot)|(x>>(64-rot))) ^ X0;
-}
-
 #define X(a) (((uint64_t*)data)[(a)])
 static
 void permute_4(void* data){
@@ -82,8 +72,8 @@ void threefish256_enc(void* data, threefish256_ctx_t* ctx){
 			add_key_4(data, ctx, s);
 			++s;
 		}
-		mix(data, r0[i%8]);
-		mix((uint8_t*)data + 16, r1[i%8]);
+		threefish_mix(data, r0[i%8]);
+		threefish_mix((uint8_t*)data + 16, r1[i%8]);
 		permute_4(data);
 		++i;
 	}while(i!=72);

@@ -61,7 +61,17 @@ void testrun_stdtest_threefish256(void){
 	threefish256_enc(data, &ctx);
 	cli_putstr_P(PSTR("\r\ncipher: "));
 	cli_hexdump(data, 32);
-	
+	/* 
+	cli_hexdump_rev(data, 8);
+	cli_putc(' ');
+	cli_hexdump_rev(data+8, 8);
+	cli_putc(' ');
+	cli_hexdump_rev(data+16, 8);
+	cli_putc(' ');
+	cli_hexdump_rev(data+24, 8);
+	cli_putc(' ');
+	*/
+	/* second test */
 	for(i=0; i<32; ++i){
 		key[i] = 0x10+i;
 		data[i] = 0xFF-i;
@@ -323,18 +333,33 @@ void testrun_performance_threefish(void){
 	testrun_performance_threefish1024();
 }
 
+void init_test(void){
+	threefish256_ctx_t ctx;
+	uint8_t key[32], tweak[16];
+	memset(key, 0,32);
+	memset(tweak, 0,16);
+	threefish256_init(key, tweak, &ctx);
+	cli_putstr_P(PSTR("\r\n ctx: \r\n\tk:"));
+	cli_hexdump(ctx.k, 5*8);
+	cli_putstr_P(PSTR("\r\n\tt:"));
+	cli_hexdump(ctx.t, 3*8);
+}
+
+
 /*****************************************************************************
  *  main																	 *
  *****************************************************************************/
 
 const char nessie_str[]      PROGMEM = "nessie";
 const char test_str[]        PROGMEM = "test";
+const char inittest_str[]    PROGMEM = "inittest";
 const char performance_str[] PROGMEM = "performance";
 const char echo_str[]        PROGMEM = "echo";
 
 cmdlist_entry_t cmdlist[] PROGMEM = {
 //	{ nessie_str,      NULL, testrun_nessie_noekeon},
 	{ test_str,        NULL, testrun_stdtest_threefish},
+	{ inittest_str,    NULL, init_test},
 	{ performance_str, NULL, testrun_performance_threefish},
 	{ echo_str,    (void*)1, (void_fpt)echo_ctrl},
 	{ NULL,            NULL, NULL}

@@ -53,16 +53,19 @@ void testrun_stdtest_skein256(uint16_t outsize_b){
 		message[i] = 0xFF-i;
 	
 	cli_putstr_P(PSTR("\r\nmessage:    "));
+	cli_hexdump(message, 1);
 	skein256(hash, outsize_b, message, 8);
 	cli_putstr_P(PSTR("\r\nhash:"));
 	cli_hexdump_block(hash, (outsize_b+7)/8, 4, 16);
 	
 	cli_putstr_P(PSTR("\r\nmessage:"));
+	cli_hexdump_block(message, 32, 4, 16);
 	skein256(hash, outsize_b, message, 32*8);
 	cli_putstr_P(PSTR("\r\nhash:"));
 	cli_hexdump_block(hash, (outsize_b+7)/8, 4, 16);
 	
 	cli_putstr_P(PSTR("\r\nmessage:"));
+	cli_hexdump_block(message, 64, 4, 16);
 	skein256(hash, outsize_b, message, 64*8);
 	cli_putstr_P(PSTR("\r\nhash:"));
 	cli_hexdump_block(hash, (outsize_b+7)/8, 4, 16);
@@ -84,11 +87,13 @@ void testrun_stdtest_skein512(uint16_t outsize_b){
 	cli_hexdump_block(hash, (outsize_b+7)/8, 4, 16);
 	
 	cli_putstr_P(PSTR("\r\nmessage:"));
+	cli_hexdump_block(message, 64, 4, 16);
 	skein512(hash, outsize_b, message, 64*8);
 	cli_putstr_P(PSTR("\r\nhash:"));
 	cli_hexdump_block(hash, (outsize_b+7)/8, 4, 16);
 	
 	cli_putstr_P(PSTR("\r\nmessage:"));
+	cli_hexdump_block(message, 128, 4, 16);
 	skein512(hash, outsize_b, message, 128*8);
 	cli_putstr_P(PSTR("\r\nhash:"));
 	cli_hexdump_block(hash, (outsize_b+7)/8, 4, 16);
@@ -110,6 +115,7 @@ void testrun_stdtest_skein1024(uint16_t outsize_b){
 	cli_hexdump_block(hash, (outsize_b+7)/8, 4, 16);
 	
 	cli_putstr_P(PSTR("\r\nmessage:"));
+	cli_hexdump_block(message, 128, 4, 16);
 	skein1024(hash, outsize_b, message, 128*8);
 	cli_putstr_P(PSTR("\r\nhash:"));
 	cli_hexdump_block(hash, (outsize_b+7)/8, 4, 16);
@@ -228,7 +234,12 @@ int main (void){
 	for(;;){
 		cli_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
 		cli_putstr(algo_name);
+		cli_putstr_P(PSTR("; "));
+		cli_putstr(__DATE__);
+		cli_putstr_P(PSTR(" "));
+		cli_putstr(__TIME__);
 		cli_putstr_P(PSTR(")\r\nloaded and running\r\n"));
+		
 		cmd_interface(cmdlist);
 	}
 }
