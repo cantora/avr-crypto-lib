@@ -60,7 +60,7 @@ void permute_16(void* data){
 #define K(s) (((uint64_t*)key)[(s)])
 #define T(s) (((uint64_t*)tweak)[(s)])
 
-void threefish1024_init(void* key, void* tweak, threefish1024_ctx_t* ctx){
+void threefish1024_init(const void* key, const void* tweak, threefish1024_ctx_t* ctx){
 	memcpy(ctx->k, key, 16*8);
 	memcpy(ctx->t, tweak, 2*8);
 	uint8_t i;
@@ -72,7 +72,7 @@ void threefish1024_init(void* key, void* tweak, threefish1024_ctx_t* ctx){
 }
 
 static
-void add_key_16(void* data, threefish1024_ctx_t* ctx, uint8_t s){
+void add_key_16(void* data, const threefish1024_ctx_t* ctx, uint8_t s){
 	uint8_t i;
 	for(i=0; i<13; ++i){
 		X(i) += ctx->k[(s+i)%17];
@@ -82,7 +82,7 @@ void add_key_16(void* data, threefish1024_ctx_t* ctx, uint8_t s){
 	X(15) += ctx->k[(s+15)%17] + s;
 }
 
-void threefish1024_enc(void* data, threefish1024_ctx_t* ctx){
+void threefish1024_enc(void* data, const threefish1024_ctx_t* ctx){
 	uint8_t i=0,s=0;
 	uint8_t r0[8] = {55, 25, 33, 34, 28, 17, 58, 47};
 	uint8_t r1[8] = {43, 25,  8, 43,  7,  6,  7, 49};

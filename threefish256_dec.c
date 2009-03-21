@@ -39,42 +39,29 @@ void permute_4(void* data){
 	X(3) = t;
 }
 
-#define THREEFISH_KEY_CONST 0x5555555555555555LL /* 2**64/3 */
-
 #define K(s) (((uint64_t*)key)[(s)])
 #define T(s) (((uint64_t*)tweak)[(s)])
 
-void threefish256_init(const void* key, const void* tweak, threefish256_ctx_t* ctx){
-	memcpy(ctx->k, key, 4*8);
-	memcpy(ctx->t, tweak, 2*8);
-	uint8_t i;
-	ctx->k[4] = THREEFISH_KEY_CONST;
-	for(i=0; i<4; ++i){
-		ctx->k[4] ^= K(i);
-	}
-	ctx->t[2] = T(0) ^ T(1);
-}
-
 static
 void add_key_4(void* data, const threefish256_ctx_t* ctx, uint8_t s){
-	X(0) += ctx->k[(s+0)%5];
-	X(1) += ctx->k[(s+1)%5] + ctx->t[s%3];
-	X(2) += ctx->k[(s+2)%5] + ctx->t[(s+1)%3];
-	X(3) += ctx->k[(s+3)%5] + s;
+	X(0) -= ctx->k[(s+0)%5];
+	X(1) -= ctx->k[(s+1)%5] + ctx->t[s%3];
+	X(2) -= ctx->k[(s+2)%5] + ctx->t[(s+1)%3];
+	X(3) -= ctx->k[(s+3)%5] + s;
 }
 
-void threefish256_enc(void* data, const threefish256_ctx_t* ctx){
-	uint8_t i=0,s=0;
-	uint8_t r0[8] = { 5, 36, 13, 58, 26, 53, 11, 59}; 
-	uint8_t r1[8] = {56, 28, 46, 44, 20, 35, 42, 50};
+void threefish256_dec(void* data, const threefish256_ctx_t* ctx){
+	uint8_t i=0,s=18;
+	uint8_t r0[8] = {59, 11, 53, 26, 58, 13, 36,  5}; 
+	uint8_t r1[8] = {50, 42, 35, 20, 44, 46, 28, 56};
 	do{
 		if(i%4==0){
 			add_key_4(data, ctx, s);
-			++s;
+			--s;
 		}
-		threefish_mix(data, r0[i%8]);
-		threefish_mix((uint8_t*)data + 16, r1[i%8]);
 		permute_4(data);
+		threefish_invmix(data, r0[i%8]);
+		threefish_invmix((uint8_t*)data + 16, r1[i%8]);
 		++i;
 	}while(i!=72);
 	add_key_4(data, ctx, s);

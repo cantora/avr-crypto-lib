@@ -40,6 +40,26 @@ char* algo_name = "Threefish";
 /*****************************************************************************
  *  additional validation-functions											 *
  *****************************************************************************/
+
+void threefish256_dummy_init(const uint8_t* key, uint16_t keysize_b, void* ctx){
+	uint8_t null[16];
+	memset(null, 0, 16);
+	threefish256_init(key, null, ctx);
+}
+
+void testrun_nessie_threefish(void){
+	nessie_bc_ctx.keysize_b = 256;
+	nessie_bc_ctx.blocksize_B = 32;
+	nessie_bc_ctx.ctx_size_B = sizeof(threefish256_ctx_t);
+	nessie_bc_ctx.name = "Threefish256";
+	nessie_bc_ctx.cipher_genctx = threefish256_dummy_init;
+	nessie_bc_ctx.cipher_enc = (nessie_bc_enc_fpt)threefish256_enc;
+	nessie_bc_ctx.cipher_dec = (nessie_bc_dec_fpt)threefish256_dec;
+	nessie_bc_ctx.cipher_free = NULL;
+	
+	nessie_bc_run();
+}
+
 void testrun_stdtest_threefish256(void){
 	uint8_t key[32], data[32];
 	uint8_t tweak[16];
@@ -357,7 +377,7 @@ const char performance_str[] PROGMEM = "performance";
 const char echo_str[]        PROGMEM = "echo";
 
 cmdlist_entry_t cmdlist[] PROGMEM = {
-//	{ nessie_str,      NULL, testrun_nessie_noekeon},
+	{ nessie_str,      NULL, testrun_nessie_threefish},
 	{ test_str,        NULL, testrun_stdtest_threefish},
 	{ inittest_str,    NULL, init_test},
 	{ performance_str, NULL, testrun_performance_threefish},

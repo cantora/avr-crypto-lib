@@ -55,14 +55,16 @@ typedef struct{
 
 
 void threefish_mix(void* data, uint8_t rot);
-void threefish256_init_c(void* key, void* tweak, threefish256_ctx_t* ctx);
+void threefish_invmix(void* data, uint8_t rot);
 
-void threefish256_init(void* key, void* tweak, threefish256_ctx_t* ctx);
-void threefish512_init(void* key, void* tweak, threefish512_ctx_t* ctx);
-void threefish1024_init(void* key, void* tweak, threefish1024_ctx_t* ctx);
+void threefish256_init(const void* key, const void* tweak, threefish256_ctx_t* ctx);
+void threefish512_init(const void* key, const void* tweak, threefish512_ctx_t* ctx);
+void threefish1024_init(const void* key, const void* tweak, threefish1024_ctx_t* ctx);
 
-void threefish256_enc(void* data, threefish256_ctx_t* ctx);
-void threefish512_enc(void* data, threefish512_ctx_t* ctx);
-void threefish1024_enc(void* data, threefish1024_ctx_t* ctx);
+void threefish256_enc(void* data, const threefish256_ctx_t* ctx);
+void threefish512_enc(void* data, const threefish512_ctx_t* ctx);
+void threefish1024_enc(void* data, const threefish1024_ctx_t* ctx);
+
+void threefish256_dec(void* data, const threefish256_ctx_t* ctx);
 
 #endif /* THREEFISH_H_ */

@@ -21,10 +21,10 @@
 
 #include <stdint.h>
 
-typedef void (*nessie_bc_gen_fpt)(uint8_t* key, uint16_t keysize_b, void* ctx);
+typedef void (*nessie_bc_gen_fpt)(const uint8_t* key, uint16_t keysize_b, void* ctx);
 typedef void (*nessie_bc_free_fpt)(void* ctx);
-typedef void (*nessie_bc_enc_fpt)(void* buffer, void* ctx);
-typedef void (*nessie_bc_dec_fpt)(void* buffer, void* ctx);
+typedef void (*nessie_bc_enc_fpt)(void* buffer, const void* ctx);
+typedef void (*nessie_bc_dec_fpt)(void* buffer, const void* ctx);
 
 typedef struct nessie_bc_ctx_st{
 	uint16_t keysize_b;
