@@ -120,6 +120,24 @@
 	out _SFR_IO_ADDR(SPL), \reg1
 .endm
 
+.macro stack_free_large3 size:req, reg1=r30, reg2=r31
+	in r0, _SFR_IO_ADDR(SREG)
+	in \reg1, _SFR_IO_ADDR(SPL)
+	in \reg2, _SFR_IO_ADDR(SPH)
+	push r16
+	push r17
+	ldi r16, lo8(\size)
+	ldi r17, hi8(\size)
+	add \reg1, r16
+	adc \reg2, r17
+	pop r17
+	pop r16 
+	cli
+	out _SFR_IO_ADDR(SPH), \reg2
+	out _SFR_IO_ADDR(SREG), r0
+	out _SFR_IO_ADDR(SPL), \reg1
+.endm
+
 
 /*******************************************************************************
 * END of MACRO SECTION                                                         *

@@ -116,15 +116,15 @@ void testrun_stdtest_threefish256(void){
 	memset(tweak, 0, 16);
 	
 	cli_putstr_P(PSTR("\r\nkey:    "));
-	cli_hexdump(key, 32);
+	cli_hexdump_block(key, 32, 4, 16);
 	cli_putstr_P(PSTR("\r\ntweak:  "));
-	cli_hexdump(tweak, 16);
+	cli_hexdump_block(tweak, 16, 4, 16);
 	cli_putstr_P(PSTR("\r\nplain:  "));
-	cli_hexdump(data, 32);
+	cli_hexdump_block(data, 32, 4, 16);
 	threefish256_init(key, tweak, &ctx);
 	threefish256_enc(data, &ctx);
 	cli_putstr_P(PSTR("\r\ncipher: "));
-	cli_hexdump(data, 32);
+	cli_hexdump_block(data, 32, 4, 16);
 	/* second test */
 	for(i=0; i<32; ++i){
 		key[i] = 0x10+i;
@@ -133,16 +133,16 @@ void testrun_stdtest_threefish256(void){
 	for(i=0; i<16; ++i){
 		tweak[i] = i;
 	}
-	cli_putstr_P(PSTR("\r\n\r\nkey:    "));
-	cli_hexdump(key, 32);
+	cli_putstr_P(PSTR("\r\nkey:    "));
+	cli_hexdump_block(key, 32, 4, 16);
 	cli_putstr_P(PSTR("\r\ntweak:  "));
-	cli_hexdump(tweak, 16);
+	cli_hexdump_block(tweak, 16, 4, 16);
 	cli_putstr_P(PSTR("\r\nplain:  "));
-	cli_hexdump(data, 32);
+	cli_hexdump_block(data, 32, 4, 16);
 	threefish256_init(key, tweak, &ctx);
 	threefish256_enc(data, &ctx);
 	cli_putstr_P(PSTR("\r\ncipher: "));
-	cli_hexdump(data, 32);
+	cli_hexdump_block(data, 32, 4, 16);
 }
 
 void testrun_stdtest_threefish512(void){
@@ -157,21 +157,17 @@ void testrun_stdtest_threefish512(void){
 	memset(tweak, 0, 16);
 	
 	cli_putstr_P(PSTR("\r\nkey:    "));
-	cli_hexdump(key, 32);
+	cli_hexdump_block(key, 32, 4, 16);
 	cli_putstr_P(PSTR("\r\n        "));
-	cli_hexdump(key+32, 32);
+	cli_hexdump_block(key+32, 32, 4, 16);
 	cli_putstr_P(PSTR("\r\ntweak:  "));
-	cli_hexdump(tweak, 16);
+	cli_hexdump_block(tweak, 16, 4, 16);
 	cli_putstr_P(PSTR("\r\nplain:  "));
-	cli_hexdump(data, 32);
-	cli_putstr_P(PSTR("\r\n        "));
-	cli_hexdump(data+32, 32);
+	cli_hexdump_block(data, 64, 4, 16);
 	threefish512_init(key, tweak, &ctx);
 	threefish512_enc(data, &ctx);
 	cli_putstr_P(PSTR("\r\ncipher: "));
-	cli_hexdump(data, 32);
-	cli_putstr_P(PSTR("\r\n        "));
-	cli_hexdump(data+32, 32);
+	cli_hexdump_block(data, 64, 4, 16);
 	
 	for(i=0; i<64; ++i){
 		key[i] = 0x10+i;
@@ -180,22 +176,18 @@ void testrun_stdtest_threefish512(void){
 	for(i=0; i<16; ++i){
 		tweak[i] = i;
 	}
-	cli_putstr_P(PSTR("\r\n\r\nkey:    "));
-	cli_hexdump(key, 32);
+	cli_putstr_P(PSTR("\r\nkey:    "));
+	cli_hexdump_block(key, 32, 4, 16);
 	cli_putstr_P(PSTR("\r\n        "));
-	cli_hexdump(key+32, 32);
+	cli_hexdump_block(key+32, 32, 4, 16);
 	cli_putstr_P(PSTR("\r\ntweak:  "));
-	cli_hexdump(tweak, 16);
+	cli_hexdump_block(tweak, 16, 4, 16);
 	cli_putstr_P(PSTR("\r\nplain:  "));
-	cli_hexdump(data, 32);
-	cli_putstr_P(PSTR("\r\n        "));
-	cli_hexdump(data+32, 32);
+	cli_hexdump_block(data, 64, 4, 16);
 	threefish512_init(key, tweak, &ctx);
 	threefish512_enc(data, &ctx);
 	cli_putstr_P(PSTR("\r\ncipher: "));
-	cli_hexdump(data, 32);
-	cli_putstr_P(PSTR("\r\n        "));
-	cli_hexdump(data+32, 32);
+	cli_hexdump_block(data, 64, 4, 16);
 }
 
 void testrun_stdtest_threefish1024(void){
@@ -210,33 +202,15 @@ void testrun_stdtest_threefish1024(void){
 	memset(tweak, 0, 16);
 	
 	cli_putstr_P(PSTR("\r\nkey:    "));
-	cli_hexdump(key, 32);
-	cli_putstr_P(PSTR("\r\n        "));
-	cli_hexdump(key+32, 32);
-	cli_putstr_P(PSTR("\r\n        "));
-	cli_hexdump(key+64, 32);
-	cli_putstr_P(PSTR("\r\n        "));
-	cli_hexdump(key+96, 32);
+	cli_hexdump_block(key, 128, 4, 16);
 	cli_putstr_P(PSTR("\r\ntweak:  "));
-	cli_hexdump(tweak, 16);
+	cli_hexdump_block(tweak, 16, 4, 16);
 	cli_putstr_P(PSTR("\r\nplain:  "));
-	cli_hexdump(data, 32);
-	cli_putstr_P(PSTR("\r\n        "));
-	cli_hexdump(data+32, 32);
-	cli_putstr_P(PSTR("\r\n        "));
-	cli_hexdump(data+64, 32);
-	cli_putstr_P(PSTR("\r\n        "));
-	cli_hexdump(data+96, 32);
+	cli_hexdump_block(data, 128, 4, 16);
 	threefish1024_init(key, tweak, &ctx);
 	threefish1024_enc(data, &ctx);
 	cli_putstr_P(PSTR("\r\ncipher: "));
-	cli_hexdump(data, 32);
-	cli_putstr_P(PSTR("\r\n        "));
-	cli_hexdump(data+32, 32);
-	cli_putstr_P(PSTR("\r\n        "));
-	cli_hexdump(data+64, 32);
-	cli_putstr_P(PSTR("\r\n        "));
-	cli_hexdump(data+96, 32);
+	cli_hexdump_block(data, 128, 4, 16);
 
 	for(i=0; i<128; ++i){
 		key[i] = 0x10+i;
@@ -245,34 +219,16 @@ void testrun_stdtest_threefish1024(void){
 	for(i=0; i<16; ++i){
 		tweak[i] = i;
 	}
-	cli_putstr_P(PSTR("\r\n\r\nkey:    "));
-	cli_hexdump(key, 32);
-	cli_putstr_P(PSTR("\r\n        "));
-	cli_hexdump(key+32, 32);
-	cli_putstr_P(PSTR("\r\n        "));
-	cli_hexdump(key+64, 32);
-	cli_putstr_P(PSTR("\r\n        "));
-	cli_hexdump(key+96, 32);
+	cli_putstr_P(PSTR("\r\nkey:    "));
+	cli_hexdump_block(key, 128, 4, 16);
 	cli_putstr_P(PSTR("\r\ntweak:  "));
-	cli_hexdump(tweak, 16);
+	cli_hexdump_block(tweak, 16, 4, 16);
 	cli_putstr_P(PSTR("\r\nplain:  "));
-	cli_hexdump(data, 32);
-	cli_putstr_P(PSTR("\r\n        "));
-	cli_hexdump(data+32, 32);
-	cli_putstr_P(PSTR("\r\n        "));
-	cli_hexdump(data+64, 32);
-	cli_putstr_P(PSTR("\r\n        "));
-	cli_hexdump(data+96, 32);
+	cli_hexdump_block(data, 128, 4, 16);
 	threefish1024_init(key, tweak, &ctx);
 	threefish1024_enc(data, &ctx);
 	cli_putstr_P(PSTR("\r\ncipher: "));
-	cli_hexdump(data, 32);
-	cli_putstr_P(PSTR("\r\n        "));
-	cli_hexdump(data+32, 32);
-	cli_putstr_P(PSTR("\r\n        "));
-	cli_hexdump(data+64, 32);
-	cli_putstr_P(PSTR("\r\n        "));
-	cli_hexdump(data+96, 32);
+	cli_hexdump_block(data, 128, 4, 16);
 }
 
 
