@@ -131,6 +131,7 @@ post_bitrot:
 exit:
 	ret
 
+
 byte_rot_jmptable:
 	rjmp  post_byterot;ret; rjmp  byte_rotr_0
 	rjmp  byte_rotr_7
@@ -144,7 +145,8 @@ byte_rot_jmptable:
 	
 ; 0 1 2 3 4 5 6 7
 ; 1 2 3 4 5 6 7 0
-
+.global byte_rotr_1
+.global byte_rotr_0
 byte_rotr_1: /* 10 words */
 	mov r0, B0
 	mov B0, B1
@@ -160,7 +162,7 @@ byte_rotr_0:
 
 ; 0 1 2 3 4 5 6 7	
 ; 2 3 4 5 6 7 0 1
-	
+.global byte_rotr_2	
 byte_rotr_2: /* 11 words */
 	mov r0, B0
 	mov B0, B2
@@ -176,7 +178,7 @@ byte_rotr_2: /* 11 words */
 
 ; 0 1 2 3 4 5 6 7
 ; 3 4 5 6 7 0 1 2
-
+.global byte_rotr_3
 byte_rotr_3: /* 10 words */
 	mov r0, B0
 	mov B0, B3
@@ -191,6 +193,7 @@ byte_rotr_3: /* 10 words */
 
 ; 0 1 2 3 4 5 6 7
 ; 4 5 6 7 0 1 2 3
+.global byte_rotr_4
 byte_rotr_4: /* 13 words */
 	mov r0, B0
 	mov B0, B4
@@ -211,6 +214,7 @@ byte_rotr_4: /* 13 words */
 
 ; 0 1 2 3 4 5 6 7
 ; 5 6 7 0 1 2 3 4
+.global byte_rotr_5
 byte_rotr_5: /* 10 words */
 	mov r0, B0
 	mov B0, B5
@@ -225,6 +229,7 @@ byte_rotr_5: /* 10 words */
 	
 ; 0 1 2 3 4 5 6 7
 ; 6 7 0 1 2 3 4 5
+.global byte_rotr_6
 byte_rotr_6: /* 11 words */
 	mov r0, B0
 	mov B0, B6
@@ -241,6 +246,7 @@ byte_rotr_6: /* 11 words */
 
 ; 0 1 2 3 4 5 6 7
 ; 7 0 1 2 3 4 5 6
+.global byte_rotr_7
 byte_rotr_7: /* 10 words */
 	mov r0, B7
 	mov B7, B6
@@ -253,6 +259,7 @@ byte_rotr_7: /* 10 words */
 	mov B0, r0
 	rjmp post_byterot
 
+.global bit_rotl
 bit_rotl:
 	tst vROT
 	brne 1f
@@ -270,6 +277,7 @@ bit_rotl:
 	dec vROT
 	rjmp bit_rotl
 	
+.global bit_rotr
 bit_rotr:
 	tst vROT
 	brne 1f

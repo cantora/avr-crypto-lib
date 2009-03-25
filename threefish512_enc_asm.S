@@ -1,4 +1,4 @@
-/* threefish256_enc_asm.S */
+/* threefish512_enc_asm.S */
 /*
     This file is part of the AVR-Crypto-Lib.
     Copyright (C) 2009  Daniel Otte (daniel.otte@rub.de)
@@ -19,7 +19,7 @@
 /*
  * \author  Daniel Otte
  * \email   daniel.otte@rub.de
- * \date    2009-03-16
+ * \date    2009-03-24
  * \license GPLv3 or later
  */ 
 
@@ -39,14 +39,13 @@ A7 = 21
 
 #define K(s) (((uint64_t*)key)[(s)])
 #define T(s) (((uint64_t*)tweak)[(s)])
-
-void threefish256_init(void* key, void* tweak, threefish256_ctx_t* ctx){
-	memcpy(ctx->k, key, 4*8);
+void threefish512_init(const void* key, const void* tweak, threefish512_ctx_t* ctx){
+	memcpy(ctx->k, key, 8*8);
 	memcpy(ctx->t, tweak, 2*8);
 	uint8_t i;
-	ctx->k[4] = THREEFISH_KEY_CONST;
-	for(i=0; i<4; ++i){
-		ctx->k[4] ^= K(i);
+	ctx->k[8] = THREEFISH_KEY_CONST;
+	for(i=0; i<8; ++i){
+		ctx->k[8] ^= K(i);
 	}
 	ctx->t[2] = T(0) ^ T(1);
 }
@@ -56,12 +55,12 @@ void threefish256_init(void* key, void* tweak, threefish256_ctx_t* ctx){
  * param tweak: r22:r23
  * param ctx:   r20:r21
  */
-.global threefish256_init
-threefish256_init:
+.global threefish512_init
+threefish512_init:
 	push_range 14, 17
 	movw r30, r20
 	movw r26, r24
-	ldi r24, 4
+	ldi r24, 8
 	ldi A7, 0x55
 	mov A6, A7
 	movw A4, A6
@@ -158,34 +157,47 @@ threefish256_init:
 /******************************************************************************/
 /*
 #define X(a) (((uint64_t*)data)[(a)])
-void permute_4(void* data){
+void permute_8(void* data){
 	uint64_t t;
-	t = X(1);
-	X(1) = X(3);
-	X(3) = t;
+	t = X(0);
+	X(0) = X(2);
+	X(2) = X(4);
+	X(4) = X(6);
+	X(6) = t;
+	t = X(3);
+	X(3) = X(7);
+	X(7) = t;
 }
-void add_key_4(void* data, threefish256_ctx_t* ctx, uint8_t s){ /* s: 0..19 * /
-	X(0) += ctx->k[(s+0)%5];
-	X(1) += ctx->k[(s+1)%5] + ctx->t[s%3];
-	X(2) += ctx->k[(s+2)%5] + ctx->t[(s+1)%3];
-	X(3) += ctx->k[(s+3)%5] + s;
+void add_key_8(void* data, const threefish512_ctx_t* ctx, uint8_t s){
+	uint8_t i;
+	for(i=0; i<5; ++i){
+		X(i) += ctx->k[(s+i)%9];
+	}
+	X(5) += ctx->k[(s+5)%9] + ctx->t[s%3];
+	X(6) += ctx->k[(s+6)%9] + ctx->t[(s+1)%3];
+	X(7) += ctx->k[(s+7)%9] + s;
 }
-void threefish256_enc(void* data, threefish256_ctx_t* ctx){
+void threefish512_enc(void* data, const threefish512_ctx_t* ctx){
 	uint8_t i=0,s=0;
-	uint8_t r0[8] = { 5, 36, 13, 58, 26, 53, 11, 59}; 
-	uint8_t r1[8] = {56, 28, 46, 44, 20, 35, 42, 50};
+	uint8_t r0[8] = {38, 48, 34, 26, 33, 39, 29, 33}; 
+	uint8_t r1[8] = {30, 20, 14, 12, 49, 27, 26, 51};
+	uint8_t r2[8] = {50, 43, 15, 58,  8, 41, 11, 39};
+	uint8_t r3[8] = {53, 31, 27,  7, 42, 14,  9, 35};
 	do{
 		if(i%4==0){
-			add_key_4(data, ctx, s);
+			add_key_8(data, ctx, s);
 			++s;
 		}
-		threefish_mix(data, r0[i%8]);
+		threefish_mix((uint8_t*)data +  0, r0[i%8]);
 		threefish_mix((uint8_t*)data + 16, r1[i%8]);
-		permute_4(data);
+		threefish_mix((uint8_t*)data + 32, r2[i%8]);
+		threefish_mix((uint8_t*)data + 48, r3[i%8]);
+		permute_8(data);
 		++i;
 	}while(i!=72);
-	add_key_4(data, ctx, s);
+	add_key_8(data, ctx, s);
 }
+
 */
 I     =  2
 S     =  3
@@ -197,12 +209,16 @@ IDX0  =  8
 IDX1  =  9
 IDX2  = 10
 IDX3  = 11
+IDX4  = 12
+IDX5  = 13
+IDX6  = 14
+IDX7  = 15
 /*
  * param data:  r24:r25
  * param ctx:   r22:r23
  */
-.global threefish256_enc
-threefish256_enc:
+.global threefish512_enc
+threefish512_enc:
 	push r28
 	push r29
 	push_range 2, 17
@@ -216,14 +232,18 @@ threefish256_enc:
 	breq 2f
 	rjmp 4f
 2:
-	ldi r30, lo8(threefish256_slut5)
-	ldi r31, hi8(threefish256_slut5)
+	ldi r30, lo8(threefish512_slut9)
+	ldi r31, hi8(threefish512_slut9)
 	add r30, S
 	adc r31, r1
 	lpm IDX0, Z+
 	lpm IDX1, Z+
 	lpm IDX2, Z+
-	lpm IDX3, Z
+	lpm IDX3, Z+
+	lpm IDX4, Z+
+	lpm IDX5, Z+
+	lpm IDX6, Z+
+	lpm IDX7, Z
 	movw r30, CTX0
 	movw r26, DATA0
 	add r30, IDX0
@@ -241,17 +261,34 @@ threefish256_enc:
 	add r30, IDX3
 	adc r31, r1
 	rcall add_z_to_x8
+	movw r30, CTX0
+	add r30, IDX4
+	adc r31, r1
+	rcall add_z_to_x8
+	movw r30, CTX0
+	add r30, IDX5
+	adc r31, r1
+	rcall add_z_to_x8
+	movw r30, CTX0
+	add r30, IDX6
+	adc r31, r1
+	rcall add_z_to_x8
+	movw r30, CTX0
+	add r30, IDX7
+	adc r31, r1
+	rcall add_z_to_x8
 	
 	/* now the remaining key */
 	sbiw r26, 3*8
-	ldi r30, lo8(threefish256_slut3)
-	ldi r31, hi8(threefish256_slut3)
+	ldi r30, lo8(threefish512_slut3)
+	ldi r31, hi8(threefish512_slut3)
 	add r30, S
 	adc r31, r1
 	lpm IDX0, Z+
 	lpm IDX1, Z
 	movw r30, CTX0
-	adiw r30, 5*8
+	adiw r30, 7*8 /* make Z pointing to (extended tweak) */
+	adiw r30, 2*8
 	movw IDX2, r30
 	add r30, IDX0
 	adc r31, r1
@@ -295,8 +332,8 @@ exit:
 	ret	
 4:	
 	/* call mix */
-	ldi r30, lo8(threefish256_rc0)
-	ldi r31, hi8(threefish256_rc0)
+	ldi r30, lo8(threefish512_rc0)
+	ldi r31, hi8(threefish512_rc0)
 	mov r26, I
 	andi r26, 0x07
 	add r30, r26
@@ -304,64 +341,63 @@ exit:
 	lpm r22, Z
 	adiw r30, 8
 	lpm IDX0, Z
+	adiw r30, 8
+	lpm IDX1, Z
+	push IDX1
+	adiw r30, 8
+	lpm IDX1, Z
+	
 	movw r24, DATA0
 	call threefish_mix_asm /* no rcall? */
 	movw r24, DATA0
 	adiw r24, 16
 	mov r22, IDX0
 	call threefish_mix_asm /* no rcall? */
+	movw r24, DATA0
+	adiw r24, 32
+	pop r22
+	;mov r22, IDX0
+	call threefish_mix_asm /* no rcall? */
+	movw r24, DATA0
+	adiw r24, 48
+	mov r22, IDX1
+	call threefish_mix_asm /* no rcall? */
 	/* now the permutation */
 	movw r26, DATA0
-	adiw r26, 8
-	movw r30, r26
-	adiw r30, 16
-	ld IDX0, X
-	ld IDX1, Z
-	st X+, IDX1
-	st Z+, IDX0
-	ld IDX0, X
-	ld IDX1, Z
-	st X+, IDX1
-	st Z+, IDX0
-	ld IDX0, X
-	ld IDX1, Z
-	st X+, IDX1
-	st Z+, IDX0
-	ld IDX0, X
-	ld IDX1, Z
-	st X+, IDX1
-	st Z+, IDX0
-	ld IDX0, X
-	ld IDX1, Z
-	st X+, IDX1
-	st Z+, IDX0
-	ld IDX0, X
-	ld IDX1, Z
-	st X+, IDX1
-	st Z+, IDX0
-	ld IDX0, X
-	ld IDX1, Z
-	st X+, IDX1
-	st Z+, IDX0
-	ld IDX0, X
-	ld IDX1, Z
-	st X+, IDX1
-	st Z+, IDX0
+	movw r30, DATA0
+	adiw r30, 6*8
+	rcall xchg_zx8
+	movw r26, DATA0
+	movw r30, DATA0
+	adiw r30, 2*8
+	rcall xchg_zx8
+	movw r26, DATA0
+	adiw r26, 2*8
+	movw r30, DATA0
+	adiw r30, 4*8
+	rcall xchg_zx8	
+	movw r26, DATA0
+	adiw r26, 3*8
+	movw r30, DATA0
+	adiw r30, 7*8
+	rcall xchg_zx8
 	inc I
 	rjmp 1b
 	
-threefish256_slut5:
-    .byte 0x00, 0x08, 0x10, 0x18, 0x20, 0x00, 0x08, 0x10 
-	.byte 0x18, 0x20, 0x00, 0x08, 0x10, 0x18, 0x20, 0x00
-	.byte 0x08, 0x10, 0x18, 0x20, 0x00, 0x08, 0x10
-threefish256_slut3:
+threefish512_slut9:
+	.byte 0x00, 0x08, 0x10, 0x18, 0x20, 0x28, 0x30, 0x38
+	.byte 0x40, 0x00, 0x08, 0x10, 0x18, 0x20, 0x28, 0x30
+	.byte 0x38, 0x40, 0x00, 0x08, 0x10, 0x18, 0x20,	0x28 
+	.byte 0x30, 0x38, 0x40
+threefish512_slut3:
 	.byte 0x00, 0x08, 0x10, 0x00, 0x08, 0x10, 0x00, 0x08
 	.byte 0x10, 0x00, 0x08, 0x10, 0x00, 0x08, 0x10, 0x00 
 	.byte 0x08, 0x10, 0x00, 0x08, 0x10, 0x00, 0x08
-;threefish256_rc0: .byte  5, 36, 13, 58, 26, 53, 11, 59 
-;threefish256_rc1: .byte 56, 28, 46, 44, 20, 35, 42, 50
-threefish256_rc0: .byte 0x1b, 0x44, 0x2b, 0x72, 0x32, 0x7b, 0x13, 0x73
-threefish256_rc1: .byte 0x70, 0x34, 0x6a, 0x54, 0x24, 0x43, 0x52, 0x62
+
+threefish512_rc0: .byte 0x5a, 0x60, 0x42, 0x32, 0x41, 0x59, 0x4b, 0x41 
+threefish512_rc1: .byte 0x4a, 0x24, 0x2a, 0x14, 0x61, 0x33, 0x32, 0x63 
+threefish512_rc2: .byte 0x62, 0x53, 0x29, 0x72, 0x10, 0x51, 0x13, 0x59 
+threefish512_rc3: .byte 0x7b, 0x49, 0x33, 0x19, 0x52, 0x2a, 0x11, 0x43 
 
 add_z_to_x8:
 	ld r0, Z+
@@ -399,12 +435,18 @@ add_z_to_x8:
 	clr r1
 	ret
 	
-	
-	
-
-
-
-
+T0 = IDX0
+T1 = 0
+CNT = 24	
+xchg_zx8:
+	ldi CNT, 8
+1:	ld T0, X
+	ld T1, Z
+	st X+, T1
+	st Z+, T0	
+	dec CNT
+	brne 1b
+	ret
 
 
 

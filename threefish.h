@@ -66,5 +66,7 @@ void threefish512_enc(void* data, const threefish512_ctx_t* ctx);
 void threefish1024_enc(void* data, const threefish1024_ctx_t* ctx);
 
 void threefish256_dec(void* data, const threefish256_ctx_t* ctx);
+void threefish512_dec(void* data, const threefish512_ctx_t* ctx);
+void threefish1024_dec(void* data, const threefish1024_ctx_t* ctx);
 
 #endif /* THREEFISH_H_ */

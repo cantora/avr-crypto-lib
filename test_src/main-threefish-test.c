@@ -47,7 +47,7 @@ void threefish256_dummy_init(const uint8_t* key, uint16_t keysize_b, void* ctx){
 	threefish256_init(key, null, ctx);
 }
 
-void testrun_nessie_threefish(void){
+void testrun_nessie_threefish256(void){
 	nessie_bc_ctx.keysize_b = 256;
 	nessie_bc_ctx.blocksize_B = 32;
 	nessie_bc_ctx.ctx_size_B = sizeof(threefish256_ctx_t);
@@ -58,6 +58,50 @@ void testrun_nessie_threefish(void){
 	nessie_bc_ctx.cipher_free = NULL;
 	
 	nessie_bc_run();
+}
+
+void threefish512_dummy_init(const uint8_t* key, uint16_t keysize_b, void* ctx){
+	uint8_t null[16];
+	memset(null, 0, 16);
+	threefish512_init(key, null, ctx);
+}
+
+void testrun_nessie_threefish512(void){
+	nessie_bc_ctx.keysize_b = 512;
+	nessie_bc_ctx.blocksize_B = 64;
+	nessie_bc_ctx.ctx_size_B = sizeof(threefish512_ctx_t);
+	nessie_bc_ctx.name = "Threefish512";
+	nessie_bc_ctx.cipher_genctx = threefish512_dummy_init;
+	nessie_bc_ctx.cipher_enc = (nessie_bc_enc_fpt)threefish512_enc;
+	nessie_bc_ctx.cipher_dec = (nessie_bc_dec_fpt)threefish512_dec;
+	nessie_bc_ctx.cipher_free = NULL;
+	
+	nessie_bc_run();
+}
+
+void threefish1024_dummy_init(const uint8_t* key, uint16_t keysize_b, void* ctx){
+	uint8_t null[16];
+	memset(null, 0, 16);
+	threefish1024_init(key, null, ctx);
+}
+
+void testrun_nessie_threefish1024(void){
+	nessie_bc_ctx.keysize_b = 1024;
+	nessie_bc_ctx.blocksize_B = 128;
+	nessie_bc_ctx.ctx_size_B = sizeof(threefish1024_ctx_t);
+	nessie_bc_ctx.name = "Threefish1024";
+	nessie_bc_ctx.cipher_genctx = threefish1024_dummy_init;
+	nessie_bc_ctx.cipher_enc = (nessie_bc_enc_fpt)threefish1024_enc;
+	nessie_bc_ctx.cipher_dec = (nessie_bc_dec_fpt)threefish1024_dec;
+	nessie_bc_ctx.cipher_free = NULL;
+	
+	nessie_bc_run();
+}
+
+void testrun_nessie_threefish(void){
+	testrun_nessie_threefish256();
+	testrun_nessie_threefish512();
+	testrun_nessie_threefish1024();
 }
 
 void testrun_stdtest_threefish256(void){
@@ -81,16 +125,6 @@ void testrun_stdtest_threefish256(void){
 	threefish256_enc(data, &ctx);
 	cli_putstr_P(PSTR("\r\ncipher: "));
 	cli_hexdump(data, 32);
-	/* 
-	cli_hexdump_rev(data, 8);
-	cli_putc(' ');
-	cli_hexdump_rev(data+8, 8);
-	cli_putc(' ');
-	cli_hexdump_rev(data+16, 8);
-	cli_putc(' ');
-	cli_hexdump_rev(data+24, 8);
-	cli_putc(' ');
-	*/
 	/* second test */
 	for(i=0; i<32; ++i){
 		key[i] = 0x10+i;
@@ -203,7 +237,7 @@ void testrun_stdtest_threefish1024(void){
 	cli_hexdump(data+64, 32);
 	cli_putstr_P(PSTR("\r\n        "));
 	cli_hexdump(data+96, 32);
-	
+
 	for(i=0; i<128; ++i){
 		key[i] = 0x10+i;
 		data[i] = 0xFF-i;
@@ -239,7 +273,7 @@ void testrun_stdtest_threefish1024(void){
 	cli_hexdump(data+64, 32);
 	cli_putstr_P(PSTR("\r\n        "));
 	cli_hexdump(data+96, 32);
-	}
+}
 
 
 void testrun_stdtest_threefish(void){
@@ -372,6 +406,9 @@ void init_test(void){
 
 const char nessie_str[]      PROGMEM = "nessie";
 const char test_str[]        PROGMEM = "test";
+const char test256_str[]     PROGMEM = "test256";
+const char test512_str[]     PROGMEM = "test512";
+const char test1024_str[]    PROGMEM = "test1024";
 const char inittest_str[]    PROGMEM = "inittest";
 const char performance_str[] PROGMEM = "performance";
 const char echo_str[]        PROGMEM = "echo";
@@ -379,6 +416,9 @@ const char echo_str[]        PROGMEM = "echo";
 cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ nessie_str,      NULL, testrun_nessie_threefish},
 	{ test_str,        NULL, testrun_stdtest_threefish},
+    { test256_str,     NULL, testrun_stdtest_threefish256},
+    { test512_str,     NULL, testrun_stdtest_threefish512},
+    { test1024_str,    NULL, testrun_stdtest_threefish1024},
 	{ inittest_str,    NULL, init_test},
 	{ performance_str, NULL, testrun_performance_threefish},
 	{ echo_str,    (void*)1, (void_fpt)echo_ctrl},
