@@ -125,6 +125,10 @@ void testrun_stdtest_threefish256(void){
 	threefish256_enc(data, &ctx);
 	cli_putstr_P(PSTR("\r\ncipher: "));
 	cli_hexdump_block(data, 32, 4, 16);
+	cli_putstr_P(PSTR("\r\ndecipher: "));
+	threefish256_dec(data, &ctx);
+	cli_hexdump_block(data, 32, 4, 16);
+	
 	/* second test */
 	for(i=0; i<32; ++i){
 		key[i] = 0x10+i;
@@ -142,6 +146,9 @@ void testrun_stdtest_threefish256(void){
 	threefish256_init(key, tweak, &ctx);
 	threefish256_enc(data, &ctx);
 	cli_putstr_P(PSTR("\r\ncipher: "));
+	cli_hexdump_block(data, 32, 4, 16);
+	cli_putstr_P(PSTR("\r\ndecipher: "));
+	threefish256_dec(data, &ctx);
 	cli_hexdump_block(data, 32, 4, 16);
 }
 
@@ -168,6 +175,10 @@ void testrun_stdtest_threefish512(void){
 	threefish512_enc(data, &ctx);
 	cli_putstr_P(PSTR("\r\ncipher: "));
 	cli_hexdump_block(data, 64, 4, 16);
+	threefish512_dec(data, &ctx);
+	cli_putstr_P(PSTR("\r\ndecipher: "));
+	cli_hexdump_block(data, 64, 4, 16);
+	
 	
 	for(i=0; i<64; ++i){
 		key[i] = 0x10+i;
@@ -188,6 +199,10 @@ void testrun_stdtest_threefish512(void){
 	threefish512_enc(data, &ctx);
 	cli_putstr_P(PSTR("\r\ncipher: "));
 	cli_hexdump_block(data, 64, 4, 16);
+	threefish512_dec(data, &ctx);
+	cli_putstr_P(PSTR("\r\ndecipher: "));
+	cli_hexdump_block(data, 64, 4, 16);
+	
 }
 
 void testrun_stdtest_threefish1024(void){
@@ -211,6 +226,9 @@ void testrun_stdtest_threefish1024(void){
 	threefish1024_enc(data, &ctx);
 	cli_putstr_P(PSTR("\r\ncipher: "));
 	cli_hexdump_block(data, 128, 4, 16);
+	threefish1024_dec(data, &ctx);
+	cli_putstr_P(PSTR("\r\ndecipher: "));
+	cli_hexdump_block(data, 128, 4, 16);
 
 	for(i=0; i<128; ++i){
 		key[i] = 0x10+i;
@@ -228,6 +246,9 @@ void testrun_stdtest_threefish1024(void){
 	threefish1024_init(key, tweak, &ctx);
 	threefish1024_enc(data, &ctx);
 	cli_putstr_P(PSTR("\r\ncipher: "));
+	cli_hexdump_block(data, 128, 4, 16);
+	threefish1024_dec(data, &ctx);
+	cli_putstr_P(PSTR("\r\ndecipher: "));
 	cli_hexdump_block(data, 128, 4, 16);
 }
 
@@ -268,6 +289,12 @@ void testrun_performance_threefish256(void){
 	ultoa((unsigned long)t, str, 10);
 	cli_putstr(str);	
 	
+	startTimer(1);
+	threefish256_dec(data, &ctx);
+	t = stopTimer();
+	cli_putstr_P(PSTR("\r\n\tdecrypt time: "));
+	ultoa((unsigned long)t, str, 10);
+	cli_putstr(str);	
 	cli_putstr_P(PSTR("\r\n"));	
 }
 
@@ -301,6 +328,13 @@ void testrun_performance_threefish512(void){
 	ultoa((unsigned long)t, str, 10);
 	cli_putstr(str);	
 	
+	startTimer(1);
+	threefish512_dec(data, &ctx);
+	t = stopTimer();
+	cli_putstr_P(PSTR("\r\n\tdecrypt time: "));
+	ultoa((unsigned long)t, str, 10);
+	cli_putstr(str);	
+	
 	cli_putstr_P(PSTR("\r\n"));	
 }
 
@@ -331,6 +365,13 @@ void testrun_performance_threefish1024(void){
 	threefish1024_enc(data, &ctx);
 	t = stopTimer();
 	cli_putstr_P(PSTR("\r\n\tencrypt time: "));
+	ultoa((unsigned long)t, str, 10);
+	cli_putstr(str);	
+	
+	startTimer(1);
+	threefish1024_dec(data, &ctx);
+	t = stopTimer();
+	cli_putstr_P(PSTR("\r\n\tdecrypt time: "));
 	ultoa((unsigned long)t, str, 10);
 	cli_putstr(str);	
 	

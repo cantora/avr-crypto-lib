@@ -1,4 +1,4 @@
-/* threefish_mix.S */
+/* threefish_invmix.S */
 /*
     This file is part of the AVR-Crypto-Lib.
     Copyright (C) 2009  Daniel Otte (daniel.otte@rub.de)
@@ -19,21 +19,21 @@
 /*
  * \author  Daniel Otte
  * \email   daniel.otte@rub.de
- * \date    2009-03-16
+ * \date    2009-03-21
  * \license GPLv3 or later
  */ 
 
 #include "avr-asm-macros.S"
 
 /*
-#define B0 (((uint64_t*)data)[0])
-#define B1 (((uint64_t*)data)[1])
-static
-void mix(void* data, uint8_t rot){
+#define X0 (((uint64_t*)data)[0])
+#define X1 (((uint64_t*)data)[1])
+void threefish_invmix(void* data, uint8_t rot){
 	uint64_t x;
-	x = B1;
-	B0 += x;
-	B1 = ((x<<rot)|(x>>(64-rot))) ^ B0;
+	x = X1;
+	x ^= X0;
+	X1 = ((x>>rot)|(x<<(64-rot)));
+	X0 -= X1;
 }
 */
 A0 = 10
@@ -59,8 +59,8 @@ vROT = 27
  * param rot:   r22
  */
 
-.global threefish_mix_asm
-threefish_mix_asm:
+.global threefish_invmix_asm
+threefish_invmix_asm:
 	movw r28, r24
 	mov vROT,r22
 	ldd A0, Y+ 0
@@ -79,14 +79,14 @@ threefish_mix_asm:
 	ldd B5, Y+13
 	ldd B6, Y+14
 	ldd B7, Y+15
-	add A0, B0
-	adc A1, B1
-	adc A2, B2
-	adc A3, B3
-	adc A4, B4
-	adc A5, B5
-	adc A6, B6
-	adc A7, B7
+	eor B0, A0
+	eor B1, A1
+	eor B2, A2
+	eor B3, A3
+	eor B4, A4
+	eor B5, A5
+	eor B6, A6
+	eor B7, A7
 
 	mov r26, vROT
 	swap r26
@@ -100,17 +100,17 @@ post_byterot:
 	bst vROT, 3
 	andi vROT, 0x07
 	brts 1f
-	rjmp bit_rotl
-1:	rjmp bit_rotr
+	rjmp bit_rotr
+1:	rjmp bit_rotl
 post_bitrot:	
-	eor B0, A0
-	eor B1, A1
-	eor B2, A2
-	eor B3, A3
-	eor B4, A4
-	eor B5, A5
-	eor B6, A6
-	eor B7, A7
+	sub A0, B0
+	sbc A1, B1
+	sbc A2, B2
+	sbc A3, B3
+	sbc A4, B4
+	sbc A5, B5
+	sbc A6, B6
+	sbc A7, B7
 
 	std Y+ 0, A0
 	std Y+ 1, A1
@@ -131,17 +131,18 @@ post_bitrot:
 exit:
 	ret
 
-
 byte_rot_jmptable:
 	rjmp  post_byterot;ret; rjmp  byte_rotr_0
-	rjmp  byte_rotr_7
-	rjmp  byte_rotr_6
-	rjmp  byte_rotr_5
-	rjmp  byte_rotr_4
-	rjmp  byte_rotr_3
-	rjmp  byte_rotr_2
 	rjmp  byte_rotr_1
+	rjmp  byte_rotr_2
+	rjmp  byte_rotr_3
+	rjmp  byte_rotr_4
+	rjmp  byte_rotr_5
+	rjmp  byte_rotr_6
+	rjmp  byte_rotr_7
 	rjmp  post_byterot;ret; rjmp  byte_rotr_0
+	
+
 	
 ; 0 1 2 3 4 5 6 7
 ; 1 2 3 4 5 6 7 0
@@ -294,18 +295,5 @@ bit_rotr:
 	ror B0
 	dec vROT
 	rjmp bit_rotr
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

@@ -74,8 +74,26 @@ for i in -3..4
   printf("%+d: %4d\n", i, ss_hist[i])
  end
 
+puts "\ntransformed:"
 (0..shift_values.length-1).each{|i|
+  puts " for 256 bit:" if i==0
+  puts " for 512 bit:" if i==16
+  puts " for 1024 bit:" if i==16+32
+  
   a = transform_shift(shift_values[i])
+  a[0] = transform_singleshift(a[0])
+  printf("0x%01x%01x, ", a[1], a[0])
+  puts("") if (i%8==7)
+}
+
+
+puts "\ntransformed (decryption):"
+(0..shift_values.length-1).each{|i|
+  puts " for 256 bit:" if i==0
+  puts " for 512 bit:" if i==16
+  puts " for 1024 bit:" if i==16+32
+  
+  a = transform_shift(shift_values[(i/8)*8+7-(i%8)])
   a[0] = transform_singleshift(a[0])
   printf("0x%01x%01x, ", a[1], a[0])
   puts("") if (i%8==7)
