@@ -152,7 +152,7 @@ threefish256_dec:
 	sbc r0, r1
 	st X+, r0
 	ld r0, X
-	adc r0, r1
+	sbc r0, r1
 	st X+, r0
 	tst S
 	brne 3f

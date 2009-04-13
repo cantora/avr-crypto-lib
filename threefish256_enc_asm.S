@@ -103,6 +103,17 @@ threefish256_init:
 	st Z+, A6
 	st Z+, A7
 	/* now the tweak */
+	tst r23
+	brne 3f
+	tst r22
+	brne 3f
+	ldi r26, 3*8
+2:
+	st Z+, r1
+	dec r26
+	brne 2b
+	rjmp 9f
+3:	
 	movw r26, r22
 	ld A0, X+
 	ld A1, X+
@@ -144,6 +155,7 @@ threefish256_init:
 	ld r0, X+
 	eor A7, r0
 	st Z+, r0
+	
 	st Z+, A0
 	st Z+, A1
 	st Z+, A2
@@ -152,6 +164,7 @@ threefish256_init:
 	st Z+, A5
 	st Z+, A6
 	st Z+, A7
+9:
 	pop_range 14, 17
 	ret
 	

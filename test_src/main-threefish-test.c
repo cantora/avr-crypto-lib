@@ -41,10 +41,22 @@ char* algo_name = "Threefish";
  *  additional validation-functions											 *
  *****************************************************************************/
 
+void threefish256_dump(threefish256_ctx_t* ctx){
+	uint8_t i;
+	cli_putstr_P(PSTR("\r\n=== ctx dump (256) === \r\n k: "));
+	for(i=0; i<5; ++i){
+		cli_hexdump(&(ctx->k[i]), 8);
+		cli_putc(' ');
+	}
+	cli_putstr_P(PSTR("\r\n t: "));
+	for(i=0; i<3; ++i){
+		cli_hexdump(&(ctx->t[i]), 8);
+		cli_putc(' ');
+	}
+}
+
 void threefish256_dummy_init(const uint8_t* key, uint16_t keysize_b, void* ctx){
-	uint8_t null[16];
-	memset(null, 0, 16);
-	threefish256_init(key, null, ctx);
+	threefish256_init(key, NULL, ctx);
 }
 
 void testrun_nessie_threefish256(void){
@@ -61,9 +73,7 @@ void testrun_nessie_threefish256(void){
 }
 
 void threefish512_dummy_init(const uint8_t* key, uint16_t keysize_b, void* ctx){
-	uint8_t null[16];
-	memset(null, 0, 16);
-	threefish512_init(key, null, ctx);
+	threefish512_init(key, NULL, ctx);
 }
 
 void testrun_nessie_threefish512(void){
@@ -80,9 +90,7 @@ void testrun_nessie_threefish512(void){
 }
 
 void threefish1024_dummy_init(const uint8_t* key, uint16_t keysize_b, void* ctx){
-	uint8_t null[16];
-	memset(null, 0, 16);
-	threefish1024_init(key, null, ctx);
+	threefish1024_init(key, NULL, ctx);
 }
 
 void testrun_nessie_threefish1024(void){

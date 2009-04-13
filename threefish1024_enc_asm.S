@@ -103,6 +103,17 @@ threefish1024_init:
 	st Z+, A7
 	/* now the tweak */
 	movw r26, r22
+	tst r27
+	brne 3f
+	tst r26
+	brne 3f
+	ldi r26, 3*8
+1:
+	st Z+, r1
+	dec r26
+	brne 1b
+	rjmp 9f
+3:	
 	ld A0, X+
 	ld A1, X+
 	ld A2, X+
@@ -151,6 +162,7 @@ threefish1024_init:
 	st Z+, A5
 	st Z+, A6
 	st Z+, A7
+9:
 	pop_range 14, 17
 	ret
 	

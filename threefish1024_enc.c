@@ -62,13 +62,17 @@ void permute_16(void* data){
 
 void threefish1024_init(const void* key, const void* tweak, threefish1024_ctx_t* ctx){
 	memcpy(ctx->k, key, 16*8);
-	memcpy(ctx->t, tweak, 2*8);
+	if(tweak){
+		memcpy(ctx->t, tweak, 2*8);
+		ctx->t[2] = T(0) ^ T(1);
+	}else{
+		memset(ctx, 0, 3*8);
+	}
 	uint8_t i;
 	ctx->k[16] = THREEFISH_KEY_CONST;
 	for(i=0; i<16; ++i){
 		ctx->k[16] ^= K(i);
 	}
-	ctx->t[2] = T(0) ^ T(1);
 }
 
 static

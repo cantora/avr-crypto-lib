@@ -68,13 +68,17 @@ void permute_inv8(void* data){
 
 void threefish512_init(const void* key, const void* tweak, threefish512_ctx_t* ctx){
 	memcpy(ctx->k, key, 8*8);
-	memcpy(ctx->t, tweak, 2*8);
+	if(tweak){
+		memcpy(ctx->t, tweak, 2*8);
+		ctx->t[2] = T(0) ^ T(1);
+	}else{
+		memset(ctx->t, 0, 3*8);
+	}
 	uint8_t i;
 	ctx->k[8] = THREEFISH_KEY_CONST;
 	for(i=0; i<8; ++i){
 		ctx->k[8] ^= K(i);
 	}
-	ctx->t[2] = T(0) ^ T(1);
 }
 
 static
