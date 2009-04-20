@@ -43,13 +43,6 @@ char* algo_name = "SHA-1";
 /*****************************************************************************
  *  additional validation-functions											 *
  *****************************************************************************/
-void sha1_next_dummy(void* buffer, void* ctx){
-	sha1_nextBlock(ctx, buffer);
-}
-
-void sha1_last_dummy(void* buffer, uint16_t size_b, void* ctx){
-	sha1_lastBlock(ctx, buffer, size_b);
-}
 
 void testrun_nessie_sha1(void){
 	nessie_hash_ctx.hashsize_b  = 160;
@@ -57,8 +50,8 @@ void testrun_nessie_sha1(void){
 	nessie_hash_ctx.ctx_size_B  = sizeof(sha1_ctx_t);
 	nessie_hash_ctx.name = algo_name;
 	nessie_hash_ctx.hash_init = (nessie_hash_init_fpt)sha1_init;
-	nessie_hash_ctx.hash_next = (nessie_hash_next_fpt)sha1_next_dummy;
-	nessie_hash_ctx.hash_last = (nessie_hash_last_fpt)sha1_last_dummy;
+	nessie_hash_ctx.hash_next = (nessie_hash_next_fpt)sha1_nextBlock;
+	nessie_hash_ctx.hash_last = (nessie_hash_last_fpt)sha1_lastBlock;
 	nessie_hash_ctx.hash_conv = (nessie_hash_conv_fpt)sha1_ctx2hash;
 	
 	nessie_hash_run();

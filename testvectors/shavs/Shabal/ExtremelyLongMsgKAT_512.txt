@@ -1,0 +1,7 @@
+# ExtremelyLongMsgKAT_512.txt
+# Algorithm Name: SHABAL
+# Principal Submitter: Saphir project represented by Jean-Francois Misarsky
+
+Repeat = 16777216
+Text = abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmno
+MD = B837F262430ED4B21D044D3159135D34622E40669CF7AD6CFD76E5F9902F22F2BE4E81DA8BEB19156C9F734097606120F76A046B0260DA3DA518B88418788019

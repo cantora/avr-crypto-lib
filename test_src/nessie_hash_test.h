@@ -22,8 +22,8 @@
 #include <stdint.h>
 
 typedef void (*nessie_hash_init_fpt)(void* ctx);
-typedef void (*nessie_hash_next_fpt)(void* buffer, void* ctx);
-typedef void (*nessie_hash_last_fpt)(void* buffer, uint16_t size_b, void* ctx);
+typedef void (*nessie_hash_next_fpt)(void* ctx, const void* buffer);
+typedef void (*nessie_hash_last_fpt)(void* ctx, const void* buffer, uint16_t size_b);
 typedef void (*nessie_hash_conv_fpt)(void* buffer, void* ctx);
 
 

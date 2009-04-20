@@ -55,7 +55,7 @@ email:  daniel.otte@rub.de
  The *_init function generally takes a pointer to the context as parameter.
  This function initializes the context with algorithm specific values.
  
-3.3. *_nexBlock function
+3.3. *_nextBlock function
  The *_nextBlock function is the core of each hash function. It updates the hash 
  state with a given message block. So this function uses a context pointer and 
  a message pointer as parameters. The size of a message block is fixed for each

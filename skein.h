@@ -17,6 +17,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 /*
+ * \file    skein.c
  * \author  Daniel Otte
  * \email   daniel.otte@rub.de
  * \date    2009-03-12
@@ -27,6 +28,7 @@
 #ifndef SKEIN_H_
 #define SKEIN_H_
 
+#include <stdint.h>
 #include "ubi.h"
 
 #define SKEIN256_BLOCKSIZE    UBI256_BLOCKSIZE

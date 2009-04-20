@@ -38,4 +38,4 @@ extern const hfdesc_t skein256_256_desc;
 extern const hfdesc_t skein256_384_desc;
 extern const hfdesc_t skein256_512_desc;
 
-#endif /* HFAL_SHA256_H_ */
+#endif /* HFAL_SKEIN256_H_ */

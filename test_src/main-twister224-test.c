@@ -46,14 +46,6 @@ void twister224_init_dummy(void* ctx){
 	twister_small_init(ctx, 224);
 }
 
-void twister224_next_dummy(void* buffer, void* ctx){
-	twister_small_nextBlock(ctx, buffer);
-}
-
-void twister224_last_dummy(void* buffer, uint16_t size_b, void* ctx){
-	twister_small_lastBlock(ctx, buffer, size_b);
-}
-
 void twister224_ctx2hash_dummy(void* buffer, void* ctx){
 	twister_small_ctx2hash(buffer, ctx, 224);
 }
@@ -65,8 +57,8 @@ void testrun_nessie_twister224(void){
 	nessie_hash_ctx.ctx_size_B  = sizeof(twister_state_t);
 	nessie_hash_ctx.name = algo_name;
 	nessie_hash_ctx.hash_init = (nessie_hash_init_fpt)twister224_init_dummy;
-	nessie_hash_ctx.hash_next = (nessie_hash_next_fpt)twister224_next_dummy;
-	nessie_hash_ctx.hash_last = (nessie_hash_last_fpt)twister224_last_dummy;
+	nessie_hash_ctx.hash_next = (nessie_hash_next_fpt)twister_small_nextBlock;
+	nessie_hash_ctx.hash_last = (nessie_hash_last_fpt)twister_small_lastBlock;
 	nessie_hash_ctx.hash_conv = (nessie_hash_conv_fpt)twister224_ctx2hash_dummy;
 	
 	nessie_hash_run();

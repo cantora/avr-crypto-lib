@@ -40,13 +40,6 @@ char* algo_name = "MD5";
 /*****************************************************************************
  *  additional validation-functions											 *
  *****************************************************************************/
-void md5_next_dummy(void* buffer, void* ctx){
-	md5_nextBlock(ctx, buffer);
-}
-
-void md5_last_dummy(void* buffer, uint16_t size_b, void* ctx){
-	md5_lastBlock(ctx, buffer, size_b);
-}
 
 void md5_ctx2hash_dummy(void* buffer, void* ctx){
 	memcpy(buffer, ctx, 16);
@@ -59,8 +52,8 @@ void testrun_nessie_md5(void){
 	nessie_hash_ctx.ctx_size_B  = sizeof(md5_ctx_t);
 	nessie_hash_ctx.name = algo_name;
 	nessie_hash_ctx.hash_init = (nessie_hash_init_fpt)md5_init;
-	nessie_hash_ctx.hash_next = (nessie_hash_next_fpt)md5_next_dummy;
-	nessie_hash_ctx.hash_last = (nessie_hash_last_fpt)md5_last_dummy;
+	nessie_hash_ctx.hash_next = (nessie_hash_next_fpt)md5_nextBlock;
+	nessie_hash_ctx.hash_last = (nessie_hash_last_fpt)md5_lastBlock;
 	nessie_hash_ctx.hash_conv = (nessie_hash_conv_fpt)md5_ctx2hash_dummy;
 	
 	nessie_hash_run();

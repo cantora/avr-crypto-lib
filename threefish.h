@@ -17,10 +17,13 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 /*
+ * \file    threefish.h
  * \author  Daniel Otte
  * \email   daniel.otte@rub.de
  * \date    2009-03-12
  * \license GPLv3 or later
+ * \brief   Implementation of the Threefish block cipher
+ * \ingroup Threefish
  */
 
 #ifndef THREEFISH_H_
@@ -35,19 +38,34 @@
 #define THREEFISH1024_BLOCKSIZE 1024
 #define THREEFISH1024_BLOCKSIZE_B ((THREEFISH1024_BLOCKSIZE+7)/8)
 
-
+/** \typedef threefish256_ctx_t
+ * \brief holds key data for Threefish-256
+ *  
+ * A variable of this type may hold the key data for Threefish-256 encryption
+ * or decryption..
+ */
 typedef struct{
 	uint64_t k[5];
 	uint64_t t[3];
 } threefish256_ctx_t;
 
-
+/** \typedef threefish512_ctx_t
+ * \brief holds key data for Threefish-512
+ *  
+ * A variable of this type may hold the key data for Threefish-512 encryption
+ * or decryption..
+ */
 typedef struct{
 	uint64_t k[9];
 	uint64_t t[3];
 } threefish512_ctx_t;
 
-
+/** \typedef threefish1024_ctx_t
+ * \brief holds key data for Threefish-1024
+ *  
+ * A variable of this type may hold the key data for Threefish-1024 encryption
+ * or decryption..
+ */
 typedef struct{
 	uint64_t k[17];
 	uint64_t t[3];

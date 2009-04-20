@@ -49,12 +49,12 @@ void ascii_hash_P(PGM_P data, PGM_P desc){
 	sl = strlen_P(data);
 	while(sl>=BLOCKSIZE_B){
 		memcpy_P(buffer, data, BLOCKSIZE_B);
-		nessie_hash_ctx.hash_next(buffer, ctx);
+		nessie_hash_ctx.hash_next(ctx, buffer);
 		data += BLOCKSIZE_B;
 		sl   -= BLOCKSIZE_B;
 	}
 	memcpy_P(buffer, data, sl);
-	nessie_hash_ctx.hash_last(buffer, sl*8, ctx);
+	nessie_hash_ctx.hash_last(ctx, buffer, sl*8);
 	nessie_hash_ctx.hash_conv(hash, ctx);
 	nessie_print_item("hash", hash, (nessie_hash_ctx.hashsize_b+7)/8);
 }
@@ -74,11 +74,11 @@ void amillion_hash(void){
 	memset(block, 'a', nessie_hash_ctx.blocksize_B);
 	nessie_hash_ctx.hash_init(ctx);
 	while(n>=nessie_hash_ctx.blocksize_B){
-		nessie_hash_ctx.hash_next(block, ctx);
+		nessie_hash_ctx.hash_next(ctx, block);
 		n    -= nessie_hash_ctx.blocksize_B;
 		NESSIE_SEND_ALIVE_A(i++);
 	}
-	nessie_hash_ctx.hash_last(block, n*8, ctx);
+	nessie_hash_ctx.hash_last(ctx, block, n*8);
 	nessie_hash_ctx.hash_conv(hash, ctx);
 	nessie_print_item("hash", hash, (nessie_hash_ctx.hashsize_b+7)/8);
 }
@@ -105,10 +105,10 @@ void zero_hash(uint16_t n){
 	memset(block, 0, nessie_hash_ctx.blocksize_B); 
 	nessie_hash_ctx.hash_init(ctx);
 	while(n>=nessie_hash_ctx.blocksize_B*8){
-		nessie_hash_ctx.hash_next(block, ctx);
+		nessie_hash_ctx.hash_next(ctx, block);
 		n   -= nessie_hash_ctx.blocksize_B*8;
 	}
-	nessie_hash_ctx.hash_last(block, n, ctx);
+	nessie_hash_ctx.hash_last(ctx, block, n);
 	nessie_hash_ctx.hash_conv(hash, ctx);
 	nessie_print_item("hash", hash, (nessie_hash_ctx.hashsize_b+7)/8);
 }
@@ -147,10 +147,10 @@ void one_in512_hash(uint16_t pos){
 	block[pos>>3] = 0x80>>(pos&0x7);
 	nessie_hash_ctx.hash_init(ctx);
 	while(n>=nessie_hash_ctx.blocksize_B*8){
-		nessie_hash_ctx.hash_next(block, ctx);
+		nessie_hash_ctx.hash_next(ctx, block);
 		n   -= nessie_hash_ctx.blocksize_B*8;
 	}
-	nessie_hash_ctx.hash_last(block, n, ctx);
+	nessie_hash_ctx.hash_last(ctx, block, n);
 	nessie_hash_ctx.hash_conv(hash, ctx);
 	nessie_print_item("hash", hash, (nessie_hash_ctx.hashsize_b+7)/8);
 }
@@ -179,15 +179,15 @@ void tv4_hash(void){
 	
 	nessie_hash_ctx.hash_init(ctx);
 	while(n>=nessie_hash_ctx.blocksize_B*8){
-		nessie_hash_ctx.hash_next(block, ctx);
+		nessie_hash_ctx.hash_next(ctx, block);
 		n    -= nessie_hash_ctx.blocksize_B*8;
 	}
-	nessie_hash_ctx.hash_last(block, n, ctx);
+	nessie_hash_ctx.hash_last(ctx, block, n);
 	nessie_hash_ctx.hash_conv(hash, ctx);
 	nessie_print_item("hash", hash, (nessie_hash_ctx.hashsize_b+7)/8);
 	for(i=1; i<100000L; ++i){ /* this assumes BLOCKSIZE >= HASHSIZE */
 		nessie_hash_ctx.hash_init(ctx);
-		nessie_hash_ctx.hash_last(hash, nessie_hash_ctx.hashsize_b, ctx);
+		nessie_hash_ctx.hash_last(ctx, hash, nessie_hash_ctx.hashsize_b);
 		nessie_hash_ctx.hash_conv(hash, ctx);
 		NESSIE_SEND_ALIVE_A(i);
 	}

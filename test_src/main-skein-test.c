@@ -17,7 +17,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 /*
- * threefish test-suit
+ * skein test-suit
  * 
 */
 
@@ -214,7 +214,7 @@ const char shavs_set_str[]   PROGMEM = "shavs_set";
 const char shavs_test1_str[] PROGMEM = "shavs_test1";
 
 cmdlist_entry_t cmdlist[] PROGMEM = {
-//	{ nessie_str,      NULL, testrun_nessie_noekeon},
+//	{ nessie_str,          NULL, testrun_nessie_skein},
 	{ test_str,            NULL, testrun_stdtest_skein},
 	{ ztest_str,       (void*)1, (void_fpt)zeromsg_test_common},
 	{ shavs_list_str,      NULL, shavs_listalgos},

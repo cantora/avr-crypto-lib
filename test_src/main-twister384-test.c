@@ -44,14 +44,6 @@ void twister384_init_dummy(void* ctx){
 	twister_big_init(ctx, 384);
 }
 
-void twister384_next_dummy(void* buffer, void* ctx){
-	twister_big_nextBlock(ctx, buffer);
-}
-
-void twister384_last_dummy(void* buffer, uint16_t size_b, void* ctx){
-	twister_big_lastBlock(ctx, buffer, size_b);
-}
-
 void twister384_ctx2hash_dummy(void* buffer, void* ctx){
 	twister_big_ctx2hash(buffer, ctx, 384);
 }
@@ -63,8 +55,8 @@ void testrun_nessie_twister384(void){
 	nessie_hash_ctx.ctx_size_B  = sizeof(twister_big_ctx_t);
 	nessie_hash_ctx.name = algo_name;
 	nessie_hash_ctx.hash_init = (nessie_hash_init_fpt)twister384_init_dummy;
-	nessie_hash_ctx.hash_next = (nessie_hash_next_fpt)twister384_next_dummy;
-	nessie_hash_ctx.hash_last = (nessie_hash_last_fpt)twister384_last_dummy;
+	nessie_hash_ctx.hash_next = (nessie_hash_next_fpt)twister_big_nextBlock;
+	nessie_hash_ctx.hash_last = (nessie_hash_last_fpt)twister_big_lastBlock;
 	nessie_hash_ctx.hash_conv = (nessie_hash_conv_fpt)twister384_ctx2hash_dummy;
 	
 	nessie_hash_run();
