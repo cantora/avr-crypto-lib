@@ -174,6 +174,10 @@ void zeromsg_test_common(char* p){
 	}
 }
 
+void performance_skein(void){
+}
+
+
 /*****************************************************************************
  *  main																	 *
  *****************************************************************************/
@@ -215,6 +219,7 @@ const char shavs_test1_str[] PROGMEM = "shavs_test1";
 
 cmdlist_entry_t cmdlist[] PROGMEM = {
 //	{ nessie_str,          NULL, testrun_nessie_skein},
+	{ performance_str,     NULL, performance_skein},
 	{ test_str,            NULL, testrun_stdtest_skein},
 	{ ztest_str,       (void*)1, (void_fpt)zeromsg_test_common},
 	{ shavs_list_str,      NULL, shavs_listalgos},

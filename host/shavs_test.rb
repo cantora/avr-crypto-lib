@@ -57,13 +57,14 @@ def send_md(md_string)
     $sp.print(md_string[i].chr)
 #	print("DBG s: "+ md_string[i].chr) if $debug
 	if(i%20==19)
-		sleep(0.1)
+#		sleep(0.1)
 	end		
   end
 end
 
 def run_test(filename)
   errors = 0
+  line=1
   if not File.exist?(filename)
   	puts("ERROR file "+filename+" does not exist!")
   end
@@ -91,7 +92,8 @@ def run_test(filename)
 	b = (/[\s]*MD[\s]*=[\s]*([0-9a-fA-F]*).*/.match(avr_md))[1];
 	a.upcase!
 	b.upcase!
-	puts("") if (pos%$linewidth==0 and $linewidth!=0)
+	printf("\n%4d: ", line) if (pos%$linewidth==0 and $linewidth!=0)
+	line += 1               if (pos%$linewidth==0 and $linewidth!=0)
 	#putc((a==b)?'*':'!')
 	if(a==b)
 	  putc('*')
@@ -131,9 +133,9 @@ init_system()
 for i in (5..(ARGV.size-1))
   errors = run_test(ARGV[i])
   if errors == 0
-    puts("[ok]")
+    puts("\n[ok]")
   else
-    puts("[errors: "+errors.to_s+"]")
+    puts("\n[errors: "+errors.to_s+"]")
   end
 end
  $sp.print("EXIT\r");

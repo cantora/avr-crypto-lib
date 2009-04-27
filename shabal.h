@@ -38,13 +38,13 @@
 
 typedef struct{
 	union{
-	uint64_t w64;
-	uint32_t w32[2];
+		uint64_t w64;
+		uint32_t w32[2];
 	} w; /* the counter */
-	uint32_t a[SHABAL_R];
 	uint32_t *b;
-	uint32_t b_buffer[16];
 	uint32_t *c;
+	uint32_t a[SHABAL_R];
+	uint32_t b_buffer[16];
 	uint32_t c_buffer[16];
 }shabal_ctx_t;
 
@@ -69,5 +69,7 @@ void shabal224(void* dest, void* msg, uint32_t length_b);
 void shabal256(void* dest, void* msg, uint32_t length_b);
 void shabal384(void* dest, void* msg, uint32_t length_b);
 void shabal512(void* dest, void* msg, uint32_t length_b);
+
+void shabal_ctx2hash(void* dest, const shabal_ctx_t* ctx, uint16_t outlength_b);
 
 #endif /* SHABAL_H_ */

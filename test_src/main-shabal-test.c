@@ -123,6 +123,86 @@ void testrun_stdtest_shabal(void){
 	testrun_stdtest_shabal512(mb, strlen(mb)*8);
 }
 
+void testshort(void){
+	uint8_t ma[64];
+	memset(ma, 0, 64);
+	testrun_stdtest_shabal192(ma, 64*8);
+}
+
+void shabal_ctx_dump(shabal_ctx_t* ctx){
+	uint8_t i;
+	void* p;
+	cli_putstr_P(PSTR("\r\n=== shabal ctx dump ===\r\n  size = "));
+	i=sizeof(shabal_ctx_t);
+	if(i>=100)
+		cli_putc('0'+i/100);
+	if(i>=10)
+		cli_putc('0'+(i/10)%10);
+	cli_putc('0'+i%10);	
+	cli_putstr_P(PSTR("\r\n  a = "));
+	cli_hexdump_block(ctx->a, 12*4, 5, 4*8);
+	cli_putstr_P(PSTR("\r\n  b_buffer = "));
+	cli_hexdump_block(ctx->b_buffer, 12*4, 5, 4*8);
+	cli_putstr_P(PSTR("\r\n  c_buffer = "));
+	cli_hexdump_block(ctx->c_buffer, 12*4, 5, 4*8);
+	if(ctx->b == &(ctx->b_buffer[0]))
+		cli_putstr_P(PSTR("\r\nb --> b_buffer"));
+	if(ctx->b == &(ctx->c_buffer[0]))
+		cli_putstr_P(PSTR("\r\nb --> c_buffer"));	
+	if(ctx->c == &(ctx->b_buffer[0]))
+		cli_putstr_P(PSTR("\r\nc --> b_buffer"));
+	if(ctx->c == &(ctx->c_buffer[0]))
+		cli_putstr_P(PSTR("\r\nc --> c_buffer"));
+	cli_putstr_P(PSTR("\r\n b = "));
+	cli_hexdump(&(ctx->b), 2);
+	p = ctx->b_buffer;
+	cli_putstr_P(PSTR("\r\n b (should) = "));
+	cli_hexdump(&p, 2);
+	cli_putstr_P(PSTR("\r\n c = "));
+	cli_hexdump(&(ctx->c), 2);	
+	p = ctx->c_buffer;
+	cli_putstr_P(PSTR("\r\n c (should) = "));
+	cli_hexdump(&p, 2);
+}
+
+
+void testinit_192(void){
+	shabal_ctx_t ctx;
+	shabal192_init(&ctx);
+	shabal_ctx_dump(&ctx);
+}
+
+void testinit_224(void){
+	shabal_ctx_t ctx;
+	shabal224_init(&ctx);
+	shabal_ctx_dump(&ctx);
+}
+
+void testinit_256(void){
+	shabal_ctx_t ctx;
+	shabal256_init(&ctx);
+	shabal_ctx_dump(&ctx);
+}
+
+void testinit_384(void){
+	shabal_ctx_t ctx;
+	shabal384_init(&ctx);
+	shabal_ctx_dump(&ctx);
+}
+
+void testinit_512(void){
+	shabal_ctx_t ctx;
+	shabal512_init(&ctx);
+	shabal_ctx_dump(&ctx);
+}
+void testinit(void){
+	testinit_192();
+	testinit_224();
+	testinit_256();
+	testinit_384();
+	testinit_512();
+}
+
 void performance_shabal(void){
 	uint64_t t;
 	char str[16];
@@ -143,28 +223,28 @@ void performance_shabal(void){
 	cli_putstr(str);
 	
 	startTimer(1);
-	shabal192_init(&ctx);
+	shabal224_init(&ctx);
 	t = stopTimer();
 	cli_putstr_P(PSTR("\r\n\tctx-gen time (224): "));
 	ultoa((unsigned long)t, str, 10);
 	cli_putstr(str);
 	
 	startTimer(1);
-	shabal192_init(&ctx);
+	shabal256_init(&ctx);
 	t = stopTimer();
 	cli_putstr_P(PSTR("\r\n\tctx-gen time (256): "));
 	ultoa((unsigned long)t, str, 10);
 	cli_putstr(str);
 	
 	startTimer(1);
-	shabal192_init(&ctx);
+	shabal384_init(&ctx);
 	t = stopTimer();
 	cli_putstr_P(PSTR("\r\n\tctx-gen time (384): "));
 	ultoa((unsigned long)t, str, 10);
 	cli_putstr(str);
 	
 	startTimer(1);
-	shabal192_init(&ctx);
+	shabal512_init(&ctx);
 	t = stopTimer();
 	cli_putstr_P(PSTR("\r\n\tctx-gen time (512): "));
 	ultoa((unsigned long)t, str, 10);
@@ -281,6 +361,9 @@ const hfdesc_t* algolist[] PROGMEM = {
 
 const char nessie_str[]      PROGMEM = "nessie";
 const char test_str[]        PROGMEM = "test";
+const char testinit192_str[] PROGMEM = "testinit192";
+const char testinit_str[]    PROGMEM = "testinit";
+const char testshort_str[]   PROGMEM = "short";
 const char ztest_str[]       PROGMEM = "zerotest";
 const char performance_str[] PROGMEM = "performance";
 const char echo_str[]        PROGMEM = "echo";
@@ -291,6 +374,9 @@ const char shavs_test1_str[] PROGMEM = "shavs_test1";
 cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ nessie_str,          NULL, testrun_nessie_shabal},
 	{ test_str,            NULL, testrun_stdtest_shabal},
+	{ testinit192_str,     NULL, testinit_192},
+	{ testinit_str,        NULL, testinit},
+	{ testshort_str,       NULL, testshort},
 	{ performance_str,     NULL, performance_shabal},
 	{ shavs_list_str,      NULL, shavs_listalgos},
 	{ shavs_set_str,   (void*)1, (void_fpt)shavs_setalgo},
