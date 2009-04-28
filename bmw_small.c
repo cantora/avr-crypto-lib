@@ -27,7 +27,9 @@
 
 #include <stdint.h>
 #include <string.h>
+#include <avr/pgmspace.h>
 #include "bmw_small.h"
+
 
 #define SHL32(a,n) ((a)<<(n))
 #define SHR32(a,n) ((a)>>(n))
@@ -164,11 +166,18 @@ uint32_t bmw_small_r7(uint32_t x){
 	return r;	
 }
 
+#define K 0x05555555L
+uint32_t k_lut[] PROGMEM = {
+	16L*K, 17L*K, 18L*K, 19L*K, 20L*K, 21L*K, 22L*K, 23L*K,
+	24L*K, 25L*K, 26L*K, 27L*K, 28L*K, 29L*K, 30L*K, 31L*K
+};
+
 uint32_t bmw_small_expand1(uint8_t j, const uint32_t* q, const void* m){
 	uint32_t(*s[])(uint32_t) = {bmw_small_s1, bmw_small_s2, bmw_small_s3, bmw_small_s0};
 	uint32_t r;
 	uint8_t i;
-	r = 0x05555555*(j+16);
+	/* r = 0x05555555*(j+16); */
+	r = pgm_read_dword(k_lut+j);
 	for(i=0; i<16; ++i){
 		r += s[i%4](q[j+i]);
 	}
@@ -184,7 +193,8 @@ uint32_t bmw_small_expand2(uint8_t j, const uint32_t* q, const void* m){
 							     bmw_small_r7};
 	uint32_t r;
 	uint8_t i;
-	r = 0x05555555*(j+16);
+	/* r = 0x05555555*(j+16); */
+	r = pgm_read_dword(k_lut+j);
 	for(i=0; i<14; i+=2){
 		r += q[j+i];
 	}
