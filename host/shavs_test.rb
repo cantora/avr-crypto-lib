@@ -57,7 +57,7 @@ def send_md(md_string)
     $sp.print(md_string[i].chr)
 #	print("DBG s: "+ md_string[i].chr) if $debug
 	if(i%20==19)
-#		sleep(0.1)
+		sleep(0.01)
 	end		
   end
 end
@@ -99,6 +99,7 @@ def run_test(filename)
 	  putc('*')
 	else
 	  putc('!')
+	#  printf("\nshould: %s\ngot:   %s\n",lb,avr_md)
 	  errors += 1;
 	end  
 	pos += 1

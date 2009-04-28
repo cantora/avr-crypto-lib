@@ -57,12 +57,12 @@ void cli_putc(char c);
 uint16_t cli_getc(void);
 uint16_t cli_getc_cecho(void);
 uint8_t cli_getsn(char* s, uint16_t n);
-void cli_putstr(char* s);
+void cli_putstr(const char* s);
 void cli_putstr_P(PGM_P s);
-void cli_hexdump(void* data, uint16_t length);
-void cli_hexdump_rev(void* data, uint16_t length);
-void cli_hexdump2(void* data, uint16_t length);
-void cli_hexdump_block(void* data, uint16_t length, uint8_t indent, uint8_t width);
+void cli_hexdump(const void* data, uint16_t length);
+void cli_hexdump_rev(const void* data, uint16_t length);
+void cli_hexdump2(const void* data, uint16_t length);
+void cli_hexdump_block(const void* data, uint16_t length, uint8_t indent, uint8_t width);
 
 void echo_ctrl(char* s);
 int8_t cmd_interface(PGM_VOID_P cmd_desc);

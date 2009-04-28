@@ -80,7 +80,7 @@ uint16_t cli_getc_cecho(void){
 /**
  * \brief ouputs a zero-terminated string from ram to the console 
  */
-void cli_putstr(char* s){
+void cli_putstr(const char* s){
 	if(!cli_tx)
 		return;
 	while(*s)
@@ -126,7 +126,7 @@ uint8_t cli_getsn(char* s, uint16_t n){
  * Dumps length bytes from data to the console ouput. The dump
  * will have 2*n continous hexadecimal characters.
  */
-void cli_hexdump(void* data, uint16_t length){
+void cli_hexdump(const void* data, uint16_t length){
 	if(!cli_tx)
 		return;
 	while(length--){
@@ -142,7 +142,7 @@ void cli_hexdump(void* data, uint16_t length){
  * bytes are dumped in reverse order. This is usefull to dump
  * integers which ar e in little endian order.
  */
-void cli_hexdump_rev(void* data, uint16_t length){
+void cli_hexdump_rev(const void* data, uint16_t length){
 	if(!cli_tx)
 		return;
 	data = (uint8_t*)data + length -1;
@@ -158,7 +158,7 @@ void cli_hexdump_rev(void* data, uint16_t length){
  * Like cli_hexdump but bytes are seperated with a single space
  * on the console output.
  */
-void cli_hexdump2(void* data, uint16_t length){
+void cli_hexdump2(const void* data, uint16_t length){
 	if(!cli_tx)
 		return;
 	while(length--){
@@ -174,7 +174,7 @@ void cli_hexdump2(void* data, uint16_t length){
  * Like cli_hexdump but bytes are seperated with a single space
  * on the console output.
  */
-void cli_hexdump_block(void* data, uint16_t length, uint8_t indent, uint8_t width){
+void cli_hexdump_block(const void* data, uint16_t length, uint8_t indent, uint8_t width){
 	uint16_t i;
 	uint8_t  j;
 	if(!cli_tx)
