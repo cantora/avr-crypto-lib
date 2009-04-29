@@ -267,7 +267,7 @@ clean:
 	rm -rf $(BIN_DIR)*.o *.o $(TESTBIN_DIR)*.elf $(TESTBIN_DIR)* *.elf *.eps *.png *.pdf *.bak
 	rm -rf *.lst *.map $(EXTRA_CLEAN_FILES) $(STAT_DIR)$(SIZESTAT_FILE) $(STAT_DIR)*_size.txt
 xclean: clean
-	rm -rf $(DEP_DIR)*.d
+	rm -rf $(DEP_DIR)*.d $(AUTOASM_DIR)*.s
 
 docu:
 	doxygen
@@ -317,10 +317,14 @@ make-info: make.png make.svg
 	@echo "[objcopy]: $@"
 	@$(OBJCOPY) -j .eeprom --change-section-lma .eeprom=0 -O binary $< $@
 	
-	
-# Every thing below here is used by avr-libc's build system and can be ignored
-# by the casual user.
+#-------------------------------------------------------------------------------
+$(AUTOASM_DIR)%.s: %.c
+	$(CC) $(CFLAGS) $(AUTOASM_OPT) -o $@ $<
 
+%.s: %.c
+	$(CC) $(CFLAGS) $(AUTOASM_OPT) -o $@ $<
+
+#-------------------------------------------------------------------------------
 FIG2DEV		 = fig2dev
 EXTRA_CLEAN_FILES       = *.hex *.bin *.srec
 

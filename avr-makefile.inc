@@ -17,6 +17,8 @@ TESTLOG_DIR    = testlog/
 TESTPREFIX     = nessie-
 LIST_DIR       = listings/
 STAT_DIR       = stats/
+AUTOASM_DIR    = autoasm/
+AUTOASM_OPT    = -S
 CC	       = avr-gcc
 CSTD           = c99
 
@@ -27,11 +29,12 @@ override ASFLAGS	   = -mmcu=$(MCU_TARGET) -Wa,--gdwarf-2
 
 SIZESTAT_FILE = sizestats.txt
 
-OBJCOPY	= avr-objcopy
-OBJDUMP	= avr-objdump
-SIZE = avr-size
-RUBY = ruby
-GET_TEST = host/get_test.rb
-MAKE = make
+OBJCOPY    = avr-objcopy
+OBJDUMP    = avr-objdump
+SIZE       = avr-size
+READELF    = readelf
+RUBY       = ruby
+GET_TEST   = host/get_test.rb
+MAKE       = make
 MAKE2GRAPH = ~/bin/make2graph.rb
-TWOPI = twopi
+TWOPI      = twopi
