@@ -164,13 +164,25 @@ uint64_t bmw_large_r7(uint64_t x){
 	r =   ROTR64(x, 64-53);
 	return r;	
 }
-
-#define K 0x0555555555555555LL
+/*
+#define K    0x0555555555555555LL
+#define MASK 0xFFFFFFFFFFFFFFFFLL
 static
 uint64_t k_lut[] PROGMEM = {
-	16LL*K, 17LL*K, 18LL*K, 19LL*K, 20LL*K, 21LL*K, 22LL*K, 23LL*K,
-	24LL*K, 25LL*K, 26LL*K, 27LL*K, 28LL*K, 29LL*K, 30LL*K, 31LL*K };
-	
+	16LL*K, 17LL*K, 18LL*K, 19LL*K, 
+	20LL*K, 21LL*K, 22LL*K, 23LL*K,
+	24LL*K, 25LL*K, 26LL*K, 27LL*K,
+	28LL*K, 29LL*K, 30LL*K, 31LL*K };
+*/	
+/* the same as above but precomputed to avoid compiler warnings */
+static
+uint64_t k_lut[] PROGMEM = {
+	0x5555555555555550LL, 0x5aaaaaaaaaaaaaa5LL, 0x5ffffffffffffffaLL,
+	0x655555555555554fLL, 0x6aaaaaaaaaaaaaa4LL, 0x6ffffffffffffff9LL,
+	0x755555555555554eLL, 0x7aaaaaaaaaaaaaa3LL, 0x7ffffffffffffff8LL,
+	0x855555555555554dLL, 0x8aaaaaaaaaaaaaa2LL, 0x8ffffffffffffff7LL,
+	0x955555555555554cLL, 0x9aaaaaaaaaaaaaa1LL, 0x9ffffffffffffff6LL,
+	0xa55555555555554bLL };
 
 uint64_t bmw_large_expand1(uint8_t j, const uint64_t* q, const void* m){
 	uint64_t(*s[])(uint64_t) = {bmw_large_s1, bmw_large_s2, bmw_large_s3, bmw_large_s0};
@@ -239,26 +251,28 @@ uint8_t f0_lut[] PROGMEM ={
 };
 
 void bmw_large_f0(uint64_t* q, uint64_t* h, const void* m){
-	uint8_t i,j=0,v,sign,l=4;
+	uint8_t i,j=-1,v,sign,l=0;
 	uint64_t(*s[])(uint64_t)={ bmw_large_s0, bmw_large_s1, bmw_large_s2,
 	                           bmw_large_s3, bmw_large_s4 };
 	for(i=0; i<16; ++i){
 		h[i] ^= ((uint64_t*)m)[i];
 	}
 	dump_x(h, 16, 'T');
-	memset(q, 0, 4*16);
+//	memset(q, 0, 4*16);
 	for(i=0; i<5*16; ++i){
 		v = pgm_read_byte(f0_lut+i);
 		sign = v&1;
 		v >>=1;
+		if(i==l){
+			j++;
+			l+=5;
+			q[j] = h[v];
+			continue;
+		}
 		if(sign){
 			q[j] -= h[v];
 		}else{
 			q[j] += h[v];
-		}
-		if(i==l){
-			j++;
-			l+=5;
 		}
 	}
 	dump_x(q, 16, 'W');

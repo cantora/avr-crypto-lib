@@ -166,13 +166,25 @@ uint32_t bmw_small_r7(uint32_t x){
 	r =   ROTR32(x, 5);
 	return r;	
 }
-
+/*
 #define K 0x05555555L
 static
 uint32_t k_lut[] PROGMEM = {
 	16L*K, 17L*K, 18L*K, 19L*K, 20L*K, 21L*K, 22L*K, 23L*K,
 	24L*K, 25L*K, 26L*K, 27L*K, 28L*K, 29L*K, 30L*K, 31L*K
 };
+*/
+/* same as above but precomputed to avoid compiler warnings */
+
+static
+uint32_t k_lut[] PROGMEM = {
+	0x55555550L, 0x5aaaaaa5L, 0x5ffffffaL, 
+	0x6555554fL, 0x6aaaaaa4L, 0x6ffffff9L, 
+	0x7555554eL, 0x7aaaaaa3L, 0x7ffffff8L, 
+	0x8555554dL, 0x8aaaaaa2L, 0x8ffffff7L,
+	0x9555554cL, 0x9aaaaaa1L, 0x9ffffff6L, 
+	0xa555554bL };
+
 
 uint32_t bmw_small_expand1(uint8_t j, const uint32_t* q, const void* m){
 	uint32_t(*s[])(uint32_t) = {bmw_small_s1, bmw_small_s2, bmw_small_s3, bmw_small_s0};
@@ -232,26 +244,28 @@ uint8_t f0_lut[] PROGMEM = {
 };
 
 void bmw_small_f0(uint32_t* q, uint32_t* h, const void* m){
-	uint8_t i,j=0,v,sign,l=4;
+	uint8_t i,j=-1,v,sign,l=0;
 	uint32_t(*s[])(uint32_t)={ bmw_small_s0, bmw_small_s1, bmw_small_s2,
 	                           bmw_small_s3, bmw_small_s4 };
 	for(i=0; i<16; ++i){
 		h[i] ^= ((uint32_t*)m)[i];
 	}
 	dump_x(h, 16, 'T');
-	memset(q, 0, 4*16);
+	// memset(q, 0, 4*16);
 	for(i=0; i<5*16; ++i){
 		v = pgm_read_byte(f0_lut+i);
 		sign = v&1;
 		v >>=1;
+		if(i==l){
+			j++;
+			l+=5;
+			q[j] = h[v];
+			continue;
+		}
 		if(sign){
 			q[j] -= h[v];
 		}else{
 			q[j] += h[v];
-		}
-		if(i==l){
-			j++;
-			l+=5;
 		}
 	}
 	dump_x(q, 16, 'W');
