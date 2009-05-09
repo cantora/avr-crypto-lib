@@ -1,4 +1,4 @@
-/* main-shabal-test.c */
+/* main-bmw-test.c */
 /*
     This file is part of the AVR-Crypto-Lib.
     Copyright (C) 2008  Daniel Otte (daniel.otte@rub.de)
@@ -17,7 +17,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 /*
- * shabal test-suit
+ * BlueMidnightWish test-suit
  * 
 */
 

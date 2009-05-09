@@ -92,7 +92,7 @@ def run_test(filename)
 	b = (/[\s]*MD[\s]*=[\s]*([0-9a-fA-F]*).*/.match(avr_md))[1];
 	a.upcase!
 	b.upcase!
-	printf("\n%4d: ", line) if (pos%$linewidth==0 and $linewidth!=0)
+	printf("\n%4d (%4d): ", line, (line-1)*$linewidth) if (pos%$linewidth==0 and $linewidth!=0)
 	line += 1               if (pos%$linewidth==0 and $linewidth!=0)
 	#putc((a==b)?'*':'!')
 	if(a==b)
