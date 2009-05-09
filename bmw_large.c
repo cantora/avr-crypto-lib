@@ -35,7 +35,7 @@
 #define ROTL64(a,n) (((a)<<(n))|((a)>>(64-(n))))
 #define ROTR64(a,n) (((a)>>(n))|((a)<<(64-(n))))
 
-#define BUG24 1
+#define BUG24 0
 #define F0_HACK 1
 #define DEBUG 0
 #if DEBUG

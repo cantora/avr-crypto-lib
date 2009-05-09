@@ -36,7 +36,7 @@
 #define ROTL32(a,n) (((a)<<(n))|((a)>>(32-(n))))
 #define ROTR32(a,n) (((a)>>(n))|((a)<<(32-(n))))
 
-#define BUG24 1
+#define BUG24   0
 #define F0_HACK 1
 
 #define DEBUG 0
