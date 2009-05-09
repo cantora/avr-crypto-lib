@@ -32,32 +32,9 @@
 #include "blake_small.h"
 #include "blake_common.h"
 
-#define DEBUG 0
-#define DEBUG_2 0
-
 #define BUG_1 0 /* bug compatibility for zero length message */
 #define BUG_2 0 /* bug compatibility for messages of length%512=505...511 */
 
-
-#if DEBUG_2
- #include "cli.h"
-#endif
-
-#if DEBUG
- #include "cli.h"
- void dump_v(uint32_t* v){
- 	uint8_t i;
-	cli_putstr_P(PSTR("\r\n=== v dump ==="));
-	for(i=0; i<16; ++i){
-		if(i%8==0)
-			cli_putstr_P(PSTR("\r\n\t"));
-		cli_hexdump_rev(v+i, 4);
-		cli_putc(' ');
-	}
- }
-#else
- #define dump_v(v)
-#endif
 
 uint32_t blake_c[] PROGMEM = {
    0x243F6A88, 0x85A308D3,
@@ -85,18 +62,6 @@ void blake_small_g(uint8_t r, uint8_t i, uint32_t* v, const uint32_t* m){
 	d = pgm_read_byte(blake_index_lut+4*i+3);
 	s0 = pgm_read_byte(blake_sigma+16*r+2*i+0);
 	s1 = pgm_read_byte(blake_sigma+16*r+2*i+1);
-#if DEBUG
-	if(i==0){
-		cli_putstr_P(PSTR("\r\n s0 = "));
-		cli_hexdump(&s0, 1);
-		cli_putstr_P(PSTR("   s1 = "));
-		cli_hexdump(&s1, 1);
-		cli_putstr_P(PSTR("\r\n m[s0] = "));
-		cli_hexdump_rev(m+s0, 4);
-		cli_putstr_P(PSTR("\r\n m[s1] = "));
-		cli_hexdump_rev(m+s1, 4);
-	}
-#endif		
 	v[a] += v[b] + (m[s0] ^ pgm_read_dword(&(blake_c[s1])));
 	v[d]  = ROTR32(v[d]^v[a], 16);
 	v[c] += v[d];
@@ -127,26 +92,9 @@ void blake_small_changeendian(void* dest, const void* src){
 
 void blake_small_compress(uint32_t* v,const void* m){
 	uint8_t r,i;
-#if DEBUG	
-	cli_putstr_P(PSTR("\r\n== compress 32 =="));
-	dump_v(v);
-#endif
-#if DEBUG_2
-	cli_putstr_P(PSTR("\r\n=== message block ===\r\n m ="));
-	cli_hexdump_block(m, 512/8, 4, 16);
-#endif
 	for(r=0; r<10; ++r){
 		for(i=0; i<8; ++i){
 			blake_small_g(r, i, v, (uint32_t*)m);
-#if DEBUG
-			if(1){
-				cli_putstr_P(PSTR("\r\n ROUND: "));
-				cli_hexdump(&r,1);
-				cli_putstr_P(PSTR("    I: "));
-				cli_hexdump(&i,1);
-				dump_v(v);
-			}
-#endif
 		}
 	}
 }
