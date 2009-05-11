@@ -40,7 +40,7 @@ typedef struct nessie_hash_ctx_st{
 
 
 extern nessie_hash_ctx_t nessie_hash_ctx;
-
+extern uint8_t nessie_hash_quick;
 void nessie_hash_run(void);
 
 #endif /*NESSIE_HASH_TEST_H_*/

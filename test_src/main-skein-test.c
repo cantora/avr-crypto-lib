@@ -32,13 +32,43 @@
 #include "hfal_skein1024.h"
 #include "cli.h"
 #include "shavs.h"
+#include "nessie_hash_test.h"
 #include "performance_test.h"
+#include "hfal-performance.h"
+#include "hfal-nessie.h"
+
 
 #include <stdint.h>
 #include <string.h>
 #include <stdlib.h>
 
 char* algo_name = "Skein";
+
+const hfdesc_t* algolist[] PROGMEM = {
+	(hfdesc_t*)&skein256_128_desc,
+	(hfdesc_t*)&skein256_160_desc,
+	(hfdesc_t*)&skein256_224_desc,
+	(hfdesc_t*)&skein256_256_desc,
+	(hfdesc_t*)&skein256_384_desc,
+	(hfdesc_t*)&skein256_512_desc,
+	
+	(hfdesc_t*)&skein512_128_desc,
+	(hfdesc_t*)&skein512_160_desc,
+	(hfdesc_t*)&skein512_224_desc,
+	(hfdesc_t*)&skein512_256_desc,
+	(hfdesc_t*)&skein512_384_desc,
+	(hfdesc_t*)&skein512_512_desc,
+	(hfdesc_t*)&skein512_1024_desc,
+	
+	(hfdesc_t*)&skein1024_128_desc,
+	(hfdesc_t*)&skein1024_160_desc,
+	(hfdesc_t*)&skein1024_224_desc,
+	(hfdesc_t*)&skein1024_256_desc,
+	(hfdesc_t*)&skein1024_384_desc,
+	(hfdesc_t*)&skein1024_512_desc,
+	(hfdesc_t*)&skein1024_1024_desc,
+	NULL
+};
 
 /*****************************************************************************
  *  additional validation-functions											 *
@@ -175,6 +205,12 @@ void zeromsg_test_common(char* p){
 }
 
 void performance_skein(void){
+	hfal_performance_multiple(algolist);
+}
+
+void testrun_nessie_skein(void){
+	nessie_hash_quick = 1;
+	hfal_nessie_multiple(algolist);
 }
 
 
@@ -182,31 +218,6 @@ void performance_skein(void){
  *  main																	 *
  *****************************************************************************/
 
-const hfdesc_t* algolist[] PROGMEM = {
-	(hfdesc_t*)&skein256_128_desc,
-	(hfdesc_t*)&skein256_160_desc,
-	(hfdesc_t*)&skein256_224_desc,
-	(hfdesc_t*)&skein256_256_desc,
-	(hfdesc_t*)&skein256_384_desc,
-	(hfdesc_t*)&skein256_512_desc,
-	
-	(hfdesc_t*)&skein512_128_desc,
-	(hfdesc_t*)&skein512_160_desc,
-	(hfdesc_t*)&skein512_224_desc,
-	(hfdesc_t*)&skein512_256_desc,
-	(hfdesc_t*)&skein512_384_desc,
-	(hfdesc_t*)&skein512_512_desc,
-	(hfdesc_t*)&skein512_1024_desc,
-	
-	(hfdesc_t*)&skein1024_128_desc,
-	(hfdesc_t*)&skein1024_160_desc,
-	(hfdesc_t*)&skein1024_224_desc,
-	(hfdesc_t*)&skein1024_256_desc,
-	(hfdesc_t*)&skein1024_384_desc,
-	(hfdesc_t*)&skein1024_512_desc,
-	(hfdesc_t*)&skein1024_1024_desc,
-	NULL
-};
 
 const char nessie_str[]      PROGMEM = "nessie";
 const char test_str[]        PROGMEM = "test";
@@ -218,7 +229,7 @@ const char shavs_set_str[]   PROGMEM = "shavs_set";
 const char shavs_test1_str[] PROGMEM = "shavs_test1";
 
 cmdlist_entry_t cmdlist[] PROGMEM = {
-//	{ nessie_str,          NULL, testrun_nessie_skein},
+	{ nessie_str,          NULL, testrun_nessie_skein},
 	{ performance_str,     NULL, performance_skein},
 	{ test_str,            NULL, testrun_stdtest_skein},
 	{ ztest_str,       (void*)1, (void_fpt)zeromsg_test_common},

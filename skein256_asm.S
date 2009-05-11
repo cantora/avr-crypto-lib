@@ -228,7 +228,7 @@ skein256_ctx2hash:
 	dec r24
 	brne 6b
 	/* store new dest */
-	movw DEST0, r26
+	movw DEST0, r30 ;XXX r26
 	/* adjust counter and outsize_b*/
 	dec OUTSIZE_B1
 	movw r30, UCTX0

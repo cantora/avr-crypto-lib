@@ -30,6 +30,9 @@
 #include "blake_large.h"
 #include "hfal_blake_small.h"
 #include "hfal_blake_large.h"
+#include "hfal-nessie.h"
+#include "hfal-test.h"
+#include "hfal-performance.h"
 #include "shavs.h"
 #include "cli.h"
 #include "nessie_hash_test.h"
@@ -41,67 +44,36 @@
 
 char* algo_name = "Blake";
 
+
+const hfdesc_t* algolist[] PROGMEM = {
+	(hfdesc_t*)&blake28_desc,
+	(hfdesc_t*)&blake32_desc,
+	(hfdesc_t*)&blake48_desc,
+	(hfdesc_t*)&blake64_desc,
+	NULL
+};
+
 /*****************************************************************************
  *  additional validation-functions											 *
  *****************************************************************************/
 
 void testrun_nessie_blake(void){
-	nessie_hash_ctx.hashsize_b  = 224;
-	nessie_hash_ctx.name = "Blake28";
-	nessie_hash_ctx.blocksize_B = 512/8;
-	nessie_hash_ctx.ctx_size_B  = sizeof(blake28_ctx_t);
-	nessie_hash_ctx.hash_init = (nessie_hash_init_fpt)blake28_init;
-	nessie_hash_ctx.hash_next = (nessie_hash_next_fpt)blake28_nextBlock;
-	nessie_hash_ctx.hash_last = (nessie_hash_last_fpt)blake28_lastBlock;
-	nessie_hash_ctx.hash_conv = (nessie_hash_conv_fpt)blake28_ctx2hash;
-	
-	nessie_hash_run();
-	
-	nessie_hash_ctx.hashsize_b  = 256;
-	nessie_hash_ctx.name = "Blake32";
-	nessie_hash_ctx.blocksize_B = 512/8;
-	nessie_hash_ctx.ctx_size_B  = sizeof(blake32_ctx_t);
-	nessie_hash_ctx.hash_init = (nessie_hash_init_fpt)blake32_init;
-	nessie_hash_ctx.hash_next = (nessie_hash_next_fpt)blake32_nextBlock;
-	nessie_hash_ctx.hash_last = (nessie_hash_last_fpt)blake32_lastBlock;
-	nessie_hash_ctx.hash_conv = (nessie_hash_conv_fpt)blake32_ctx2hash;
-	
-	nessie_hash_run();
+	hfal_nessie_multiple(algolist);
 }
 void blake28_test(void* msg, uint32_t length_b){
-	uint8_t diggest[224/8];
-	cli_putstr_P(PSTR("\r\n=== Blake28 test ===\r\n message:\r\n"));
-	cli_hexdump_block(msg, (length_b+7)/8, 4, 16);
-	blake28(diggest, msg, length_b);
-	cli_putstr_P(PSTR("\r\n diggest:\r\n"));
-	cli_hexdump_block(diggest, 224/8, 4, 16);
+	hfal_test(&blake28_desc, msg, length_b);
 }
 
 void blake32_test(void* msg, uint32_t length_b){
-	uint8_t diggest[256/8];
-	cli_putstr_P(PSTR("\r\n=== Blake32 test ===\r\n message:\r\n"));
-	cli_hexdump_block(msg, (length_b+7)/8, 4, 16);
-	blake32(diggest, msg, length_b);
-	cli_putstr_P(PSTR("\r\n diggest:\r\n"));
-	cli_hexdump_block(diggest, 256/8, 4, 16);
+	hfal_test(&blake32_desc, msg, length_b);
 }
 
 void blake48_test(void* msg, uint32_t length_b){
-	uint8_t diggest[384/8];
-	cli_putstr_P(PSTR("\r\n=== Blake48 test ===\r\n message:\r\n"));
-	cli_hexdump_block(msg, (length_b+7)/8, 4, 16);
-	blake48(diggest, msg, length_b);
-	cli_putstr_P(PSTR("\r\n diggest:\r\n"));
-	cli_hexdump_block(diggest, 384/8, 4, 16);
+	hfal_test(&blake48_desc, msg, length_b);
 }
 
 void blake64_test(void* msg, uint32_t length_b){
-	uint8_t diggest[512/8];
-	cli_putstr_P(PSTR("\r\n=== Blake48 test ===\r\n message:\r\n"));
-	cli_hexdump_block(msg, (length_b+7)/8, 4, 16);
-	blake64(diggest, msg, length_b);
-	cli_putstr_P(PSTR("\r\n diggest:\r\n"));
-	cli_hexdump_block(diggest, 512/8, 4, 16);
+	hfal_test(&blake64_desc, msg, length_b);
 }
 void testrun_stdtest_blake(void){
 	uint8_t msg1[144]; 
@@ -226,27 +198,25 @@ void performance_blake(void){
 
 }
 
+void autoperformance_blake(void){
+	hfal_performance_multiple(algolist);
+}
+
 /*****************************************************************************
  *  main																	 *
  *****************************************************************************/
 
-const hfdesc_t* algolist[] PROGMEM = {
-	(hfdesc_t*)&blake28_desc,
-	(hfdesc_t*)&blake32_desc,
-	(hfdesc_t*)&blake48_desc,
-	(hfdesc_t*)&blake64_desc,
-	NULL
-};
 
-const char nessie_str[]      PROGMEM = "nessie";
-const char test_str[]        PROGMEM = "test";
-const char testshort_str[]   PROGMEM = "short";
-const char testlshort_str[]  PROGMEM = "lshort";
-const char performance_str[] PROGMEM = "performance";
-const char echo_str[]        PROGMEM = "echo";
-const char shavs_list_str[]  PROGMEM = "shavs_list";
-const char shavs_set_str[]   PROGMEM = "shavs_set";
-const char shavs_test1_str[] PROGMEM = "shavs_test1";
+const char nessie_str[]       PROGMEM = "nessie";
+const char test_str[]         PROGMEM = "test";
+const char testshort_str[]    PROGMEM = "short";
+const char testlshort_str[]   PROGMEM = "lshort";
+const char performance_str[]  PROGMEM = "performance";
+const char aperformance_str[] PROGMEM = "autoperformance";
+const char echo_str[]         PROGMEM = "echo";
+const char shavs_list_str[]   PROGMEM = "shavs_list";
+const char shavs_set_str[]    PROGMEM = "shavs_set";
+const char shavs_test1_str[]  PROGMEM = "shavs_test1";
 
 cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ nessie_str,          NULL, testrun_nessie_blake},
@@ -254,6 +224,7 @@ cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ testshort_str,       NULL, testshort},
 	{ testlshort_str,      NULL, testlshort},
 	{ performance_str,     NULL, performance_blake},
+	{ aperformance_str,    NULL, autoperformance_blake},
 	{ shavs_list_str,      NULL, shavs_listalgos},
 	{ shavs_set_str,   (void*)1, (void_fpt)shavs_setalgo},
 	{ shavs_test1_str,     NULL, shavs_test1},

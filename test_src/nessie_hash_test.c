@@ -32,6 +32,7 @@
 #include "dbz_strings.h"
 
 nessie_hash_ctx_t nessie_hash_ctx;
+uint8_t           nessie_hash_quick=0;
 
 #define HASHSIZE_B ((nessie_hash_ctx.hashsize_b+7)/8)
 #define BLOCKSIZE_B (nessie_hash_ctx.blocksize_B)
@@ -185,6 +186,8 @@ void tv4_hash(void){
 	nessie_hash_ctx.hash_last(ctx, block, n);
 	nessie_hash_ctx.hash_conv(hash, ctx);
 	nessie_print_item("hash", hash, (nessie_hash_ctx.hashsize_b+7)/8);
+	if(nessie_hash_quick)
+		return;
 	for(i=1; i<100000L; ++i){ /* this assumes BLOCKSIZE >= HASHSIZE */
 		nessie_hash_ctx.hash_init(ctx);
 		nessie_hash_ctx.hash_last(ctx, hash, nessie_hash_ctx.hashsize_b);
@@ -242,7 +245,8 @@ void nessie_hash_run(void){
 		ascii_hash_P(challange[2*i], challange[2*i+1]);
 	}
 	nessie_print_set_vector(set, i);
-	amillion_hash();
+	if(!nessie_hash_quick)
+		amillion_hash();
 	/* test set 2 */
 	set=2;
 	nessie_print_setheader(set);
