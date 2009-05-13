@@ -32,8 +32,8 @@
 #include "blake_large.h"
 #include "blake_common.h"
 
-#define BUG_3 0 /* bug compatibility with reference code */
-#define BUG_4 0 /* bug compatibility with reference code */
+#define BUG_3 1 /* bug compatibility with reference code */
+#define BUG_4 1 /* bug compatibility with reference code */
 
 uint64_t pgm_read_qword(void* p){
 	union{
@@ -67,25 +67,6 @@ uint64_t blake_c[] PROGMEM = {
 						    ((0x00ff0000&(a))>>8)| \
 						    (a)>>24 )
 
-void blake_large_g(uint8_t r, uint8_t i, uint64_t* v, const uint64_t* m){
-	uint8_t a,b,c,d, s0, s1;
-	a = pgm_read_byte(blake_index_lut+4*i+0);
-	b = pgm_read_byte(blake_index_lut+4*i+1);
-	c = pgm_read_byte(blake_index_lut+4*i+2);
-	d = pgm_read_byte(blake_index_lut+4*i+3);
-	s0 = pgm_read_byte(blake_sigma+16*r+2*i+0);
-	s1 = pgm_read_byte(blake_sigma+16*r+2*i+1);
-	v[a] += v[b] + (m[s0] ^ pgm_read_qword(&(blake_c[s1])));
-	v[d]  = ROTR64(v[d]^v[a], 32);
-	v[c] += v[d];
-	v[b]  = ROTR64(v[b]^v[c], 25);	
-	v[a] += v[b] + (m[s1] ^ pgm_read_qword(&(blake_c[s0])));
-	v[d]  = ROTR64(v[d]^v[a], 16);
-	v[c] += v[d];
-	v[b]  = ROTR64(v[b]^v[c], 11);
-
-}
-
 void blake_large_expand(uint64_t* v, const blake_large_ctx_t* ctx){
 	uint8_t i;
 	memcpy(v, ctx->h, 8*8);
@@ -108,9 +89,24 @@ void blake_large_changeendian(void* dest, const void* src){
 
 void blake_large_compress(uint64_t* v,const void* m){
 	uint8_t r,i;
+	uint8_t a,b,c,d, s0, s1;
 	for(r=0; r<14; ++r){
 		for(i=0; i<8; ++i){
-			blake_large_g(r%10, i, v, (uint64_t*)m);
+	//		blake_large_g(r%10, i, v, (uint64_t*)m);
+			a = pgm_read_byte(blake_index_lut+4*i+0);
+			b = pgm_read_byte(blake_index_lut+4*i+1);
+			c = pgm_read_byte(blake_index_lut+4*i+2);
+			d = pgm_read_byte(blake_index_lut+4*i+3);
+			s0 = pgm_read_byte(blake_sigma+16*r+2*i+0);
+			s1 = pgm_read_byte(blake_sigma+16*r+2*i+1);
+			v[a] += v[b] + (((uint64_t*)m)[s0] ^ pgm_read_qword(&(blake_c[s1])));
+			v[d]  = ROTR64(v[d]^v[a], 32);
+			v[c] += v[d];
+			v[b]  = ROTR64(v[b]^v[c], 25);	
+			v[a] += v[b] + (((uint64_t*)m)[s1] ^ pgm_read_qword(&(blake_c[s0])));
+			v[d]  = ROTR64(v[d]^v[a], 16);
+			v[c] += v[d];
+			v[b]  = ROTR64(v[b]^v[c], 11);
 		}
 	}
 }

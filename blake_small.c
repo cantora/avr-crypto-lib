@@ -32,8 +32,8 @@
 #include "blake_small.h"
 #include "blake_common.h"
 
-#define BUG_1 0 /* bug compatibility for zero length message */
-#define BUG_2 0 /* bug compatibility for messages of length%512=505...511 */
+#define BUG_1 1 /* bug compatibility for zero length message */
+#define BUG_2 1 /* bug compatibility for messages of length%512=505...511 */
 
 
 uint32_t blake_c[] PROGMEM = {
@@ -54,25 +54,6 @@ uint32_t blake_c[] PROGMEM = {
 						    ((0x00ff0000&(a))>>8)| \
 						    (a)>>24 )
 
-void blake_small_g(uint8_t r, uint8_t i, uint32_t* v, const uint32_t* m){
-	uint8_t a,b,c,d, s0, s1;
-	a = pgm_read_byte(blake_index_lut+4*i+0);
-	b = pgm_read_byte(blake_index_lut+4*i+1);
-	c = pgm_read_byte(blake_index_lut+4*i+2);
-	d = pgm_read_byte(blake_index_lut+4*i+3);
-	s0 = pgm_read_byte(blake_sigma+16*r+2*i+0);
-	s1 = pgm_read_byte(blake_sigma+16*r+2*i+1);
-	v[a] += v[b] + (m[s0] ^ pgm_read_dword(&(blake_c[s1])));
-	v[d]  = ROTR32(v[d]^v[a], 16);
-	v[c] += v[d];
-	v[b]  = ROTR32(v[b]^v[c], 12);	
-	v[a] += v[b] + (m[s1] ^ pgm_read_dword(&(blake_c[s0])));
-	v[d]  = ROTR32(v[d]^v[a], 8);
-	v[c] += v[d];
-	v[b]  = ROTR32(v[b]^v[c], 7);
-
-}
-
 void blake_small_expand(uint32_t* v, const blake_small_ctx_t* ctx){
 	uint8_t i;
 	memcpy(v, ctx->h, 8*4);
@@ -92,9 +73,36 @@ void blake_small_changeendian(void* dest, const void* src){
 
 void blake_small_compress(uint32_t* v,const void* m){
 	uint8_t r,i;
+	uint8_t a,b,c,d, s0, s1;
+	uint32_t lv[4];
 	for(r=0; r<10; ++r){
 		for(i=0; i<8; ++i){
-			blake_small_g(r, i, v, (uint32_t*)m);
+	//		blake_small_g(r, i, v, (uint32_t*)m);
+			a = pgm_read_byte(blake_index_lut+4*i+0);
+			b = pgm_read_byte(blake_index_lut+4*i+1);
+			c = pgm_read_byte(blake_index_lut+4*i+2);
+			d = pgm_read_byte(blake_index_lut+4*i+3);
+			s0 = pgm_read_byte(blake_sigma+16*r+2*i+0);
+			s1 = pgm_read_byte(blake_sigma+16*r+2*i+1);
+			lv[0] = v[a];
+			lv[1] = v[b];
+			lv[2] = v[c];
+			lv[3] = v[d];
+			
+			lv[0] += lv[1] + (((uint32_t*)m)[s0] ^ pgm_read_dword(&(blake_c[s1])));
+			lv[3]  = ROTR32(lv[3]^lv[0], 16);
+			lv[2] += lv[3];
+			lv[1]  = ROTR32(lv[1]^lv[2], 12);	
+			lv[0] += lv[1] + (((uint32_t*)m)[s1] ^ pgm_read_dword(&(blake_c[s0])));
+			lv[3]  = ROTR32(lv[3]^lv[0], 8);
+			lv[2] += lv[3];
+			lv[1]  = ROTR32(lv[1]^lv[2], 7);
+
+			v[a] = lv[0];
+			v[b] = lv[1];
+			v[c] = lv[2];
+			v[d] = lv[3];
+
 		}
 	}
 }

@@ -29,6 +29,9 @@
 #include "shabal.h"
 #include "cli.h"
 #include "hfal_shabal.h"
+#include "hfal-test.h"
+#include "hfal-nessie.h"
+#include "hfal-performance.h"
 #include "shavs.h"
 #include "nessie_hash_test.h"
 #include "performance_test.h"
@@ -39,67 +42,37 @@
 
 char* algo_name = "Shabal";
 
+
+const hfdesc_t* algolist[] PROGMEM = {
+	(hfdesc_t*)&shabal192_desc,
+	(hfdesc_t*)&shabal224_desc,
+	(hfdesc_t*)&shabal256_desc,
+	(hfdesc_t*)&shabal384_desc,
+	(hfdesc_t*)&shabal512_desc,	
+	NULL
+};
+
 /*****************************************************************************
  *  additional validation-functions											 *
  *****************************************************************************/
 void testrun_stdtest_shabal192(void* msg, uint16_t size_b){
-	uint8_t hash[192/8];
-		
-	cli_putstr_P(PSTR("\r\n\r\nTest vectors for Shabal (192 bits):"));
-
-	cli_putstr_P(PSTR("\r\nmessage:"));
-	cli_hexdump_block(msg, (size_b+7)/8, 4, 16);
-	shabal192(hash, msg, size_b);
-	cli_putstr_P(PSTR("\r\nhash:"));
-	cli_hexdump_block(hash, 192/8, 4, 16);
+	hfal_test(&shabal192_desc, msg, size_b);
 }
 
 void testrun_stdtest_shabal224(void* msg, uint16_t size_b){
-	uint8_t hash[224/8];
-		
-	cli_putstr_P(PSTR("\r\n\r\nTest vectors for Shabal (224 bits):"));
-
-	cli_putstr_P(PSTR("\r\nmessage:"));
-	cli_hexdump_block(msg, (size_b+7)/8, 4, 16);
-	shabal224(hash, msg, size_b);
-	cli_putstr_P(PSTR("\r\nhash:"));
-	cli_hexdump_block(hash, 224/8, 4, 16);
+	hfal_test(&shabal224_desc, msg, size_b);
 }
 
 void testrun_stdtest_shabal256(void* msg, uint16_t size_b){
-	uint8_t hash[256/8];
-		
-	cli_putstr_P(PSTR("\r\n\r\nTest vectors for Shabal (256 bits):"));
-
-	cli_putstr_P(PSTR("\r\nmessage:"));
-	cli_hexdump_block(msg, (size_b+7)/8, 4, 16);
-	shabal256(hash, msg, size_b);
-	cli_putstr_P(PSTR("\r\nhash:"));
-	cli_hexdump_block(hash, 256/8, 4, 16);
+	hfal_test(&shabal256_desc, msg, size_b);
 }
 
 void testrun_stdtest_shabal384(void* msg, uint16_t size_b){
-	uint8_t hash[384/8];
-		
-	cli_putstr_P(PSTR("\r\n\r\nTest vectors for Shabal (384 bits):"));
-
-	cli_putstr_P(PSTR("\r\nmessage:"));
-	cli_hexdump_block(msg, (size_b+7)/8, 4, 16);
-	shabal384(hash, msg, size_b);
-	cli_putstr_P(PSTR("\r\nhash:"));
-	cli_hexdump_block(hash, 384/8, 4, 16);
+	hfal_test(&shabal384_desc, msg, size_b);
 }
 
 void testrun_stdtest_shabal512(void* msg, uint16_t size_b){
-	uint8_t hash[512/8];
-		
-	cli_putstr_P(PSTR("\r\n\r\nTest vectors for Shabal (512 bits):"));
-
-	cli_putstr_P(PSTR("\r\nmessage:"));
-	cli_hexdump_block(msg, (size_b+7)/8, 4, 16);
-	shabal512(hash, msg, size_b);
-	cli_putstr_P(PSTR("\r\nhash:"));
-	cli_hexdump_block(hash, 512/8, 4, 16);
+	hfal_test(&shabal512_desc, msg, size_b);
 }
 
 void testrun_stdtest_shabal(void){
@@ -204,160 +177,17 @@ void testinit(void){
 }
 
 void performance_shabal(void){
-	uint64_t t;
-	char str[16];
-	uint8_t data[64];
-	uint8_t hash[512/8];
-	shabal_ctx_t ctx;
-	
-	calibrateTimer();
-	print_overhead();
-	
-	memset(data, 0, 64);
-	
-	startTimer(1);
-	shabal192_init(&ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tctx-gen time (192): "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	
-	startTimer(1);
-	shabal224_init(&ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tctx-gen time (224): "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	
-	startTimer(1);
-	shabal256_init(&ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tctx-gen time (256): "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	
-	startTimer(1);
-	shabal384_init(&ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tctx-gen time (384): "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	
-	startTimer(1);
-	shabal512_init(&ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tctx-gen time (512): "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-		
-	startTimer(1);
-	shabal_nextBlock(&ctx, data);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tone-block time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	
-	
-	startTimer(1);
-	shabal_lastBlock(&ctx, data, 0);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tlast block time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	
-	startTimer(1);
-	shabal192_ctx2hash(hash, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tctx2hash time (192): "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	
-	startTimer(1);
-	shabal224_ctx2hash(hash, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tctx2hash time (224): "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	
-	startTimer(1);
-	shabal256_ctx2hash(hash, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tctx2hash time (256): "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	
-	startTimer(1);
-	shabal384_ctx2hash(hash, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tctx2hash time (384): "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	
-	startTimer(1);
-	shabal512_ctx2hash(hash, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tctx2hash time (512): "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-		
-	cli_putstr_P(PSTR("\r\n"));
-
+	hfal_performance_multiple(algolist);
 }
 
 void testrun_nessie_shabal(void){
-	nessie_hash_ctx.hashsize_b  = 192;
-	nessie_hash_ctx.blocksize_B = 512/8;
-	nessie_hash_ctx.ctx_size_B  = sizeof(shabal_ctx_t);
-	nessie_hash_ctx.name = "Shabal-192";
-	nessie_hash_ctx.hash_init = (nessie_hash_init_fpt)shabal192_init;
-	nessie_hash_ctx.hash_next = (nessie_hash_next_fpt)shabal_nextBlock;
-	nessie_hash_ctx.hash_last = (nessie_hash_last_fpt)shabal_lastBlock;
-	nessie_hash_ctx.hash_conv = (nessie_hash_conv_fpt)shabal192_ctx2hash;
-	
-	nessie_hash_run();
-	
-	nessie_hash_ctx.hashsize_b  = 224;
-	nessie_hash_ctx.name = "Shabal-224";
-	nessie_hash_ctx.hash_init = (nessie_hash_init_fpt)shabal224_init;
-	nessie_hash_ctx.hash_conv = (nessie_hash_conv_fpt)shabal224_ctx2hash;
-	
-	nessie_hash_run();
-	
-	nessie_hash_ctx.hashsize_b  = 256;
-	nessie_hash_ctx.name = "Shabal-256";
-	nessie_hash_ctx.hash_init = (nessie_hash_init_fpt)shabal256_init;
-	nessie_hash_ctx.hash_conv = (nessie_hash_conv_fpt)shabal256_ctx2hash;
-	
-	nessie_hash_run();
-	
-	nessie_hash_ctx.hashsize_b  = 384;
-	nessie_hash_ctx.name = "Shabal-384";
-	nessie_hash_ctx.hash_init = (nessie_hash_init_fpt)shabal384_init;
-	nessie_hash_ctx.hash_conv = (nessie_hash_conv_fpt)shabal384_ctx2hash;
-	
-	nessie_hash_run();
-	
-	nessie_hash_ctx.hashsize_b  = 512;
-	nessie_hash_ctx.name = "Shabal-512";
-	nessie_hash_ctx.hash_init = (nessie_hash_init_fpt)shabal512_init;
-	nessie_hash_ctx.hash_conv = (nessie_hash_conv_fpt)shabal512_ctx2hash;
-	
-	nessie_hash_run();
-	
+	hfal_nessie_multiple(algolist);
 }
 
 /*****************************************************************************
  *  main																	 *
  *****************************************************************************/
 
-const hfdesc_t* algolist[] PROGMEM = {
-	(hfdesc_t*)&shabal192_desc,
-	(hfdesc_t*)&shabal224_desc,
-	(hfdesc_t*)&shabal256_desc,
-	(hfdesc_t*)&shabal384_desc,
-	(hfdesc_t*)&shabal512_desc,	
-	NULL
-};
 
 const char nessie_str[]      PROGMEM = "nessie";
 const char test_str[]        PROGMEM = "test";

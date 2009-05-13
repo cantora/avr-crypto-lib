@@ -69,26 +69,34 @@ void hfal_performance(const hfdesc_t* hd){
 	cli_putstr_P(PSTR("\r\n    blocksize (bits):   "));
 	printvalue(hf.blocksize_b);
 	
-	startTimer(1);
+	startTimer(0);
+	START_TIMER;
 	hf.init(&ctx);
+	STOP_TIMER;
 	t = stopTimer();
 	cli_putstr_P(PSTR("\r\n    init (cycles):      "));
 	printvalue(t);
 	
-	startTimer(1);
+	startTimer(0);
+	START_TIMER;
 	hf.nextBlock(&ctx, data);
+	STOP_TIMER;
 	t = stopTimer();
 	cli_putstr_P(PSTR("\r\n    nextBlock (cycles): "));
 	printvalue(t);
 	
-	startTimer(1);
+	startTimer(0);
+	START_TIMER;
 	hf.lastBlock(&ctx, data, 0);
+	STOP_TIMER;
 	t = stopTimer();
 	cli_putstr_P(PSTR("\r\n    lastBlock (cycles): "));
 	printvalue(t);
 	
-	startTimer(1);
+	startTimer(0);
+	START_TIMER;
 	hf.ctx2hash(digest, &ctx);
+	STOP_TIMER;
 	t = stopTimer();
 	cli_putstr_P(PSTR("\r\n    ctx2hash (cycles):  "));
 	printvalue(t);

@@ -42,8 +42,8 @@ const hfdesc_t blake28_desc PROGMEM = {
 	BLAKE28_BLOCKSIZE,
 	224,
 	(hf_init_fpt)blake28_init,
-	(hf_nextBlock_fpt)blake28_nextBlock,
-	(hf_lastBlock_fpt)blake28_lastBlock,
+	(hf_nextBlock_fpt)blake_small_nextBlock,
+	(hf_lastBlock_fpt)blake_small_lastBlock,
 	(hf_ctx2hash_fpt)blake28_ctx2hash,
 	(hf_free_fpt)NULL,
 	(hf_mem_fpt)blake28
@@ -57,8 +57,8 @@ const hfdesc_t blake32_desc PROGMEM = {
 	BLAKE32_BLOCKSIZE,
 	256,
 	(hf_init_fpt)blake32_init,
-	(hf_nextBlock_fpt)blake32_nextBlock,
-	(hf_lastBlock_fpt)blake32_lastBlock,
+	(hf_nextBlock_fpt)blake_small_nextBlock,
+	(hf_lastBlock_fpt)blake_small_lastBlock,
 	(hf_ctx2hash_fpt)blake32_ctx2hash,
 	(hf_free_fpt)NULL,
 	(hf_mem_fpt)blake32
