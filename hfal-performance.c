@@ -60,7 +60,7 @@ void hfal_performance(const hfdesc_t* hd){
 	cli_putstr_P(PSTR("\r\n\r\n === "));
 	cli_putstr_P(hf.name);
 	cli_putstr_P(PSTR(" performance === "
-	                  "\r\n    type:                     hash"
+	                  "\r\n    type:             hashfunction"
 	                  "\r\n    hashsize (bits):    "));
 	printvalue(hf.hashsize_b);
 	
@@ -108,8 +108,10 @@ void hfal_performance_multiple(const hfdesc_t** hd_list){
 	const hfdesc_t* hd;
 	for(;;){
 		hd = (void*)pgm_read_word(hd_list);
-		if(!hd)
+		if(!hd){
+			cli_putstr_P(PSTR("\r\n\r\n End of performance figures\r\n"));
 			return;
+		}
 		hfal_performance(hd);
 		hd_list = (void*)((uint8_t*)hd_list + 2);
 	}
