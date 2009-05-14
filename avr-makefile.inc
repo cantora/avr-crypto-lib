@@ -15,6 +15,8 @@ TESTPORT       = /dev/ttyUSB1
 TESTPORTBAUDR  = 38400
 TESTLOG_DIR    = testlog/
 TESTPREFIX     = nessie-
+SPEEDLOG_DIR   = speed_log/
+SPEEDPREFIX    =
 LIST_DIR       = listings/
 STAT_DIR       = stats/
 AUTOASM_DIR    = autoasm/
@@ -29,12 +31,13 @@ override ASFLAGS	   = -mmcu=$(MCU_TARGET) -Wa,--gdwarf-2
 
 SIZESTAT_FILE = sizestats.txt
 
-OBJCOPY    = avr-objcopy
-OBJDUMP    = avr-objdump
-SIZE       = avr-size
-READELF    = readelf
-RUBY       = ruby
-GET_TEST   = host/get_test.rb
-MAKE       = make
-MAKE2GRAPH = ~/bin/make2graph.rb
-TWOPI      = twopi
+OBJCOPY         = avr-objcopy
+OBJDUMP         = avr-objdump
+SIZE            = avr-size
+READELF         = readelf
+RUBY            = ruby
+GET_TEST        = host/get_test.rb
+GET_PERFORMANCE = host/get_performance.rb
+MAKE            = make
+MAKE2GRAPH      = ~/bin/make2graph.rb
+TWOPI           = twopi

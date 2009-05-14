@@ -1,5 +1,6 @@
 # Makefile for the AVR-Crypto-Lib project
 # author: Daniel Otte
+SHELL = sh
 
 BLOCK_CIPHERS  := 
 STREAM_CIPHERS := 
@@ -7,13 +8,14 @@ HASHES         :=
 MACS           :=
 PRNGS          := 
 ENCODINGS      :=
+AUX            :=
 
 # we use the gnu make standard library
 include gmsl
 include avr-makefile.inc
 include mkfiles/*.mk
 
-ALGORITHMS = $(BLOCK_CIPHERS) $(STREAM_CIPHERS) $(HASHES) $(PRNGS) $(MACS) $(ENCODINGS)
+ALGORITHMS = $(BLOCK_CIPHERS) $(STREAM_CIPHERS) $(HASHES) $(PRNGS) $(MACS) $(ENCODINGS) $(AUX)
 ALGORITHMS_OBJ = $(patsubst %,%_OBJ, $(ALGORITHMS))
 ALGORITHMS_TEST_BIN = $(patsubst %,%_TEST_BIN, $(ALGORITHMS))
 
@@ -200,6 +202,20 @@ endef
 $(foreach algo, $(ALGORITHMS),$(eval $(call TESTRUN_TEMPLATE, $(algo), $(call lc,$(algo)) )))
 
 all_testrun: $(foreach algo, $(ALGORITHMS), $(algo)_TESTRUN)
+
+#-------------------------------------------------------------------------------
+
+define TESTSPEED_TEMPLATE
+$(1)_TESTSPEED: $(1)_FLASH
+	@echo "[speed]: $(1)"
+	$(RUBY) $(GET_PERFORMANCE)  $(TESTPORT) $(TESTPORTBAUDR) 8 1 performance $(SPEEDLOG_DIR)$(SPEEDPREFIX) $(2)
+endef
+
+$(foreach algo, $(ALGORITHMS),$(eval $(call TESTSPEED_TEMPLATE, $(algo), $(call lc,$(algo)) )))
+
+all_testspeed: $(foreach algo, $(ALGORITHMS), $(algo)_TESTSPEED)
+hash_testspeed: $(foreach algo, $(HASHES), $(algo)_TESTSPEED)
+
 
 #-------------------------------------------------------------------------------
 

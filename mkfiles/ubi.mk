@@ -2,7 +2,7 @@
 ALGO_NAME := UBI
 
 # comment out the following line for removement of ubi from the build process
-HASHES += $(ALGO_NAME)
+AUX += $(ALGO_NAME)
 
 
 $(ALGO_NAME)_OBJ      := threefish_mix.o threefish256_enc_asm.o ubi256_asm.o \

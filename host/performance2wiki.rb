@@ -57,8 +57,11 @@ def process_hashfunction(fin, name)
   m = lb.match(/ctx2hash \(cycles\):[\s]*([\d]*)/)
   convtime = m[1].to_i()
   
-  printf("| %s || C || C || || %4d || %4d || %4d || %6d || %6d || %6.2f || %6d || || || \n|-\n" , 
-    name, ctxsize, hashsize, blocksize, inittime, nextblocktime, nextblocktime.to_f/blocksize*8, lastblocktime+convtime)
+  printf("| %20s || %3s || %3s || || %4d || %4d || %4d ||" +
+         " %6d || %6d || %7.2f || %6d || || || \n|-\n" , 
+        name, $lang, $lang ,ctxsize, hashsize, blocksize, 
+	    inittime, nextblocktime, nextblocktime.to_f/blocksize*8,
+		lastblocktime+convtime)
 end
 
 
@@ -68,6 +71,8 @@ $handlers["hashfunction"] = 1 #process_hashfunction
 
 def process_file(fname)
   fin = File.open(fname, "r")
+  $lang = "asm"
+  $lang = "C" if fname.match(/_c.txt$/)
   begin
     begin
 	  if fin.eof()
