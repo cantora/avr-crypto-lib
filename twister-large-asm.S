@@ -1,4 +1,4 @@
-/* twister-big-asm.S */
+/* twister-large-asm.S */
 /*
     This file is part of the AVR-Crypto-Lib.
     Copyright (C) 2008  Daniel Otte (daniel.otte@rub.de)
@@ -17,7 +17,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * \file     twister-big-asm.S
+ * \file     twister-large-asm.S
  * \email    daniel.otte@rub.de
  * \author   Daniel Otte 
  * \date     2008-12-27
@@ -27,7 +27,7 @@
  
  #include "avr-asm-macros.S"
 
-/* void checksum_update(twister_big_ctx_t* ctx, uint8_t col) */
+/* void checksum_update(twister_large_ctx_t* ctx, uint8_t col) */
 /*
  * param ctx: r24:r25
  * param col: r22
@@ -117,7 +117,7 @@ checksum_update:
 	ret
 
 /*********************************************************************/
-/* void twister_big_init(twister_big_ctx_t* ctx, uint16_t hashsize_b)*/
+/* void twister_large_init(twister_large_ctx_t* ctx, uint16_t hashsize_b)*/
 /* 
  * param ctx:        r24:r25
  * param hashsize_b: r22:r23
@@ -126,15 +126,15 @@ checksum_update:
 twister384_init:
 	ldi r22, lo8(384)
 	ldi r23, hi8(384)
-	rjmp twister_big_init
+	rjmp twister_large_init
 	
 .global twister512_init
 twister512_init:
 	ldi r22, lo8(512)
 	ldi r23, hi8(512)
 	
-.global twister_big_init
-twister_big_init:
+.global twister_large_init
+twister_large_init:
 	movw r30, r24
 	ldi r24, 64
 1:
@@ -163,7 +163,7 @@ twister_big_init:
 	ret
 
 /*********************************************************************/
-/* void twister_big_nextBlock(twister_state_t* ctx, void* msg) */   
+/* void twister_large_nextBlock(twister_state_t* ctx, void* msg) */   
 /*
  * param ctx: r24:r25
  * param msg: r22:r23
@@ -174,13 +174,13 @@ TMP_SAVE0 = 12
 TMP_SAVE1 = 13
 MSG_SAVE0 = 28
 MSG_SAVE1 = 29
-.global twister_big_nextBlock
+.global twister_large_nextBlock
 .global twister384_nextBlock
 .global twister512_nextBlock
 
 twister384_nextBlock:
 twister512_nextBlock:
-twister_big_nextBlock:
+twister_large_nextBlock:
 	push_range 12, 15
 	push r28
 	push r29
@@ -350,7 +350,7 @@ twister_big_nextBlock:
 	ret
 	
 /*********************************************************************/
-/* void twister_big_lastBlock(twister_state_t* ctx, void* msg, uint16_t length_b) */   
+/* void twister_large_lastBlock(twister_state_t* ctx, void* msg, uint16_t length_b) */   
 /*
  * param ctx:      r24:r25
  * param msg:      r22:r23
@@ -364,13 +364,13 @@ LEN_SAVE0 = 16
 LEN_SAVE1 = 17
 MSG_SAVE0 = 28
 MSG_SAVE1 = 29
-.global twister_big_lastBlock
+.global twister_large_lastBlock
 .global twister384_lastBlock
 .global twister512_lastBlock
 
 twister384_lastBlock:
 twister512_lastBlock:
-twister_big_lastBlock:
+twister_large_lastBlock:
 	push_range 12, 17
 	push r28
 	push r29
@@ -385,7 +385,7 @@ twister_big_lastBlock:
 	brmi 2f
 	movw r24, CTX_SAVE0
 	movw r22, MSG_SAVE0
-	rcall twister_big_nextBlock
+	rcall twister_large_nextBlock
 	adiw MSG_SAVE0, 8
 	subi LEN_SAVE1, 2
 	rjmp 1b
@@ -433,7 +433,7 @@ twister_big_lastBlock:
 7:	
 	movw r24, CTX_SAVE0
 	movw r22, TMP_SAVE0
-	rcall twister_big_nextBlock
+	rcall twister_large_nextBlock
 	
 	ldi r19, 2
 	clr r18

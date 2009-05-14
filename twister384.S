@@ -60,7 +60,7 @@ twister384:
 	movw r24, CTX_SAVE0
 	ldi r22, lo8(384)
 	ldi r23, hi8(384)
-	rcall twister_big_init
+	rcall twister_large_init
 1:
 	tst MSG_LEN3
 	brne 2f
@@ -71,7 +71,7 @@ twister384:
 2:
 	movw r24, CTX_SAVE0
 	movw r22, MSG_SAVE0
-	rcall twister_big_nextBlock
+	rcall twister_large_nextBlock
 	adiw MSG_SAVE0, 63
 	adiw MSG_SAVE0,  1	
 	subi MSG_LEN1, 2
@@ -82,13 +82,13 @@ twister384:
 	movw r24, CTX_SAVE0
 	movw r22, MSG_SAVE0
 	movw r20, MSG_LEN0
-	rcall twister_big_lastBlock
+	rcall twister_large_lastBlock
 	
 	movw r24, DST_SAVE0
 	movw r22, CTX_SAVE0
 	ldi r20, lo8(384)
 	ldi r21, hi8(384)
-	rcall twister_big_ctx2hash
+	rcall twister_large_ctx2hash
 
 	stack_free_large2 64+2*8+64
 	pop r29

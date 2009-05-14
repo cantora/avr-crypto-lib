@@ -1,4 +1,4 @@
-/* twister-big.c */
+/* twister-large.c */
 /*
     This file is part of the AVR-Crypto-Lib.
     Copyright (C) 2008  Daniel Otte (daniel.otte@rub.de)
@@ -21,12 +21,12 @@
 #include <string.h>
 #include "memxor.h"
 #include "twister.h"
-#include "twister-big.h"
+#include "twister-large.h"
 
 /*********************************************************************/
 
 static
-void checksum_update(twister_big_ctx_t* ctx, uint8_t col){
+void checksum_update(twister_large_ctx_t* ctx, uint8_t col){
 	uint8_t i, col2;
 	uint8_t carry = 0;
 	int sum = 0;
@@ -46,7 +46,7 @@ void checksum_update(twister_big_ctx_t* ctx, uint8_t col){
 
 /*********************************************************************/
 
-void twister_big_init(twister_big_ctx_t* ctx, uint16_t hashsize_b){
+void twister_large_init(twister_large_ctx_t* ctx, uint16_t hashsize_b){
 	memset(ctx->state.s,  0, 64);
 	memset(ctx->checksum, 0, 64);
 	ctx->state.counter=0xffffffffffffffffLL;
@@ -57,7 +57,7 @@ void twister_big_init(twister_big_ctx_t* ctx, uint16_t hashsize_b){
 
 /*********************************************************************/
 
-void twister_big_nextBlock(twister_big_ctx_t* ctx, const void* msg){
+void twister_large_nextBlock(twister_large_ctx_t* ctx, const void* msg){
 	uint8_t tmp[8][8];
 
 	/* 1st maxi round */
@@ -108,24 +108,24 @@ void twister_big_nextBlock(twister_big_ctx_t* ctx, const void* msg){
 
 /*********************************************************************/
 
-void twister_inject_chksum(twister_big_ctx_t* ctx, uint8_t col){
+void twister_inject_chksum(twister_large_ctx_t* ctx, uint8_t col){
 	*((uint64_t*)(&ctx->state.s[7][0])) ^= *((uint64_t*)(&ctx->checksum[col][0]));
 	twister_blank_round(&ctx->state);
 }
 
 /*********************************************************************/
 
-void twister_big_lastBlock(twister_big_ctx_t* ctx, const void* msg, uint16_t length_b){
+void twister_large_lastBlock(twister_large_ctx_t* ctx, const void* msg, uint16_t length_b){
 	uint8_t tmp[64];	
 	while(length_b>=512){
-		twister_big_nextBlock(ctx, msg);
+		twister_large_nextBlock(ctx, msg);
 		msg = ((uint8_t*)msg)+64;
 		length_b -= 512;
 	}
 	memset(tmp, 0, 64);
 	memcpy(tmp, msg, (length_b+7)/8);
 	tmp[length_b/8] |= 0x80 >> (length_b&0x07);
-	twister_big_nextBlock(ctx, tmp);
+	twister_large_nextBlock(ctx, tmp);
 	ctx->state.length_counter_b -= 512 - length_b;
 	twister_mini_round(&(ctx->state), &(ctx->state.length_counter_b));
 
@@ -151,7 +151,7 @@ void twister_big_lastBlock(twister_big_ctx_t* ctx, const void* msg, uint16_t len
 
 /*********************************************************************/
 
-void twister_big_ctx2hash(void* dest, twister_big_ctx_t* ctx, uint16_t hashsize_b){
+void twister_large_ctx2hash(void* dest, twister_large_ctx_t* ctx, uint16_t hashsize_b){
 	twister_ctx2hash(dest, &(ctx->state), hashsize_b);
 }
 
@@ -159,39 +159,39 @@ void twister_big_ctx2hash(void* dest, twister_big_ctx_t* ctx, uint16_t hashsize_
 /*********************************************************************/
 
 void twister384_init(twister384_ctx_t* ctx){
-	twister_big_init(ctx, 384);
+	twister_large_init(ctx, 384);
 }
 
 /*********************************************************************/
 
 void twister384_nextBlock(twister384_ctx_t* ctx, const void* msg){
-	twister_big_nextBlock(ctx, msg);
+	twister_large_nextBlock(ctx, msg);
 }
 
 /*********************************************************************/
 
 void twister384_lastBlock(twister384_ctx_t* ctx, const void* msg, uint16_t length_b){
-	twister_big_lastBlock(ctx, msg, length_b);
+	twister_large_lastBlock(ctx, msg, length_b);
 }
 
 /*********************************************************************/
 
 void twister384_ctx2hash(void* dest, twister384_ctx_t* ctx){
-	twister_big_ctx2hash(dest, ctx, 384);
+	twister_large_ctx2hash(dest, ctx, 384);
 }
 
 /*********************************************************************/
 
 void twister384(void* dest, const void* msg, uint32_t msg_length_b){
-	twister_big_ctx_t ctx;
-	twister_big_init(&ctx, 384);
+	twister_large_ctx_t ctx;
+	twister_large_init(&ctx, 384);
 	while(msg_length_b >=512){
-		twister_big_nextBlock(&ctx, msg);
+		twister_large_nextBlock(&ctx, msg);
 		msg = (uint8_t*)msg + 512/8;
 		msg_length_b -= 512;
 	}
-	twister_big_lastBlock(&ctx, msg, msg_length_b);
-	twister_big_ctx2hash(dest, &ctx, 384);
+	twister_large_lastBlock(&ctx, msg, msg_length_b);
+	twister_large_ctx2hash(dest, &ctx, 384);
 }
 
 /*********************************************************************/
@@ -199,39 +199,39 @@ void twister384(void* dest, const void* msg, uint32_t msg_length_b){
 
 
 void twister512_init(twister512_ctx_t* ctx){
-	twister_big_init(ctx, 512);
+	twister_large_init(ctx, 512);
 }
 
 /*********************************************************************/
 
 void twister512_nextBlock(twister512_ctx_t* ctx, const void* msg){
-	twister_big_nextBlock(ctx, msg);
+	twister_large_nextBlock(ctx, msg);
 }
 
 /*********************************************************************/
 
 void twister512_lastBlock(twister512_ctx_t* ctx, const void* msg, uint16_t length_b){
-	twister_big_lastBlock(ctx, msg, length_b);
+	twister_large_lastBlock(ctx, msg, length_b);
 }
 
 /*********************************************************************/
 
 void twister512_ctx2hash(void* dest, twister512_ctx_t* ctx){
-	twister_big_ctx2hash(dest, ctx, 512);
+	twister_large_ctx2hash(dest, ctx, 512);
 }
 
 /*********************************************************************/
 
 void twister512(void* dest, const void* msg, uint32_t msg_length_b){
-	twister_big_ctx_t ctx;
-	twister_big_init(&ctx, 512);
+	twister_large_ctx_t ctx;
+	twister_large_init(&ctx, 512);
 	while(msg_length_b >=512){
-		twister_big_nextBlock(&ctx, msg);
+		twister_large_nextBlock(&ctx, msg);
 		msg = (uint8_t*)msg + 512/8;
 		msg_length_b -= 512;
 	}
-	twister_big_lastBlock(&ctx, msg, msg_length_b);
-	twister_big_ctx2hash(dest, &ctx, 512);
+	twister_large_lastBlock(&ctx, msg, msg_length_b);
+	twister_large_ctx2hash(dest, &ctx, 512);
 }
 
 

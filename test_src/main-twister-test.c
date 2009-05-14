@@ -27,6 +27,7 @@
 #include "debug.h"
 
 #include "twister-small.h"
+#include "twister-large.h"
 #include "nessie_hash_test.h"
 #include "performance_test.h"
 #include "hfal_twister224.h"

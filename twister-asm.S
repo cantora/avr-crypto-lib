@@ -301,7 +301,7 @@ TMP_SAVE1  = 17
 
 .global twister_ctx2hash
 .global twister_small_ctx2hash
-.global twister_big_ctx2hash
+.global twister_large_ctx2hash
 .global twister224_ctx2hash
 .global twister256_ctx2hash
 .global twister384_ctx2hash
@@ -327,7 +327,7 @@ twister512_ctx2hash:
 	ldi r21, hi8(512)
 ;	rjmp twister_ctx2hash
 
-twister_big_ctx2hash:
+twister_large_ctx2hash:
 twister_small_ctx2hash:
 twister_ctx2hash:
 	push_range 10, 17
