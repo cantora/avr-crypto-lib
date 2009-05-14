@@ -29,6 +29,8 @@
 #include "sha256.h"
 #include "nessie_hash_test.h"
 #include "performance_test.h"
+#include "hfal-performance.h"
+#include "hfal-nessie.h"
 
 #include <stdint.h>
 #include <string.h>
@@ -40,58 +42,21 @@
 
 char* algo_name = "SHA-256";
 
+const hfdesc_t* algolist[] PROGMEM = {
+	(hfdesc_t*)&sha256_desc,
+	NULL
+};
+
 /*****************************************************************************
  *  additional validation-functions											 *
  *****************************************************************************/
 
 void testrun_nessie_sha256(void){
-	nessie_hash_ctx.hashsize_b  = 256;
-	nessie_hash_ctx.blocksize_B = 512/8;
-	nessie_hash_ctx.ctx_size_B  = sizeof(sha256_ctx_t);
-	nessie_hash_ctx.name = algo_name;
-	nessie_hash_ctx.hash_init = (nessie_hash_init_fpt)sha256_init;
-	nessie_hash_ctx.hash_next = (nessie_hash_next_fpt)sha256_nextBlock;
-	nessie_hash_ctx.hash_last = (nessie_hash_last_fpt)sha256_lastBlock;
-	nessie_hash_ctx.hash_conv = (nessie_hash_conv_fpt)sha256_ctx2hash;
-	
-	nessie_hash_run();
+	hfal_nessie_multiple(algolist);
 }
 
 void testrun_performance_sha256(void){
-	uint64_t t;
-	char str[16];
-	uint8_t data[32];
-	sha256_ctx_t ctx;
-	
-	calibrateTimer();
-	print_overhead();
-	
-	memset(data, 0, 32);
-	
-	startTimer(1);
-	sha256_init(&ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tctx-gen time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	
-	
-	startTimer(1);
-	sha256_nextBlock(&ctx, data);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tone-block time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	
-	
-	startTimer(1);
-	sha256_lastBlock(&ctx, data, 0);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tlast block time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	
-	cli_putstr_P(PSTR("\r\n"));
+	hfal_performance_multiple(algolist);
 }
 
 /*****************************************************************************
@@ -106,11 +71,6 @@ const char shavs_list_str[]  PROGMEM = "shavs_list";
 const char shavs_set_str[]   PROGMEM = "shavs_set";
 const char shavs_test1_str[] PROGMEM = "shavs_test1";
 const char dump_str[]        PROGMEM = "dump";
-
-const hfdesc_t* algolist[] PROGMEM = {
-	(hfdesc_t*)&sha256_desc,
-	NULL
-};
 
 cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ nessie_str,          NULL, testrun_nessie_sha256},

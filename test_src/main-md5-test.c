@@ -29,6 +29,8 @@
 #include "md5.h"
 #include "nessie_hash_test.h"
 #include "performance_test.h"
+#include "hfal_md5.h"
+#include "hfal-performance.h"
 
 #include <stdint.h>
 #include <string.h>
@@ -36,6 +38,11 @@
 #include "cli.h"
 
 char* algo_name = "MD5";
+
+const hfdesc_t* algolist[] PROGMEM = {
+	(hfdesc_t*)&md5_desc,
+	NULL
+};
 
 /*****************************************************************************
  *  additional validation-functions											 *
@@ -111,40 +118,7 @@ void testrun_md5(void){
 
 
 void testrun_performance_md5(void){
-	uint64_t t;
-	char str[16];
-	uint8_t data[32];
-	md5_ctx_t ctx;
-	
-	calibrateTimer();
-	print_overhead();
-	
-	memset(data, 0, 32);
-	
-	startTimer(1);
-	md5_init(&ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tctx-gen time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	
-	
-	startTimer(1);
-	md5_nextBlock(&ctx, data);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tone-block time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	
-	
-	startTimer(1);
-	md5_lastBlock(&ctx, data, 0);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tlast block time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	
-	cli_putstr_P(PSTR("\r\n"));
+	hfal_performance_multiple(algolist);
 }
 
 

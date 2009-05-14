@@ -34,6 +34,9 @@
 #include "shavs.h"
 #include "nessie_hash_test.h"
 #include "performance_test.h"
+#include "hfal-nessie.h"
+#include "hfal-performance.h"
+#include "hfal-test.h"
 
 #include <stdint.h>
 #include <string.h>
@@ -41,189 +44,41 @@
 
 char* algo_name = "BlueMidnightWish";
 
+
+const hfdesc_t* algolist[] PROGMEM = {
+	(hfdesc_t*)&bmw224_desc,
+	(hfdesc_t*)&bmw256_desc,
+	(hfdesc_t*)&bmw384_desc,
+	(hfdesc_t*)&bmw512_desc,
+	NULL
+};
+
 /*****************************************************************************
  *  additional validation-functions											 *
  *****************************************************************************/
 
 void performance_bmw(void){
-	uint64_t t;
-	char str[16];
-	uint8_t data[128];
-	uint8_t hash[512/8];
-	bmw_small_ctx_t ctx1;
-	bmw_large_ctx_t ctx2;
-
-	calibrateTimer();
-	print_overhead();
-	
-	memset(data, 0, 64);
-	
-	startTimer(1);
-	bmw224_init(&ctx1);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tctx-gen time (224): "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	
-	startTimer(1);
-	bmw256_init(&ctx1);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tctx-gen time (256): "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	
-	startTimer(1);
-	bmw384_init(&ctx2);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tctx-gen time (384): "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	
-	startTimer(1);
-	bmw512_init(&ctx2);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tctx-gen time (512): "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-		
-	startTimer(1);
-	bmw_small_nextBlock(&ctx1, data);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tone-block (small) time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	
-	startTimer(1);
-	bmw_large_nextBlock(&ctx2, data);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tone-block (large) time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	
-	startTimer(1);
-	bmw_small_lastBlock(&ctx1, data, 0);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tlast block (small) time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	
-	startTimer(1);
-	bmw_large_lastBlock(&ctx2, data, 0);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tlast block (large) time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	
-	startTimer(1);
-	bmw224_ctx2hash(hash, &ctx1);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tctx2hash time (224): "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	
-	startTimer(1);
-	bmw256_ctx2hash(hash, &ctx1);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tctx2hash time (256): "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	
-	startTimer(1);
-	bmw384_ctx2hash(hash, &ctx2);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tctx2hash time (384): "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	
-	startTimer(1);
-	bmw512_ctx2hash(hash, &ctx2);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tctx2hash time (512): "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-		
-	cli_putstr_P(PSTR("\r\n"));
+	hfal_performance_multiple(algolist);
 }
 
 void testrun_nessie_bmw(void){
-	nessie_hash_ctx.hashsize_b  = 224;
-	nessie_hash_ctx.name = "BlueMidnigthWish-224";
-	nessie_hash_ctx.blocksize_B = 512/8;
-	nessie_hash_ctx.ctx_size_B  = sizeof(bmw224_ctx_t);
-	nessie_hash_ctx.hash_init = (nessie_hash_init_fpt)bmw224_init;
-	nessie_hash_ctx.hash_next = (nessie_hash_next_fpt)bmw224_nextBlock;
-	nessie_hash_ctx.hash_last = (nessie_hash_last_fpt)bmw224_lastBlock;
-	nessie_hash_ctx.hash_conv = (nessie_hash_conv_fpt)bmw224_ctx2hash;
-	
-	nessie_hash_run();
-	
-	nessie_hash_ctx.hashsize_b  = 256;
-	nessie_hash_ctx.name = "BlueMidnigthWish-256";
-	nessie_hash_ctx.blocksize_B = 512/8;
-	nessie_hash_ctx.ctx_size_B  = sizeof(bmw256_ctx_t);
-	nessie_hash_ctx.hash_init = (nessie_hash_init_fpt)bmw256_init;
-	nessie_hash_ctx.hash_next = (nessie_hash_next_fpt)bmw256_nextBlock;
-	nessie_hash_ctx.hash_last = (nessie_hash_last_fpt)bmw256_lastBlock;
-	nessie_hash_ctx.hash_conv = (nessie_hash_conv_fpt)bmw256_ctx2hash;
-	
-	nessie_hash_run();
-	
-	nessie_hash_ctx.hashsize_b  = 384;
-	nessie_hash_ctx.name = "BlueMidnigthWish-384";
-	nessie_hash_ctx.blocksize_B = 1024/8;
-	nessie_hash_ctx.ctx_size_B  = sizeof(bmw384_ctx_t);
-	nessie_hash_ctx.hash_init = (nessie_hash_init_fpt)bmw384_init;
-	nessie_hash_ctx.hash_next = (nessie_hash_next_fpt)bmw384_nextBlock;
-	nessie_hash_ctx.hash_last = (nessie_hash_last_fpt)bmw384_lastBlock;
-	nessie_hash_ctx.hash_conv = (nessie_hash_conv_fpt)bmw384_ctx2hash;
-	
-	nessie_hash_run();
-	
-	nessie_hash_ctx.hashsize_b  = 512;
-	nessie_hash_ctx.name = "BlueMidnigthWish-512";
-	nessie_hash_ctx.blocksize_B = 1024/8;
-	nessie_hash_ctx.ctx_size_B  = sizeof(bmw512_ctx_t);
-	nessie_hash_ctx.hash_init = (nessie_hash_init_fpt)bmw512_init;
-	nessie_hash_ctx.hash_next = (nessie_hash_next_fpt)bmw512_nextBlock;
-	nessie_hash_ctx.hash_last = (nessie_hash_last_fpt)bmw512_lastBlock;
-	nessie_hash_ctx.hash_conv = (nessie_hash_conv_fpt)bmw512_ctx2hash;
-	
-	nessie_hash_run();
+	hfal_nessie_multiple(algolist);
 }
+
 void bmw224_test(void* msg, uint32_t length_b){
-	uint8_t diggest[224/8];
-	cli_putstr_P(PSTR("\r\n=== BMW224 test ===\r\n message:\r\n"));
-	cli_hexdump_block(msg, (length_b+7)/8, 4, 16);
-	bmw224(diggest, msg, length_b);
-	cli_putstr_P(PSTR("\r\n diggest:\r\n"));
-	cli_hexdump_block(diggest, 224/8, 4, 16);
+	hfal_test(&bmw224_desc, msg, length_b);
 }
 
 void bmw256_test(void* msg, uint32_t length_b){
-	uint8_t diggest[256/8];
-	cli_putstr_P(PSTR("\r\n=== BMW256 test ===\r\n message:\r\n"));
-	cli_hexdump_block(msg, (length_b+7)/8, 4, 16);
-	bmw256(diggest, msg, length_b);
-	cli_putstr_P(PSTR("\r\n diggest:\r\n"));
-	cli_hexdump_block(diggest, 256/8, 4, 16);
+	hfal_test(&bmw256_desc, msg, length_b);
 }
 
 void bmw384_test(void* msg, uint32_t length_b){
-	uint8_t diggest[384/8];
-	cli_putstr_P(PSTR("\r\n=== BMW384 test ===\r\n message:\r\n"));
-	cli_hexdump_block(msg, (length_b+7)/8, 4, 16);
-	bmw384(diggest, msg, length_b);
-	cli_putstr_P(PSTR("\r\n diggest:\r\n"));
-	cli_hexdump_block(diggest, 384/8, 4, 16);
+	hfal_test(&bmw384_desc, msg, length_b);
 }
 
 void bmw512_test(void* msg, uint32_t length_b){
-	uint8_t diggest[512/8];
-	cli_putstr_P(PSTR("\r\n=== BMW512 test ===\r\n message:\r\n"));
-	cli_hexdump_block(msg, (length_b+7)/8, 4, 16);
-	bmw512(diggest, msg, length_b);
-	cli_putstr_P(PSTR("\r\n diggest:\r\n"));
-	cli_hexdump_block(diggest, 512/8, 4, 16);
+	hfal_test(&bmw512_desc, msg, length_b);
 }
 
 void testrun_stdtest_bmw(void){
@@ -252,14 +107,6 @@ void testlshort(void){
 /*****************************************************************************
  *  main																	 *
  *****************************************************************************/
-
-const hfdesc_t* algolist[] PROGMEM = {
-	(hfdesc_t*)&bmw224_desc,
-	(hfdesc_t*)&bmw256_desc,
-	(hfdesc_t*)&bmw384_desc,
-	(hfdesc_t*)&bmw512_desc,
-	NULL
-};
 
 const char nessie_str[]      PROGMEM = "nessie";
 const char test_str[]        PROGMEM = "test";

@@ -28,7 +28,8 @@
 
 #include "sha1.h"
 #include "nessie_hash_test.h"
-#include "performance_test.h"
+#include "hfal_sha1.h"
+#include "hfal-performance.h"
 
 #include <stdint.h>
 #include <string.h>
@@ -40,6 +41,10 @@
 
 char* algo_name = "SHA-1";
 
+const hfdesc_t* algolist[] PROGMEM = {
+	(hfdesc_t*)&sha1_desc,
+	NULL
+};
 /*****************************************************************************
  *  additional validation-functions											 *
  *****************************************************************************/
@@ -119,40 +124,7 @@ void testrun_sha1_2(void){
 
 
 void testrun_performance_sha1(void){
-	uint64_t t;
-	char str[16];
-	uint8_t data[32];
-	sha1_ctx_t ctx;
-	
-	calibrateTimer();
-	print_overhead();
-	
-	memset(data, 0, 32);
-	
-	startTimer(1);
-	sha1_init(&ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tctx-gen time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	
-	
-	startTimer(1);
-	sha1_nextBlock(&ctx, data);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tone-block time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	
-	
-	startTimer(1);
-	sha1_lastBlock(&ctx, data, 0);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tlast block time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	
-	cli_putstr_P(PSTR("\r\n"));
+	hfal_performance_multiple(algolist);
 }
 
 
@@ -182,11 +154,6 @@ cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ shavs_test1_str,     NULL, shavs_test1},
 	{ dump_str,        (void*)1, (void_fpt)dump},
 	{ NULL,                NULL, NULL}
-};
-
-const hfdesc_t* algolist[] PROGMEM = {
-	(hfdesc_t*)&sha1_desc,
-	NULL
 };
 
 int main (void){

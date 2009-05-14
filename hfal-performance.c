@@ -60,6 +60,7 @@ void hfal_performance(const hfdesc_t* hd){
 	cli_putstr_P(PSTR("\r\n\r\n === "));
 	cli_putstr_P(hf.name);
 	cli_putstr_P(PSTR(" performance === "
+	                  "\r\n    type:                     hash"
 	                  "\r\n    hashsize (bits):    "));
 	printvalue(hf.hashsize_b);
 	
