@@ -1,0 +1,7 @@
+# ExtremelyLongMsgKAT_256.txt
+# Algorithm Name: Twister
+# Principal Submitter: Michael Gorski
+
+Repeat = 16777216
+Text = abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmno
+MD = C2EF0A386154AB0A34137799053C37D9A66CA4919FBC6DECA873AE7580CAF132
