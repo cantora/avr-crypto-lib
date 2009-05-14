@@ -117,7 +117,7 @@ void twister_inject_chksum(twister_big_ctx_t* ctx, uint8_t col){
 
 void twister_big_lastBlock(twister_big_ctx_t* ctx, const void* msg, uint16_t length_b){
 	uint8_t tmp[64];	
-	while(length_b>512){
+	while(length_b>=512){
 		twister_big_nextBlock(ctx, msg);
 		msg = ((uint8_t*)msg)+64;
 		length_b -= 512;

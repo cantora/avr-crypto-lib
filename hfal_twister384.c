@@ -28,7 +28,7 @@
 #include <avr/pgmspace.h>
 #include <stdlib.h>
 #include "hashfunction_descriptor.h"
-#include "twister384.h"
+#include "twister-big.h"
 
 static const char twister384_str[]   PROGMEM = "Twister-384";
 

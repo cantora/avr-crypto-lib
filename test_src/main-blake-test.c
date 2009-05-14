@@ -96,109 +96,8 @@ void testlshort(void){
 	blake64_test("", 8);
 }
 
+
 void performance_blake(void){
-	uint64_t t;
-	char str[16];
-	uint8_t data[64];
-	uint8_t hash[512/8];
-	blake_small_ctx_t ctx;
-	blake_large_ctx_t ctx2;
-	
-	calibrateTimer();
-	print_overhead();
-	
-	memset(data, 0, 64);
-	
-	
-	startTimer(1);
-	blake28_init(&ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tctx-gen time (224): "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	
-	startTimer(1);
-	blake32_init(&ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tctx-gen time (256): "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-
-	startTimer(1);
-	blake48_init(&ctx2);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tctx-gen time (384): "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	
-	startTimer(1);
-	blake64_init(&ctx2);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tctx-gen time (512): "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-		
-	startTimer(1);
-	blake_small_nextBlock(&ctx, data);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tone-block (small) time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	
-	startTimer(1);
-	blake_large_nextBlock(&ctx2, data);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tone-block (large) time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-		
-	startTimer(1);
-	blake_small_lastBlock(&ctx, data, 0);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tlast block (small) time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	
-	startTimer(1);
-	blake_large_lastBlock(&ctx2, data, 0);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tlast block (large) time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	
-	startTimer(1);
-	blake28_ctx2hash(hash, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tctx2hash time (224): "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	
-	startTimer(1);
-	blake32_ctx2hash(hash, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tctx2hash time (256): "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-
-	startTimer(1);
-	blake48_ctx2hash(hash, &ctx2);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tctx2hash time (384): "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	
-	startTimer(1);
-	blake64_ctx2hash(hash, &ctx2);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tctx2hash time (512): "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-		
-	cli_putstr_P(PSTR("\r\n"));
-
-}
-
-void autoperformance_blake(void){
 	hfal_performance_multiple(algolist);
 }
 
@@ -212,7 +111,6 @@ const char test_str[]         PROGMEM = "test";
 const char testshort_str[]    PROGMEM = "short";
 const char testlshort_str[]   PROGMEM = "lshort";
 const char performance_str[]  PROGMEM = "performance";
-const char aperformance_str[] PROGMEM = "autoperformance";
 const char echo_str[]         PROGMEM = "echo";
 const char shavs_list_str[]   PROGMEM = "shavs_list";
 const char shavs_set_str[]    PROGMEM = "shavs_set";
@@ -224,7 +122,6 @@ cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ testshort_str,       NULL, testshort},
 	{ testlshort_str,      NULL, testlshort},
 	{ performance_str,     NULL, performance_blake},
-	{ aperformance_str,    NULL, autoperformance_blake},
 	{ shavs_list_str,      NULL, shavs_listalgos},
 	{ shavs_set_str,   (void*)1, (void_fpt)shavs_setalgo},
 	{ shavs_test1_str,     NULL, shavs_test1},
