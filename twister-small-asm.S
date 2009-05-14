@@ -123,15 +123,15 @@ twister_small_lastBlock:
 	movw r30, TMP_SAVE0	
 	ldi r20, 0x80
 	sub r19, r18 /* r18: bytes to copy, r19: bytes to clear */
-	
+
 	ld r0, X+	
-3:
-	tst r18
+3:	tst r18
 	breq 4f
+31:
 	st Z+, r0
 	ld r0, X+
 	dec r18
-	
+	brne 31b
 4:	
 	mov r18, LEN_SAVE0
 	andi r18, 0x07
@@ -146,11 +146,14 @@ twister_small_lastBlock:
 
 5:
 	st Z+, r20	
+
+	tst r19
+	breq 7f
 6:	
 	st Z+, r1
 	dec r19
 	brne 6b
-	
+7:	
 	movw r24, CTX_SAVE0
 	movw r22, TMP_SAVE0
 	rcall twister_small_nextBlock

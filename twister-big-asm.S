@@ -405,10 +405,11 @@ twister_big_lastBlock:
 3:
 	tst r18
 	breq 4f
+31:
 	st Z+, r0
 	ld r0, X+
 	dec r18
-	
+	brne 31b
 4:	
 	mov r18, LEN_SAVE0
 	andi r18, 0x07
@@ -423,11 +424,13 @@ twister_big_lastBlock:
 
 5:
 	st Z+, r20	
+	tst r19
+	breq 7f
 6:	
 	st Z+, r1
 	dec r19
 	brne 6b
-	
+7:	
 	movw r24, CTX_SAVE0
 	movw r22, TMP_SAVE0
 	rcall twister_big_nextBlock
