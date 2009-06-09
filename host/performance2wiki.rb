@@ -57,7 +57,7 @@ def process_hashfunction(fin, name)
   m = lb.match(/ctx2hash \(cycles\):[\s]*([\d]*)/)
   convtime = m[1].to_i()
   
-  printf("| %20s || %3s || %3s || || %4d || %4d || %4d ||" +
+  printf("| %20s || %3s || %3s || || %4d || || %4d || %4d ||" +
          " %6d || %6d || %7.2f || %6d || || || \n|-\n" , 
         name, $lang, $lang ,ctxsize, hashsize, blocksize, 
 	    inittime, nextblocktime, nextblocktime.to_f/blocksize*8,

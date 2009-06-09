@@ -57,7 +57,7 @@ def send_md(md_string)
     $sp.print(md_string[i].chr)
 #	print("DBG s: "+ md_string[i].chr) if $debug
 	if(i%20==19)
-		sleep(0.01)
+		sleep(0.015)
 	end		
   end
 end
