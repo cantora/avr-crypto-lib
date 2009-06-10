@@ -40,7 +40,7 @@
 
 #if DEBUG
  #include "cli.h"
- void dump_m(uint8_t* m){
+ void dump_m(const uint8_t* m){
 	 uint8_t i,j;
 	 for(i=0; i<8; ++i){
 		cli_putstr_P(PSTR("\r\n"));
@@ -70,7 +70,7 @@ void groestl_small_rounds(uint8_t *m, uint8_t q){
 	uint8_t tmp[8];
 	for(r=0; r<ROUNDS; ++r){
 		if(q){
-			m[8*7] ^= 0xff ^ r;
+			m[7] ^= 0xff ^ r;
 		}else{
 			m[0] ^= r;
 		}
@@ -84,9 +84,10 @@ void groestl_small_rounds(uint8_t *m, uint8_t q){
 			m[i] = pgm_read_byte(aes_sbox+m[i]);
 		}
 		for(i=1; i<8; ++i){
-			memcpy(tmp, m+8*i, 8);
+			for(j=0; j<8; ++j)
+				tmp[j] = m[i+8*j];
 			for(j=0; j<8; ++j){
-				m[8*i+(j-i+8)%8] = tmp[j];
+				m[i+((j-i+8)%8)*8] = tmp[j];
 			}
 		}
 #if DEBUG		
@@ -96,11 +97,9 @@ void groestl_small_rounds(uint8_t *m, uint8_t q){
 		}
 #endif 		
 		for(i=0; i<8; ++i){
+			memcpy(tmp, m+8*i, 8);
 			for(j=0; j<8; ++j){
-				tmp[j] = m[j*8+i];
-			}
-			for(j=0; j<8; ++j){
-				m[j*8+i] = gf256mul(pgm_read_byte(matrix+8*j+0),tmp[0], POLYNOM)
+				m[j+i*8] = gf256mul(pgm_read_byte(matrix+8*j+0),tmp[0], POLYNOM)
 				        ^ gf256mul(pgm_read_byte(matrix+8*j+1),tmp[1], POLYNOM)
 				        ^ gf256mul(pgm_read_byte(matrix+8*j+2),tmp[2], POLYNOM)
 				        ^ gf256mul(pgm_read_byte(matrix+8*j+3),tmp[3], POLYNOM)
@@ -108,7 +107,7 @@ void groestl_small_rounds(uint8_t *m, uint8_t q){
 				        ^ gf256mul(pgm_read_byte(matrix+8*j+5),tmp[5], POLYNOM)
 				        ^ gf256mul(pgm_read_byte(matrix+8*j+6),tmp[6], POLYNOM)
 				        ^ gf256mul(pgm_read_byte(matrix+8*j+7),tmp[7], POLYNOM);
-						}
+			}
 		}
 #if DEBUG
 		if(r<2){
@@ -127,18 +126,19 @@ void groestl224_init(groestl224_ctx_t* ctx){
 
 void groestl256_init(groestl256_ctx_t* ctx){
 	memset(ctx->h, 0, 8*8);
-	ctx->h[8*7-1] = 1;
+	ctx->h[8*8-2] = 1;
 	ctx->counter = 0;
 }
 
 void groestl_small_nextBlock(groestl_small_ctx_t* ctx, const void* block){
 	uint8_t tmp1[64], tmp2[65];
-	uint8_t i,j;
-	for(i=0; i<8; ++i){
+/*	for(i=0; i<8; ++i){
 		for(j=0; j<8; ++j){
 			tmp1[j*8+i] = ((uint8_t*)block)[i*8+j];
 		}
 	}
+*/ 
+	memcpy(tmp1, block, 64);
 	memcpy(tmp2, tmp1, 64);
 	memxor(tmp1, ctx->h, 64);
 	groestl_small_rounds(tmp1, 0);
@@ -163,24 +163,23 @@ void groestl_small_lastBlock(groestl_small_ctx_t* ctx, const void* block, uint16
 		memset(buffer, 0, 64-4);
 	}
 	ctx->counter++;
-	buffer[64-1] = (uint8_t)(ctx->counter);
-	buffer[64-2] = (uint8_t)((ctx->counter)>>8);
-	buffer[64-3] = (uint8_t)((ctx->counter)>>16);
-	buffer[64-4] = (uint8_t)((ctx->counter)>>24);
+	buffer[64-1]  = (uint8_t)(ctx->counter);
+	buffer[64-2]  = (uint8_t)((ctx->counter)>>8);
+	buffer[64-3]  = (uint8_t)((ctx->counter)>>16);
+	buffer[64-4]  = (uint8_t)((ctx->counter)>>24);
 	groestl_small_nextBlock(ctx, buffer);
 }
 
 void groestl_small_ctx2hash(void* dest, const groestl_small_ctx_t* ctx, uint16_t outlength_b){
 	uint8_t tmp[64];
-	uint8_t i,a,b;
 	memcpy(tmp, ctx->h, 64);
 	groestl_small_rounds(tmp, 0);
 	memxor(tmp, ctx->h, 64);
-	for(i=0; i<outlength_b/8; ++i){
-		a = (64-i-1)%8;
-		b = (64-i-1)/8;
-		((uint8_t*)dest)[outlength_b/8-1-i] = tmp[a*8+b];
-	}
+#if DEBUG
+	cli_putstr_P(PSTR("\r\npost finalisation"));
+	dump_m(tmp);
+#endif		
+	memcpy(dest, tmp+64-outlength_b/8, outlength_b/8);
 }
 
 void groestl224_ctx2hash(void* dest, const groestl224_ctx_t* ctx){
