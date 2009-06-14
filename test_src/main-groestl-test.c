@@ -27,9 +27,9 @@
 #include "debug.h"
 
 #include "groestl_small.h"
-//#include "groestl_large.h"
+#include "groestl_large.h"
 #include "hfal_groestl_small.h"
-//#include "hfal_groestl_large.h"
+#include "hfal_groestl_large.h"
 #include "hfal-nessie.h"
 #include "hfal-test.h"
 #include "hfal-performance.h"
@@ -48,8 +48,8 @@ char* algo_name = "Groestl";
 const hfdesc_t* algolist[] PROGMEM = {
 	(hfdesc_t*)&groestl224_desc,
 	(hfdesc_t*)&groestl256_desc,
-//	(hfdesc_t*)&groestl384_desc,
-//	(hfdesc_t*)&groestl512_desc,
+	(hfdesc_t*)&groestl384_desc,
+	(hfdesc_t*)&groestl512_desc,
 	NULL
 };
 
@@ -67,7 +67,7 @@ void groestl224_test(void* msg, uint32_t length_b){
 void groestl256_test(void* msg, uint32_t length_b){
 	hfal_test(&groestl256_desc, msg, length_b);
 }
-/*
+
 void groestl384_test(void* msg, uint32_t length_b){
 	hfal_test(&groestl384_desc, msg, length_b);
 }
@@ -75,7 +75,7 @@ void groestl384_test(void* msg, uint32_t length_b){
 void groestl512_test(void* msg, uint32_t length_b){
 	hfal_test(&groestl512_desc, msg, length_b);
 }
-*/
+
 
 void testrun_stdtest_groestl(void){
 	uint8_t msg1[144]; 
@@ -84,12 +84,10 @@ void testrun_stdtest_groestl(void){
 	groestl224_test(msg1, 576);
 	groestl256_test("", 8);
 	groestl256_test(msg1, 576);
-/*
 	groestl384_test("", 8);
 	groestl384_test(msg1, 1152);
 	groestl512_test("", 8);
 	groestl512_test(msg1, 1152);
-*/
 }
 
 void testshort(void){
@@ -97,7 +95,7 @@ void testshort(void){
 }
 
 void testlshort(void){
-//	groestl512_test("", 8);
+	groestl512_test("abc", 24);
 }
 
 

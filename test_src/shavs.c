@@ -140,8 +140,14 @@ void shavs_test1(void){
 	}
 	
 	buffersize_B=pgm_read_word(&(shavs_algo->blocksize_b))/8;
+	cli_putstr_P(PSTR("\r\nbuffer allocated for 0x"));
+	cli_hexdump(&buffersize_B, 2);
+	cli_putstr_P(PSTR(" bytes"));
 	buffer = malloc(buffersize_B);
-
+	if(buffer==NULL){
+		cli_putstr_P(PSTR("\r\n allocating memory for buffer failed!"));
+		return;
+	}
 	for(;;){
 		blocks = 0;
 		do{	
@@ -175,8 +181,15 @@ void shavs_test1(void){
 		buffer_idx = 0;
 		in_byte=0;
 		len_set = 0;
-		
-		hfal_hash_init(shavs_algo, &ctx);
+		uint8_t ret;
+		cli_putstr_P(PSTR("\r\n HFAL init"));
+		ret = hfal_hash_init(shavs_algo, &ctx);
+		if(ret){
+			cli_putstr_P(PSTR("\r\n HFAL init returned with: "));
+			cli_hexdump(&ret, 1);
+			free(buffer);
+			return;
+		}
 		cli_putstr_P(PSTR("\r\n"));
 		while((c=cli_getc_cecho())!='M' && c!='m'){
 			if(!isblank(c)){
@@ -208,6 +221,9 @@ void shavs_test1(void){
 		buffer_idx=0;
 		while(expect_input>0){
 			c=cli_getc_cecho();
+			cli_putstr_P(PSTR("+("));
+			cli_hexdump_rev((uint8_t*)&expect_input, 4);
+			cli_putstr_P(PSTR(") "));
 			if(buffer_add(c)==0){
 				--expect_input;		
 			}else{
@@ -220,9 +236,13 @@ void shavs_test1(void){
 				}
 			}
 		}
+		cli_putstr_P(PSTR("\r\n starting finalisation"));
 		uint8_t diggest[pgm_read_word(shavs_algo->hashsize_b)/8];
+		cli_putstr_P(PSTR("\r\n starting last block"));
 		hfal_hash_lastBlock(&ctx, buffer, length-blocks*(buffersize_B*8));
+		cli_putstr_P(PSTR("\r\n starting ctx2hash"));
 		hfal_hash_ctx2hash(diggest, &ctx);
+		cli_putstr_P(PSTR("\r\n starting hash free"));
 		hfal_hash_free(&ctx);
 		cli_putstr_P(PSTR("\r\n MD = "));
 		cli_hexdump(diggest, pgm_read_word(&(shavs_algo->hashsize_b))/8);

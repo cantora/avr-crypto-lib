@@ -2,7 +2,7 @@
 # shavs_test.rb
 =begin
     This file is part of the AVR-Crypto-Lib.
-    Copyright (C) 2008  Daniel Otte (daniel.otte@rub.de)
+    Copyright (C) 2008, 2009  Daniel Otte (daniel.otte@rub.de)
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,7 +18,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
-$debug = false
+$debug = true;
+$debug = false;
 require 'rubygems'
 require 'serialport'
 
@@ -57,7 +58,7 @@ def send_md(md_string)
     $sp.print(md_string[i].chr)
 #	print("DBG s: "+ md_string[i].chr) if $debug
 	if(i%20==19)
-		sleep(0.015)
+		sleep(0.1)
 	end		
   end
 end
@@ -71,6 +72,7 @@ def run_test(filename)
   pos = 0
   file = File.new(filename, "r");
   until file.eof
+    sleep(0.5)
     begin
       lb=file.gets()
     end while not (file.eof or (/[\s]*Len[\s]*=.*/.match(lb)))

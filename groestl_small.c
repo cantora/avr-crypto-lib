@@ -54,7 +54,7 @@
  #define dump_m(m)
 #endif
 
-uint8_t matrix[] PROGMEM = {
+static uint8_t matrix[] PROGMEM = {
  2, 2, 3, 4, 5, 3, 5, 7,
  7, 2, 2, 3, 4, 5, 3, 5,
  5, 7, 2, 2, 3, 4, 5, 3,
@@ -131,7 +131,7 @@ void groestl256_init(groestl256_ctx_t* ctx){
 }
 
 void groestl_small_nextBlock(groestl_small_ctx_t* ctx, const void* block){
-	uint8_t tmp1[64], tmp2[65];
+	uint8_t tmp1[64], tmp2[64];
 /*	for(i=0; i<8; ++i){
 		for(j=0; j<8; ++j){
 			tmp1[j*8+i] = ((uint8_t*)block)[i*8+j];
@@ -152,7 +152,7 @@ void groestl_small_lastBlock(groestl_small_ctx_t* ctx, const void* block, uint16
 	uint8_t buffer[64];
 	while(length_b>=GROESTL_SMALL_BLOCKSIZE){
 		groestl_small_nextBlock(ctx, block);
-		length_b -= GROESTL224_BLOCKSIZE;
+		length_b -= GROESTL_SMALL_BLOCKSIZE;
 		block = (uint8_t*)block + GROESTL_SMALL_BLOCKSIZE_B;
 	}
 	memset(buffer, 0, 64);
