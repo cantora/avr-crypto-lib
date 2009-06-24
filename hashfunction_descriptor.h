@@ -47,7 +47,7 @@ typedef struct {
 	/** mem, function pointer to a function which hashes a message in RAM
 	 *  completely or NULL if there is no such function */
 	hf_mem_fpt mem;
-} hfdesc_t; /* blockcipher descriptor type */
+} hfdesc_t; /* hashfunction descriptor type */
 
 typedef struct{
 	hfdesc_t* desc_ptr;

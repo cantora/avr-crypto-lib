@@ -28,13 +28,13 @@ email:  daniel.otte@rub.de
   * compression algorithm
   * finalization function
  
-3. block cipher API
+3. hash function API
  The API is not always consistent due to the fact that we tried to optimize the
  code for size (flash, heap and stack) and speed (runtime of the different 
  components).
  Generally the API of the implemented block ciphers consists of:
  
- *_init function, which implements the keyschedule
+ *_init      function, which implements the initialisation of the context
  *_nextBlock function, which implements the compression algorithm
  *_lastBlock function, which implements the the padding algorithm
  *_ctx2hash  function, which turns a context into an actual hash value
@@ -45,7 +45,7 @@ email:  daniel.otte@rub.de
  parameter means what. 
   
 3.1.2 sizes in bits and bytes
- Working with cryptographical functions involves working with different 
+ Working with cryptographic functions involves working with different 
  lengths. Some times you want to know it in bits and sometimes in bytes. To 
  reduce frustration and to avoid bugs we suffix a length parameter with either
  _b or _B depending on the meaning. _b means in bits and _B means in bytes 

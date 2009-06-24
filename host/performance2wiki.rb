@@ -60,7 +60,7 @@ def process_hashfunction(fin, name)
   printf("| %20s || %3s || %3s || || %4d || || %4d || %4d ||" +
          " %6d || %6d || %7.2f || %6d || || || \n|-\n" , 
         name, $lang, $lang ,ctxsize, hashsize, blocksize, 
-	    inittime, nextblocktime, nextblocktime.to_f/blocksize*8,
+	    inittime, nextblocktime, nextblocktime.to_f/(blocksize/8),
 		lastblocktime+convtime)
 end
 
