@@ -38,52 +38,14 @@
 
 cli_rx_fpt cli_rx = NULL;
 cli_tx_fpt cli_tx = NULL;
-uint8_t cli_echo=1;
+uint8_t    cli_echo = 1;
 
-void echo_ctrl(char* s);
+void     echo_ctrl(char* s);
 uint16_t max_cmd_length(PGM_VOID_P cmdlist);
-int8_t search_and_call(char* cmd, uint16_t maxcmdlength, PGM_VOID_P cmdlist);
-void cli_option_listing(char* buffer, PGM_VOID_P cmdlist);
-	
+int8_t   search_and_call(char* cmd, uint16_t maxcmdlength, PGM_VOID_P cmdlist);
+void     cli_option_listing(char* buffer, PGM_VOID_P cmdlist);
+void     cli_auto_help(uint16_t maxcmdlength, PGM_VOID_P cmdlist);	
 
-void cli_auto_help(uint16_t maxcmdlength, PGM_VOID_P cmdlist);/*
-{
-	cmdlist_entry_t item;
-	uint16_t i;
-	if(!cli_tx)
-		return;
-	
-	cli_putstr_P(PSTR("\r\n[auto help] available commands:\r\n"
-	                  " <command> - <params> - <address>\r\n"));
-	for(;;){
-		item.cmd_name      = (void*)pgm_read_word(cmdlist+0);
-		item.cmd_param_str = (void*)pgm_read_word(cmdlist+2);
-		item.cmd_function  = (void_fpt)pgm_read_word(cmdlist+4);
-		cmdlist = (uint8_t*)cmdlist+CMDLIST_ENTRY_SIZE;
-		if(item.cmd_name==NULL){
-			return;
-		}
-		cli_tx(' ');
-		cli_putstr_P(item.cmd_name);
-		i=maxcmdlength-strlen_P(item.cmd_name);
-		while(i--)
-			cli_tx(' ');
-		cli_putstr_P(PSTR(" - "));
-		if(item.cmd_param_str==NULL){
-			cli_putstr_P(PSTR("none \t- 0x"));
-		} else {
-			if(item.cmd_param_str==(void*)1){
-				cli_putstr_P(PSTR("yes  \t- 0x"));
-			} else {
-				cli_putstr_P(item.cmd_param_str);
-				cli_putstr_P(PSTR(" \t- 0x"));
-			}
-		}
-		cli_hexdump_rev(&item.cmd_function, 2);	
-		cli_putstr_P(PSTR("\r\n"));
-	}
-}
-*/
 typedef void(*str_fpt)(char*);
 #define CLI_ENTER     13
 #define CLI_BACKSPACE  8

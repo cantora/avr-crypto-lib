@@ -52,10 +52,7 @@ void nessie_send_alive_a(uint16_t i);
 #define NESSIE_PUTSTR cli_putstr
 #define NESSIE_PUTSTR_P cli_putstr_P
 #else
-#include "uart.h"
-#define NESSIE_PUTC uart_putc
-#define NESSIE_PUTSTR uart_putstr
-#define NESSIE_PUTSTR_P uart_putstr_P
+# error "direct uart output removed for nessie"
 #endif
 
 void nessie_print_block(uint8_t* block, uint16_t blocksize_bit);

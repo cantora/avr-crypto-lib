@@ -22,11 +22,11 @@
  */
 
 #ifndef F_CPU
-#  error "uart_ni requires F_CPU to be defined"
+#  error "uart_i requires F_CPU to be defined"
 #endif
 
 #ifndef BAUD
-#  error "uart_ni requires UART0_BAUD_RATE to be defined"
+#  error "uart_i requires UART0_BAUD_RATE to be defined"
 #endif
 
 #if !(F_CPU)

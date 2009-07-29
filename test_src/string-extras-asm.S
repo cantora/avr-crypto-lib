@@ -46,9 +46,9 @@ stridentcnt_P:
 	ld r22, X+
 	lpm r23, Z+
 	cpse r22, r23
-	ret
-	cpse r22, r1
-	ret
+2:	ret
+	tst r22
+	breq 2b
 	adiw r24, 1
 	rjmp 1b
 		

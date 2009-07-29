@@ -29,9 +29,27 @@
 #include <avr/io.h>
 #include "config.h"
 #include "avr-asm-macros.S"
+#include "uart_defs.h"
 
 #define XON_VALUE  0x11
 #define XOFF_VALUE 0x13
+
+#if UART0_I
+
+#ifndef UART0_PARATY
+# warning "UART0: using default paraty: 'none'"
+# define UART0_PARATY UART_PARATY_NONE
+#endif
+
+#ifndef UART0_STOPBITS
+# warning "UART0: using default ammount of stop bits: '1'"
+# define UART0_STOPBITS UART_STOPBITS_1
+#endif
+
+#ifndef UART0_DATABITS
+# warning "UART0: using default ammount of data bits: '8'"
+# define UART0_DATABITS UART_DATABITS_8
+#endif
 
 #ifdef UDR
 # define OLD_UART
@@ -310,8 +328,9 @@ uart0_putc:
  */
  .global USART0_RX_vect
  USART0_RX_vect:
+ 	push_range 0, 1
 	push_range 16, 31
-	in r21, _SFR_IO_ADDR(SREG)
+	in r18, _SFR_IO_ADDR(SREG)
 	LOAD_IO r24, UDR0
 #if UART0_SWFLOWCTRL
 	ldi r26, lo8(uart0_ctx+UART0_TXON_OFFSET)
@@ -368,8 +387,8 @@ uart0_putc:
 	ldi r23, hi8(uart0_ctx+UART0_CBB_TX_OFFSET)
 	ldi r30, lo8(uart0_ctx+UART0_RXON_OFFSET)
 	ldi r31, hi8(uart0_ctx+UART0_RXON_OFFSET)
-	ld r21, Z
-	tst r21
+	ld r16, Z
+	tst r16
 	breq 60f
 	cpi r24, UART0_THRESH_HIGH+1
 	brlo 99f
@@ -387,8 +406,9 @@ uart0_putc:
 	SET_BIT_IO UCSR0B, UDRIE0, r24
 #endif /* UART0_SWFLOWCTRL */
 99:	
-	out _SFR_IO_ADDR(SREG), r21
+	out _SFR_IO_ADDR(SREG), r18
 	pop_range 16, 31
+	pop_range 0, 1
 	reti
 
 /******************************************************************************/
@@ -415,6 +435,7 @@ uart0_putc:
 	movw r24, r22
 	cli
 	rcall circularbytebuffer_get_fifo
+	clr r25
 	reti
 	
 /******************************************************************************/
@@ -445,3 +466,4 @@ uart0_sethook:
 	ret
 #endif
 	
+#endif /* UART0_I */

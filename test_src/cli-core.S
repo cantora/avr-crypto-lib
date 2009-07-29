@@ -277,6 +277,9 @@ cli_option_listing:
 	call strlen
 	sbiw r24, 1
 	movw LEN_0, r24
+	brpl 1f
+	clr LEN_0
+	clr LEN_1
 1:
 	movw r30, LST_0
 	lpm r24, Z+
