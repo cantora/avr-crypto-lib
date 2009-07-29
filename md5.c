@@ -27,7 +27,7 @@
 
  #include "md5.h"
  #include "md5_sbox.h"
- #include "uart.h" 
+ #include "cli.h" 
  #include <stdint.h>
  #include <string.h>
  
@@ -73,12 +73,12 @@ void md5_core(uint32_t* a, void* block, uint8_t as, uint8_t s, uint8_t i, uint8_
 	/* a = b + ((a + F(b,c,d) + X[k] + T[i]) <<< s). */
 #ifdef DEBUG
 	char funcc[]={'*', '-', '+', '~'};
-	uart_putstr("\r\n DBG: md5_core [");
-	uart_putc(funcc[fi]);
-	uart_hexdump(&as, 1); uart_putc(' ');
-	uart_hexdump(&k, 1); uart_putc(' ');
-	uart_hexdump(&s, 1); uart_putc(' ');
-	uart_hexdump(&i, 1); uart_putc(']');
+	cli_putstr("\r\n DBG: md5_core [");
+	cli_putc(funcc[fi]);
+	cli_hexdump(&as, 1); cli_putc(' ');
+	cli_hexdump(&k, 1); cli_putc(' ');
+	cli_hexdump(&s, 1); cli_putc(' ');
+	cli_hexdump(&i, 1); cli_putc(']');
 #endif	
 	t = a[as] + funcs[fi](a[(as+1)&3], a[(as+2)&3], a[(as+3)&3]) 
 	    + *((uint32_t*)block) + pgm_read_dword(md5_T+i) ;
@@ -90,11 +90,11 @@ void md5_nextBlock(md5_ctx_t *state, const void* block){
 	uint8_t		m,n,i=0;
 	/* this requires other mixed sboxes */
 #ifdef DEBUG
-	uart_putstr("\r\n DBG: md5_nextBlock: block:\r\n");
-	uart_hexdump(block, 16);	uart_putstr("\r\n");
-	uart_hexdump(block+16, 16);	uart_putstr("\r\n");
-	uart_hexdump(block+32, 16);	uart_putstr("\r\n");
-	uart_hexdump(block+48, 16);	uart_putstr("\r\n");
+	cli_putstr("\r\n DBG: md5_nextBlock: block:\r\n");
+	cli_hexdump(block, 16);	cli_putstr("\r\n");
+	cli_hexdump(block+16, 16);	cli_putstr("\r\n");
+	cli_hexdump(block+32, 16);	cli_putstr("\r\n");
+	cli_hexdump(block+48, 16);	cli_putstr("\r\n");
 #endif	
 	
 	a[0]=state->a[0];

@@ -29,7 +29,7 @@
 #include <avr/pgmspace.h>
 #include <string.h>
 #include "seed_sbox.h"
-#include "uart.h"
+#include "cli.h"
 #include "debug.h"
 
 
@@ -221,19 +221,19 @@ void seed_enc(void * buffer, const seed_ctx_t * ctx){
 	for(r=0; r<8; ++r){
 			k = getnextkeys(((seed_ctx_t*)ctx)->k, 2*r);
 /*
-	DEBUG_S("\r\n\tDBG ka,0: "); uart_hexdump(&k.k0, 4);
-	DEBUG_S("\r\n\tDBG ka,1: "); uart_hexdump(&k.k1, 4);
-	DEBUG_S("\r\n\t DBG L: "); uart_hexdump((uint8_t*)buffer+0, 8);
-	DEBUG_S("\r\n\t DBG R: "); uart_hexdump((uint8_t*)buffer+8, 8);
+	DEBUG_S("\r\n\tDBG ka,0: "); cli_hexdump(&k.k0, 4);
+	DEBUG_S("\r\n\tDBG ka,1: "); cli_hexdump(&k.k1, 4);
+	DEBUG_S("\r\n\t DBG L: "); cli_hexdump((uint8_t*)buffer+0, 8);
+	DEBUG_S("\r\n\t DBG R: "); cli_hexdump((uint8_t*)buffer+8, 8);
 */
 			L ^= f_function(&R,k.k0,k.k1);
 			
 			k = getnextkeys(((seed_ctx_t*)ctx)->k, 2*r+1);
 /*
-	DEBUG_S("\r\n\tDBG kb,0: "); uart_hexdump(&k.k0, 4);
-	DEBUG_S("\r\n\tDBG kb,1: "); uart_hexdump(&k.k1, 4);
-	DEBUG_S("\r\n\t DBG L: "); uart_hexdump((uint8_t*)buffer+8, 8);
-	DEBUG_S("\r\n\t DBG R: "); uart_hexdump((uint8_t*)buffer+0, 8);
+	DEBUG_S("\r\n\tDBG kb,0: "); cli_hexdump(&k.k0, 4);
+	DEBUG_S("\r\n\tDBG kb,1: "); cli_hexdump(&k.k1, 4);
+	DEBUG_S("\r\n\t DBG L: "); cli_hexdump((uint8_t*)buffer+8, 8);
+	DEBUG_S("\r\n\t DBG R: "); cli_hexdump((uint8_t*)buffer+0, 8);
 */
 			R ^= f_function(&L,k.k0,k.k1);
 	}
@@ -254,19 +254,19 @@ void seed_dec(void * buffer, seed_ctx_t * ctx){
 	for(r=7; r>=0; --r){
 			k = getprevkeys(((seed_ctx_t*)ctx)->k, 2*r+1);
 /*
-	DEBUG_S("\r\n\tDBG ka,0: "); uart_hexdump(&k.k0, 4);
-	DEBUG_S("\r\n\tDBG ka,1: "); uart_hexdump(&k.k1, 4);
-	DEBUG_S("\r\n\t DBG L: "); uart_hexdump((uint8_t*)buffer+0, 8);
-	DEBUG_S("\r\n\t DBG R: "); uart_hexdump((uint8_t*)buffer+8, 8);
+	DEBUG_S("\r\n\tDBG ka,0: "); cli_hexdump(&k.k0, 4);
+	DEBUG_S("\r\n\tDBG ka,1: "); cli_hexdump(&k.k1, 4);
+	DEBUG_S("\r\n\t DBG L: "); cli_hexdump((uint8_t*)buffer+0, 8);
+	DEBUG_S("\r\n\t DBG R: "); cli_hexdump((uint8_t*)buffer+8, 8);
 */
 			L ^= f_function(&R,k.k0,k.k1);
 			
 			k = getprevkeys(((seed_ctx_t*)ctx)->k, 2*r+0);
 /*
-	DEBUG_S("\r\n\tDBG kb,0: "); uart_hexdump(&k.k0, 4);
-	DEBUG_S("\r\n\tDBG kb,1: "); uart_hexdump(&k.k1, 4);
-	DEBUG_S("\r\n\t DBG L: "); uart_hexdump((uint8_t*)buffer+8, 8);
-	DEBUG_S("\r\n\t DBG R: "); uart_hexdump((uint8_t*)buffer+0, 8);
+	DEBUG_S("\r\n\tDBG kb,0: "); cli_hexdump(&k.k0, 4);
+	DEBUG_S("\r\n\tDBG kb,1: "); cli_hexdump(&k.k1, 4);
+	DEBUG_S("\r\n\t DBG L: "); cli_hexdump((uint8_t*)buffer+8, 8);
+	DEBUG_S("\r\n\t DBG R: "); cli_hexdump((uint8_t*)buffer+0, 8);
 */
 			R ^= f_function(&L,k.k0,k.k1);
 	}

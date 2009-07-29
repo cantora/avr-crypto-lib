@@ -194,31 +194,31 @@ void w(void* buffer, uint8_t* tr, uint32_t* tm){
 /*
 void dump_ctx(const cast6_ctx_t* ctx){
 	uint8_t i,t;
-	uart_putstr_P(PSTR("\r\n DBG:"));
+	cli_putstr_P(PSTR("\r\n DBG:"));
 	for(i=0; i<12; ++i){
-		uart_putstr_P(PSTR("\r\n DBG:"));
-		uart_putstr_P(PSTR(" rotk1="));
+		cli_putstr_P(PSTR("\r\n DBG:"));
+		cli_putstr_P(PSTR(" rotk1="));
 		t=kr(i*4+0, ctx);
-		uart_hexdump(&t,1);
-		uart_putstr_P(PSTR("          rotk2="));
+		cli_hexdump(&t,1);
+		cli_putstr_P(PSTR("          rotk2="));
 		t=kr(i*4+1, ctx);
-		uart_hexdump(&t,1);
-		uart_putstr_P(PSTR("          rotk3="));
+		cli_hexdump(&t,1);
+		cli_putstr_P(PSTR("          rotk3="));
 		t=kr(i*4+2, ctx);
-		uart_hexdump(&t,1);
-		uart_putstr_P(PSTR("          rotk4="));
+		cli_hexdump(&t,1);
+		cli_putstr_P(PSTR("          rotk4="));
 		t=kr(i*4+3, ctx);
-		uart_hexdump(&t,1);
-		uart_putstr_P(PSTR("\r\n     "));
-		uart_putstr_P(PSTR(" mask1="));
-		uart_hexdump(&(ctx->km[i][0]),4);
-		uart_putstr_P(PSTR(" mask2="));
-		uart_hexdump(&(ctx->km[i][1]),4);
-		uart_putstr_P(PSTR(" mask3="));
-		uart_hexdump(&(ctx->km[i][2]),4);
-		uart_putstr_P(PSTR(" mask4="));
-		uart_hexdump(&(ctx->km[i][3]),4);
-		uart_putstr_P(PSTR("\r\n;-----"));
+		cli_hexdump(&t,1);
+		cli_putstr_P(PSTR("\r\n     "));
+		cli_putstr_P(PSTR(" mask1="));
+		cli_hexdump(&(ctx->km[i][0]),4);
+		cli_putstr_P(PSTR(" mask2="));
+		cli_hexdump(&(ctx->km[i][1]),4);
+		cli_putstr_P(PSTR(" mask3="));
+		cli_hexdump(&(ctx->km[i][2]),4);
+		cli_putstr_P(PSTR(" mask4="));
+		cli_hexdump(&(ctx->km[i][3]),4);
+		cli_putstr_P(PSTR("\r\n;-----"));
 	}
 }
 */

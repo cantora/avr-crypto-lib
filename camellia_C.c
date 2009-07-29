@@ -28,7 +28,7 @@
 #include <avr/pgmspace.h>
 #include "camellia.h"
 #if 0
- #include "uart.h"
+ #include "cli.h"
  #include "debug.h"
  #include <util/delay.h>
 #endif 
@@ -100,7 +100,7 @@ uint8_t camellia_s4(uint8_t b){
 /*****************************************************************************/
 
 uint64_t camellia_s(uint64_t d){
-//	uart_putstr("\n\r S von "); uart_hexdump(&(d), 8);
+//	cli_putstr("\n\r S von "); cli_hexdump(&(d), 8);
 	#define D ((uint8_t*)(&d))
 	D[7] = camellia_s1(D[7]);
 	D[6] = camellia_s2(D[6]);
@@ -112,7 +112,7 @@ uint64_t camellia_s(uint64_t d){
 	D[1] = camellia_s4(D[1]);
 	D[0] = camellia_s1(D[0]);
 	#undef D
-//	uart_putstr(" ist "); uart_hexdump(&(d), 8);
+//	cli_putstr(" ist "); cli_hexdump(&(d), 8);
 	return d;
 }
 
@@ -133,7 +133,7 @@ uint64_t camellia_p(uint64_t d){
 	Z[7] = D[3] ^ D[5] ^ D[4];
 */
 //	Z[7] = z1 z3 z4 z6 z7 z8
-//	uart_putstr("\n\r P von "); uart_hexdump(&(d), 8);
+//	cli_putstr("\n\r P von "); cli_hexdump(&(d), 8);
 	
 	Z[7] = D[7] ^        D[5] ^ D[4] ^        D[2] ^ D[1] ^ D[0];
 	Z[6] = D[7] ^ D[6]        ^ D[4] ^ D[3] ^        D[1] ^ D[0];
@@ -144,7 +144,7 @@ uint64_t camellia_p(uint64_t d){
 	Z[1] =               D[5] ^ D[4] ^ D[3] ^ D[2] ^        D[0];
 	Z[0] = D[7] ^               D[4] ^ D[3] ^ D[2] ^ D[1]       ;
 	
-//	uart_putstr(" ist "); uart_hexdump(&(z), 8);
+//	cli_putstr(" ist "); cli_hexdump(&(z), 8);
 			
 	#undef Z
 	#undef D
@@ -176,12 +176,12 @@ uint64_t camellia_fl(uint64_t x, uint64_t k){
 	yl = (yr | K[0]) ^ (X[1]);           /* Yl */
 	
 /*	
-	uart_putstr("\r\nFL(");
-	uart_hexdump(&(x), 8);
-	uart_putstr(", ");
-	uart_hexdump(&(k), 8);
-	uart_putstr(") = ");
-	uart_hexdump(y, 8);
+	cli_putstr("\r\nFL(");
+	cli_hexdump(&(x), 8);
+	cli_putstr(", ");
+	cli_hexdump(&(k), 8);
+	cli_putstr(") = ");
+	cli_hexdump(y, 8);
 */
 	#undef K
 	#undef X
@@ -206,11 +206,11 @@ uint64_t camellia_fl_inv(uint64_t y, uint64_t k){
 	X[0]=rol32((X[1] & K[1]),1) ^ Y[0];
 	
 /*	
-	uart_putstr("\r\nFL_inv(");
-	uart_hexdump(&(y), 8);
-	uart_putstr(", ");
-	uart_hexdump(&(k), 8);
-	uart_putstr(") = ");
+	cli_putstr("\r\nFL_inv(");
+	cli_hexdump(&(y), 8);
+	cli_putstr(", ");
+	cli_hexdump(&(k), 8);
+	cli_putstr(") = ");
 */	
 	#undef K
 	#undef X
@@ -232,11 +232,11 @@ uint64_t camellia_sigma[6]={
 /*****************************************************************************/
 #if 0
 void camellia128_ctx_dump(camellia128_ctx_t *s){
-	uart_putstr("\r\n==State Dump==");
-	uart_putstr("\n\rKAl: "); uart_hexdump(&(s->kal), 8);
-	uart_putstr("\n\rKAr: "); uart_hexdump(&(s->kar), 8);
-	uart_putstr("\n\rKLl: "); uart_hexdump(&(s->kll), 8);
-	uart_putstr("\n\rKLr: "); uart_hexdump(&(s->klr), 8);	
+	cli_putstr("\r\n==State Dump==");
+	cli_putstr("\n\rKAl: "); cli_hexdump(&(s->kal), 8);
+	cli_putstr("\n\rKAr: "); cli_hexdump(&(s->kar), 8);
+	cli_putstr("\n\rKLl: "); cli_hexdump(&(s->kll), 8);
+	cli_putstr("\n\rKLr: "); cli_hexdump(&(s->klr), 8);	
 	return;
 }
 #endif
@@ -270,7 +270,7 @@ void camellia128_init(const void* key, camellia128_ctx_t* s){
 	s->kar ^= camellia_f(s->kal, camellia_sigma[2]);
 	s->kal ^= camellia_f(s->kar, camellia_sigma[3]);
 	/**/
-//	uart_putstr("\n\r----------------init finished--------------------");
+//	cli_putstr("\n\r----------------init finished--------------------");
 }
 
 /*****************************************************************************/

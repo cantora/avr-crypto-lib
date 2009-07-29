@@ -23,7 +23,7 @@
 
 #include "config.h"
 #include "serial-tools.h"
-#include "uart.h"
+#include "uart_i.h"
 #include "debug.h"
 
 #include <A5_1.h>
@@ -79,8 +79,8 @@ int main (void){
 	DEBUG_INIT();
 	
 	
-	cli_rx = uart_getc;
-	cli_tx = uart_putc;	 	
+	cli_rx = (cli_rx_fpt)uart0_getc;
+	cli_tx = (cli_tx_fpt)uart0_putc;	 	
 	for(;;){
 		cli_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
 		cli_putstr(algo_name);

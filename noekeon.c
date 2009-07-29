@@ -32,7 +32,7 @@
 	#include <avr/pgmspace.h>
 #endif
 #include "noekeon.h"
-// #include "uart.h"
+// #include "cli.h"
 
 #define ROUND_NR 16
 
@@ -172,8 +172,8 @@ void noekeon_dec(void* buffer, const void* key){
 	changendian(dkey);
 	
 	theta((uint32_t*)nullv, (uint32_t*)dkey);
-//	uart_putstr_P(PSTR("\r\nTheta: "));
-//	uart_hexdump(dkey, 16);
+//	cli_putstr_P(PSTR("\r\nTheta: "));
+//	cli_hexdump(dkey, 16);
 	
 	for(i=ROUND_NR-1; i>=0; --i){
 #ifdef __AVR__

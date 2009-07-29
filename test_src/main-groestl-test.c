@@ -23,7 +23,7 @@
 
 #include "config.h"
 #include "serial-tools.h"
-#include "uart.h"
+#include "uart_i.h"
 #include "debug.h"
 
 #include "groestl_small.h"
@@ -134,8 +134,8 @@ cmdlist_entry_t cmdlist[] PROGMEM = {
 int main (void){
 	DEBUG_INIT();
 	
-	cli_rx = uart_getc;
-	cli_tx = uart_putc;	 	
+	cli_rx = (cli_rx_fpt)uart0_getc;
+	cli_tx = (cli_tx_fpt)uart0_putc;	 	
 	shavs_algolist=(hfdesc_t**)algolist;
 	shavs_algo=(hfdesc_t*)&groestl256_desc;
 	for(;;){

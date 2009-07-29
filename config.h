@@ -24,6 +24,7 @@
 // #define F_CPU 14745600
 
 
+#include "uart_defs.h"
 
 #define DEBUG uart
 
@@ -38,6 +39,17 @@
 #define UART_XON_XOFF_THRESHOLD_2 (UART_RXBUFSIZE - 60)
 
 #undef UART_LEDS
+
+#define UART0_I 1
+#define UART0_BAUD_RATE  38400
+#define UART0_PARATY     UART_PARATY_NONE
+#define UART0_STOPBITS   UART_STOPBITS_1
+#define UART0_DATABITS   UART_DATABITS_8
+#define UART0_RXBUFFER_SIZE 64
+#define UART0_TXBUFFER_SIZE 64
+#define UART0_SWFLOWCTRL     1
+#define UART0_THRESH_LOW    10
+#define UART0_THRESH_HIGH   48
 /*
 #define UART_HWFLOWCONTROL
 #define UART_RTS_PORT PORTA

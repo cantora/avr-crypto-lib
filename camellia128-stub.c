@@ -28,7 +28,7 @@
 #include <avr/pgmspace.h>
 #include "camellia.h"
 #if 0
- #include "uart.h"
+ #include "cli.h"
  #include "debug.h"
  #include <util/delay.h>
 #endif
@@ -72,11 +72,11 @@ uint32_t PROGMEM camellia_sigma[12]={ /* 48 byte table */
 /*****************************************************************************/
 /*
 void camellia128_ctx_dump(camellia128_ctx_t *s){
-	uart_putstr_P(PSTR("\r\n==State Dump=="));
-	uart_putstr_P(PSTR("\n\rKAl: ")); uart_hexdump(&(s->kal), 8);
-	uart_putstr_P(PSTR("\n\rKAr: ")); uart_hexdump(&(s->kar), 8);
-	uart_putstr_P(PSTR("\n\rKLl: ")); uart_hexdump(&(s->kll), 8);
-	uart_putstr_P(PSTR("\n\rKLr: ")); uart_hexdump(&(s->klr), 8);	
+	cli_putstr_P(PSTR("\r\n==State Dump=="));
+	cli_putstr_P(PSTR("\n\rKAl: ")); cli_hexdump(&(s->kal), 8);
+	cli_putstr_P(PSTR("\n\rKAr: ")); cli_hexdump(&(s->kar), 8);
+	cli_putstr_P(PSTR("\n\rKLl: ")); cli_hexdump(&(s->kll), 8);
+	cli_putstr_P(PSTR("\n\rKLr: ")); cli_hexdump(&(s->klr), 8);	
 	return;
 }
 */

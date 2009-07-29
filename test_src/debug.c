@@ -24,7 +24,7 @@
 #include "config.h"
 
 #if DEBUG == uart
- #include "uart.h"
+ #include "uart_i.h"
 #else
   #error "Your DEBUG methode is not suported!"
 #endif
@@ -32,7 +32,7 @@
 #ifdef DEBUG
  void debug_init(void){
  #if DBUG==uart
-  uart_init();
+  uart0_init();
  #else
   #error "Your DEBUG methode is not suported!"
  #endif
@@ -41,10 +41,10 @@
  void debug_char(char c){
 	static char initialised = 0;
 	if (!initialised){
-		uart_init();
+		uart0_init();
 		initialised=1;
 	}	
-	uart_putc(c);
+	uart0_putc(c);
  }
  
  void debug_str(char* s){

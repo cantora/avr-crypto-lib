@@ -23,7 +23,7 @@
 
 #include "config.h"
 #include "serial-tools.h"
-#include "uart.h"
+#include "uart_i.h"
 #include "debug.h"
 
 #include "entropium.h"
@@ -45,7 +45,7 @@ void testrun_entropium(void){
 	char c, str[16];
 	uint8_t data[32];
 	uint32_t i=0;
-	while(!uart_getc_nb(&c)){
+	while('q'!=cli_getc()){
 		entropium_getRandomBlock(data);
 		cli_putstr_P(PSTR("\r\n "));
 		ultoa(i, str, 10);
@@ -106,8 +106,8 @@ cmdlist_entry_t cmdlist[] PROGMEM = {
 
 int main (void){
 	DEBUG_INIT();
-	cli_rx = uart_getc;
-	cli_tx = uart_putc;	 	
+	cli_rx = (cli_rx_fpt)uart0_getc;
+	cli_tx = (cli_tx_fpt)uart0_putc;	 	
 
 	for(;;){
 		cli_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));

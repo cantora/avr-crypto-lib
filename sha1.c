@@ -110,7 +110,7 @@ void sha1_nextBlock (sha1_ctx_t *state, const void* block){
 		DEBUG_B(dbgi);
 		DEBUG_C(':');
 		#ifdef DEBUG
-			uart_hexdump(&(w[dbgi]) ,4);
+			cli_hexdump(&(w[dbgi]) ,4);
 		#endif
 	}
 	
@@ -124,12 +124,12 @@ void sha1_nextBlock (sha1_ctx_t *state, const void* block){
 		s = t & MASK;
 		if(t>=16){
 			#ifdef DEBUG
-			 DEBUG_S("\r\n ws = "); uart_hexdump(&ws, 4);
+			 DEBUG_S("\r\n ws = "); cli_hexdump(&ws, 4);
 			#endif
 			w[s] = rotl32( w[(s+13)&MASK] ^ w[(s+8)&MASK] ^ 
 				 w[(s+ 2)&MASK] ^ w[s] ,1);			
 			#ifdef DEBUG
-			 DEBUG_S(" --> ws = "); uart_hexdump(&(w[s]), 4);
+			 DEBUG_S(" --> ws = "); cli_hexdump(&(w[s]), 4);
 			#endif
 		}
 		
@@ -143,15 +143,15 @@ void sha1_nextBlock (sha1_ctx_t *state, const void* block){
 		DEBUG_S("\r\nt = "); DEBUG_B(t);
 		DEBUG_S("; a[]: ");
 		#ifdef DEBUG
-		 uart_hexdump(a, 5*4);
+		 cli_hexdump(a, 5*4);
 		#endif
 		DEBUG_S("; k = ");
 		#ifdef DEBUG
-		 uart_hexdump(&(k[t/20]), 4);
+		 cli_hexdump(&(k[t/20]), 4);
 		#endif
 		DEBUG_S("; f(b,c,d) = ");
 		#ifdef DEBUG
-		 uart_hexdump(&dtemp, 4);
+		 cli_hexdump(&dtemp, 4);
 		#endif
 	}
 	

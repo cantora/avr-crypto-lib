@@ -32,7 +32,6 @@
 #include "nessie_mac_test.h"
 #include "nessie_common.h"
 #include "dbz_strings.h"
-#include "uart.h"
 
 nessie_mac_ctx_t nessie_mac_ctx;
 

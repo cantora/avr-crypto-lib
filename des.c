@@ -27,7 +27,7 @@
  */
 #include "config.h"
 #include "debug.h"
-#include "uart.h"
+#include "cli.h"
 #include <stdint.h>
 #include <string.h>
 #include <util/delay.h>

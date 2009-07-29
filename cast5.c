@@ -36,7 +36,7 @@
  #undef DEBUG
  
  #ifdef DEBUG
-  #include "uart.h"
+  #include "cli.h"
  #endif
  
 #include "cast5-sbox.h"
@@ -112,7 +112,7 @@ void cast5_init_rM(uint8_t *klo, uint8_t *khi, uint8_t offset, uint8_t *src, boo
 		klo[offset*2+1] |= t<<4;
 		h |= t&0x10; h >>=1;
 	#ifdef DEBUG
-		uart_putstr("\r\n\t h="); uart_hexdump(&h,1);
+		cli_putstr("\r\n\t h="); cli_hexdump(&h,1);
 	#endif
 	khi[offset>>1] |= h<<((offset&0x1)?4:0);
 }
@@ -204,17 +204,17 @@ uint32_t cast5_f1(uint32_t d, uint32_t m, uint8_t r){
 	t = ROTL32((d + m),r);
 #ifdef DEBUG
 	uint32_t ia,ib,ic,id;
-	uart_putstr("\r\n f1("); uart_hexdump(&d, 4); uart_putc(',');
-		uart_hexdump(&m , 4); uart_putc(','); uart_hexdump(&r, 1);uart_putstr("): I=");
-		uart_hexdump(&t, 4);
+	cli_putstr("\r\n f1("); cli_hexdump(&d, 4); cli_putc(',');
+		cli_hexdump(&m , 4); cli_putc(','); cli_hexdump(&r, 1);cli_putstr("): I=");
+		cli_hexdump(&t, 4);
 	ia = pgm_read_dword(&s1[((uint8_t*)&t)[IA]] );
 	ib = pgm_read_dword(&s2[((uint8_t*)&t)[IB]] );
 	ic = pgm_read_dword(&s3[((uint8_t*)&t)[IC]] );
 	id = pgm_read_dword(&s4[((uint8_t*)&t)[ID]] );
-	uart_putstr("\r\n\tIA="); uart_hexdump(&ia, 4);
-	uart_putstr("\r\n\tIB="); uart_hexdump(&ib, 4);
-	uart_putstr("\r\n\tIC="); uart_hexdump(&ic, 4);
-	uart_putstr("\r\n\tID="); uart_hexdump(&id, 4);
+	cli_putstr("\r\n\tIA="); cli_hexdump(&ia, 4);
+	cli_putstr("\r\n\tIB="); cli_hexdump(&ib, 4);
+	cli_putstr("\r\n\tIC="); cli_hexdump(&ic, 4);
+	cli_putstr("\r\n\tID="); cli_hexdump(&id, 4);
 
 	return (((ia ^ ib) - ic) + id);
 
@@ -234,19 +234,19 @@ uint32_t cast5_f2(uint32_t d, uint32_t m, uint8_t r){
 	t = ROTL32((d ^ m),r);
 #ifdef DEBUG
 	uint32_t ia,ib,ic,id;
-	uart_putstr("\r\n f2("); uart_hexdump(&d, 4); uart_putc(',');
-		uart_hexdump(&m , 4); uart_putc(','); uart_hexdump(&r, 1);uart_putstr("): I=");
-		uart_hexdump(&t, 4);
+	cli_putstr("\r\n f2("); cli_hexdump(&d, 4); cli_putc(',');
+		cli_hexdump(&m , 4); cli_putc(','); cli_hexdump(&r, 1);cli_putstr("): I=");
+		cli_hexdump(&t, 4);
 
 	ia = pgm_read_dword(&s1[((uint8_t*)&t)[IA]] );
 	ib = pgm_read_dword(&s2[((uint8_t*)&t)[IB]] );
 	ic = pgm_read_dword(&s3[((uint8_t*)&t)[IC]] );
 	id = pgm_read_dword(&s4[((uint8_t*)&t)[ID]] );
 	
-	uart_putstr("\r\n\tIA="); uart_hexdump(&ia, 4);
-	uart_putstr("\r\n\tIB="); uart_hexdump(&ib, 4);
-	uart_putstr("\r\n\tIC="); uart_hexdump(&ic, 4);
-	uart_putstr("\r\n\tID="); uart_hexdump(&id, 4);
+	cli_putstr("\r\n\tIA="); cli_hexdump(&ia, 4);
+	cli_putstr("\r\n\tIB="); cli_hexdump(&ib, 4);
+	cli_putstr("\r\n\tIC="); cli_hexdump(&ic, 4);
+	cli_putstr("\r\n\tID="); cli_hexdump(&id, 4);
 
 	return (((ia - ib) + ic) ^ id);
 #else
@@ -267,19 +267,19 @@ uint32_t cast5_f3(uint32_t d, uint32_t m, uint8_t r){
 #ifdef DEBUG
 	uint32_t ia,ib,ic,id;
 
-	uart_putstr("\r\n f3("); uart_hexdump(&d, 4); uart_putc(',');
-		uart_hexdump(&m , 4); uart_putc(','); uart_hexdump(&r, 1);uart_putstr("): I=");
-		uart_hexdump(&t, 4);
+	cli_putstr("\r\n f3("); cli_hexdump(&d, 4); cli_putc(',');
+		cli_hexdump(&m , 4); cli_putc(','); cli_hexdump(&r, 1);cli_putstr("): I=");
+		cli_hexdump(&t, 4);
 
 	ia = pgm_read_dword(&s1[((uint8_t*)&t)[IA]] );
 	ib = pgm_read_dword(&s2[((uint8_t*)&t)[IB]] );
 	ic = pgm_read_dword(&s3[((uint8_t*)&t)[IC]] );
 	id = pgm_read_dword(&s4[((uint8_t*)&t)[ID]] );
 	
-	uart_putstr("\r\n\tIA="); uart_hexdump(&ia, 4);
-	uart_putstr("\r\n\tIB="); uart_hexdump(&ib, 4);
-	uart_putstr("\r\n\tIC="); uart_hexdump(&ic, 4);
-	uart_putstr("\r\n\tID="); uart_hexdump(&id, 4);
+	cli_putstr("\r\n\tIA="); cli_hexdump(&ia, 4);
+	cli_putstr("\r\n\tIB="); cli_hexdump(&ib, 4);
+	cli_putstr("\r\n\tIC="); cli_hexdump(&ic, 4);
+	cli_putstr("\r\n\tID="); cli_hexdump(&id, 4);
 	return (((ia + ib) ^ ic) - id);
 #else
 	return ((  pgm_read_dword(&s1[((uint8_t*)&t)[IA]] )
@@ -298,16 +298,16 @@ void cast5_enc(void* block, const cast5_ctx_t *s){
 	cast5_f_t* f[]={cast5_f1,cast5_f2,cast5_f3};
 	l=((uint32_t*)block)[0];
 	r=((uint32_t*)block)[1];
-//	uart_putstr("\r\n round[-1] = ");
-//	uart_hexdump(&r, 4);
+//	cli_putstr("\r\n round[-1] = ");
+//	cli_hexdump(&r, 4);
 	for (i=0;i<(s->shortkey?12:16);++i){
 		x = r;
 		y = (f[i%3])(CHANGE_ENDIAN32(r), CHANGE_ENDIAN32(s->mask[i]), 
 			(((s->roth[i>>3]) & (1<<(i&0x7)))?0x10:0x00) 
 			 + ( ((s->rotl[i>>1])>>((i&1)?4:0)) & 0x0f) );
 		r = l ^ CHANGE_ENDIAN32(y);
-//		uart_putstr("\r\n round["); DEBUG_B(i); uart_putstr("] = ");
-//		uart_hexdump(&r, 4);
+//		cli_putstr("\r\n round["); DEBUG_B(i); cli_putstr("] = ");
+//		cli_hexdump(&r, 4);
 		l = x;
 	}
 	((uint32_t*)block)[0]=r;

@@ -29,7 +29,6 @@
 #include <string.h>
 #include "nessie_bc_test.h"
 #include "nessie_common.h"
-#include "uart.h"
 
 nessie_bc_ctx_t nessie_bc_ctx;
 

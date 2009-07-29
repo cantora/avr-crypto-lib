@@ -29,7 +29,6 @@
 #include <string.h>
 #include "nessie_stream_test.h"
 #include "nessie_common.h"
-#include "uart.h"
 
 nessie_stream_ctx_t nessie_stream_ctx;
 

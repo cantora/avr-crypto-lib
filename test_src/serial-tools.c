@@ -26,18 +26,18 @@
  */
 
 #include "config.h"
-#include "uart.h"
+#include "uart_i.h"
 #include <string.h>
 #include <stdint.h>
 
 int getnextwordn(char *s, int n){ /* words are seperated by spaces, lf or cr */
 	char c = ' ';
 	do{
-		c=uart_getc(); 
+		c=uart0_getc(); 
 	}while(c==' ' || c=='\r' || c=='\n');
 	*s++ = c;
 	do{ 
-	  *s++ = c = uart_getc();
+	  *s++ = c = uart0_getc();
 	}while(c!=' ' && c!='\r' && c!='\n' && --n);
 	*(s-1) = '\0';
 	return n;
@@ -50,7 +50,7 @@ void readhex2buffer(void* buffer, int n){
 	
 //	DEBUG_S("\r\nDBG: n="); DEBUG_B(n&0xff); DEBUG_S("\r\n");
 	for(i=0; i<n; ++i){
-		c = uart_getc();
+		c = uart0_getc();
 		if ('0'<= c && '9'>=c){
 			((uint8_t*)buffer)[i] = c - '0';
 		} else {
@@ -64,7 +64,7 @@ void readhex2buffer(void* buffer, int n){
 		
 		((uint8_t*)buffer)[i] <<= 4;
 		
-		c = uart_getc();
+		c = uart0_getc();
 		if ('0'<= c && '9'>=c){
 			((uint8_t*)buffer)[i] |= c - '0';
 		} else {
@@ -78,7 +78,7 @@ void readhex2buffer(void* buffer, int n){
 	} /* for i=0 .. n */
 }
 
-void uart_putptr(void* p){
-	uart_hexdump((void*) &p,2);
+void uart0_putptr(void* p){
+	uart0_hexdump((void*) &p,2);
 }
 
