@@ -229,6 +229,8 @@ circularbytebuffer_get_lifo:
  *	}
  *
  * param cb:  r24:r25
+ * return:    r24
+ * modifys:   r22-r27,r30,r31
  */
 .global circularbytebuffer_get_fifo
 circularbytebuffer_get_fifo:

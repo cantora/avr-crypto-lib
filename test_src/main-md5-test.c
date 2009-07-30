@@ -144,6 +144,7 @@ int main (void){
 	
 	cli_rx = (cli_rx_fpt)uart0_getc;
 	cli_tx = (cli_tx_fpt)uart0_putc;	 	
+	testrun_md5();
 	for(;;){
 		cli_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
 		cli_putstr(algo_name);

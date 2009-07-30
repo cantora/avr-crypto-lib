@@ -71,6 +71,25 @@
 # define RXC0   RXC
 # define TXB80  TXB8
 # define RXB80  RXB8
+# define U2X0   U2X
+# define UDRIE0 UDRIE
+# define RXCIE0 RXCIE
+#endif
+
+#ifdef USART0_RX_vect
+# define RX_ISR USART0_RX_vect
+#endif
+
+#ifdef USART_RXC_vect
+# define RX_ISR USART_RXC_vect
+#endif
+
+#ifdef USART0_UDRE_vect
+# define TX_ISR USART0_UDRE_vect
+#endif
+
+#ifdef USART_UDRE_vect
+# define TX_ISR USART_UDRE_vect
 #endif
 
 #define CBB_SIZE 10
@@ -156,7 +175,6 @@ uart0_init:
 	clr r25
 	ldi r22, lo8(uart0_ctx+UART0_CBB_RX_OFFSET)
 	ldi r23, hi8(uart0_ctx+UART0_CBB_RX_OFFSET)
-	ldi r24, UART0_RXBUFFER_SIZE
 	ldi r20, lo8(uart0_rxbuffer)
 	ldi r21, hi8(uart0_rxbuffer)
 	rcall circularbytebuffer_init2
@@ -164,7 +182,6 @@ uart0_init:
 	clr r25
 	ldi r22, lo8(uart0_ctx+UART0_CBB_TX_OFFSET)
 	ldi r23, hi8(uart0_ctx+UART0_CBB_TX_OFFSET)
-	ldi r24, UART0_TXBUFFER_SIZE
 	ldi r20, lo8(uart0_txbuffer)
 	ldi r21, hi8(uart0_txbuffer)
 	rcall circularbytebuffer_init2
@@ -183,7 +200,6 @@ uart0_init:
 	SET_BIT_IO UCSR0A, U2X0, r24
 #else
   	CLEAR_BIT_IO UCSR0A, U2X0, r24
-/*	             UCSR0A */
 #endif
 	ldi r24, (UART0_PARATY<<4)|(UART0_STOPBITS<<3)|((UART0_DATABITS&3)<<1)
 	STORE_IO UCSR0C, r24
@@ -210,11 +226,17 @@ uart0_init:
  *	}
  */ 
  
-.global USART0_UDRE_vect
-USART0_UDRE_vect:
-	push_range 21, 26
-	push_range 30, 31
+.global TX_ISR
+TX_ISR:
+	push r1
+	push r21
+	push r22
 	in r21, _SFR_IO_ADDR(SREG)
+	CLEAR_BIT_IO UCSR0B, UDRIE0, r22
+	sei
+	push_range 23, 27
+	push_range 30, 31
+	clr r1
 	ldi r24, lo8(uart0_ctx+UART0_CBB_TX_OFFSET)
 	ldi r25, hi8(uart0_ctx+UART0_CBB_TX_OFFSET)
 	rcall circularbytebuffer_get_fifo
@@ -232,11 +254,14 @@ USART0_UDRE_vect:
 	breq 30b
 #endif
 	STORE_IO UDR0, r24
+	SET_BIT_IO UCSR0B, UDRIE0, r22
 99:
+	ori r21, 0x80 /* set I bit */
 	out _SFR_IO_ADDR(SREG), r21
 	pop_range 30, 31
-	pop_range 21, 26
-	reti
+	pop_range 21, 27
+	pop r1
+	ret
 	
 /******************************************************************************/
 /*
@@ -269,8 +294,13 @@ uart0_putc:
 	ldi r26, lo8(uart0_ctx+UART0_CBB_TX_OFFSET)
 	ldi r27, hi8(uart0_ctx+UART0_CBB_TX_OFFSET)
 20:
+;	sei
 	movw r24, r26
+;	nop
+;	nop
+	cli
 	rcall circularbytebuffer_cnt
+	sei
 	cpi r24, UART0_TXBUFFER_SIZE
 	breq 20b
 	movw r22, r26
@@ -326,11 +356,12 @@ uart0_putc:
  *	}
  *
  */
- .global USART0_RX_vect
- USART0_RX_vect:
+ .global RX_ISR
+ RX_ISR:
  	push_range 0, 1
 	push_range 16, 31
-	in r18, _SFR_IO_ADDR(SREG)
+	in r16, _SFR_IO_ADDR(SREG)
+	clr r1
 	LOAD_IO r24, UDR0
 #if UART0_SWFLOWCTRL
 	ldi r26, lo8(uart0_ctx+UART0_TXON_OFFSET)
@@ -387,8 +418,8 @@ uart0_putc:
 	ldi r23, hi8(uart0_ctx+UART0_CBB_TX_OFFSET)
 	ldi r30, lo8(uart0_ctx+UART0_RXON_OFFSET)
 	ldi r31, hi8(uart0_ctx+UART0_RXON_OFFSET)
-	ld r16, Z
-	tst r16
+	ld r18, Z
+	tst r18
 	breq 60f
 	cpi r24, UART0_THRESH_HIGH+1
 	brlo 99f
@@ -406,7 +437,7 @@ uart0_putc:
 	SET_BIT_IO UCSR0B, UDRIE0, r24
 #endif /* UART0_SWFLOWCTRL */
 99:	
-	out _SFR_IO_ADDR(SREG), r18
+	out _SFR_IO_ADDR(SREG), r16
 	pop_range 16, 31
 	pop_range 0, 1
 	reti
