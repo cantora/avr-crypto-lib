@@ -133,6 +133,7 @@ $algo_select = ARGV[4]
 
 init_system()
 
+errors = 0
 for i in (5..(ARGV.size-1))
   errors = run_test(ARGV[i])
   if errors == 0

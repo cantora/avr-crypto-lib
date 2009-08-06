@@ -4,7 +4,7 @@ ALGO_NAME := SKEIN
 # comment out the following line for removement of Skein from the build process
 HASHES += $(ALGO_NAME)
 
-
+$(ALGO_NAME)_DIR      := skein/
 $(ALGO_NAME)_OBJ      := threefish_mix.o \
                          threefish256_enc_asm.o  ubi256_asm.o  skein256_asm.o \
                          threefish512_enc_asm.o  ubi512_asm.o  skein512_asm.o \

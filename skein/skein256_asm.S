@@ -16,12 +16,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-/*
+/**
  * \author  Daniel Otte
  * \email   daniel.otte@rub.de
  * \date    2009-03-16
  * \license GPLv3 or later
- */ 
+ */
 
 #include "avr-asm-macros.S"
 
@@ -86,7 +86,7 @@ skein256_init:
 	movw r24, UBICTX0
 	movw r22, r30
 	ldi r20, 4
-	rcall ubi256_init	
+	rcall ubi256_init
 	/* call ubi256_lastBlock*/
 	movw r24, UBICTX0
 	movw r22, CONF0
@@ -103,7 +103,7 @@ skein256_init:
 	stack_free 64-22
 	pop_range 2, 5
 	ret
-	
+
 /******************************************************************************/
 .global skein256_nextBlock
 skein256_nextBlock:
@@ -121,11 +121,11 @@ skein256_lastBlock:
 void skein256_ctx2hash(void* dest, skein256_ctx_t* ctx){
 	ubi256_ctx_t uctx;
 	uint16_t outsize_b;
-	
+
 	uint64_t counter=0;
 	uint8_t outbuffer[UBI256_BLOCKSIZE_B];
 	ubi256_init(&(ctx->ubictx), ctx->ubictx.g, UBI_TYPE_OUT);
-	
+
 	outsize_b = ctx->outsize_b;
 	while(1){
 		memcpy(&uctx, &(ctx->ubictx), sizeof(ubi256_ctx_t));
@@ -183,7 +183,7 @@ skein256_ctx2hash:
 	movw r24, UBICTX0
 	ldi r20, 63
 	rcall ubi256_init
- 	
+
    /* main loop */
    /* copy ubictx in uctx*/
 1:	movw r30, UCTX0
@@ -201,7 +201,7 @@ skein256_ctx2hash:
 	clr r21
 	ldi r20, 64
 	rcall ubi256_lastBlock
-  /* copy uctx->g to outbuffer */	
+  /* copy uctx->g to outbuffer */
 	movw r26, UCTX0
 	adiw r26, 16
 	movw r30, UCTX0
@@ -211,13 +211,13 @@ skein256_ctx2hash:
     st Z+, r25
 	dec r24
 	brne 2b
-   /* compare outsize_b with 256*/	 
+   /* compare outsize_b with 256*/
 	cpi OUTSIZE_B1, 2
 	brge 5f
 	cpi OUTSIZE_B1, 1
 	brlo 3f
 	tst OUTSIZE_B0
-	breq 3f	
+	breq 3f
 5:	/* copy outbuffer to dest */
 	movw r30, DEST0
 	movw r26, UCTX0
@@ -260,7 +260,7 @@ skein256_ctx2hash:
 	st Z+, r25
 	dec r24
 	brne 7b
-8:	
+8:
 	stack_free_large 88
 	pop_range 10, 17
 	ret
@@ -321,12 +321,12 @@ skein256:
 	movw r24, DEST0
 	movw r22, CTX0
 	rcall skein256_ctx2hash
-   /* return */	
+   /* return */
 	stack_free 50
 	pop_range 2, 11
 	ret
-   		
-4: /* process preceeding blocks */	
+
+4: /* process preceeding blocks */
 	movw r24, CTX0
 	movw r22, MSG0
 	rcall skein256_nextBlock

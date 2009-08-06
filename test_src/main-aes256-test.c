@@ -26,10 +26,10 @@
 #include "uart_i.h"
 #include "debug.h"
 
-#include "aes.h"
-#include "aes256_enc.h"
-#include "aes256_dec.h"
-#include "aes_keyschedule.h"
+#include "aes/aes.h"
+#include "aes/aes256_enc.h"
+#include "aes/aes256_dec.h"
+#include "aes/aes_keyschedule.h"
 
 #include "nessie_bc_test.h"
 #include "cli.h"

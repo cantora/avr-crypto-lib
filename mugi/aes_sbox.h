@@ -1,4 +1,4 @@
-/* config.h */
+/* aes_sbox.h */
 /*
     This file is part of the AVR-Crypto-Lib.
     Copyright (C) 2008  Daniel Otte (daniel.otte@rub.de)
@@ -16,32 +16,18 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef __CONFIG_H__
-#define __CONFIG_H__
-#include <avr/io.h>
-// #define F_CPU 20000000
- #define F_CPU 16000000         /* Oszillator-Frequenz in Hz */
-// #define F_CPU 14745600
+/**
+ * \file     aes_sbox.h
+ * \email    daniel.otte@rub.de
+ * \author   Daniel Otte 
+ * \date     2008-12-30
+ * \license  GPLv3 or later
+ * 
+ */
+#ifndef AES_SBOX_H_
+#define AES_SBOX_H_
+#include <stdint.h>
 
-
-#include "uart_defs.h"
-
-#define DEBUG uart
-
-#undef UART_LEDS
-
-#define UART0_I 1
-#define UART0_BAUD_RATE  38400
-#define UART0_PARATY     UART_PARATY_NONE
-#define UART0_STOPBITS   UART_STOPBITS_1
-#define UART0_DATABITS   UART_DATABITS_8
-#define UART0_RXBUFFER_SIZE 64
-#define UART0_TXBUFFER_SIZE 64
-#define UART0_SWFLOWCTRL     1
-#define UART0_THRESH_LOW    10
-#define UART0_THRESH_HIGH   48
-
-#define CLI_AUTO_HELP 
+extern uint8_t aes_sbox[];
 
 #endif
-

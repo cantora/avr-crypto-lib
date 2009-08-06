@@ -2,71 +2,212 @@
 # author: Daniel Otte
 SHELL = sh
 
-BLOCK_CIPHERS  := 
-STREAM_CIPHERS := 
+BLOCK_CIPHERS  :=
+STREAM_CIPHERS :=
 HASHES         :=
 MACS           :=
-PRNGS          := 
+PRNGS          :=
 ENCODINGS      :=
 AUX            :=
 
 # we use the gnu make standard library
 include gmsl
 include avr-makefile.inc
+
+#-------------------------------------------------------------------------------
+# inclusion of make stubs
 include mkfiles/*.mk
 
-ALGORITHMS = $(BLOCK_CIPHERS) $(STREAM_CIPHERS) $(HASHES) $(PRNGS) $(MACS) $(ENCODINGS) $(AUX)
+#-------------------------------------------------------------------------------
+ALGORITHMS = $(BLOCK_CIPHERS) $(STREAM_CIPHERS) $(HASHES) $(PRNGS) $(MACS) \
+			 $(ENCODINGS) $(AUX)
 ALGORITHMS_OBJ = $(patsubst %,%_OBJ, $(ALGORITHMS))
 ALGORITHMS_TEST_BIN = $(patsubst %,%_TEST_BIN, $(ALGORITHMS))
 
-define OBJinBINDIR_TEMPLATE
+#-------------------------------------------------------------------------------
+# define binary object in $(BIN_DIR)$(ALGO)/<obj>
+define Assert_Template
 $(1) = $(2)
 endef
 
-$(foreach a, $(ALGORITHMS_OBJ), $(eval $(call OBJinBINDIR_TEMPLATE, $(a), $(patsubst %.o,$(BIN_DIR)%.o,$($(a))))))
+$(foreach a, $(ALGORITHMS), $(eval $(call Assert_Template, \
+    $(a)_BINOBJ, \
+    $(addprefix $(BIN_DIR)$(call lc,$(a))/,$($(a)_OBJ)) \
+)))
 
-$(foreach a, $(ALGORITHMS_TEST_BIN), $(eval $(call OBJinBINDIR_TEMPLATE, $(a), $(patsubst %.o,$(TESTBIN_DIR)%.o,$($(a))))))
+$(foreach a, $(ALGORITHMS), $(eval $(call Assert_Template, \
+    $(a)_TESTBINOBJ, \
+    $(addprefix $(BIN_DIR)$(call lc,$(a))/$(TEST_DIR),$($(a)_TEST_BIN)) \
+)))
 
 
-#ALGORITHMS_TEST_BIN_IMM =  $(foreach a, $(ALGORITHMS_TEST_BIN), $($(a)))
-ALGORITHMS_NESSIE_TEST = $(patsubst %,%_NESSIE_TEST, $(ALGORITHMS))
-ALGORITHMS_PERFORMANCE_TEST = $(patsubst %,%_PERORMANCE_TEST, $(ALGORITHMS))
-
-ALGORITHMS_LC = $(call lc,$(ALGORITHMS))
-
-ALGORITHMS_TEST_TARGET_ELF = $(patsubst %, $(TESTBIN_DIR)main-%-test.elf, $(ALGORITHMS_LC))
-ALGORITHMS_TEST_TARGET_HEX = $(patsubst %, $(TESTBIN_DIR)main-%-test.hex, $(ALGORITHMS_LC))
-
+#$(foreach a, $(ALGORITHMS), \
+#    $(if $(def $(a)_DIR), \
+#    $(eval $(call Assert_Template, \
+#        $(a)_DIR, \
+#        . \
+#    ) \
+#    )) \
+#)
+#
+#$(foreach a, $(ALGORITHMS), \
+#    $(if $(call seq($(strip($($(a)_DIR))),)), \
+#    $(eval $(call Assert_Template, \
+#        $(a)_DIR, \
+#        . \
+#    ) \
+#    )) \
+#)
 
 #-------------------------------------------------------------------------------
+#
+###	ifeq 'blafoo' ''
+###	    $(error no source ($(2)) for $(1) in TargetSource_Template)
+###	endif
 
-all: $(foreach algo, $(ALGORITHMS), $(algo)_OBJ)
+define TargetSource_Template
+$(1): $(2)
+	@echo "[cc]: $(1) <-- $(2)"
+	@mkdir -p $(dir $(1))
+	@$(CC) $(CFLAGS_A) -I./$(strip $(3)) -c -o $(1) $(2)
+endef
 
+$(foreach a, $(ALGORITHMS), \
+  $(foreach b, $($(a)_OBJ), \
+    $(eval $(call TargetSource_Template, \
+      $(BIN_DIR)$(call lc, $(a))/$(b), \
+      $(filter %.S %.c, $(wildcard $($(a)_DIR)$(notdir $(patsubst %.o,%,$(b))).*)), \
+      $($(a)_DIR) \
+    )) \
+  ) \
+)
+
+$(foreach a, $(ALGORITHMS), \
+  $(foreach b, $($(a)_TEST_BIN), \
+    $(eval $(call TargetSource_Template, \
+	  $(BIN_DIR)$(call lc, $(a))/$(TEST_DIR)$(b), \
+      $(if $(call sne,$(strip $(filter %.S %.c, $(wildcard $(TESTSRC_DIR)$(notdir $(patsubst %.o,%,$(b))).*))),), \
+          $(filter %.S %.c, $(wildcard $(TESTSRC_DIR)$(notdir $(patsubst %.o,%,$(b))).*)), \
+          $(filter %.S %.c, $(wildcard ./$(notdir $(patsubst %.o,%,$(b))).*))\
+	  ), \
+      $($(a)_DIR) \
+    )) \
+  ) \
+)
 #-------------------------------------------------------------------------------
 
-define MAIN_OBJ_TEMPLATE
-$(2): $(3) $(4)
-	@echo "[ld] : $$@"
-#	echo $$^
-	@$(CC) $(CFLAGS) $(LDFLAGS)$(patsubst %.elf,%.map,$(2)) -o \
-	$(2) \
-	$(3) $(4) \
+define MainTestElf_Template
+$(1): $(2) $(3)
+	@echo "[ld]: $(1)"
+	@$(CC) $(CFLAGS_A) $(LDFLAGS)$(patsubst %.elf,%.map,$(1)) -o \
+	$(1) \
+	$(2) $(3) \
 	$(LIBS)
 endef
 
-$(foreach algo, $(ALGORITHMS), $(eval $(call MAIN_OBJ_TEMPLATE, \
-   $(algo), \
-   $(TESTBIN_DIR)main-$(call lc,$(algo))-test.elf, \
-   $(patsubst %.o,%.o,$($(algo)_TEST_BIN)), \
-   $(patsubst %.o,%.o,$($(algo)_OBJ))  )))
+$(foreach a, $(ALGORITHMS), \
+    $(eval $(call MainTestElf_Template,  \
+        $(BIN_DIR)$(call lc, $(a))/$(TEST_DIR)main-$(call lc, $(a))-test.elf, \
+        $($(a)_BINOBJ), \
+        $($(a)_TESTBINOBJ) \
+	)) \
+)
 
+#-------------------------------------------------------------------------------
 
+all: $(foreach algo, $(ALGORITHMS), $($(algo)_BINOBJ))
+
+#-------------------------------------------------------------------------------
+
+define TestBin_TEMPLATE
+$(1)_TEST_BIN: $(2)
+endef
+
+$(foreach algo, $(ALGORITHMS), $(eval $(call TestBin_TEMPLATE, \
+    $(algo), \
+    $(BIN_DIR)$(call lc, $(algo))/$(TEST_DIR)main-$(call lc, $(algo))-test.elf \
+)))
+
+#-------------------------------------------------------------------------------
+
+%.hex: %.elf
+	@echo "[objcopy]: $@"
+	@$(OBJCOPY) -j .text -j .data -O ihex $< $@
+
+#-------------------------------------------------------------------------------
+
+define Flash_Template
+$(1)_FLASH: $(2)
+	@echo "[flash]: $(2)"
+	@$(FLASHCMD)$(call first,$(2))
+endef
+
+$(foreach algo, $(ALGORITHMS), $(eval $(call Flash_Template, \
+    $(algo), \
+    $(BIN_DIR)$(call lc, $(algo))/$(TEST_DIR)main-$(call lc, $(algo))-test.hex \
+)))
+
+#-------------------------------------------------------------------------------
+
+.PHONY: tests
+tests: $(foreach a, $(ALGORITHMS), $(a)_TEST_BIN)
+
+#-------------------------------------------------------------------------------
+
+define TestRun_Template
+$(1)_TESTRUN: $(1)_FLASH
+	@echo "[test]: $(1)"
+	$(RUBY) $(GET_TEST) $(TESTPORT) $(TESTPORTBAUDR) 8 1 nessie $(TESTLOG_DIR)$(TESTPREFIX) $(2)
+endef
+
+$(foreach algo, $(ALGORITHMS),$(eval $(call TestRun_Template, $(algo), $(call lc,$(algo)) )))
+
+all_testrun: $(foreach algo, $(ALGORITHMS), $(algo)_TESTRUN)
+
+#-------------------------------------------------------------------------------
+
+define Obj_Template
+$(1)_OBJ: $(2)
+endef
+
+$(foreach algo, $(ALGORITHMS), \
+    $(eval $(call Obj_Template, \
+        $(algo), \
+        $($(algo)_BINOBJ)\
+	))\
+)
+
+.PHONY: cores
+cores: $(foreach algo, $(ALGORITHMS), $(algo)_OBJ)
+
+.PHONY: blockchiphers
+blockciphers: $(foreach algo, $(BLOCK_CIPHERS), $(algo)_OBJ)
+
+.PHONY: streamchiphers
+streamciphers: $(foreach algo, $(STREAM_CIPHERS), $(algo)_OBJ)
+
+.PHONY: hashes
+hashes: $(foreach algo, $(HASHES), $(algo)_OBJ)
+
+.PHONY: macs
+macs: $(foreach algo, $(MACS), $(algo)_OBJ)
+
+.PHONY: prngs
+prngs: $(foreach algo, $(PRNGS), $(algo)_OBJ)
+
+.PHONY: encodings
+encodings: $(foreach algo, $(ENCODINGS), $(algo)_OBJ)
+
+.PHONY: aux
+aux: $(foreach algo, $(AUX), $(algo)_OBJ)
 
 
 #-------------------------------------------------------------------------------
+
+
 .PHONY: help
 help: info
-
+.PHONY: info
 info:
 	@echo "infos on AVR-Crypto-lib:"
 	@echo "  block ciphers:"
@@ -81,10 +222,6 @@ info:
 	@echo "    $(PRNGS)"
 	@echo "  encodings:"
 	@echo "    $(ENCODINGS)"
-#	@echo "  ALGORITHMS_TEST_BIN:"
-#	@echo "    $(ALGORITHMS_TEST_BIN)"
-#	@echo "  ALGORITHMS_TEST_TARGET_ELF:"
-#	@echo "    $(ALGORITHMS_TEST_TARGET_ELF)"
 	@echo " targets:"
 	@echo "  all           - all algorithm cores"
 	@echo "  cores         - all algorithm cores"
@@ -99,266 +236,27 @@ info:
 	@echo "  all_testrun   - testrun all algorithms"
 	@echo "  docu          - build doxygen documentation"
 	@echo "  clean         - remove a lot of builded files"
-	@echo "  xclean        - also remove dependency files"
+	@echo "  depclean      - also remove dependency files"
 	@echo "  *_TEST_BIN    - build test program"
 	@echo "  *_TESTRUN     - run nessie test"
 	@echo "  *_OBJ         - build algorithm core"
 	@echo "  *_FLASH       - flash test program"
 	@echo "  *_LIST        - build assembler listing"
 
-#-------------------------------------------------------------------------------
-	
-define SOURCEFILE_TEMPLATE
-$(BIN_DIR)$(1): $(2)/$(3).c
-	$(CC) $(CFLAGS) -c -o $@ $<
-endef
 
 #-------------------------------------------------------------------------------
-$(BIN_DIR)%.o: %.c
-	@echo "[gcc]:  $@"
-	@$(CC) $(CFLAGS)  -c -o $@ $<
-
-$(BIN_DIR)%.o: %.S
-	@echo "[as] :  $@"
-	@$(CC) $(ASFLAGS) -c -o $@ $<
-
-$(TESTBIN_DIR)%.o: $(TESTSRC_DIR)%.c
-	@echo "[gcc]:  $@"
-	@$(CC) $(CFLAGS)  -c -o $@ $<
-
-$(TESTBIN_DIR)%.o: $(TESTSRC_DIR)%.S
-	@echo "[as] :  $@"
-	@$(CC) $(ASFLAGS) -c -o $@ $<
-
-$(TESTBIN_DIR)%.o: %.c
-	@echo "[gcc]:  $@"
-	@$(CC) $(CFLAGS)  -c -o $@ $<
-
-$(TESTBIN_DIR)%.o: %.S
-	@echo "[as] :  $@"
-	@$(CC) $(ASFLAGS) -c -o $@ $<
-
-
-
-%.o: %.c
-	@echo "[gcc]:  $@"
-	@$(CC) $(CFLAGS)  -c -o $@ $<
-
-%.o: %.S
-	@echo "[as] :  $@"
-	@$(CC) $(ASFLAGS) -c -o $@ $<
-
-#-------------------------------------------------------------------------------
-	
-define OBJ_TEMPLATE
-$(1)_OBJ: $(2)
-#	@echo " ALGO: $(1)"
-#	@echo " REQ:  $(2)"
-endef
-
-$(foreach algo, $(ALGORITHMS), $(eval $(call OBJ_TEMPLATE, $(algo), $($(algo)_OBJ))))
-
-
-#-------------------------------------------------------------------------------
-
-define TESTBIN_TEMPLATE
-$(1)_TEST_BIN: $(2)
-endef
-
-$(foreach algo, $(ALGORITHMS), $(eval $(call TESTBIN_TEMPLATE, $(algo), $($(algo)_TEST_BIN))))
-
-#-------------------------------------------------------------------------------
-
-$(BLOCK_CIPHERS_OBJ): $(patsubst %,%_OBJ, $(BLOCK_CIPHERS)) 
-$(STREAM_CIPHERS_OBJ): $(patsubst %,%_OBJ, $(STREAM_CIPHERS))
-$(HASHES_OBJ): $(patsubst %,%_OBJ, $(HASHES))
-$(PRNGS_OBJ): $(patsubst %,%_OBJ, $(PRNGS))
-$(MACS_OBJ): $(patsubst %,%_OBJ, $(MACS))
-$(ENCODINGS_OBJ): $(patsubst %,%_OBJ, $(ENCODINGS))
-
-#-------------------------------------------------------------------------------
-
-define SIZE_TEMPLATE
-$(1)_size.txt: $(2)
-	@echo "[size]: $(1)_size.txt"
-	@$(SIZE) $(2) > $(1)_size.txt
-endef
-
-$(foreach algo, $(ALGORITHMS), $(eval $(call SIZE_TEMPLATE, $(STAT_DIR)$(call lc,$(algo)), $($(algo)_OBJ))))
-
-#-------------------------------------------------------------------------------
-
-define FLASH_TEMPLATE
-$(1)_FLASH: $(2)
-	@echo "[flash]: $(2)"
-	@$(FLASHCMD)$(call first,$(2))
-endef
-
-$(foreach algo, $(ALGORITHMS),$(eval $(call FLASH_TEMPLATE, $(algo), $(TESTBIN_DIR)main-$(call lc,$(algo))-test.hex) ))  
-
-#-------------------------------------------------------------------------------
-
-define TESTRUN_TEMPLATE
-$(1)_TESTRUN: $(1)_FLASH
-	@echo "[test]: $(1)"
-	$(RUBY) $(GET_TEST)  $(TESTPORT) $(TESTPORTBAUDR) 8 1 nessie $(TESTLOG_DIR)$(TESTPREFIX) $(2)
-endef
-
-$(foreach algo, $(ALGORITHMS),$(eval $(call TESTRUN_TEMPLATE, $(algo), $(call lc,$(algo)) )))
-
-all_testrun: $(foreach algo, $(ALGORITHMS), $(algo)_TESTRUN)
-
-#-------------------------------------------------------------------------------
-
-define TESTSPEED_TEMPLATE
-$(1)_TESTSPEED: $(1)_FLASH
-	@echo "[speed]: $(1)"
-	$(RUBY) $(GET_PERFORMANCE)  $(TESTPORT) $(TESTPORTBAUDR) 8 1 performance $(SPEEDLOG_DIR)$(SPEEDPREFIX) $(2)
-endef
-
-$(foreach algo, $(ALGORITHMS),$(eval $(call TESTSPEED_TEMPLATE, $(algo), $(call lc,$(algo)) )))
-
-all_testspeed: $(foreach algo, $(ALGORITHMS), $(algo)_TESTSPEED)
-hash_testspeed: $(foreach algo, $(HASHES), $(algo)_TESTSPEED)
-
-
-#-------------------------------------------------------------------------------
-
-define LISTING_TEMPLATE
-$(1)_LIST: $(2)
-endef
-
-$(foreach algo, $(ALGORITHMS),$(eval $(call LISTING_TEMPLATE,$(call uc, $(algo)), \
- $(patsubst %,$(LIST_DIR)%, \
-  $(patsubst $(BIN_DIR)%,%, \
-  $(patsubst $(TESTBIN_DIR)%,%, \
-  $(patsubst %.o,%.lst,$($(algo)_OBJ)))) ))))
-
-listings: $(patsubst %,%_LIST,$(ALGORITHMS))
-
-
-$(LIST_DIR)%.lst: $(TESTBIN_DIR)%.elf
-	$(OBJDUMP) -h -S $< > $@
-
-$(LIST_DIR)%.lst: $(BIN_DIR)%.o
-	$(OBJDUMP) -h -S $< > $@
-
-$(LIST_DIR)%.lst: $(TESTBIN_DIR)%.o
-	$(OBJDUMP) -h -S $< > $@
-
-#-------------------------------------------------------------------------------
-
-.PHONY: cores
-cores: $(ALGORITHMS_OBJ)
-
-.PHONY: blockciphers
-blockciphers: $(patsubst %, %_OBJ, $(BLOCK_CIPHERS))
-
-.PHONY: streamciphers
-streamciphers: $(patsubst %, %_OBJ, $(STREAM_CIPHERS))
-
-.PHONY:  hashes
-hashes: $(patsubst %, %_OBJ, $(HASHES))
-
-.PHONY:  macs
-macs: $(patsubst %, %_OBJ, $(MACS))
-
-.PHONY:  prngs
-prngs: $(patsubst %, %_OBJ, $(PRNGS))
-
-.PHONY:  encodings
-encodings: $(patsubst %, %_OBJ, $(ENCODINGS))
-
-tests: $(ALGORITHMS_TEST_BIN) \
-       $(ALGORITHMS_TEST_TARGET_ELF) \
-       $(ALGORITHMS_TEST_TARGET_HEX)
-
-.PHONY:  stats
-stats: $(SIZESTAT_FILE)
-	@cat $(STAT_DIR)$(SIZESTAT_FILE)	
-	
-$(SIZESTAT_FILE): $(patsubst %, $(STAT_DIR)%_size.txt, $(ALGORITHMS_LC))
-	$(RUBY) sumsize.rb $^ > $(STAT_DIR)$(SIZESTAT_FILE)
-	
-#-------------------------------------------------------------------------------	
-
 
 .PHONY: clean
 clean:
-	rm -rf $(BIN_DIR)*.o *.o $(TESTBIN_DIR)*.elf $(TESTBIN_DIR)* *.elf *.eps *.png *.pdf *.bak
-	rm -rf *.lst *.map $(EXTRA_CLEAN_FILES) $(STAT_DIR)$(SIZESTAT_FILE) $(STAT_DIR)*_size.txt
-xclean: clean
-	rm -rf $(DEP_DIR)*.d $(AUTOASM_DIR)*.s
+	rm -rf $(BIN_DIR)*
 
-docu:
-	doxygen
-
-make.dump: Makefile
-	$(MAKE) -p -B -n -f $^ > $@
-
-make.dot: make.dump
-	$(MAKE2GRAPH) $^ > $@
-
-make.png: make.dot
-	$(TWOPI) -Tpng -o $@ $^
-
-make.svg: make.dot
-	$(TWOPI) -Tsvg -o $@ $^
-
-.PHONY: make-info
-make-info: make.png make.svg
-
-
-# Rules for building the .text rom images
-
-%.hex: %.elf
-	@echo "[objcopy]: $@"
-	@$(OBJCOPY) -j .text -j .data -O ihex $< $@
-
-%.srec: %.elf
-	@echo "[objcopy]: $@"
-	@$(OBJCOPY) -j .text -j .data -O srec $< $@
-
-%.bin: %.elf
-	@echo "[objcopy]: $@"
-	@$(OBJCOPY) -j .text -j .data -O binary $< $@
-
-# Rules for building the .eeprom rom images
-
-
-%_eeprom.hex: %.elf
-	@echo "[objcopy]: $@"
-	@$(OBJCOPY) -j .eeprom --change-section-lma .eeprom=0 -O ihex $< $@
-
-%_eeprom.srec: %.elf
-	@echo "[objcopy]: $@"
-	@$(OBJCOPY) -j .eeprom --change-section-lma .eeprom=0 -O srec $< $@
-
-%_eeprom.bin: %.elf
-	@echo "[objcopy]: $@"
-	@$(OBJCOPY) -j .eeprom --change-section-lma .eeprom=0 -O binary $< $@
-	
-#-------------------------------------------------------------------------------
-$(AUTOASM_DIR)%.s: %.c
-	$(CC) $(CFLAGS) $(AUTOASM_OPT) -o $@ $<
-
-%.s: %.c
-	$(CC) $(CFLAGS) $(AUTOASM_OPT) -o $@ $<
+.PHONY: depclean
+depclean: clean
+	rm $(DEP_DIR)*.d
 
 #-------------------------------------------------------------------------------
-FIG2DEV		 = fig2dev
-EXTRA_CLEAN_FILES       = *.hex *.bin *.srec
-
-
-%.eps: %.fig
-	$(FIG2DEV) -L eps $< $@
-
-%.pdf: %.fig
-	$(FIG2DEV) -L pdf $< $@
-
-%.png: %.fig
-	$(FIG2DEV) -L png $< $@
-
+# dependency inclusion
+#
 
 DEPS := $(wildcard $(DEP_DIR)*.d)
 

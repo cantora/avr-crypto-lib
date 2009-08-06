@@ -1,4 +1,4 @@
-/* config.h */
+/* gf256mul.S */
 /*
     This file is part of the AVR-Crypto-Lib.
     Copyright (C) 2008  Daniel Otte (daniel.otte@rub.de)
@@ -16,32 +16,67 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef __CONFIG_H__
-#define __CONFIG_H__
+
+/* 
+ * File:        gf256mul.S
+ * Author:      Daniel Otte
+ * Date:        2008-12-19
+ * License:     GPLv3 or later
+ * Description: peasant's algorithm for multiplication in GF(2^8)
+ * 
+ */
+
 #include <avr/io.h>
-// #define F_CPU 20000000
- #define F_CPU 16000000         /* Oszillator-Frequenz in Hz */
-// #define F_CPU 14745600
+#define OPTIMIZE_SMALL_A
 
+/*
+ * param a: r24
+ * param b: r22
+ * param reducer: r20
+ */
+A = 23
+B = 22
+P = 24
+.global gf256mul
 
-#include "uart_defs.h"
+#ifdef OPTIMIZE_SMALL_A
+gf256mul:
+	mov A, r24
+	clr r24
+1:	
+	lsr A
+	breq 4f
+	brcc 2f
+	eor P, B
+2:
+	lsl B
+	brcc 3f
+	eor B, r20	
+3:
+	rjmp 1b
+4:
+	brcc 2f
+	eor P, B
+2:
+	ret
 
-#define DEBUG uart
+#else
 
-#undef UART_LEDS
-
-#define UART0_I 1
-#define UART0_BAUD_RATE  38400
-#define UART0_PARATY     UART_PARATY_NONE
-#define UART0_STOPBITS   UART_STOPBITS_1
-#define UART0_DATABITS   UART_DATABITS_8
-#define UART0_RXBUFFER_SIZE 64
-#define UART0_TXBUFFER_SIZE 64
-#define UART0_SWFLOWCTRL     1
-#define UART0_THRESH_LOW    10
-#define UART0_THRESH_HIGH   48
-
-#define CLI_AUTO_HELP 
+gf256mul:
+	mov r21, r24
+	clr r24
+	ldi r25, 8
+1:	
+	lsr A
+	brcc 2f
+	eor P, B
+2:
+	lsl B
+	brcc 3f
+	eor B, r20	
+3:
+	dec r25
+	brne 1b
+	ret
 
 #endif
-

@@ -1,4 +1,4 @@
-/* threefish_mix.S */
+/* threefish256_enc_asm.S */
 /*
     This file is part of the AVR-Crypto-Lib.
     Copyright (C) 2009  Daniel Otte (daniel.otte@rub.de)
@@ -21,7 +21,7 @@
  * \email   daniel.otte@rub.de
  * \date    2009-03-16
  * \license GPLv3 or later
- */ 
+ */
 
 #include "avr-asm-macros.S"
 
@@ -103,18 +103,18 @@ threefish256_init:
 	st Z+, A6
 	st Z+, A7
 	/* now the tweak */
-	movw r26, r22
-	tst r27
+	tst r23
 	brne 3f
-	tst r26
+	tst r22
 	brne 3f
 	ldi r26, 3*8
-1:
+2:
 	st Z+, r1
 	dec r26
-	brne 1b
+	brne 2b
 	rjmp 9f
-3:	
+3:
+	movw r26, r22
 	ld A0, X+
 	ld A1, X+
 	ld A2, X+
@@ -155,6 +155,7 @@ threefish256_init:
 	ld r0, X+
 	eor A7, r0
 	st Z+, r0
+
 	st Z+, A0
 	st Z+, A1
 	st Z+, A2
@@ -166,7 +167,7 @@ threefish256_init:
 9:
 	pop_range 14, 17
 	ret
-	
+
 /******************************************************************************/
 /*
 #define X(a) (((uint64_t*)data)[(a)])
@@ -176,7 +177,7 @@ void permute_4(void* data){
 	X(1) = X(3);
 	X(3) = t;
 }
-void add_key_4(void* data, threefish256_ctx_t* ctx, uint8_t s){ /* s: 0..19 * /
+void add_key_4(void* data, threefish256_ctx_t* ctx, uint8_t s){ / * s: 0..19 * /
 	X(0) += ctx->k[(s+0)%5];
 	X(1) += ctx->k[(s+1)%5] + ctx->t[s%3];
 	X(2) += ctx->k[(s+2)%5] + ctx->t[(s+1)%3];
@@ -184,7 +185,7 @@ void add_key_4(void* data, threefish256_ctx_t* ctx, uint8_t s){ /* s: 0..19 * /
 }
 void threefish256_enc(void* data, threefish256_ctx_t* ctx){
 	uint8_t i=0,s=0;
-	uint8_t r0[8] = { 5, 36, 13, 58, 26, 53, 11, 59}; 
+	uint8_t r0[8] = { 5, 36, 13, 58, 26, 53, 11, 59};
 	uint8_t r1[8] = {56, 28, 46, 44, 20, 35, 42, 50};
 	do{
 		if(i%4==0){
@@ -222,7 +223,7 @@ threefish256_enc:
 	movw CTX0, r22
 	clr I
 	clr S
-1:	
+1:
 	mov r30,  I
 	andi r30, 0x03
 	breq 2f
@@ -230,8 +231,7 @@ threefish256_enc:
 2:
 	ldi r30, lo8(threefish256_slut5)
 	ldi r31, hi8(threefish256_slut5)
-	mov r26, S
-	add r30, r26
+	add r30, S
 	adc r31, r1
 	lpm IDX0, Z+
 	lpm IDX1, Z+
@@ -254,7 +254,7 @@ threefish256_enc:
 	add r30, IDX3
 	adc r31, r1
 	rcall add_z_to_x8
-	
+
 	/* now the remaining key */
 	sbiw r26, 3*8
 	ldi r30, lo8(threefish256_slut3)
@@ -276,13 +276,27 @@ threefish256_enc:
 	ld r0, X
 	add r0, S
 	st X+, r0
-	ldi r16, 7
-3:	
 	ld r0, X
 	adc r0, r1
 	st X+, r0
-	dec r16
-	brne 3b
+	ld r0, X
+	adc r0, r1
+	st X+, r0
+	ld r0, X
+	adc r0, r1
+	st X+, r0
+	ld r0, X
+	adc r0, r1
+	st X+, r0
+	ld r0, X
+	adc r0, r1
+	st X+, r0
+	ld r0, X
+	adc r0, r1
+	st X+, r0
+	ld r0, X
+	adc r0, r1
+	st X+, r0
 	inc S
 	mov r26, S
 	cpi r26, 19
@@ -291,8 +305,8 @@ exit:
 	pop_range 2, 17
 	pop r29
 	pop r28
-	ret	
-4:	
+	ret
+4:
 	/* call mix */
 	ldi r30, lo8(threefish256_rc0)
 	ldi r31, hi8(threefish256_rc0)
@@ -314,24 +328,51 @@ exit:
 	adiw r26, 8
 	movw r30, r26
 	adiw r30, 16
-	ldi r16, 8
-3:	ld IDX0, X
+	ld IDX0, X
 	ld IDX1, Z
 	st X+, IDX1
 	st Z+, IDX0
-	dec r16
-	brne 3b
+	ld IDX0, X
+	ld IDX1, Z
+	st X+, IDX1
+	st Z+, IDX0
+	ld IDX0, X
+	ld IDX1, Z
+	st X+, IDX1
+	st Z+, IDX0
+	ld IDX0, X
+	ld IDX1, Z
+	st X+, IDX1
+	st Z+, IDX0
+	ld IDX0, X
+	ld IDX1, Z
+	st X+, IDX1
+	st Z+, IDX0
+	ld IDX0, X
+	ld IDX1, Z
+	st X+, IDX1
+	st Z+, IDX0
+	ld IDX0, X
+	ld IDX1, Z
+	st X+, IDX1
+	st Z+, IDX0
+	ld IDX0, X
+	ld IDX1, Z
+	st X+, IDX1
+	st Z+, IDX0
 	inc I
 	rjmp 1b
-	
+
 threefish256_slut5:
-    .byte 0x00, 0x08, 0x10, 0x18, 0x20, 0x00, 0x08, 0x10 
+    .byte 0x00, 0x08, 0x10, 0x18, 0x20, 0x00, 0x08, 0x10
 	.byte 0x18, 0x20, 0x00, 0x08, 0x10, 0x18, 0x20, 0x00
 	.byte 0x08, 0x10, 0x18, 0x20, 0x00, 0x08, 0x10
 threefish256_slut3:
 	.byte 0x00, 0x08, 0x10, 0x00, 0x08, 0x10, 0x00, 0x08
-	.byte 0x10, 0x00, 0x08, 0x10, 0x00, 0x08, 0x10, 0x00 
+	.byte 0x10, 0x00, 0x08, 0x10, 0x00, 0x08, 0x10, 0x00
 	.byte 0x08, 0x10, 0x00, 0x08, 0x10, 0x00, 0x08
+;threefish256_rc0: .byte  5, 36, 13, 58, 26, 53, 11, 59
+;threefish256_rc1: .byte 56, 28, 46, 44, 20, 35, 42, 50
 threefish256_rc0: .byte 0x1b, 0x44, 0x2b, 0x72, 0x32, 0x7b, 0x13, 0x73
 threefish256_rc1: .byte 0x70, 0x34, 0x6a, 0x54, 0x24, 0x43, 0x52, 0x62
 
@@ -340,19 +381,39 @@ add_z_to_x8:
 	ld r1, X
 	add r1, r0
 	st X+, r1
-	ldi r16, 7
-1:
 	ld r0, Z+
 	ld r1, X
 	adc r1, r0
 	st X+, r1
-	dec r16
-	brne 1b
+	ld r0, Z+
+	ld r1, X
+	adc r1, r0
+	st X+, r1
+	ld r0, Z+
+	ld r1, X
+	adc r1, r0
+	st X+, r1
+	ld r0, Z+
+	ld r1, X
+	adc r1, r0
+	st X+, r1
+	ld r0, Z+
+	ld r1, X
+	adc r1, r0
+	st X+, r1
+	ld r0, Z+
+	ld r1, X
+	adc r1, r0
+	st X+, r1
+	ld r0, Z+
+	ld r1, X
+	adc r1, r0
+	st X+, r1
 	clr r1
 	ret
-	
-	
-	
+
+
+
 
 
 
