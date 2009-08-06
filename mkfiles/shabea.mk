@@ -4,6 +4,7 @@ ALGO_NAME := SHABEA
 # comment out the following line for removement of SHABEA from the build process
 BLOCK_CIPHERS += $(ALGO_NAME)
 
+$(ALGO_NAME)_DIR      := shabea/
 $(ALGO_NAME)_OBJ      := shabea.o sha256-asm.o memxor.o
 $(ALGO_NAME)_TEST_BIN := main-shabea-test.o $(CLI_STD)  \
                          nessie_bc_test.o nessie_common.o performance_test.o

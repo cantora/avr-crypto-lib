@@ -28,9 +28,10 @@
 
 #include "md5.h"
 #include "hmac-md5.h"
+/*
 #include "base64_enc.h"
 #include "base64_dec.h"
-
+*/
 #include "nessie_mac_test.h"
 
 #include <stdint.h>
@@ -109,6 +110,7 @@ void strhexdump(char* dest, void* src, uint16_t length){
 	}
 }
 
+/*
 void cram_md5_interactive(void){
 	char key[101];
 	char msg_b64[101];
@@ -137,9 +139,9 @@ void cram_md5_interactive(void){
 	cli_putstr_P(PSTR("\r\nresponse: "));
 	cli_hexdump(hmac, HMAC_MD5_BYTES);
 	cli_putstr_P(PSTR("\r\nresponse (b64): "));
-	cli_putstr(msg_b64);
-	
+	cli_putstr(msg_b64);	
 }
+*/
 
 
 void md5_interactive(void){
@@ -164,7 +166,7 @@ const char test_str[]        PROGMEM = "test";
 /* const char performance_str[] PROGMEM = "performance"; */
 const char echo_str[]        PROGMEM = "echo";
 const char hmd5i_str[]       PROGMEM = "hmac-md5";
-const char crammd5i_str[]    PROGMEM = "cram-md5";
+/* const char crammd5i_str[]    PROGMEM = "cram-md5"; */
 const char md5i_str[]        PROGMEM = "md5";
 
 
@@ -172,7 +174,7 @@ cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ nessie_str,      NULL, testrun_nessie_hmacmd5},
 	{ test_str,        NULL, testrun_test_hmacmd5},
 	{ hmd5i_str,       NULL, hmacmd5_interactive},
-	{ crammd5i_str,    NULL, cram_md5_interactive},
+/*	{ crammd5i_str,    NULL, cram_md5_interactive},        */
 	{ md5i_str,        NULL, md5_interactive},
 /*	{ performance_str, NULL, testrun_performance_hmacmd5}, */
 	{ echo_str,    (void*)1, (void_fpt)echo_ctrl},

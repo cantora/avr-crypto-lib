@@ -4,7 +4,7 @@ ALGO_NAME := SERPENT_ASM_BITSLICE
 # comment out the following line for removement of serpent from the build process
 BLOCK_CIPHERS += $(ALGO_NAME)
 
-
+$(ALGO_NAME)_DIR      := serpent/
 $(ALGO_NAME)_OBJ      := serpent-sboxes-bitslice-asm.o serpent-asm.o memxor.o
 $(ALGO_NAME)_TEST_BIN := main-serpent-test.o $(CLI_STD)  \
                          nessie_bc_test.o nessie_common.o performance_test.o

@@ -4,6 +4,7 @@ ALGO_NAME := SKIPJACK
 # comment out the following line for removement of skipjack from the build process
 BLOCK_CIPHERS += $(ALGO_NAME)
 
+$(ALGO_NAME)_DIR      := skipjack/
 $(ALGO_NAME)_OBJ      := skipjack.o
 $(ALGO_NAME)_TEST_BIN := main-skipjack-test.o $(CLI_STD) \
                          nessie_bc_test.o nessie_common.o performance_test.o
