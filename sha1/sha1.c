@@ -22,23 +22,24 @@
  * \date	2006-10-08
  * \license GPLv3 or later
  * \brief SHA-1 implementation.
- * 
+ *
  */
- 
+
 #include <string.h> /* memcpy & co */
 #include <stdint.h>
 #include "config.h"
 #undef DEBUG
+//#define DEBUG UART
 #include "debug.h"
 #include "sha1.h"
 
 #define LITTLE_ENDIAN
 
 /********************************************************************************************************/
- 
+
 /**
  * \brief initialises given SHA-1 context
- * 
+ *
  */
 void sha1_init(sha1_ctx_t *state){
 	DEBUG_S("\r\nSHA1_INIT");
@@ -81,10 +82,10 @@ uint32_t parity(uint32_t x, uint32_t y, uint32_t z){
 /**
  * \brief "add" a block to the hash
  * This is the core function of the hash algorithm. To understand how it's working
- * and what thoese variables do, take a look at FIPS-182. This is an "alternativ" implementation 
+ * and what thoese variables do, take a look at FIPS-182. This is an "alternativ" implementation
  */
 
-#define MASK 0x0000000f 
+#define MASK 0x0000000f
 
 typedef uint32_t (*pf_t)(uint32_t x, uint32_t y, uint32_t z);
 
@@ -94,11 +95,11 @@ void sha1_nextBlock (sha1_ctx_t *state, const void* block){
 	uint32_t temp;
 	uint8_t t,s;
 	pf_t f[] = {ch,parity,maj,parity};
-	uint32_t k[4]={	0x5a827999, 
-					0x6ed9eba1, 
-					0x8f1bbcdc, 
+	uint32_t k[4]={	0x5a827999,
+					0x6ed9eba1,
+					0x8f1bbcdc,
 					0xca62c1d6};
-	
+
 	/* load the w array (changing the endian and so) */
 	for(t=0; t<16; ++t){
 		w[t] = change_endian32(((uint32_t*)block)[t]);
@@ -113,32 +114,32 @@ void sha1_nextBlock (sha1_ctx_t *state, const void* block){
 			cli_hexdump(&(w[dbgi]) ,4);
 		#endif
 	}
-	
-	
+
+
 	/* load the state */
 	memcpy(a, state->h, 5*sizeof(uint32_t));
-	
-	
+
+
 	/* the fun stuff */
 	for(t=0; t<=79; ++t){
 		s = t & MASK;
 		if(t>=16){
 			#ifdef DEBUG
-			 DEBUG_S("\r\n ws = "); cli_hexdump(&ws, 4);
+			 DEBUG_S("\r\n ws = "); cli_hexdump(&(w[s]), 4);
 			#endif
-			w[s] = rotl32( w[(s+13)&MASK] ^ w[(s+8)&MASK] ^ 
-				 w[(s+ 2)&MASK] ^ w[s] ,1);			
+			w[s] = rotl32( w[(s+13)&MASK] ^ w[(s+8)&MASK] ^
+				 w[(s+ 2)&MASK] ^ w[s] ,1);
 			#ifdef DEBUG
 			 DEBUG_S(" --> ws = "); cli_hexdump(&(w[s]), 4);
 			#endif
 		}
-		
+
 		uint32_t dtemp;
 		temp = rotl32(a[0],5) + (dtemp=f[t/20](a[1],a[2],a[3])) + a[4] + k[t/20] + w[s];
 		memmove(&(a[1]), &(a[0]), 4*sizeof(uint32_t)); /* e=d; d=c; c=b; b=a; */
 		a[0] = temp;
 		a[2] = rotl32(a[2],30); /* we might also do rotr32(c,2) */
-		
+
 		/* debug dump */
 		DEBUG_S("\r\nt = "); DEBUG_B(t);
 		DEBUG_S("; a[]: ");
@@ -154,7 +155,7 @@ void sha1_nextBlock (sha1_ctx_t *state, const void* block){
 		 cli_hexdump(&dtemp, 4);
 		#endif
 	}
-	
+
 	/* update the state */
 	for(t=0; t<5; ++t){
 		state->h[t] += a[t];
@@ -166,31 +167,33 @@ void sha1_nextBlock (sha1_ctx_t *state, const void* block){
 
 void sha1_lastBlock(sha1_ctx_t *state, const void* block, uint16_t length){
 	uint8_t lb[SHA1_BLOCK_BITS/8]; /* local block */
-	state->length += length;
-	memcpy (&(lb[0]), block, length/8);
-	
-	/* set the final one bit */
-	if (length & 0x7){ /* if we have single bits at the end */
-		lb[length/8] = ((uint8_t*)(block))[length/8];
-	} else {
-		lb[length/8] = 0;
+	while(length>=512){
+		sha1_nextBlock(state, block);
+		length -=512;
+		block = (uint8_t*)block + 512/8;
 	}
-	lb[length/8] |= 0x80>>(length & 0x3);
-	length =(length >> 7) + 1; /* from now on length contains the number of BYTES in lb*/
-	/* pad with zeros */
+	state->length += length;
+	memcpy (lb, block, (length+7)/8);
+
+	/* set the final one bit */
+	lb[length/8] |= 0x80>>(length & 0x07);
+	length=(length)/8 +1; /* from now on length contains the number of BYTES in lb */
+
 	if (length>64-8){ /* not enouth space for 64bit length value */
-		memset((void*)(&(lb[length])), 0, 64-length);
+		memset(lb+length, 0, 64-length);
 		sha1_nextBlock(state, lb);
 		state->length -= 512;
-		length = 0;	
+		length = 0;
 	}
-	memset((void*)(&(lb[length])), 0, 56-length);
+
+	/* pad with zeros */
+	memset(lb+length, 0, 56-length);
 	/* store the 64bit length value */
 #if defined LITTLE_ENDIAN
 	 	/* this is now rolled up */
-	uint8_t i; 	
-	for (i=1; i<=8; ++i){
-		lb[55+i] = (uint8_t)(state->length>>(64- 8*i));
+	uint8_t i;
+	for (i=0; i<8; ++i){
+		lb[56+i] = ((uint8_t*)&(state->length))[7-i];
 	}
 #elif defined BIG_ENDIAN
 	*((uint64_t)&(lb[56])) = state->length;
@@ -216,8 +219,8 @@ void sha1_ctx2hash (sha1_hash_t *dest, sha1_ctx_t *state){
 
 /********************************************************************************************************/
 /**
- * 
- * 
+ *
+ *
  */
 void sha1 (sha1_hash_t *dest, const void* msg, uint32_t length){
 	sha1_ctx_t s;

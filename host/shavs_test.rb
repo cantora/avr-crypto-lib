@@ -1,4 +1,4 @@
-#!/usr/bin/ruby 
+#!/usr/bin/ruby
 # shavs_test.rb
 =begin
     This file is part of the AVR-Crypto-Lib.
@@ -50,7 +50,7 @@ def get_md
 	line = "" if line==nil
 	puts("DBG g: "+line) if $debug
   end while not /[\s]*MD[\s]*=.*/.match(line)
-  return line	
+  return line
 end
 
 def send_md(md_string)
@@ -59,12 +59,12 @@ def send_md(md_string)
 #	print("DBG s: "+ md_string[i].chr) if $debug
 	if(i%20==19)
 		sleep(0.1)
-	end		
+	end
   end
 end
 
 def run_test(filename)
-  errors = 0
+  nerrors = 0
   line=1
   if not File.exist?(filename)
   	puts("ERROR file "+filename+" does not exist!")
@@ -101,12 +101,12 @@ def run_test(filename)
 	  putc('*')
 	else
 	  putc('!')
-	#  printf("\nshould: %s\ngot:   %s\n",lb,avr_md)
-	  errors += 1;
-	end  
+	  printf("\nshould: %s\ngot:   %s\n",lb,avr_md)
+	  nerrors += 1
+	end
 	pos += 1
   end
-  return errors
+  return nerrors.to_i
 end
 
 if ARGV.size < 6
@@ -119,9 +119,9 @@ end
 puts("\nPort: "+ARGV[0]+ "@"+ARGV[1]+" "+ARGV[2]+"N"+ARGV[3]+"\n");
 puts("serial port interface version: " + SerialPort::VERSION);
 $linewidth = 64
-$params = { "baud"      => ARGV[1].to_i, 
-            "data_bits" => ARGV[2].to_i, 
-            "stop_bits" => ARGV[3].to_i, 
+$params = { "baud"      => ARGV[1].to_i,
+            "data_bits" => ARGV[2].to_i,
+            "stop_bits" => ARGV[3].to_i,
             "parity"    => SerialPort::NONE }
 $sp = SerialPort.new(ARGV[0], $params)
 #$sp = SerialPort.new(ARGV[0], ARGV[1].to_i, ARGV[2].to_i, ARGV[3].to_i, SerialPort::NONE);
@@ -133,13 +133,13 @@ $algo_select = ARGV[4]
 
 init_system()
 
-errors = 0
+nerrors = 0
 for i in (5..(ARGV.size-1))
-  errors = run_test(ARGV[i])
-  if errors == 0
+  nerrors = run_test(ARGV[i])
+  if nerrors == 0
     puts("\n[ok]")
   else
-    puts("\n[errors: "+errors.to_s+"]")
+    puts("\n[errors: "+ nerrors.to_s() +"]")
   end
 end
  $sp.print("EXIT\r");

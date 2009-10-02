@@ -24,11 +24,12 @@
 	#define DEBUG_C(_c) debug_char(_c)
 	#define DEBUG_S(_s) debug_str(_s)
 	#define DEBUG_B(_b) debug_byte(_b)
+	#include "cli.h"
 #else
 	#define DEBUG_INIT()
-	#define DEBUG_C(_c) 
-	#define DEBUG_S(_s) 
-	#define DEBUG_B(_b) 
+	#define DEBUG_C(_c)
+	#define DEBUG_S(_s)
+	#define DEBUG_B(_b)
 #endif
 
 
