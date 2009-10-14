@@ -21,7 +21,7 @@
  * \email   daniel.otte@rub.de
  * \date    2009-03-24
  * \license GPLv3 or later
- */ 
+ */
 
 #include "avr-asm-macros.S"
 
@@ -113,7 +113,7 @@ threefish512_init:
 	dec r26
 	brne 1b
 	rjmp 9f
-3:	
+3:
 	ld A0, X+
 	ld A1, X+
 	ld A2, X+
@@ -165,7 +165,7 @@ threefish512_init:
 9:
 	pop_range 14, 17
 	ret
-	
+
 /******************************************************************************/
 /*
 #define X(a) (((uint64_t*)data)[(a)])
@@ -191,7 +191,7 @@ void add_key_8(void* data, const threefish512_ctx_t* ctx, uint8_t s){
 }
 void threefish512_enc(void* data, const threefish512_ctx_t* ctx){
 	uint8_t i=0,s=0;
-	uint8_t r0[8] = {38, 48, 34, 26, 33, 39, 29, 33}; 
+	uint8_t r0[8] = {38, 48, 34, 26, 33, 39, 29, 33};
 	uint8_t r1[8] = {30, 20, 14, 12, 49, 27, 26, 51};
 	uint8_t r2[8] = {50, 43, 15, 58,  8, 41, 11, 39};
 	uint8_t r3[8] = {53, 31, 27,  7, 42, 14,  9, 35};
@@ -238,7 +238,7 @@ threefish512_enc:
 	movw CTX0, r22
 	clr I
 	clr S
-1:	
+1:
 	mov r30,  I
 	andi r30, 0x03
 	breq 2f
@@ -289,7 +289,7 @@ threefish512_enc:
 	add r30, IDX7
 	adc r31, r1
 	rcall add_z_to_x8
-	
+
 	/* now the remaining key */
 	sbiw r26, 3*8
 	ldi r30, lo8(threefish512_slut3)
@@ -341,8 +341,8 @@ exit:
 	pop_range 2, 17
 	pop r29
 	pop r28
-	ret	
-4:	
+	ret
+4:
 	/* call mix */
 	ldi r30, lo8(threefish512_rc0)
 	ldi r31, hi8(threefish512_rc0)
@@ -358,7 +358,7 @@ exit:
 	push IDX1
 	adiw r30, 8
 	lpm IDX1, Z
-	
+
 	movw r24, DATA0
 	call threefish_mix_asm /* no rcall? */
 	movw r24, DATA0
@@ -387,7 +387,7 @@ exit:
 	adiw r26, 2*8
 	movw r30, DATA0
 	adiw r30, 4*8
-	rcall xchg_zx8	
+	rcall xchg_zx8
 	movw r26, DATA0
 	adiw r26, 3*8
 	movw r30, DATA0
@@ -395,22 +395,27 @@ exit:
 	rcall xchg_zx8
 	inc I
 	rjmp 1b
-	
+
 threefish512_slut9:
 	.byte 0x00, 0x08, 0x10, 0x18, 0x20, 0x28, 0x30, 0x38
 	.byte 0x40, 0x00, 0x08, 0x10, 0x18, 0x20, 0x28, 0x30
-	.byte 0x38, 0x40, 0x00, 0x08, 0x10, 0x18, 0x20,	0x28 
+	.byte 0x38, 0x40, 0x00, 0x08, 0x10, 0x18, 0x20,	0x28
 	.byte 0x30, 0x38, 0x40
 threefish512_slut3:
 	.byte 0x00, 0x08, 0x10, 0x00, 0x08, 0x10, 0x00, 0x08
-	.byte 0x10, 0x00, 0x08, 0x10, 0x00, 0x08, 0x10, 0x00 
+	.byte 0x10, 0x00, 0x08, 0x10, 0x00, 0x08, 0x10, 0x00
 	.byte 0x08, 0x10, 0x00, 0x08, 0x10, 0x00, 0x08
 
-threefish512_rc0: .byte 0x5a, 0x60, 0x42, 0x32, 0x41, 0x59, 0x4b, 0x41 
-threefish512_rc1: .byte 0x4a, 0x24, 0x2a, 0x14, 0x61, 0x33, 0x32, 0x63 
-threefish512_rc2: .byte 0x62, 0x53, 0x29, 0x72, 0x10, 0x51, 0x13, 0x59 
-threefish512_rc3: .byte 0x7b, 0x49, 0x33, 0x19, 0x52, 0x2a, 0x11, 0x43 
-
+/* old round constants
+threefish512_rc0: .byte 0x5a, 0x60, 0x42, 0x32, 0x41, 0x59, 0x4b, 0x41
+threefish512_rc1: .byte 0x4a, 0x24, 0x2a, 0x14, 0x61, 0x33, 0x32, 0x63
+threefish512_rc2: .byte 0x62, 0x53, 0x29, 0x72, 0x10, 0x51, 0x13, 0x59
+threefish512_rc3: .byte 0x7b, 0x49, 0x33, 0x19, 0x52, 0x2a, 0x11, 0x43
+*/
+threefish512_rc0:  .byte 0x6a, 0x41, 0x21, 0x54, 0x59, 0x2b, 0x31, 0x10
+threefish512_rc1:  .byte 0x44, 0x33, 0x61, 0x11, 0x4a, 0x62, 0x4b, 0x43
+threefish512_rc2:  .byte 0x23, 0x2a, 0x44, 0x7a, 0x42, 0x12, 0x59, 0x70
+threefish512_rc3:  .byte 0x5b, 0x52, 0x59, 0x70, 0x30, 0x21, 0x53, 0x3a
 add_z_to_x8:
 	ld r0, Z+
 	ld r1, X
@@ -446,16 +451,16 @@ add_z_to_x8:
 	st X+, r1
 	clr r1
 	ret
-	
+
 T0 = IDX0
 T1 = 0
-CNT = 24	
+CNT = 24
 xchg_zx8:
 	ldi CNT, 8
 1:	ld T0, X
 	ld T1, Z
 	st X+, T1
-	st Z+, T0	
+	st Z+, T0
 	dec CNT
 	brne 1b
 	ret

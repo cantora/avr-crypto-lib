@@ -21,9 +21,9 @@
  * \email   daniel.otte@rub.de
  * \date    2009-03-12
  * \license GPLv3 or later
- * 
- * 
- * 
+ *
+ *
+ *
  */
 
 #include <stdint.h>
@@ -88,6 +88,7 @@ void add_key_16(void* data, const threefish1024_ctx_t* ctx, uint8_t s){
 
 void threefish1024_enc(void* data, const threefish1024_ctx_t* ctx){
 	uint8_t i=0,s=0;
+	/* old constans, changed at round 2 of the SHA-3 contest
 	uint8_t r0[8] = {55, 25, 33, 34, 28, 17, 58, 47};
 	uint8_t r1[8] = {43, 25,  8, 43,  7,  6,  7, 49};
 	uint8_t r2[8] = {37, 46, 18, 25, 47, 18, 32, 27};
@@ -96,7 +97,15 @@ void threefish1024_enc(void* data, const threefish1024_ctx_t* ctx){
 	uint8_t r5[8] = {22, 13, 12,  9,  9, 42, 18, 48};
 	uint8_t r6[8] = {38, 52, 32, 59, 35, 40,  2, 53};
 	uint8_t r7[8] = {12, 57, 54, 34, 41, 15, 56, 56};
-	
+	*/
+	uint8_t r0[8] = {24, 38, 33,  5, 41, 16, 31,  9};
+	uint8_t r1[8] = {13, 19,  4, 20,  9, 34, 44, 48};
+	uint8_t r2[8] = { 8, 10, 51, 48, 37, 56, 47, 35};
+	uint8_t r3[8] = {47, 55, 13, 41, 31, 51, 46, 52};
+	uint8_t r4[8] = { 8, 49, 34, 47, 12,  4, 19, 23};
+	uint8_t r5[8] = {17, 18, 41, 28, 47, 53, 42, 31};
+	uint8_t r6[8] = {22, 23, 59, 16, 44, 42, 44, 37};
+	uint8_t r7[8] = {37, 52, 17, 25, 30, 41, 25, 20};
 	do{
 		if(i%4==0){
 			add_key_16(data, ctx, s);

@@ -103,8 +103,8 @@ void testrun_sha1(void){
 	cli_putstr_P(PSTR("\r\nsha1(tv_496) = \r\n\t"));
 	cli_hexdump(hash,SHA1_HASH_BITS/8);
 
-//	sha1(&hash,"abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq",448);
-	cli_putstr_P(PSTR("\r\nsha1(\"abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq\") = \r\n\t"));
+	sha1(&hash,"abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq",448);
+//	cli_putstr_P(PSTR("\r\nsha1(\"abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq\") = \r\n\t"));
 	cli_hexdump(hash,SHA1_HASH_BITS/8);
 /*
 	cli_putstr("\r\nsha1(1,000,000 * 'a') = \r\n\t");

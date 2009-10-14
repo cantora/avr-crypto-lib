@@ -21,9 +21,9 @@
  * \email   daniel.otte@rub.de
  * \date    2009-03-12
  * \license GPLv3 or later
- * 
- * 
- * 
+ *
+ *
+ *
  */
 
 #include <stdint.h>
@@ -69,8 +69,12 @@ void add_key_4(void* data, const threefish256_ctx_t* ctx, uint8_t s){
 
 void threefish256_enc(void* data, const threefish256_ctx_t* ctx){
 	uint8_t i=0,s=0;
-	uint8_t r0[8] = { 5, 36, 13, 58, 26, 53, 11, 59}; 
+/* old constans, changed at round 2 of the SHA-3 contest
+	uint8_t r0[8] = { 5, 36, 13, 58, 26, 53, 11, 59};
 	uint8_t r1[8] = {56, 28, 46, 44, 20, 35, 42, 50};
+*/
+	uint8_t r0[8] = {14, 52, 23,  5, 25, 46, 58, 32};
+	uint8_t r1[8] = {16, 57, 40, 37, 33, 12, 22, 32};
 	do{
 		if(i%4==0){
 			add_key_4(data, ctx, s);

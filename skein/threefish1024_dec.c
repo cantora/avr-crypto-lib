@@ -21,9 +21,9 @@
  * \email   daniel.otte@rub.de
  * \date    2009-03-12
  * \license GPLv3 or later
- * 
- * 
- * 
+ *
+ *
+ *
  */
 
 #include <stdint.h>
@@ -44,7 +44,7 @@ void permute_inv16(void* data){
 	X(11) = X(5);
 	X(5) = X(13);
 	X(13) = X(3);
-	X(3) = t; 		
+	X(3) = t;
 	t = X(4);
 	X(4) = X(6);
 	X(6) = t;
@@ -68,6 +68,7 @@ void add_key_16(void* data, const threefish1024_ctx_t* ctx, uint8_t s){
 
 void threefish1024_dec(void* data, const threefish1024_ctx_t* ctx){
 	uint8_t i=0,s=20;
+	/* old round constants
 	uint8_t r0[8] = {47, 58, 17, 28, 34, 33, 25, 55};
 	uint8_t r1[8] = {49,  7,  6,  7, 43,  8, 25, 43};
 	uint8_t r2[8] = {27, 32, 18, 47, 25, 18, 46, 37};
@@ -76,6 +77,15 @@ void threefish1024_dec(void* data, const threefish1024_ctx_t* ctx){
 	uint8_t r5[8] = {48, 18, 42,  9,  9, 12, 13, 22};
 	uint8_t r6[8] = {53,  2, 40, 35, 59, 32, 52, 38};
 	uint8_t r7[8] = {56, 56, 15, 41, 34, 54, 57, 12};
+	*/
+	uint8_t r0[8] = {  9, 31, 16, 41,  5, 33, 38, 24};
+	uint8_t r1[8] = { 48, 44, 34,  9, 20,  4, 19, 13};
+	uint8_t r2[8] = { 35, 47, 56, 37, 48, 51, 10,  8};
+	uint8_t r3[8] = { 52, 46, 51, 31, 41, 13, 55, 47};
+	uint8_t r4[8] = { 23, 19,  4, 12, 47, 34, 49,  8};
+	uint8_t r5[8] = { 31, 42, 53, 47, 28, 41, 18, 17};
+	uint8_t r6[8] = { 37, 44, 42, 44, 16, 59, 23, 22};
+	uint8_t r7[8] = { 20, 25, 41, 30, 25, 17, 52, 37};
 	do{
 		if(i%4==0){
 			add_key_16(data, ctx, s);

@@ -21,9 +21,9 @@
  * \email   daniel.otte@rub.de
  * \date    2009-03-22
  * \license GPLv3 or later
- * 
- * 
- * 
+ *
+ *
+ *
  */
 
 #include <stdint.h>
@@ -60,10 +60,17 @@ void add_key_8(void* data, const threefish512_ctx_t* ctx, uint8_t s){
 
 void threefish512_dec(void* data, const threefish512_ctx_t* ctx){
 	uint8_t i=0,s=18;
-	uint8_t r0[8] = {33, 29, 39, 33, 26, 34, 48, 38}; 
+	/* old round constants
+	uint8_t r0[8] = {33, 29, 39, 33, 26, 34, 48, 38};
 	uint8_t r1[8] = {51, 26, 27, 49, 12, 14, 20, 30};
 	uint8_t r2[8] = {39, 11, 41,  8, 58, 15, 43, 50};
 	uint8_t r3[8] = {35,  9, 14, 42,  7, 27, 31, 53};
+	*/
+	uint8_t r0[8] = {  8, 25, 13, 39, 44, 17, 33, 46};
+	uint8_t r1[8] = { 35, 29, 50, 30,  9, 49, 27, 36};
+	uint8_t r2[8] = { 56, 39, 10, 34, 54, 36, 14, 19};
+	uint8_t r3[8] = { 22, 43, 17, 24, 56, 39, 42, 37};
+
 	do{
 		if(i%4==0){
 			add_key_8(data, ctx, s);

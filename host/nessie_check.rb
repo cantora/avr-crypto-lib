@@ -1,4 +1,4 @@
-#!/usr/bin/ruby 
+#!/usr/bin/ruby
 # nessie_check.rb
 =begin
     This file is part of the AVR-Crypto-Lib.
@@ -84,10 +84,10 @@ def compare(fname1, fname2)
       pos +=1
 	end
 	if(a!=b and a!=nil and b!=nil)
-	  $error = 1
-	  puts("a key: "+a[0]+" value: "+a[1])
-	  puts("b key: "+b[0]+" value: "+b[1])
-	end	
+	  $error += 1
+#	  puts("a key: "+a[0]+" value: "+a[1])
+#	  puts("b key: "+b[0]+" value: "+b[1])
+	end
   end until a==nil or b==nil
 end
 
@@ -112,9 +112,13 @@ else
   f1 = ARGV[0]
   f2 = ARGV[1]
 end
-  
+
 puts("compare("+f1+", "+f2+")")
 compare(f1, f2)
-puts($error==0?"[ok]":"[failed]")
+if $error!=0
+  puts("[failed] ("+$error.to_s()+")")
+else
+  puts("[ok]")
+end
 
 exit($error)
