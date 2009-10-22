@@ -24,19 +24,23 @@ require 'rubygems'
 require 'serialport'
 
 def init_system
-  sleep 1
-  $sp.print("echo  off \r")
-  print("DBG i: " + "echo  off \r"+"\n") if $debug
+#  sleep 1
+  $sp.print("exit\r")
+  sleep 0.1
+  $sp.print("exit\r")
+  sleep 0.1
+  $sp.print("echo off \r")
+  print("DBG i: " + "echo off \r"+"\n") if $debug
 #  line = $sp.readlines()
 #  print("DBG 0.0: ")
 #  print(line)
-#  sleep 1
-  $sp.print("shavs_set #{$algo_select} \r")
-  print("DBG i: " + "shavs_set #{$algo_select} \r"+"\n") if $debug
+  sleep 1
+  $sp.print("shavs_set #{$algo_select}\r")
+  print("DBG i: " + "shavs_set #{$algo_select} \r"+"\n") # if $debug
 #  line = $sp.readlines()
 #  print("DBG 0.1: ")
 #  print(line)
-#  sleep 1
+  sleep 1
   $sp.print("shavs_test1 \r")
   print("DBG i: " + "shavs_test1 \r"+"\n") if $debug
 #  line = $sp.readlines()
@@ -58,7 +62,7 @@ def send_md(md_string)
     $sp.print(md_string[i].chr)
 #	print("DBG s: "+ md_string[i].chr) if $debug
 	if(i%20==19)
-		sleep(0.1)
+		sleep(0.15)
 	end
   end
 end

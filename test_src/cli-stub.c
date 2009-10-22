@@ -17,16 +17,16 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * 
+ *
  * author: Daniel Otte
  * email:  daniel.otte@rub.de
  * license: GPLv3 or later
- * 
+ *
  * components to help implementing simple command based interaction
- * 
+ *
  **/
- 
-#include <stdlib.h> 
+
+#include <stdlib.h>
 #include <stdint.h>
 #include <ctype.h>
 #include <string.h>
@@ -44,7 +44,7 @@ void     echo_ctrl(char* s);
 uint16_t max_cmd_length(PGM_VOID_P cmdlist);
 int8_t   search_and_call(char* cmd, uint16_t maxcmdlength, PGM_VOID_P cmdlist);
 void     cli_option_listing(char* buffer, PGM_VOID_P cmdlist);
-void     cli_auto_help(uint16_t maxcmdlength, PGM_VOID_P cmdlist);	
+void     cli_auto_help(uint16_t maxcmdlength, PGM_VOID_P cmdlist);
 
 typedef void(*str_fpt)(char*);
 #define CLI_ENTER     13
@@ -102,9 +102,11 @@ int8_t cmd_interface(PGM_VOID_P cmd_desc){
 				free(cli_buffer);
 				return exit_code;
 			}
+			cli_putstr(cli_buffer);
+
 			memset(cli_buffer, 0, cli_buffer_size);
 			cli_buffer_index=0;
-			cli_putstr_P(PSTR("\r\n>"));
+			cli_putstr_P(PSTR(" DONE\r\n>"));
 			completion_failed=0;
 			break;
 		case CLI_BACKSPACE:
@@ -123,7 +125,7 @@ int8_t cmd_interface(PGM_VOID_P cmd_desc){
 					cli_option_listing(cli_buffer, cmd_desc);
 			} else {
 				uint16_t old_idx = cli_buffer_index;
-				completion_failed = 
+				completion_failed =
 					~cli_completion(cli_buffer, maxcmdlength, cmd_desc);
 				cli_buffer_index = strlen(cli_buffer);
 				if(cli_echo && cli_tx){

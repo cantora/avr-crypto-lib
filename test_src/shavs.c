@@ -18,10 +18,10 @@
 */
 /**
  * \file	shavs.c
- * \author  Daniel Otte 
+ * \author  Daniel Otte
  * \date    2006-05-16
  * \license	GPLv3 or later
- * 
+ *
  */
 
 #include <avr/pgmspace.h>
@@ -39,7 +39,7 @@ hfdesc_t** shavs_algolist=NULL;
 
 void shavs_listalgos(void){
 	char option = 'a';
-		
+
 	hfdesc_t* t;
 	uint8_t i=0;
 	cli_putstr_P(PSTR("\r\nthe following algorithms are available:\r\n"));
@@ -58,7 +58,7 @@ void shavs_setalgo(char* param){
 	param = strstrip(param);
 	if(param[1]=='\0'){ /* single letter specified */
 		uint8_t i,option = param[0]-'a';
-		
+
 		if(!shavs_algolist){
 			cli_putstr_P(PSTR("\r\nERROR: shavs_algolist not set!"));
 			return;
@@ -70,7 +70,7 @@ void shavs_setalgo(char* param){
 			}
 		}
 		shavs_algo=(hfdesc_t*)pgm_read_word(&(shavs_algolist[option]));
-	} else { /* name specifyed */ 
+	} else { /* name specifyed */
 		hfdesc_t* t=NULL;
 		uint8_t i=0;
 		while((t=(hfdesc_t*)pgm_read_word(&(shavs_algolist[i]))) &&
@@ -82,7 +82,7 @@ void shavs_setalgo(char* param){
 			cli_putstr_P(PSTR("\r\nERROR: could not find \""));
 			cli_putstr(param);
 			cli_putstr_P(PSTR("\"!"));
-		}	
+		}
 	}
 }
 
@@ -113,7 +113,7 @@ uint8_t buffer_add(char c){
 			}else{
 				return 1;
 			}
-		}	
+		}
 	}
 
 	t=buffer[buffer_idx];
@@ -134,11 +134,11 @@ void shavs_test1(void){
 	char* len2;
 	uint32_t length=0;
 	uint8_t len_set=0;
-	if(!shavs_algo){		
+	if(!shavs_algo){
 			cli_putstr_P(PSTR("\r\nERROR: select algorithm first!"));
 		return;
 	}
-	
+
 	buffersize_B=pgm_read_word(&(shavs_algo->blocksize_b))/8;
 	cli_putstr_P(PSTR("\r\nbuffer allocated for 0x"));
 	cli_hexdump(&buffersize_B, 2);
@@ -150,7 +150,7 @@ void shavs_test1(void){
 	}
 	for(;;){
 		blocks = 0;
-		do{	
+		do{
 			cli_putstr_P(PSTR("\r\n"));
 			cli_getsn(lenstr, 20);
 			len2 = strstrip(lenstr);
@@ -167,22 +167,22 @@ void shavs_test1(void){
 					free(buffer);
 					return;
 				}
-			}		
+			}
 		}while(!len_set);
 		volatile int32_t expect_input;
 		char c;
-				
+
 		if(length==0){
 			expect_input=2;
 		}else{
 			expect_input=((length+7)/8)*2;
 		}
-		
+
 		buffer_idx = 0;
 		in_byte=0;
 		len_set = 0;
 		uint8_t ret;
-		cli_putstr_P(PSTR("\r\n HFAL init"));
+//		cli_putstr_P(PSTR("\r\n HFAL init"));
 		ret = hfal_hash_init(shavs_algo, &ctx);
 		if(ret){
 			cli_putstr_P(PSTR("\r\n HFAL init returned with: "));
@@ -190,7 +190,7 @@ void shavs_test1(void){
 			free(buffer);
 			return;
 		}
-		cli_putstr_P(PSTR("\r\n"));
+//		cli_putstr_P(PSTR("\r\n"));
 		while((c=cli_getc_cecho())!='M' && c!='m'){
 			if(!isblank(c)){
 				cli_putstr_P(PSTR("\r\nERROR: wrong input (1) [0x"));
@@ -217,7 +217,7 @@ void shavs_test1(void){
 				return;
 			}
 		}
-		
+
 		buffer_idx=0;
 		while(expect_input>0){
 			c=cli_getc_cecho();
@@ -225,7 +225,7 @@ void shavs_test1(void){
 			cli_hexdump_rev((uint8_t*)&expect_input, 4);
 			cli_putstr_P(PSTR(") "));
 			if(buffer_add(c)==0){
-				--expect_input;		
+				--expect_input;
 			}else{
 				if(!isblank((uint16_t)c)){
 					cli_putstr_P(PSTR("\r\nERROR: wrong input (5) ("));
@@ -236,17 +236,17 @@ void shavs_test1(void){
 				}
 			}
 		}
-		cli_putstr_P(PSTR("\r\n starting finalisation"));
+//		cli_putstr_P(PSTR("\r\n starting finalisation"));
 		uint8_t diggest[pgm_read_word(shavs_algo->hashsize_b)/8];
-		cli_putstr_P(PSTR("\r\n starting last block"));
+//		cli_putstr_P(PSTR("\r\n starting last block"));
 		hfal_hash_lastBlock(&ctx, buffer, length-blocks*(buffersize_B*8));
-		cli_putstr_P(PSTR("\r\n starting ctx2hash"));
+//		cli_putstr_P(PSTR("\r\n starting ctx2hash"));
 		hfal_hash_ctx2hash(diggest, &ctx);
-		cli_putstr_P(PSTR("\r\n starting hash free"));
+//		cli_putstr_P(PSTR("\r\n starting hash free"));
 		hfal_hash_free(&ctx);
 		cli_putstr_P(PSTR("\r\n MD = "));
 		cli_hexdump(diggest, pgm_read_word(&(shavs_algo->hashsize_b))/8);
-		
+
 	}
 	free(buffer);
 }

@@ -1,0 +1,7 @@
+# ExtremelyLongMsgKAT_256.txt
+# Algorithm Name: Blue Midnight Wish
+# Principal Submitter: Svein Johan Knapskog
+
+Repeat = 16777216
+Text = abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmno
+MD = 154FF90923F8925F817221748DB28F7FEEDCB16CC18D59CA581481E0FE96914D
