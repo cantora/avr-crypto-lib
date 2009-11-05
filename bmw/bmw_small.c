@@ -44,9 +44,13 @@
 #  define BUG24   1
 #endif
 
-#define F0_HACK 1
+#define F0_HACK 2
 
 #define DEBUG 0
+
+#ifndef F0_HACK
+#  define F0_HACK 0
+#endif
 
 #if DEBUG
  #include "cli.h"
@@ -83,6 +87,7 @@
  #define dump_x(a,b,c)
 #endif
 
+static
 uint32_t bmw_small_s0(uint32_t x){
 	uint32_t r;
 	r =   SHR32(x, 1)
@@ -92,6 +97,7 @@ uint32_t bmw_small_s0(uint32_t x){
 	return r;
 }
 
+static
 uint32_t bmw_small_s1(uint32_t x){
 	uint32_t r;
 	r =   SHR32(x, 1)
@@ -101,6 +107,7 @@ uint32_t bmw_small_s1(uint32_t x){
 	return r;
 }
 
+static
 uint32_t bmw_small_s2(uint32_t x){
 	uint32_t r;
 	r =   SHR32(x, 2)
@@ -110,6 +117,7 @@ uint32_t bmw_small_s2(uint32_t x){
 	return r;
 }
 
+static
 uint32_t bmw_small_s3(uint32_t x){
 	uint32_t r;
 	r =   SHR32(x, 2)
@@ -119,6 +127,7 @@ uint32_t bmw_small_s3(uint32_t x){
 	return r;
 }
 
+static
 uint32_t bmw_small_s4(uint32_t x){
 	uint32_t r;
 	r =   SHR32(x, 1)
@@ -126,6 +135,7 @@ uint32_t bmw_small_s4(uint32_t x){
 	return r;
 }
 
+static
 uint32_t bmw_small_s5(uint32_t x){
 	uint32_t r;
 	r =   SHR32(x, 2)
@@ -133,42 +143,49 @@ uint32_t bmw_small_s5(uint32_t x){
 	return r;
 }
 
+static
 uint32_t bmw_small_r1(uint32_t x){
 	uint32_t r;
 	r =   ROTL32(x, 3);
 	return r;
 }
 
+static
 uint32_t bmw_small_r2(uint32_t x){
 	uint32_t r;
 	r =   ROTL32(x, 7);
 	return r;
 }
 
+static
 uint32_t bmw_small_r3(uint32_t x){
 	uint32_t r;
 	r =   ROTL32(x, 13);
 	return r;
 }
 
+static
 uint32_t bmw_small_r4(uint32_t x){
 	uint32_t r;
 	r =   ROTL32(x, 16);
 	return r;
 }
 
+static
 uint32_t bmw_small_r5(uint32_t x){
 	uint32_t r;
 	r =   ROTR32(x, 13);
 	return r;
 }
 
+static
 uint32_t bmw_small_r6(uint32_t x){
 	uint32_t r;
 	r =   ROTR32(x, 9);
 	return r;
 }
 
+static
 uint32_t bmw_small_r7(uint32_t x){
 	uint32_t r;
 	r =   ROTR32(x, 5);
@@ -193,7 +210,7 @@ uint32_t k_lut[] PROGMEM = {
 	0x9555554cL, 0x9aaaaaa1L, 0x9ffffff6L,
 	0xa555554bL };
 
-
+static
 uint32_t bmw_small_expand1(uint8_t j, const uint32_t* q, const void* m, const void* h){
 	uint32_t(*s[])(uint32_t) = {bmw_small_s1, bmw_small_s2, bmw_small_s3, bmw_small_s0};
 	uint32_t r=0;
@@ -217,6 +234,7 @@ uint32_t bmw_small_expand1(uint8_t j, const uint32_t* q, const void* m, const vo
 	return r;
 }
 
+static
 uint32_t bmw_small_expand2(uint8_t j, const uint32_t* q, const void* m, const void* h){
 	uint32_t(*rf[])(uint32_t) = {bmw_small_r1, bmw_small_r2, bmw_small_r3,
 	                             bmw_small_r4, bmw_small_r5, bmw_small_r6,
@@ -251,7 +269,53 @@ uint32_t bmw_small_expand2(uint8_t j, const uint32_t* q, const void* m, const vo
 	return r;
 }
 
-#if F0_HACK
+#if F0_HACK==2
+/* to understand this implementation take a look at f0-opt-table.txt */
+uint16_t hack_table[5] PROGMEM = { 0x0311, 0xDDB3, 0x2A79, 0x07AA, 0x51C2 };
+uint8_t  offset_table[5] PROGMEM = { 4+16, 6+16, 9+16, 12+16, 13+16 };
+
+static
+void bmw_small_f0(uint32_t* q, uint32_t* h, const void* m){
+	uint16_t hack_reg;
+	uint8_t c,i,j;
+	uint32_t(*s[])(uint32_t)={ bmw_small_s0, bmw_small_s1, bmw_small_s2,
+	                           bmw_small_s3, bmw_small_s4 };
+	for(i=0; i<16; ++i){
+		((uint32_t*)h)[i] ^= ((uint32_t*)m)[i];
+	}
+	dump_x(h, 16, 'T');
+	memset(q, 0, 4*16);
+	c=4;
+	do{
+		i=15;
+		j=pgm_read_byte(offset_table+c);
+		hack_reg=pgm_read_word(&(hack_table[c]));
+		do{
+			if(hack_reg&1){
+				q[i]-= h[j&15];
+			}else{
+				q[i]+= h[j&15];
+			}
+			--j;
+			hack_reg>>= 1;
+		}while(i--!=0);
+	}while(c--!=0);
+	dump_x(q, 16, 'W');
+	for(i=0; i<16; ++i){
+		q[i] = s[i%5](q[i]);
+	}
+#if TWEAK
+	for(i=0; i<16; ++i){
+		((uint32_t*)h)[i] ^= ((uint32_t*)m)[i];
+	}
+	for(i=0; i<16; ++i){
+		q[i] += h[(i+1)&0xf];
+	}
+#endif
+}
+#endif /* F0_HACK==2*/
+
+#if F0_HACK==1
 static
 uint8_t f0_lut[] PROGMEM = {
 	 5<<1, ( 7<<1)+1, (10<<1)+0, (13<<1)+0, (14<<1)+0,
@@ -272,6 +336,7 @@ uint8_t f0_lut[] PROGMEM = {
 	12<<1, ( 4<<1)+1, ( 6<<1)+1, ( 9<<1)+1, (13<<1)+0
 };
 
+static
 void bmw_small_f0(uint32_t* q, uint32_t* h, const void* m){
 	uint8_t i,j=-1,v,sign,l=0;
 	uint32_t(*s[])(uint32_t)={ bmw_small_s0, bmw_small_s1, bmw_small_s2,
@@ -308,10 +373,12 @@ void bmw_small_f0(uint32_t* q, uint32_t* h, const void* m){
 	for(i=0; i<16; ++i){
 		q[i] += h[(i+1)&0xf];
 	}
-#endif
+#endif /* TWEAK */
 }
+#endif /* F0_HACK==1 */
 
-#else
+#if F0_HACK==0
+static
 void bmw_small_f0(uint32_t* q, uint32_t* h, const void* m){
 	uint8_t i;
 	uint32_t(*s[])(uint32_t)={ bmw_small_s0, bmw_small_s1, bmw_small_s2,
@@ -347,10 +414,11 @@ void bmw_small_f0(uint32_t* q, uint32_t* h, const void* m){
 	for(i=0; i<16; ++i){
 		q[i] += h[(i+1)&0xf];
 	}
-#endif
+#endif /* TWEAK */
 }
-#endif
+#endif /* F0_HACK==0 */
 
+static
 void bmw_small_f1(uint32_t* q, const void* m, const void* h){
 	uint8_t i;
 	q[16] = bmw_small_expand1(0, q, m, h);
@@ -360,6 +428,7 @@ void bmw_small_f1(uint32_t* q, const void* m, const void* h){
 	}
 }
 
+static
 void bmw_small_f2(uint32_t* h, const uint32_t* q, const void* m){
 	uint32_t xl=0, xh;
 	uint8_t i;
