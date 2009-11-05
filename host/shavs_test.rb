@@ -19,16 +19,16 @@
 =end
 
 $debug = true;
-$debug = false;
+#$debug = false;
 require 'rubygems'
 require 'serialport'
 
 def init_system
 #  sleep 1
   $sp.print("exit\r")
-  sleep 0.1
+  sleep 0.5
   $sp.print("exit\r")
-  sleep 0.1
+  sleep 0.5
   $sp.print("echo off \r")
   print("DBG i: " + "echo off \r"+"\n") if $debug
 #  line = $sp.readlines()
@@ -52,16 +52,17 @@ def get_md
   begin
     line = $sp.gets()
 	line = "" if line==nil
-	puts("DBG g: "+line) if $debug
+	puts("DBG got: "+line) if $debug && line!=""
   end while not /[\s]*MD[\s]*=.*/.match(line)
   return line
 end
 
 def send_md(md_string)
+  sleep(0.15)
   for i in 0..md_string.length-1
     $sp.print(md_string[i].chr)
 #	print("DBG s: "+ md_string[i].chr) if $debug
-	if(i%20==19)
+	if(i%5==4)
 		sleep(0.15)
 	end
   end
@@ -100,6 +101,7 @@ def run_test(filename)
 	b.upcase!
 	printf("\n%4d (%4d): ", line, (line-1)*$linewidth) if (pos%$linewidth==0 and $linewidth!=0)
 	line += 1               if (pos%$linewidth==0 and $linewidth!=0)
+	sleep(1)
 	#putc((a==b)?'*':'!')
 	if(a==b)
 	  putc('*')

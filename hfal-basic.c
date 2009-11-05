@@ -24,21 +24,23 @@
 
 uint8_t hfal_hash_init(const hfdesc_t* hash_descriptor, hfgen_ctx_t* ctx){
 	hf_init_fpt f;
+	uint16_t tmp;
 	ctx->desc_ptr = (hfdesc_t*)hash_descriptor;
-	if(!(ctx->ctx=malloc(pgm_read_word(&(hash_descriptor->ctxsize_B)))))
+	tmp = pgm_read_word(&(hash_descriptor->ctxsize_B));
+	if(!(ctx->ctx=malloc(tmp)))
 		return 3;
 	f= (hf_init_fpt)pgm_read_word(&(hash_descriptor->init));
 	f(ctx->ctx);
 	return 0;
 }
-	
+
 void hfal_hash_nextBlock(hfgen_ctx_t* ctx, const void* block){
 	hf_nextBlock_fpt f;
 	hfdesc_t* x=(ctx->desc_ptr);
 	f =(hf_nextBlock_fpt)pgm_read_word(&(x->nextBlock));
 	f(ctx->ctx, block);
 }
-	
+
 void hfal_hash_lastBlock(hfgen_ctx_t* ctx, const void* block, uint16_t length_b){
 	hf_lastBlock_fpt f;
 	hfdesc_t* x=ctx->desc_ptr;
@@ -68,7 +70,7 @@ void hfal_hash_mem(const hfdesc_t* hash_descriptor, void* dest, const void* msg,
 	if(f){
 		((hf_mem_fpt)f)(dest, msg, length_b);
 	}else{
-		
+
 		uint16_t bs,bsb;
 		uint8_t ctx[pgm_read_word(&(hash_descriptor->ctxsize_B))];
 		f=(void_fpt)pgm_read_word(&(hash_descriptor->init));
@@ -86,7 +88,7 @@ void hfal_hash_mem(const hfdesc_t* hash_descriptor, void* dest, const void* msg,
 		f=(void_fpt)pgm_read_word(&(hash_descriptor->ctx2hash));
 		((hf_ctx2hash_fpt)f)(dest, ctx);
 	}
-} 
+}
 
 uint16_t hfal_hash_getBlocksize(const hfdesc_t* hash_descriptor){
 	uint16_t ret;

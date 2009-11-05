@@ -102,11 +102,12 @@ int8_t cmd_interface(PGM_VOID_P cmd_desc){
 				free(cli_buffer);
 				return exit_code;
 			}
-			cli_putstr(cli_buffer);
+			/* cli_putstr(cli_buffer); */
 
 			memset(cli_buffer, 0, cli_buffer_size);
 			cli_buffer_index=0;
-			cli_putstr_P(PSTR(" DONE\r\n>"));
+			/* cli_putstr_P(PSTR(" DONE\r\n>")); */
+			cli_putstr_P(PSTR("\r\n>"));
 			completion_failed=0;
 			break;
 		case CLI_BACKSPACE:

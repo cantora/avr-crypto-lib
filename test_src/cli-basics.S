@@ -56,13 +56,13 @@ cli_getc_cecho:
 	ser r25
 	ser r24
 	ret
-1:	
+1:
 	icall
 	lds r20, cli_echo
 	tst r20
 	brne 2f
 	ret
-2:	
+2:
 	push r2
 	mov r2, r24
 	rcall cli_putc
@@ -70,7 +70,7 @@ cli_getc_cecho:
 	clr r25
 	pop r2
 	ret
-	
+
 /******************************************************************************/
 .global cli_putstr
 cli_putstr:
@@ -84,7 +84,7 @@ cli_putstr:
 	breq 2f
 	rcall cli_putc
 	rjmp 1b
-2:	
+2:
 	pop r29
 	pop r28
 	ret
@@ -104,7 +104,7 @@ cli_putstr_P:
 	rcall cli_putc
 	adiw r28, 1
 	rjmp 1b
-2:	
+2:
 	pop r29
 	pop r28
 	ret
@@ -113,7 +113,7 @@ cli_putstr_P:
 /*
  * param s: r24:r25
  * param n: r22:r23
- */	
+ */
 .global cli_getsn
 cli_getsn:
 	push r28
@@ -137,14 +137,46 @@ cli_getsn:
 	st Y+, r24
 	movw r26, r16
 	sbiw r26, 1
-	movw r16, r24
+	movw r16, r26
 	brne 2b
-9:	
+9:
 	clr r25
 	mov r24, r20
 	st Y, r1
 	pop r17
 	pop r16
-	pop r28
 	pop r29
+	pop r28
 	ret
+
+/******************************************************************************/
+/*
+ * param s: r24:r25
+ * param n: r22:r23
+ */
+.global cli_getsn_cecho
+cli_getsn_cecho:
+	push r28
+	push r29
+	push r16
+	push r17
+	movw r28, r24
+	ldi r20, 2
+	movw r24, r22
+	adiw r24, 0
+	breq 9b
+1:
+	movw r16, r22
+2:	clr r20
+	rcall cli_getc_cecho
+	cpi r24, '\r'
+	breq 9b
+	ldi r20, 1
+	tst r24
+	breq 9b
+	st Y+, r24
+	movw r26, r16
+	sbiw r26, 1
+	movw r16, r26
+	brne 2b
+	rjmp 9b

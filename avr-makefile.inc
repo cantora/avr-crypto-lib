@@ -1,6 +1,6 @@
 
 MCU_TARGET     = atmega644
-OPTIMIZE       = -Os
+OPTIMIZE       = -Os # -Os
 PROGRAMMER     = avr911
 DEFS           = -D$(call uc, $(MCU_TARGET))
 FLASHCMD       = avrdude -p $(MCU_TARGET) -P /dev/ttyUSB0 -c $(PROGRAMMER) -U flash:w:# no space at the end

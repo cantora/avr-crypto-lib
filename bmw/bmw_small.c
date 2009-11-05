@@ -36,13 +36,18 @@
 #define ROTL32(a,n) (((a)<<(n))|((a)>>(32-(n))))
 #define ROTR32(a,n) (((a)>>(n))|((a)<<(32-(n))))
 
-#define BUG24   0
-#define BUG_ROT 1
+
 #define TWEAK   1
+#if TWEAK
+#  define BUG24   0
+#else
+#  define BUG24   1
+#endif
 
 #define F0_HACK 1
 
 #define DEBUG 0
+
 #if DEBUG
  #include "cli.h"
 
@@ -198,19 +203,11 @@ uint32_t bmw_small_expand1(uint8_t j, const uint32_t* q, const void* m, const vo
 		r += s[i%4](q[j+i]);
 	}
 #if TWEAK
-#  if BUG_ROT
 	r += (   ROTL32(((uint32_t*)m)[j&0xf],      ((j+0)&0xf)+1  )
 	       + ROTL32(((uint32_t*)m)[(j+3)&0xf],  ((j+3)&0xf)+1  )
 	       - ROTL32(((uint32_t*)m)[(j+10)&0xf], ((j+10)&0xf)+1 )
 	       + pgm_read_dword(k_lut+j)
 	     ) ^ ((uint32_t*)h)[(j+7)&0xf];
-#  else
-	r += (   ROTL32(((uint32_t*)m)[j&0xf],      (j+1)&0xf  )
-	       + ROTL32(((uint32_t*)m)[(j+3)&0xf],  (j+4)&0xf  )
-	       - ROTL32(((uint32_t*)m)[(j+10)&0xf], (j+11)&0xf )
-	       + pgm_read_dword(k_lut+j)
-	     ) ^ ((uint32_t*)h)[(j+7)&0xf];
-#  endif
 #else
 	r += pgm_read_dword(k_lut+j);
 	r += ((uint32_t*)m)[j&0xf];
@@ -240,20 +237,11 @@ uint32_t bmw_small_expand2(uint8_t j, const uint32_t* q, const void* m, const vo
 	r += bmw_small_s4(q[j+15]);
 #endif
 #if TWEAK
-#  if BUG_ROT
 	r += (   ROTL32(((uint32_t*)m)[j&0xf],      ((j+0)&0xf)+1  )
 	       + ROTL32(((uint32_t*)m)[(j+3)&0xf],  ((j+3)&0xf)+1  )
 	       - ROTL32(((uint32_t*)m)[(j+10)&0xf], ((j+10)&0xf)+1 )
 	       + pgm_read_dword(k_lut+j)
 	     ) ^ ((uint32_t*)h)[(j+7)&0xf];
-#  else
-	r += (   ROTL32(((uint32_t*)m)[j&0xf],      (j+1)&0xf  )
-	       + ROTL32(((uint32_t*)m)[(j+3)&0xf],  (j+4)&0xf  )
-	       - ROTL32(((uint32_t*)m)[(j+10)&0xf], (j+11)&0xf )
-	       + pgm_read_dword(k_lut+j)
-	     ) ^ ((uint32_t*)h)[(j+7)&0xf];
-#endif
-
 #else
 	r += pgm_read_dword(k_lut+j);
 	r += ((uint32_t*)m)[j&0xf];
@@ -284,7 +272,7 @@ uint8_t f0_lut[] PROGMEM = {
 	12<<1, ( 4<<1)+1, ( 6<<1)+1, ( 9<<1)+1, (13<<1)+0
 };
 
-void bmw_small_f0(uint32_t* q, const uint32_t* h, const void* m){
+void bmw_small_f0(uint32_t* q, uint32_t* h, const void* m){
 	uint8_t i,j=-1,v,sign,l=0;
 	uint32_t(*s[])(uint32_t)={ bmw_small_s0, bmw_small_s1, bmw_small_s2,
 	                           bmw_small_s3, bmw_small_s4 };
@@ -324,7 +312,7 @@ void bmw_small_f0(uint32_t* q, const uint32_t* h, const void* m){
 }
 
 #else
-void bmw_small_f0(uint32_t* q, const uint32_t* h, const void* m){
+void bmw_small_f0(uint32_t* q, uint32_t* h, const void* m){
 	uint8_t i;
 	uint32_t(*s[])(uint32_t)={ bmw_small_s0, bmw_small_s1, bmw_small_s2,
 	                           bmw_small_s3, bmw_small_s4 };

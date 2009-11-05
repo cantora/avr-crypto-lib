@@ -19,7 +19,7 @@
 
 #include "avr-asm-macros.S"
 /******************************************************************************/
-/* cli_hexdump_byte 
+/* cli_hexdump_byte
  *   param data:   r24
  */
 .global cli_hexdump_byte
@@ -43,10 +43,10 @@ cli_hexdump_byte:
 	clr r25
 	lpm r24, Z
 	rcall cli_putc
-	ret	
+	ret
 
 /******************************************************************************/
-/* cli_hexdump 
+/* cli_hexdump
  *   param data:   r24:r25
  *   param length: r22:r23
  */
@@ -63,19 +63,19 @@ cli_hexdump:
 	breq hexdump_exit
 2:
 	ld r24, Y+
-	rcall cli_hexdump_byte	
+	rcall cli_hexdump_byte
 	subi r16, 1
-	sbc  r17, r1
+	sbci  r17, 0
 	brne 2b
-hexdump_exit:	
+hexdump_exit:
 	pop r17
 	pop r16
 	pop r29
 	pop r28
 	ret
-	
+
 /******************************************************************************/
-/* cli_hexdump_rev 
+/* cli_hexdump_rev
  *   param data:   r24:r25
  *   param length: r22:r23
  */
@@ -94,11 +94,11 @@ cli_hexdump_rev:
 1:
 	breq hexdump_exit
 	ld r24, -Y
-	rcall cli_hexdump_byte	
+	rcall cli_hexdump_byte
 	subi r16, 1
 	sbci r17, 0
 	rjmp 1b
-	
+
 /******************************************************************************/
 /* cli_hexdump2
  *   param data:   r24:r25
@@ -114,14 +114,14 @@ cli_hexdump2:
 	movw r16, r22
 	movw r26, r16
 	adiw r26, 0
-1:	
+1:
 	breq hexdump_exit
 	ld r24, Y+
 	rcall cli_hexdump_byte
 	clr r25
 	ldi r24,' '
 	rcall cli_putc
-	
+
 	subi r16, 1
 	sbci r17, 0
 	rjmp 1b
@@ -158,7 +158,7 @@ cli_hexdump_block:
 	mov WIDTH, r18
 	mov INDENT, r20
 	movw DATA_0, r24
-	movw LENG_0, r22 
+	movw LENG_0, r22
 2:
 	clr r25
 	ldi r24, '\r'
@@ -184,15 +184,15 @@ cli_hexdump_block:
 	breq 6f
 	brmi 7f
 	mov r22, LENG_0
-6:	inc r4	
-7:	
+6:	inc r4
+7:
 	rcall cli_hexdump2
 	add DATA_0, WIDTH
 	adc DATA_1, r1
 	sub LENG_0, WIDTH
 	sbc LENG_0, r1
 	tst r4
-	breq 2b	
+	breq 2b
 	pop r4
 	pop LENG_1
 	pop LENG_0
@@ -201,5 +201,5 @@ cli_hexdump_block:
 	pop INDENT
 	pop WIDTH
 	ret
-	
-	
+
+

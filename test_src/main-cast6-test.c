@@ -4,7 +4,7 @@
 */
 
 #include "config.h"
-#include "serial-tools.h"
+
 #include "uart_i.h"
 #include "debug.h"
 
