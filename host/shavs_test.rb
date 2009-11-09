@@ -19,7 +19,7 @@
 =end
 
 $debug = true;
-#$debug = false;
+$debug = false;
 require 'rubygems'
 require 'serialport'
 
@@ -107,7 +107,7 @@ def run_test(filename)
 	  putc('*')
 	else
 	  putc('!')
-	  printf("\nshould: %s\ngot:   %s\n",lb,avr_md)
+#	  printf("\nshould: %s\ngot:   %s\n",lb,avr_md)
 	  nerrors += 1
 	end
 	pos += 1

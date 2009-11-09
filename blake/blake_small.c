@@ -22,7 +22,7 @@
  * \email   daniel.otte@rub.de
  * \date    2009-05-04
  * \license GPLv3 or later
- * 
+ *
  */
 
 #include <stdint.h>
@@ -32,8 +32,8 @@
 #include "blake_small.h"
 #include "blake_common.h"
 
-#define BUG_1 1 /* bug compatibility for zero length message */
-#define BUG_2 1 /* bug compatibility for messages of length%512=505...511 */
+#define BUG_1 0 /* bug compatibility for zero length message */
+#define BUG_2 0 /* bug compatibility for messages of length%512=505...511 */
 
 
 uint32_t blake_c[] PROGMEM = {
@@ -61,7 +61,7 @@ void blake_small_expand(uint32_t* v, const blake_small_ctx_t* ctx){
 		v[8+i] = pgm_read_dword(&(blake_c[i]));
 	}
 	memxor((uint8_t*)v+8, ctx->s, 4*4);
-	
+
 }
 
 void blake_small_changeendian(void* dest, const void* src){
@@ -77,22 +77,22 @@ void blake_small_compress(uint32_t* v,const void* m){
 	uint32_t lv[4];
 	for(r=0; r<10; ++r){
 		for(i=0; i<8; ++i){
-	//		blake_small_g(r, i, v, (uint32_t*)m);
 			a = pgm_read_byte(blake_index_lut+4*i+0);
 			b = pgm_read_byte(blake_index_lut+4*i+1);
 			c = pgm_read_byte(blake_index_lut+4*i+2);
 			d = pgm_read_byte(blake_index_lut+4*i+3);
 			s0 = pgm_read_byte(blake_sigma+16*r+2*i+0);
 			s1 = pgm_read_byte(blake_sigma+16*r+2*i+1);
+
 			lv[0] = v[a];
 			lv[1] = v[b];
 			lv[2] = v[c];
 			lv[3] = v[d];
-			
+
 			lv[0] += lv[1] + (((uint32_t*)m)[s0] ^ pgm_read_dword(&(blake_c[s1])));
 			lv[3]  = ROTR32(lv[3]^lv[0], 16);
 			lv[2] += lv[3];
-			lv[1]  = ROTR32(lv[1]^lv[2], 12);	
+			lv[1]  = ROTR32(lv[1]^lv[2], 12);
 			lv[0] += lv[1] + (((uint32_t*)m)[s1] ^ pgm_read_dword(&(blake_c[s0])));
 			lv[3]  = ROTR32(lv[3]^lv[0], 8);
 			lv[2] += lv[3];
@@ -102,7 +102,6 @@ void blake_small_compress(uint32_t* v,const void* m){
 			v[b] = lv[1];
 			v[c] = lv[2];
 			v[d] = lv[3];
-
 		}
 	}
 }
@@ -112,7 +111,7 @@ void blake_small_collapse(blake_small_ctx_t* ctx, uint32_t* v){
 	for(i=0; i<8; ++i){
 		ctx->h[i] ^= ctx->s[i%4] ^ v[i] ^ v[8+i];
 	}
-}	
+}
 
 void blake_small_nextBlock(blake_small_ctx_t* ctx, const void* msg){
 	uint32_t v[16];
@@ -155,26 +154,28 @@ void blake_small_lastBlock(blake_small_ctx_t* ctx, const void* msg, uint16_t len
 		ctr.v32[0] = ctx->counter*512;
 		ctr.v32[0] |= 0x40+length_b-504;
 	}
-#endif	
+#endif
 	memset(buffer, 0, 64);
 	memcpy(buffer, msg, (length_b+7)/8);
-	buffer[length_b/8] |= 0x80 >> (length_b%8);
+	buffer[length_b/8] |= 0x80 >> (length_b&0x7);
 	blake_small_changeendian(buffer, buffer);
 	blake_small_expand(v, ctx);
+if(length_b){
 	v[12] ^= ctr.v32[0];
 	v[13] ^= ctr.v32[0];
 	v[14] ^= ctr.v32[1];
 	v[15] ^= ctr.v32[1];
+}
 #if BUG_2
 	if(length_b>=505)
 		ctr.v32[0] = tmp;
 #endif
-#if BUG_1	
+#if BUG_1
 	if(length_b==0 && ctx->counter==0){
 		v[14] ^= 1;
 		v[15] ^= 1;
 	}
-#endif	
+#endif
 	if(length_b>512-64-2){
 		blake_small_compress(v, buffer);
 		blake_small_collapse(ctx, v);
@@ -182,12 +183,12 @@ void blake_small_lastBlock(blake_small_ctx_t* ctx, const void* msg, uint16_t len
 		blake_small_expand(v, ctx);
 	}
 	if(ctx->appendone)
-		buffer[64-8-4] |= 0x01;	
+		buffer[64-8-4] |= 0x01;
 	*((uint32_t*)(&(buffer[64-8]))) = ctr.v32[1];
 	*((uint32_t*)(&(buffer[64-4]))) = ctr.v32[0];
 	blake_small_compress(v, buffer);
 	blake_small_collapse(ctx, v);
-	
+
 }
 
 uint32_t blake32_iv[] PROGMEM = {

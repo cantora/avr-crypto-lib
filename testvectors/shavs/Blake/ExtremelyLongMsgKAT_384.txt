@@ -1,0 +1,7 @@
+# ExtremelyLongMsgKAT_384.txt
+# Algorithm Name: BLAKE
+# Principal Submitter: Jean-Philippe Aumasson
+
+Repeat = 16777216
+Text = abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmno
+MD = 3BB6DB0259A274BAEFCA1156FD09BBA3435A0781AEAFC836756C3904BE561CF47D164DC58365CE06ECF7C1B50ED4843D

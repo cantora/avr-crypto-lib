@@ -271,8 +271,8 @@ uint32_t bmw_small_expand2(uint8_t j, const uint32_t* q, const void* m, const vo
 
 #if F0_HACK==2
 /* to understand this implementation take a look at f0-opt-table.txt */
-uint16_t hack_table[5] PROGMEM = { 0x0311, 0xDDB3, 0x2A79, 0x07AA, 0x51C2 };
-uint8_t  offset_table[5] PROGMEM = { 4+16, 6+16, 9+16, 12+16, 13+16 };
+static uint16_t hack_table[5] PROGMEM = { 0x0311, 0xDDB3, 0x2A79, 0x07AA, 0x51C2 };
+static uint8_t  offset_table[5] PROGMEM = { 4+16, 6+16, 9+16, 12+16, 13+16 };
 
 static
 void bmw_small_f0(uint32_t* q, uint32_t* h, const void* m){

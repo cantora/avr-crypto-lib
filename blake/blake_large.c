@@ -22,7 +22,7 @@
  * \email   daniel.otte@rub.de
  * \date    2009-05-08
  * \license GPLv3 or later
- * 
+ *
  */
 
 #include <stdint.h>
@@ -32,8 +32,10 @@
 #include "blake_large.h"
 #include "blake_common.h"
 
-#define BUG_3 1 /* bug compatibility with reference code */
-#define BUG_4 1 /* bug compatibility with reference code */
+#include "cli.h"
+
+#define BUG_3 0 /* bug compatibility with reference code */
+#define BUG_4 0 /* bug compatibility with reference code */
 
 uint64_t pgm_read_qword(void* p){
 	union{
@@ -46,7 +48,7 @@ uint64_t pgm_read_qword(void* p){
 }
 
 static
-uint64_t blake_c[] PROGMEM = {   
+uint64_t blake_c[] PROGMEM = {
    0x243F6A8885A308D3LL, 0x13198A2E03707344LL,
    0xA4093822299F31D0LL, 0x082EFA98EC4E6C89LL,
    0x452821E638D01377LL, 0xBE5466CF34E90C6CLL,
@@ -55,13 +57,12 @@ uint64_t blake_c[] PROGMEM = {
    0x2FFD72DBD01ADFB7LL, 0xB8E1AFED6A267E96LL,
    0xBA7C9045F12C7F99LL, 0x24A19947B3916CF7LL,
    0x0801F2E2858EFC16LL, 0x636920D871574E69LL
-
 };
 
 
 
-#define ROTL64(a, n) (((a)<<(n))|((a)>>(64-(n)))) 
-#define ROTR64(a, n) (((a)>>(n))|((a)<<(64-(n)))) 
+#define ROTL64(a, n) (((a)<<(n))|((a)>>(64-(n))))
+#define ROTR64(a, n) (((a)>>(n))|((a)<<(64-(n))))
 #define CHANGE_ENDIAN32(a) (((a)<<24)| \
                             ((0x0000ff00&(a))<<8)| \
 						    ((0x00ff0000&(a))>>8)| \
@@ -74,7 +75,7 @@ void blake_large_expand(uint64_t* v, const blake_large_ctx_t* ctx){
 		v[8+i] = pgm_read_qword(&(blake_c[i]));
 	}
 	memxor((uint8_t*)v+8, ctx->s, 4*8);
-	
+
 }
 
 void blake_large_changeendian(void* dest, const void* src){
@@ -90,6 +91,8 @@ void blake_large_changeendian(void* dest, const void* src){
 void blake_large_compress(uint64_t* v,const void* m){
 	uint8_t r,i;
 	uint8_t a,b,c,d, s0, s1;
+//	cli_putstr_P(PSTR("\r\nblock:"));
+//	cli_hexdump_block(m, 128, 5, 8);
 	for(r=0; r<14; ++r){
 		for(i=0; i<8; ++i){
 	//		blake_large_g(r%10, i, v, (uint64_t*)m);
@@ -102,12 +105,21 @@ void blake_large_compress(uint64_t* v,const void* m){
 			v[a] += v[b] + (((uint64_t*)m)[s0] ^ pgm_read_qword(&(blake_c[s1])));
 			v[d]  = ROTR64(v[d]^v[a], 32);
 			v[c] += v[d];
-			v[b]  = ROTR64(v[b]^v[c], 25);	
+			v[b]  = ROTR64(v[b]^v[c], 25);
 			v[a] += v[b] + (((uint64_t*)m)[s1] ^ pgm_read_qword(&(blake_c[s0])));
 			v[d]  = ROTR64(v[d]^v[a], 16);
 			v[c] += v[d];
 			v[b]  = ROTR64(v[b]^v[c], 11);
 		}
+/*
+		cli_putstr_P(PSTR("\r\nv:"));
+		for(i=0; i<16; ++i){
+			if(i%4==0)
+				cli_putstr_P(PSTR("\r\n    "));
+			cli_hexdump_rev(&(v[i]), 8);
+			cli_putc(' ');
+		}
+*/
 	}
 }
 
@@ -116,7 +128,7 @@ void blake_large_collapse(blake_large_ctx_t* ctx, uint64_t* v){
 	for(i=0; i<8; ++i){
 		ctx->h[i] ^= ctx->s[i%4] ^ v[i] ^ v[8+i];
 	}
-}	
+}
 
 void blake_large_nextBlock(blake_large_ctx_t* ctx, const void* msg){
 	uint64_t v[16];
@@ -147,7 +159,7 @@ void blake_large_lastBlock(blake_large_ctx_t* ctx, const void* msg, uint16_t len
 	ctr = ctx->counter*1024+length_b;
 	memset(buffer, 0, 128);
 	memcpy(buffer, msg, (length_b+7)/8);
-	buffer[length_b/8] |= 0x80 >> (length_b%8);
+	buffer[length_b/8] |= 0x80 >> (length_b&0x7);
 	blake_large_changeendian(buffer, buffer);
 	blake_large_expand(v, ctx);
 #if BUG_3
@@ -156,18 +168,20 @@ void blake_large_lastBlock(blake_large_ctx_t* ctx, const void* msg, uint16_t len
 		x=0x40;
 	v[12] ^= ctr + x;
 	v[13] ^= ctr + x;
-	
-#else	
-	v[12] ^= ctr;
-	v[13] ^= ctr;
+
+#else
+	if(length_b){
+		v[12] ^= ctr;
+		v[13] ^= ctr;
+	}
 #endif
 	if(length_b>1024-128-2){
 #if BUG_4
 		if(length_b<1017){
 			blake_large_compress(v, buffer);
 			blake_large_collapse(ctx, v);
-		}	
-#else	
+		}
+#else
 		blake_large_compress(v, buffer);
 		blake_large_collapse(ctx, v);
 #endif
@@ -175,11 +189,11 @@ void blake_large_lastBlock(blake_large_ctx_t* ctx, const void* msg, uint16_t len
 		blake_large_expand(v, ctx);
 	}
 	if(ctx->appendone)
-		buffer[128-16-8] |= 0x01;	
+		buffer[128-16-8] |= 0x01;
 	*((uint64_t*)(&(buffer[128-8]))) = ctr;
 	blake_large_compress(v, buffer);
 	blake_large_collapse(ctx, v);
-	
+
 }
 
 uint64_t blake64_iv[] PROGMEM = {
