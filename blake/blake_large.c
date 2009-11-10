@@ -32,11 +32,6 @@
 #include "blake_large.h"
 #include "blake_common.h"
 
-#include "cli.h"
-
-#define BUG_3 0 /* bug compatibility with reference code */
-#define BUG_4 0 /* bug compatibility with reference code */
-
 uint64_t pgm_read_qword(void* p){
 	union{
 		uint64_t v64;
@@ -91,11 +86,8 @@ void blake_large_changeendian(void* dest, const void* src){
 void blake_large_compress(uint64_t* v,const void* m){
 	uint8_t r,i;
 	uint8_t a,b,c,d, s0, s1;
-//	cli_putstr_P(PSTR("\r\nblock:"));
-//	cli_hexdump_block(m, 128, 5, 8);
 	for(r=0; r<14; ++r){
 		for(i=0; i<8; ++i){
-	//		blake_large_g(r%10, i, v, (uint64_t*)m);
 			a = pgm_read_byte(blake_index_lut+4*i+0);
 			b = pgm_read_byte(blake_index_lut+4*i+1);
 			c = pgm_read_byte(blake_index_lut+4*i+2);
@@ -111,15 +103,6 @@ void blake_large_compress(uint64_t* v,const void* m){
 			v[c] += v[d];
 			v[b]  = ROTR64(v[b]^v[c], 11);
 		}
-/*
-		cli_putstr_P(PSTR("\r\nv:"));
-		for(i=0; i<16; ++i){
-			if(i%4==0)
-				cli_putstr_P(PSTR("\r\n    "));
-			cli_hexdump_rev(&(v[i]), 8);
-			cli_putc(' ');
-		}
-*/
 	}
 }
 
@@ -162,31 +145,18 @@ void blake_large_lastBlock(blake_large_ctx_t* ctx, const void* msg, uint16_t len
 	buffer[length_b/8] |= 0x80 >> (length_b&0x7);
 	blake_large_changeendian(buffer, buffer);
 	blake_large_expand(v, ctx);
-#if BUG_3
-	uint8_t x=0;
-	if(length_b%1024<895 && length_b%8)
-		x=0x40;
-	v[12] ^= ctr + x;
-	v[13] ^= ctr + x;
-
-#else
-	if(length_b){
+	if(length_b>1024-128-2){
 		v[12] ^= ctr;
 		v[13] ^= ctr;
-	}
-#endif
-	if(length_b>1024-128-2){
-#if BUG_4
-		if(length_b<1017){
-			blake_large_compress(v, buffer);
-			blake_large_collapse(ctx, v);
-		}
-#else
 		blake_large_compress(v, buffer);
 		blake_large_collapse(ctx, v);
-#endif
 		memset(buffer, 0, 128-8);
 		blake_large_expand(v, ctx);
+	} else {
+		if(length_b){
+			v[12] ^= ctr;
+			v[13] ^= ctr;
+		}
 	}
 	if(ctx->appendone)
 		buffer[128-16-8] |= 0x01;

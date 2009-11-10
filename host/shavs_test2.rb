@@ -68,18 +68,11 @@ def scan_system
 end
 
 def init_system(algo_select)
-#  sleep 1
   $sp.print("echo off \r")
   print("DBG i: " + "echo off \r"+"\n") if $debug
-#  line = $sp.readlines()
-#  print("DBG 0.0: ")
-#  print(line)
-  sleep 1
+ sleep 1
   $sp.print("shavs_set #{algo_select}\r")
   print("DBG i: " + "shavs_set #{$algo_select} \r"+"\n") # if $debug
-#  line = $sp.readlines()
-#  print("DBG 0.1: ")
-#  print(line)
   sleep 1
   $sp.print("shavs_test1 \r")
   print("DBG i: " + "shavs_test1 \r"+"\n") if $debug
@@ -87,9 +80,6 @@ def init_system(algo_select)
     line=$sp.gets()
   end while not m=/buffer_size[\s]*=[\s]*0x([0-9A-Fa-f]*)/.match(line)
   $buffer_size = m[1].to_i(16)
-#  line = $sp.readlines()
-#  print("DBG 0.2: ")
-#  print(line)
 end
 
 def get_md
@@ -102,18 +92,19 @@ def get_md
 end
 
 def send_md(md_string)
+  $sp.print("Msg = ")
   for i in 0..md_string.length-1
     $sp.print(md_string[i].chr)
 #	print("DBG s: "+ md_string[i].chr) if $debug
-	if(i%$buffer_size==$buffer_size-1)
-		begin
-			line=$sp.gets()
-		end while not /\./.match(line)
+	if((i%($buffer_size*2)==0)&&(i!=0))
+	  begin
+		line=$sp.gets()
+	  end while not /\./.match(line)
 	end
   end
 end
 
-def run_test(filename)
+def run_test(filename, skip=0)
   nerrors = 0
   line=1
   if not File.exist?(filename)
@@ -123,20 +114,24 @@ def run_test(filename)
   pos = 0
   file = File.new(filename, "r");
   until file.eof
-    sleep(0.5)
     begin
       lb=file.gets()
     end while not (file.eof or (/[\s]*Len[\s]*=.*/.match(lb)))
+    len = /[\s]*Len[\s]*=[\s]*([0-9]*)/.match(lb)[1].to_i
     puts("DBG sending: "+lb) if $debug
 	return if file.eof
+	if(skip>0)
+	  skip -= 1
+	  redo
+	end
 	$sp.print(lb.strip)
 	$sp.print("\r")
     begin
 	  lb=file.gets()
-    end while not (file.eof or (/[\s]*Msg[\s]*=.*/.match(lb)))
+    end while not (file.eof or (m=/[\s]*Msg[\s]*=[\s]*([0-9a-fA-F]*)/.match(lb)))
     return if file.eof
     puts("DBG sending: "+lb) if $debug
-	send_md(lb.strip)
+	send_md(m[1])
 	avr_md = get_md()
     begin
 	  lb=file.gets()
@@ -145,15 +140,15 @@ def run_test(filename)
 	b = (/[\s]*MD[\s]*=[\s]*([0-9a-fA-F]*).*/.match(avr_md))[1];
 	a.upcase!
 	b.upcase!
-	printf("\n%4d (%4d): ", line, (line-1)*$linewidth) if (pos%$linewidth==0 and $linewidth!=0)
+	printf("\n%4d (%4d) [%5d]: ", line, (line-1)*$linewidth, len) if (pos%$linewidth==0 and $linewidth!=0)
 	line += 1               if (pos%$linewidth==0 and $linewidth!=0)
-	sleep(1)
+	#sleep(1)
 	#putc((a==b)?'*':'!')
 	if(a==b)
 	  putc('*')
 	else
 	  putc('!')
-	  printf("\nshould: %s\ngot:   %s\n",lb,avr_md)
+	  printf("<%d>",len)
 	  nerrors += 1
 	end
 	pos += 1
@@ -165,7 +160,7 @@ conf = Hash.new
 conf = readconfigfile("/etc/testport.conf", conf)
 conf = readconfigfile("~/.testport.conf", conf)
 conf = readconfigfile("testport.conf", conf)
-puts conf.inspect
+#puts conf.inspect
 
 puts("serial port interface version: " + SerialPort::VERSION);
 $linewidth = 64
@@ -190,14 +185,13 @@ $sp = SerialPort.new(conf["PORT"]["port"], params)
 
 $sp.read_timeout=1000; # 5 minutes
 $sp.flow_control = SerialPort::SOFT
-#$algo_select = ARGV[4]
-#irb
 
 reset_system()
 algos=scan_system()
-puts algos.inspect
+#puts algos.inspect
 
-algos.each_key do |algo|
+algos.sort.each do |algoa|
+  algo = algoa[0]
   if conf[algo]==nil
     puts("No test-set defined for #{algo} \r\n")
     next
@@ -207,8 +201,8 @@ algos.each_key do |algo|
 	while conf[algo]["file_#{i}"] != nil
 	  puts("Testing #{algo} with #{conf[algo]["file_#{i}"]}")
 	  reset_system()
-	  init_system(algos[algo])
-	  nerrors=run_test(conf[algo]["file_#{i}"])
+	  init_system(algoa[1])
+	  nerrors=run_test(conf[algo]["file_#{i}"], 0)
       if nerrors == 0
         puts("\n[ok]")
         logfile.puts("[ok] "+conf[algo]["file_#{i}"]+ " ("+Time.now.to_s()+")")
