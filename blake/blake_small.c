@@ -32,10 +32,7 @@
 #include "blake_small.h"
 #include "blake_common.h"
 
-#define BUG_1 0 /* bug compatibility for zero length message */
-#define BUG_2 0 /* bug compatibility for messages of length%512=505...511 */
-
-
+static
 uint32_t blake_c[] PROGMEM = {
    0x243F6A88, 0x85A308D3,
    0x13198A2E, 0x03707344,
@@ -53,7 +50,7 @@ uint32_t blake_c[] PROGMEM = {
                             ((0x0000ff00&(a))<<8)| \
 						    ((0x00ff0000&(a))>>8)| \
 						    (a)>>24 )
-
+static
 void blake_small_expand(uint32_t* v, const blake_small_ctx_t* ctx){
 	uint8_t i;
 	memcpy(v, ctx->h, 8*4);
@@ -64,6 +61,7 @@ void blake_small_expand(uint32_t* v, const blake_small_ctx_t* ctx){
 
 }
 
+static
 void blake_small_changeendian(void* dest, const void* src){
 	uint8_t i;
 	for(i=0; i<16; ++i){
@@ -71,6 +69,7 @@ void blake_small_changeendian(void* dest, const void* src){
 	}
 }
 
+static
 void blake_small_compress(uint32_t* v,const void* m){
 	uint8_t r,i;
 	uint8_t a,b,c,d, s0, s1;
@@ -106,6 +105,7 @@ void blake_small_compress(uint32_t* v,const void* m){
 	}
 }
 
+static
 void blake_small_collapse(blake_small_ctx_t* ctx, uint32_t* v){
 	uint8_t i;
 	for(i=0; i<8; ++i){
@@ -140,44 +140,16 @@ void blake_small_lastBlock(blake_small_ctx_t* ctx, const void* msg, uint16_t len
 	}
 	uint8_t buffer[64];
 	uint32_t v[16];
-#if BUG_2
-	uint32_t tmp=0;
-#endif
 	union {
 		uint64_t v64;
 		uint32_t v32[2];
 	}ctr;
 	ctr.v64 = ctx->counter*512+length_b;
-#if BUG_2
-	if(length_b>=505){
-		tmp =ctr.v32[0];
-		ctr.v32[0] = ctx->counter*512;
-		ctr.v32[0] |= 0x40+length_b-504;
-	}
-#endif
 	memset(buffer, 0, 64);
 	memcpy(buffer, msg, (length_b+7)/8);
 	buffer[length_b/8] |= 0x80 >> (length_b&0x7);
 	blake_small_changeendian(buffer, buffer);
 	blake_small_expand(v, ctx);
-/*
-if(length_b<505 && length_b){
-	v[12] ^= ctr.v32[0];
-	v[13] ^= ctr.v32[0];
-	v[14] ^= ctr.v32[1];
-	v[15] ^= ctr.v32[1];
-}
-*/
-#if BUG_2
-	if(length_b>=505)
-		ctr.v32[0] = tmp;
-#endif
-#if BUG_1
-	if(length_b==0 && ctx->counter==0){
-		v[14] ^= 1;
-		v[15] ^= 1;
-	}
-#endif
 	if(length_b>512-64-2){
 		v[12] ^= ctr.v32[0];
 		v[13] ^= ctr.v32[0];

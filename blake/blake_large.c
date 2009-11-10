@@ -32,6 +32,7 @@
 #include "blake_large.h"
 #include "blake_common.h"
 
+static
 uint64_t pgm_read_qword(void* p){
 	union{
 		uint64_t v64;
@@ -63,6 +64,7 @@ uint64_t blake_c[] PROGMEM = {
 						    ((0x00ff0000&(a))>>8)| \
 						    (a)>>24 )
 
+static
 void blake_large_expand(uint64_t* v, const blake_large_ctx_t* ctx){
 	uint8_t i;
 	memcpy(v, ctx->h, 8*8);
@@ -73,6 +75,7 @@ void blake_large_expand(uint64_t* v, const blake_large_ctx_t* ctx){
 
 }
 
+static
 void blake_large_changeendian(void* dest, const void* src){
 	uint8_t i;
 	uint32_t tmp;
@@ -83,6 +86,7 @@ void blake_large_changeendian(void* dest, const void* src){
 	}
 }
 
+static
 void blake_large_compress(uint64_t* v,const void* m){
 	uint8_t r,i;
 	uint8_t a,b,c,d, s0, s1;
@@ -106,6 +110,7 @@ void blake_large_compress(uint64_t* v,const void* m){
 	}
 }
 
+static
 void blake_large_collapse(blake_large_ctx_t* ctx, uint64_t* v){
 	uint8_t i;
 	for(i=0; i<8; ++i){
