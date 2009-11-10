@@ -1,0 +1,239 @@
+#!/usr/bin/ruby
+# shavs_test.rb
+=begin
+    This file is part of the AVR-Crypto-Lib.
+    Copyright (C) 2008, 2009  Daniel Otte (daniel.otte@rub.de)
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+=end
+
+$debug = true
+$debug = false
+require 'rubygems'
+require 'serialport'
+require 'getopt/std'
+
+$buffer_size = 0
+
+def readconfigfile(fname, conf)
+  section = "default"
+  if not File.exists?(fname)
+    return conf
+  end
+  file = File.open(fname, "r")
+  until file.eof
+    line = file.gets()
+	next if /[\s]*#/.match(line)
+	if m=/\[[\s]*([^\s]*)[\s]*\]/.match(line)
+	  section=m[1]
+	  conf[m[1]] = Hash.new
+	  next
+	end
+	next if not /=/.match(line)
+	m=/[\s]*([^\s]*)[\s]*=[\s]*([^\s]*)/.match(line)
+	conf[section][m[1]] = m[2]
+  end
+  file.close()
+  return conf
+end
+
+def reset_system
+  $sp.print("exit\r")
+  sleep 0.1
+  $sp.print("exit\r")
+  sleep 0.1
+end
+
+def scan_system
+  algos = Hash.new
+  $sp.print("shavs_list\r")
+  while true
+    line=$sp.gets()
+    return algos if /^>$/.match(line)
+    if m = /[\*\ ]([a-z]):[\s]*([a-zA-Z0-9+_-]+)/.match(line)
+      algos[m[2]]=m[1]
+    end
+  end
+end
+
+def init_system(algo_select)
+#  sleep 1
+  $sp.print("echo off \r")
+  print("DBG i: " + "echo off \r"+"\n") if $debug
+#  line = $sp.readlines()
+#  print("DBG 0.0: ")
+#  print(line)
+  sleep 1
+  $sp.print("shavs_set #{algo_select}\r")
+  print("DBG i: " + "shavs_set #{$algo_select} \r"+"\n") # if $debug
+#  line = $sp.readlines()
+#  print("DBG 0.1: ")
+#  print(line)
+  sleep 1
+  $sp.print("shavs_test1 \r")
+  print("DBG i: " + "shavs_test1 \r"+"\n") if $debug
+  begin
+    line=$sp.gets()
+  end while not m=/buffer_size[\s]*=[\s]*0x([0-9A-Fa-f]*)/.match(line)
+  $buffer_size = m[1].to_i(16)
+#  line = $sp.readlines()
+#  print("DBG 0.2: ")
+#  print(line)
+end
+
+def get_md
+  begin
+    line = $sp.gets()
+	line = "" if line==nil
+	puts("DBG got: "+line) if $debug
+  end while not /[\s]*MD[\s]*=.*/.match(line)
+  return line
+end
+
+def send_md(md_string)
+  for i in 0..md_string.length-1
+    $sp.print(md_string[i].chr)
+#	print("DBG s: "+ md_string[i].chr) if $debug
+	if(i%$buffer_size==$buffer_size-1)
+		begin
+			line=$sp.gets()
+		end while not /\./.match(line)
+	end
+  end
+end
+
+def run_test(filename)
+  nerrors = 0
+  line=1
+  if not File.exist?(filename)
+  	puts("ERROR file "+filename+" does not exist!")
+  	return nerrors
+  end
+  pos = 0
+  file = File.new(filename, "r");
+  until file.eof
+    sleep(0.5)
+    begin
+      lb=file.gets()
+    end while not (file.eof or (/[\s]*Len[\s]*=.*/.match(lb)))
+    puts("DBG sending: "+lb) if $debug
+	return if file.eof
+	$sp.print(lb.strip)
+	$sp.print("\r")
+    begin
+	  lb=file.gets()
+    end while not (file.eof or (/[\s]*Msg[\s]*=.*/.match(lb)))
+    return if file.eof
+    puts("DBG sending: "+lb) if $debug
+	send_md(lb.strip)
+	avr_md = get_md()
+    begin
+	  lb=file.gets()
+    end while not /[\s]*MD[\s]*=.*/.match(lb)
+	a = (/[\s]*MD[\s]*=[\s]*([0-9a-fA-F]*).*/.match(lb))[1];
+	b = (/[\s]*MD[\s]*=[\s]*([0-9a-fA-F]*).*/.match(avr_md))[1];
+	a.upcase!
+	b.upcase!
+	printf("\n%4d (%4d): ", line, (line-1)*$linewidth) if (pos%$linewidth==0 and $linewidth!=0)
+	line += 1               if (pos%$linewidth==0 and $linewidth!=0)
+	sleep(1)
+	#putc((a==b)?'*':'!')
+	if(a==b)
+	  putc('*')
+	else
+	  putc('!')
+	  printf("\nshould: %s\ngot:   %s\n",lb,avr_md)
+	  nerrors += 1
+	end
+	pos += 1
+  end
+  return nerrors.to_i
+end
+
+conf = Hash.new
+conf = readconfigfile("/etc/testport.conf", conf)
+conf = readconfigfile("~/.testport.conf", conf)
+conf = readconfigfile("testport.conf", conf)
+puts conf.inspect
+
+puts("serial port interface version: " + SerialPort::VERSION);
+$linewidth = 64
+params = { "baud"       => conf["PORT"]["baud"].to_i,
+            "data_bits" => conf["PORT"]["databits"].to_i,
+            "stop_bits" => conf["PORT"]["stopbits"].to_i,
+            "parity"    => SerialPort::NONE }
+params["paraty"] = SerialPort::ODD   if conf["PORT"]["paraty"].downcase == "odd"
+params["paraty"] = SerialPort::EVEN  if conf["PORT"]["paraty"].downcase == "even"
+params["paraty"] = SerialPort::MARK  if conf["PORT"]["paraty"].downcase == "mark"
+params["paraty"] = SerialPort::SPACE if conf["PORT"]["paraty"].downcase == "space"
+
+puts("\nPort: "+conf["PORT"]["port"]+"@"    +
+                params["baud"].to_s      +
+                " "                      +
+                params["data_bits"].to_s +
+                conf["PORT"]["paraty"][0,1].upcase +
+                params["stop_bits"].to_s +
+                "\n")
+
+$sp = SerialPort.new(conf["PORT"]["port"], params)
+
+$sp.read_timeout=1000; # 5 minutes
+$sp.flow_control = SerialPort::SOFT
+#$algo_select = ARGV[4]
+#irb
+
+reset_system()
+algos=scan_system()
+puts algos.inspect
+
+algos.each_key do |algo|
+  if conf[algo]==nil
+    puts("No test-set defined for #{algo} \r\n")
+    next
+  else
+	i=0
+	logfile=File.open(conf["PORT"]["testlogbase"]+algo+".txt", "a")
+	while conf[algo]["file_#{i}"] != nil
+	  puts("Testing #{algo} with #{conf[algo]["file_#{i}"]}")
+	  reset_system()
+	  init_system(algos[algo])
+	  nerrors=run_test(conf[algo]["file_#{i}"])
+      if nerrors == 0
+        puts("\n[ok]")
+        logfile.puts("[ok] "+conf[algo]["file_#{i}"]+ " ("+Time.now.to_s()+")")
+      else
+        puts("\n[errors: "+ nerrors.to_s() +"]")
+        logfile.puts("[error] "+nerrors.to_s+" "+conf[algo]["file_#{i}"]+ " ("+Time.now.to_s()+")")
+      end
+      i += 1
+    end
+    logfile.close()
+  end
+end
+
+=begin
+nerrors = 0
+for i in (5..(ARGV.size-1))
+  nerrors = run_test(ARGV[i])
+  if nerrors == 0
+    puts("\n[ok]")
+  else
+    puts("\n[errors: "+ nerrors.to_s() +"]")
+  end
+end
+ $sp.print("EXIT\r");
+
+#exit(0);
+=end
+
