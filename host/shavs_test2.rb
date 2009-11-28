@@ -25,8 +25,12 @@ require 'serialport'
 require 'getopt/std'
 
 $buffer_size = 0
+$conffile_check = Hash.new
+$conffile_check.default = 0
 
 def readconfigfile(fname, conf)
+  return conf if $conffile_check[fname]==1
+  $conffile_check[fname]=1
   section = "default"
   if not File.exists?(fname)
     return conf
@@ -42,7 +46,11 @@ def readconfigfile(fname, conf)
 	end
 	next if not /=/.match(line)
 	m=/[\s]*([^\s]*)[\s]*=[\s]*([^\s]*)/.match(line)
-	conf[section][m[1]] = m[2]
+	if m[1]=="include"
+	  Dir.glob(m[2]){ |fn| conf = readconfigfile(fn, conf) }
+	else
+  	  conf[section][m[1]] = m[2]
+	end
   end
   file.close()
   return conf
@@ -96,6 +104,7 @@ def send_md(md_string)
   for i in 0..md_string.length-1
     $sp.print(md_string[i].chr)
 #	print("DBG s: "+ md_string[i].chr) if $debug
+    sleep(0.01)
 	if((i%($buffer_size*2)==0)&&(i!=0))
 	  begin
 		line=$sp.gets()
@@ -148,7 +157,8 @@ def run_test(filename, skip=0)
 	  putc('*')
 	else
 	  putc('!')
-	  printf("<%d>",len)
+	#  printf("<%d>",len)
+	  printf("\nError @%05d: %s \n           != %s - ",len, a, b)
 	  nerrors += 1
 	end
 	pos += 1
@@ -156,10 +166,14 @@ def run_test(filename, skip=0)
   return nerrors.to_i
 end
 
+opts = Getopt::Std.getopts("s:f:i:hdca")
+
 conf = Hash.new
 conf = readconfigfile("/etc/testport.conf", conf)
 conf = readconfigfile("~/.testport.conf", conf)
 conf = readconfigfile("testport.conf", conf)
+conf = readconfigfile(opts["f"], conf) if opts["f"]
+
 #puts conf.inspect
 
 puts("serial port interface version: " + SerialPort::VERSION);
@@ -190,7 +204,19 @@ reset_system()
 algos=scan_system()
 #puts algos.inspect
 
-algos.sort.each do |algoa|
+if opts["s"]
+  algos_rev = algos.invert
+  algo_tasks = Array.new
+  opts["s"].each_byte{ |x|
+    if algos_rev[x.chr]
+      algo_tasks << [algos_rev[x.chr],x.chr]
+    end
+  }
+else
+  algo_tasks=algos.sort
+end
+
+algo_tasks.each do |algoa|
   algo = algoa[0]
   if conf[algo]==nil
     puts("No test-set defined for #{algo} \r\n")
@@ -202,7 +228,9 @@ algos.sort.each do |algoa|
 	  puts("Testing #{algo} with #{conf[algo]["file_#{i}"]}")
 	  reset_system()
 	  init_system(algoa[1])
-	  nerrors=run_test(conf[algo]["file_#{i}"], 0)
+	  skip=0
+	  skip=opts["i"].to_i if opts["i"]
+	  nerrors=run_test(conf[algo]["file_#{i}"], skip)
       if nerrors == 0
         puts("\n[ok]")
         logfile.puts("[ok] "+conf[algo]["file_#{i}"]+ " ("+Time.now.to_s()+")")

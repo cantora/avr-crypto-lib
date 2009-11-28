@@ -22,7 +22,7 @@
  * \email   daniel.otte@rub.de
  * \date    2009-05-10
  * \license GPLv3 or later
- * 
+ *
  */
 
 #include "hfal-performance.h"
@@ -53,23 +53,24 @@ void hfal_performance(const hfdesc_t* hd){
 	uint8_t data[(hf.blocksize_b+7)/8];
 	uint8_t digest[(hf.hashsize_b+7)/8];
 	uint64_t t;
-	
+
 	if(hf.type!=HFDESC_TYPE_HASHFUNCTION)
 		return;
 	calibrateTimer();
+	print_overhead();
 	cli_putstr_P(PSTR("\r\n\r\n === "));
 	cli_putstr_P(hf.name);
 	cli_putstr_P(PSTR(" performance === "
 	                  "\r\n    type:             hashfunction"
 	                  "\r\n    hashsize (bits):    "));
 	printvalue(hf.hashsize_b);
-	
+
 	cli_putstr_P(PSTR("\r\n    ctxsize (bytes):    "));
 	printvalue(hf.ctxsize_B);
-	
+
 	cli_putstr_P(PSTR("\r\n    blocksize (bits):   "));
 	printvalue(hf.blocksize_b);
-	
+
 	startTimer(0);
 	START_TIMER;
 	hf.init(&ctx);
@@ -77,7 +78,7 @@ void hfal_performance(const hfdesc_t* hd){
 	t = stopTimer();
 	cli_putstr_P(PSTR("\r\n    init (cycles):      "));
 	printvalue(t);
-	
+
 	startTimer(0);
 	START_TIMER;
 	hf.nextBlock(&ctx, data);
@@ -85,7 +86,7 @@ void hfal_performance(const hfdesc_t* hd){
 	t = stopTimer();
 	cli_putstr_P(PSTR("\r\n    nextBlock (cycles): "));
 	printvalue(t);
-	
+
 	startTimer(0);
 	START_TIMER;
 	hf.lastBlock(&ctx, data, 0);
@@ -93,7 +94,7 @@ void hfal_performance(const hfdesc_t* hd){
 	t = stopTimer();
 	cli_putstr_P(PSTR("\r\n    lastBlock (cycles): "));
 	printvalue(t);
-	
+
 	startTimer(0);
 	START_TIMER;
 	hf.ctx2hash(digest, &ctx);

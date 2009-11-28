@@ -51,7 +51,7 @@ ISR(TIMER1_OVF_vect){
 }
 
 void calibrateTimer(void){
-	volatile uint8_t i;
+	volatile uint8_t i=0;
 	startTimer(1);
 	stopTimer();
 	const_overhead = TCNT1;

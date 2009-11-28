@@ -18,7 +18,7 @@
 */
 /*
  * AES-192 test-suit
- * 
+ *
 */
 
 #include "config.h"
@@ -27,9 +27,6 @@
 #include "debug.h"
 
 #include "aes/aes.h"
-#include "aes/aes192_enc.h"
-#include "aes/aes192_dec.h"
-#include "aes/aes_keyschedule.h"
 
 #include "nessie_bc_test.h"
 #include "cli.h"
@@ -57,11 +54,11 @@ void testrun_nessie_aes(void){
 }
 
 void testrun_testkey_aes192(void){
-	uint8_t key[24] = { 0x8e, 0x73, 0xb0, 0xf7, 
+	uint8_t key[24] = { 0x8e, 0x73, 0xb0, 0xf7,
 	                    0xda, 0x0e, 0x64, 0x52,
-	                    0xc8, 0x10, 0xf3, 0x2b, 
-	                    0x80, 0x90, 0x79, 0xe5, 
-	                    0x62, 0xf8, 0xea, 0xd2, 
+	                    0xc8, 0x10, 0xf3, 0x2b,
+	                    0x80, 0x90, 0x79, 0xe5,
+	                    0x62, 0xf8, 0xea, 0xd2,
 	                    0x52, 0x2c, 0x6b, 0x7b};
 	aes192_ctx_t ctx;
 	uint8_t i;
@@ -88,36 +85,36 @@ void testrun_performance_aes192(void){
 	char str[16];
 	uint8_t key[32], data[16];
 	aes192_ctx_t ctx;
-	
+
 	calibrateTimer();
 	print_overhead();
-	
+
 	memset(key,  0, 32);
 	memset(data, 0, 16);
-	
+
 	startTimer(1);
 	aes192_init(key, &ctx);
 	t = stopTimer();
 	cli_putstr_P(PSTR("\r\n\tctx-gen time: "));
 	ultoa((unsigned long)t, str, 10);
 	cli_putstr(str);
-	
-	
+
+
 	startTimer(1);
 	aes192_enc(data, &ctx);
 	t = stopTimer();
 	cli_putstr_P(PSTR("\r\n\tencrypt time: "));
 	ultoa((unsigned long)t, str, 10);
 	cli_putstr(str);
-	
-	
+
+
 	startTimer(1);
 	aes192_dec(data, &ctx);
 	t = stopTimer();
 	cli_putstr_P(PSTR("\r\n\tdecrypt time: "));
 	ultoa((unsigned long)t, str, 10);
 	cli_putstr(str);
-	
+
 	cli_putstr_P(PSTR("\r\n"));
 }
 
@@ -148,9 +145,9 @@ cmdlist_entry_t cmdlist[] PROGMEM = {
 
 int main (void){
 	DEBUG_INIT();
-	
+
 	cli_rx = (cli_rx_fpt)uart0_getc;
-	cli_tx = (cli_tx_fpt)uart0_putc;	 	
+	cli_tx = (cli_tx_fpt)uart0_putc;
 	for(;;){
 		cli_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
 		cli_putstr(algo_name);

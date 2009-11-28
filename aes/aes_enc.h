@@ -19,14 +19,14 @@
 /**
  * \file     aes_enc.h
  * \email    daniel.otte@rub.de
- * \author   Daniel Otte 
+ * \author   Daniel Otte
  * \date     2008-12-30
  * \license  GPLv3 or later
- * 
+ *
  */
 #ifndef AES_ENC_H_
 #define AES_ENC_H_
-#include "aes.h"
+#include "aes_types.h"
 #include <stdint.h>
 
 

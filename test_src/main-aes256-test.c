@@ -18,7 +18,7 @@
 */
 /*
  * AES-256 test-suit
- * 
+ *
 */
 
 #include "config.h"
@@ -27,9 +27,6 @@
 #include "debug.h"
 
 #include "aes/aes.h"
-#include "aes/aes256_enc.h"
-#include "aes/aes256_dec.h"
-#include "aes/aes_keyschedule.h"
 
 #include "nessie_bc_test.h"
 #include "cli.h"
@@ -57,13 +54,13 @@ void testrun_nessie_aes(void){
 }
 
 void testrun_testkey_aes256(void){
-	uint8_t key[32] = { 0x60, 0x3d, 0xeb, 0x10, 
-	                    0x15, 0xca, 0x71, 0xbe, 
-	                    0x2b, 0x73, 0xae, 0xf0, 
-	                    0x85, 0x7d, 0x77, 0x81, 
-	                    0x1f, 0x35, 0x2c, 0x07, 
-	                    0x3b, 0x61, 0x08, 0xd7, 
-	                    0x2d, 0x98, 0x10, 0xa3, 
+	uint8_t key[32] = { 0x60, 0x3d, 0xeb, 0x10,
+	                    0x15, 0xca, 0x71, 0xbe,
+	                    0x2b, 0x73, 0xae, 0xf0,
+	                    0x85, 0x7d, 0x77, 0x81,
+	                    0x1f, 0x35, 0x2c, 0x07,
+	                    0x3b, 0x61, 0x08, 0xd7,
+	                    0x2d, 0x98, 0x10, 0xa3,
 	                    0x09, 0x14, 0xdf, 0xf4};
 	aes256_ctx_t ctx;
 	uint8_t i;
@@ -90,36 +87,36 @@ void testrun_performance_aes256(void){
 	char str[16];
 	uint8_t key[32], data[16];
 	aes256_ctx_t ctx;
-	
+
 	calibrateTimer();
 	print_overhead();
-	
+
 	memset(key,  0, 32);
 	memset(data, 0, 16);
-	
+
 	startTimer(1);
 	aes256_init(key, &ctx);
 	t = stopTimer();
 	cli_putstr_P(PSTR("\r\n\tctx-gen time: "));
 	ultoa((unsigned long)t, str, 10);
 	cli_putstr(str);
-	
-	
+
+
 	startTimer(1);
 	aes256_enc(data, &ctx);
 	t = stopTimer();
 	cli_putstr_P(PSTR("\r\n\tencrypt time: "));
 	ultoa((unsigned long)t, str, 10);
 	cli_putstr(str);
-	
-	
+
+
 	startTimer(1);
 	aes256_dec(data, &ctx);
 	t = stopTimer();
 	cli_putstr_P(PSTR("\r\n\tdecrypt time: "));
 	ultoa((unsigned long)t, str, 10);
 	cli_putstr(str);
-	
+
 	cli_putstr_P(PSTR("\r\n"));
 }
 
@@ -150,9 +147,9 @@ cmdlist_entry_t cmdlist[] PROGMEM = {
 
 int main (void){
 	DEBUG_INIT();
-	
+
 	cli_rx = (cli_rx_fpt)uart0_getc;
-	cli_tx = (cli_tx_fpt)uart0_putc;	 	
+	cli_tx = (cli_tx_fpt)uart0_putc;
 	for(;;){
 		cli_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
 		cli_putstr(algo_name);

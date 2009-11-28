@@ -1,4 +1,4 @@
-/* serial-tools.h */
+/* aes.h */
 /*
     This file is part of the AVR-Crypto-Lib.
     Copyright (C) 2008  Daniel Otte (daniel.otte@rub.de)
@@ -16,12 +16,41 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef SERIALTOOLS_H_
-#define SERIALTOOLS_H_
+/**
+ * \file     aes_types.h
+ * \email    daniel.otte@rub.de
+ * \author   Daniel Otte
+ * \date     2008-12-30
+ * \license  GPLv3 or later
+ *
+ */
+#ifndef AES_TYPES_H_
+#define AES_TYPES_H_
 
+#include <stdint.h>
 
-int getnextwordn(char *s, int n); /* words are seperated by spaces */
-void readhex2buffer(void* buffer, int n);
-void uart_putptr(void* p);
+typedef struct{
+	uint8_t ks[16];
+} aes_roundkey_t;
 
-#endif /*SERIALTOOLS_H_*/
+typedef struct{
+	aes_roundkey_t key[10+1];
+} aes128_ctx_t;
+
+typedef struct{
+	aes_roundkey_t key[12+1];
+} aes192_ctx_t;
+
+typedef struct{
+	aes_roundkey_t key[14+1];
+} aes256_ctx_t;
+
+typedef struct{
+	aes_roundkey_t key[1]; /* just to avoid the warning */
+} aes_genctx_t;
+
+typedef struct{
+	uint8_t s[16];
+} aes_cipher_state_t;
+
+#endif

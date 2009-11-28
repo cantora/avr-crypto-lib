@@ -22,7 +22,7 @@
  * \email   daniel.otte@rub.de
  * \date    2009-05-19
  * \license GPLv3 or later
- * 
+ *
  */
 
 #include "groestl_small.h"
@@ -74,7 +74,7 @@ void groestl_small_rounds(uint8_t *m, uint8_t q){
 		}else{
 			m[0] ^= r;
 		}
-#if DEBUG		
+#if DEBUG
 		if(r<2){
 			cli_putstr_P(PSTR("\r\npost add-const"));
 			dump_m(m);
@@ -90,12 +90,12 @@ void groestl_small_rounds(uint8_t *m, uint8_t q){
 				m[i+((j-i+8)%8)*8] = tmp[j];
 			}
 		}
-#if DEBUG		
+#if DEBUG
 		if(r<2){
 			cli_putstr_P(PSTR("\r\npost shift-bytes"));
 			dump_m(m);
 		}
-#endif 		
+#endif
 		for(i=0; i<8; ++i){
 			memcpy(tmp, m+8*i, 8);
 			for(j=0; j<8; ++j){
@@ -114,20 +114,20 @@ void groestl_small_rounds(uint8_t *m, uint8_t q){
 			cli_putstr_P(PSTR("\r\npost mix-bytes"));
 			dump_m(m);
 		}
-#endif		
+#endif
 	}
 }
 
 void groestl224_init(groestl224_ctx_t* ctx){
 	memset(ctx->h, 0, 8*8);
 	ctx->h[8*8-1] = 224;
-	ctx->counter = 0;
+	ctx->counter = 1;
 }
 
 void groestl256_init(groestl256_ctx_t* ctx){
 	memset(ctx->h, 0, 8*8);
 	ctx->h[8*8-2] = 1;
-	ctx->counter = 0;
+	ctx->counter = 1;
 }
 
 void groestl_small_nextBlock(groestl_small_ctx_t* ctx, const void* block){
@@ -137,7 +137,7 @@ void groestl_small_nextBlock(groestl_small_ctx_t* ctx, const void* block){
 			tmp1[j*8+i] = ((uint8_t*)block)[i*8+j];
 		}
 	}
-*/ 
+*/
 	memcpy(tmp1, block, 64);
 	memcpy(tmp2, tmp1, 64);
 	memxor(tmp1, ctx->h, 64);
@@ -157,12 +157,12 @@ void groestl_small_lastBlock(groestl_small_ctx_t* ctx, const void* block, uint16
 	}
 	memset(buffer, 0, 64);
 	memcpy(buffer, block, (length_b+7)/8);
-	buffer[length_b/8] |= 0x80>>(length_b%8);
+	buffer[length_b/8] |= 0x80>>(length_b&0x7);
 	if(length_b>512-65){
 		groestl_small_nextBlock(ctx, buffer);
 		memset(buffer, 0, 64-4);
 	}
-	ctx->counter++;
+//	ctx->counter++;
 	buffer[64-1]  = (uint8_t)(ctx->counter);
 	buffer[64-2]  = (uint8_t)((ctx->counter)>>8);
 	buffer[64-3]  = (uint8_t)((ctx->counter)>>16);
@@ -178,7 +178,7 @@ void groestl_small_ctx2hash(void* dest, const groestl_small_ctx_t* ctx, uint16_t
 #if DEBUG
 	cli_putstr_P(PSTR("\r\npost finalisation"));
 	dump_m(tmp);
-#endif		
+#endif
 	memcpy(dest, tmp+64-outlength_b/8, outlength_b/8);
 }
 

@@ -19,38 +19,25 @@
 /**
  * \file     aes.h
  * \email    daniel.otte@rub.de
- * \author   Daniel Otte 
+ * \author   Daniel Otte
  * \date     2008-12-30
  * \license  GPLv3 or later
- * 
+ *
  */
 #ifndef AES_H_
 #define AES_H_
 
 #include <stdint.h>
 
-typedef struct{
-	uint8_t ks[16];
-} aes_roundkey_t;
-
-typedef struct{
-	aes_roundkey_t key[10+1];
-} aes128_ctx_t;
-
-typedef struct{
-	aes_roundkey_t key[12+1];
-} aes192_ctx_t;
-
-typedef struct{
-	aes_roundkey_t key[14+1];
-} aes256_ctx_t;
-
-typedef struct{
-	aes_roundkey_t key[1]; /* just to avoid the warning */
-} aes_genctx_t;
-
-typedef struct{
-	uint8_t s[16];
-} aes_cipher_state_t;
+#include "aes_types.h"
+#include "aes128_enc.h"
+#include "aes192_enc.h"
+#include "aes256_enc.h"
+#include "aes128_dec.h"
+#include "aes192_dec.h"
+#include "aes256_dec.h"
+#include "aes_enc.h"
+#include "aes_dec.h"
+#include "aes_keyschedule.h"
 
 #endif

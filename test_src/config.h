@@ -20,15 +20,13 @@
 #define __CONFIG_H__
 #include <avr/io.h>
 // #define F_CPU 20000000
- #define F_CPU 16000000         /* Oszillator-Frequenz in Hz */
+// #define F_CPU 16000000         /* oscillator-frequency in Hz */
 // #define F_CPU 14745600
+#define F_CPU 20000000 /* this is out of spec but lets try it */
 
+#define DEBUG_METHOD uart
 
 #include "uart_defs.h"
-
-#define DEBUG uart
-
-#undef UART_LEDS
 
 #define UART0_I 1
 #define UART0_BAUD_RATE  38400

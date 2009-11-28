@@ -23,35 +23,35 @@
 ****************************/
 #include "config.h"
 
-#if DEBUG == uart
+#if DEBUG_METHOD == uart
  #include "uart_i.h"
 #else
   #error "Your DEBUG methode is not suported!"
 #endif
 
-#ifdef DEBUG
+#ifdef DEBUG_METHOD
  void debug_init(void){
- #if DBUG==uart
+ #if DEBUG_METHOD==uart
   uart0_init();
  #else
   #error "Your DEBUG methode is not suported!"
  #endif
  }
- 
+
  void debug_char(char c){
 	static char initialised = 0;
 	if (!initialised){
 		uart0_init();
 		initialised=1;
-	}	
+	}
 	uart0_putc(c);
  }
- 
+
  void debug_str(char* s){
  	while (*s)
  		debug_char(*s++);
  }
- 
+
 
 
  void debug_byte(char b){

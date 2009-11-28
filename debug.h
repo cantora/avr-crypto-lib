@@ -19,7 +19,7 @@
 #ifndef DEBUG_H_
 #define DEBUG_H_
 
-#ifdef DEBUG
+#ifdef DEBUG_METHOD
 	#define DEBUG_INIT() debug_init()
 	#define DEBUG_C(_c) debug_char(_c)
 	#define DEBUG_S(_s) debug_str(_s)

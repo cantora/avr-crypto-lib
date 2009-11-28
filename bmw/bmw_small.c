@@ -213,24 +213,25 @@ uint32_t k_lut[] PROGMEM = {
 static
 uint32_t bmw_small_expand1(uint8_t j, const uint32_t* q, const void* m, const void* h){
 	uint32_t(*s[])(uint32_t) = {bmw_small_s1, bmw_small_s2, bmw_small_s3, bmw_small_s0};
-	uint32_t r=0;
+	uint32_t r;
 	uint8_t i;
 	/* r = 0x05555555*(j+16); */
-	for(i=0; i<16; ++i){
-		r += s[i%4](q[j+i]);
-	}
+
 #if TWEAK
-	r += (   ROTL32(((uint32_t*)m)[j&0xf],      ((j+0)&0xf)+1  )
+	r = (   ROTL32(((uint32_t*)m)[j&0xf],      ((j+0)&0xf)+1  )
 	       + ROTL32(((uint32_t*)m)[(j+3)&0xf],  ((j+3)&0xf)+1  )
 	       - ROTL32(((uint32_t*)m)[(j+10)&0xf], ((j+10)&0xf)+1 )
 	       + pgm_read_dword(k_lut+j)
 	     ) ^ ((uint32_t*)h)[(j+7)&0xf];
 #else
-	r += pgm_read_dword(k_lut+j);
+	r = pgm_read_dword(k_lut+j);
 	r += ((uint32_t*)m)[j&0xf];
 	r += ((uint32_t*)m)[(j+3)&0xf];
 	r -= ((uint32_t*)m)[(j+10)&0xf];
 #endif
+	for(i=0; i<16; ++i){
+		r += s[i%4](q[j+i]);
+	}
 	return r;
 }
 
