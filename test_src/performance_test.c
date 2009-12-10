@@ -20,10 +20,10 @@
  * author: Daniel Otte
  * email:  daniel.otte@rub.de
  * license: GPLv3
- * 
- * 
+ *
+ *
  **/
- 
+
 #include "config.h"
 #include <string.h>
 #include <stdint.h>
@@ -41,10 +41,10 @@
 
 
 
-uint32_t ovfcounter;
+static volatile uint32_t ovfcounter;
 
-uint16_t const_overhead=0;
-uint16_t int_overhead=0;
+static uint16_t const_overhead=0;
+static uint16_t int_overhead=0;
 
 ISR(TIMER1_OVF_vect){
 	ovfcounter++;
@@ -75,7 +75,7 @@ void startTimer(uint8_t granularity){
 uint64_t stopTimer(void){
 	TCCR1B = 0; /* stop timer */
 	uint64_t ret;
-	ret = (ovfcounter<<16) | TCNT1;
+	ret = (((uint64_t)ovfcounter)<<16) | TCNT1;
 	ret -= const_overhead;
 	ret -= ovfcounter * int_overhead;
 	return ret;
@@ -83,7 +83,7 @@ uint64_t stopTimer(void){
 
 void getOverhead(uint16_t* constoh, uint16_t* intoh){
 	*constoh = const_overhead;
-	*intoh   = int_overhead; 
+	*intoh   = int_overhead;
 }
 
 void print_time_P(PGM_P s, uint64_t t){

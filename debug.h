@@ -21,17 +21,20 @@
 
 #ifdef DEBUG_METHOD
 	#define DEBUG_INIT() debug_init()
+#else
+	#define DEBUG_INIT()
+#endif
+
+#if DEBUG
 	#define DEBUG_C(_c) debug_char(_c)
 	#define DEBUG_S(_s) debug_str(_s)
 	#define DEBUG_B(_b) debug_byte(_b)
 	#include "cli.h"
 #else
-	#define DEBUG_INIT()
 	#define DEBUG_C(_c)
 	#define DEBUG_S(_s)
 	#define DEBUG_B(_b)
 #endif
-
 
 void debug_init(void);
 void debug_char(char);

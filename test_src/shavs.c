@@ -291,10 +291,23 @@ void shavs_test1(void){
 		_delay_ms(500);
 
 		cli_putstr_P(PSTR("\r\n starting last block"));
+		cli_putstr_P(PSTR("\r\n\tlength       == "));
+		cli_hexdump_rev(&length,4);
+		cli_putstr_P(PSTR("\r\n\tbuffersize_B == "));
+		cli_hexdump_rev(&(shavs_ctx.buffersize_B),2);
+		uint16_t temp=length-(shavs_ctx.blocks)*((shavs_ctx.buffersize_B)*8);
+		cli_putstr_P(PSTR("\r\n\t (temp)      == "));
+		cli_hexdump_rev(&temp,2);
+		_delay_ms(500);
 #endif
-		hfal_hash_lastBlock( &(shavs_ctx.ctx),
-		                     shavs_ctx.buffer,
-		                     length-(shavs_ctx.blocks)*((shavs_ctx.buffersize_B)*8));
+#if !DEBUG
+		uint16_t temp=length-(shavs_ctx.blocks)*((shavs_ctx.buffersize_B)*8);
+//		cli_putstr_P(PSTR("\r\n\t (temp)      == "));
+		cli_hexdump_rev(&temp,2);
+#endif
+		hfal_hash_lastBlock( &(shavs_ctx.ctx), buffer, /* be aware of freaking compilers!!! */
+//							length-(shavs_ctx.blocks)*((shavs_ctx.buffersize_B)*8));
+		                    temp );
 #if DEBUG
 		cli_putstr_P(PSTR("\r\n starting ctx2hash"));
 		_delay_ms(500);

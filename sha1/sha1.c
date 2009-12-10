@@ -28,10 +28,13 @@
 #include <string.h> /* memcpy & co */
 #include <stdint.h>
 #include "config.h"
-#undef DEBUG
-//#define DEBUG UART
 #include "debug.h"
 #include "sha1.h"
+
+#ifdef DEBUG
+#  undef DEBUG
+#endif
+
 
 #define LITTLE_ENDIAN
 

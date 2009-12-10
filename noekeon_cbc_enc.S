@@ -21,21 +21,21 @@
  * \email   daniel.otte@rub.de
  * \date    2008-08-06
  * \license GPLv3 or later
- * 
- * 
- * 
+ *
+ *
+ *
  */
 
 .macro push_ p1:req p2:vararg
 	push \p1
-.ifnb \p2	
+.ifnb \p2
 	push_ \p2
 .endif
 .endm
 
 .macro pop_ p1:req p2:vararg
 	pop \p1
-.ifnb \p2	
+.ifnb \p2
 	pop_ \p2
 .endif
 .endm
@@ -45,7 +45,7 @@
 /*
  * void noekeon_cbc_enc(void* buffer, uint8_t block_cnt, const void* key)
  */
- 
+
 /* param buffer    is passed in r24:r25
  * param block_cnt is passed in r22 (r23 is 0)
  * param key       is passed in r20:r21
@@ -58,7 +58,7 @@
 	rcall noekeon_enc
 1:
 	pop_ r27, r26, r23, r22
-	pop r16 /* bloc  counter */
+	pop r16 /* block  counter */
 	dec r16
 	breq 9f
 	push r16
@@ -73,27 +73,27 @@
 	st Z+, r18
 	dec r16
 	brne 2b
-	
+
 	/* call encryption function; X points to our new block */
 	push_ r22, r23, r26, r27
 	movw r24, r26
 	rcall noekeon_enc
 	rjmp 1b
-9: 
-	ret	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+9:
+	ret
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

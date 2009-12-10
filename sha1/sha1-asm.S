@@ -92,7 +92,7 @@ SHA1_HASH_BITS = 160
 .endm
 
 .macro delay
-/*	
+/*
 	push r0
 	push r1
 	clr r0
@@ -107,7 +107,7 @@ SHA1_HASH_BITS = 160
 
 /* X points to Block */
 .macro dbg_hexdump length
-/*	
+/*
 	precall
 	hexdump \length
 	postcall
@@ -129,7 +129,7 @@ SREG = 0x3F
 ; [h0][h1][h2][h3][h4][length]
 ; hn is 32 bit large, length is 64 bit large
 
-;###########################################################	
+;###########################################################
 
 .global sha1_ctx2hash
 ; === sha1_ctx2hash ===
@@ -143,21 +143,21 @@ sha1_ctx2hash:
 	movw r30, r24
 	ldi r21, 5
 	sbiw r26, 4
-1:	
+1:
 	ldi r20, 4
 	adiw r26, 8
-2:	
+2:
 		ld r0, -X
-		st Z+, r0	
+		st Z+, r0
 	dec r20
 	brne 2b
-	
+
 	dec r21
 	brne 1b
-	
+
 	ret
 
-;###########################################################	
+;###########################################################
 
 .global sha1
 ; === sha1 ===
@@ -180,24 +180,24 @@ sha1_prolog:
 	push r17
 	in r16, SPL
 	in r17, SPH
-	subi r16, 5*4+8 
-	sbci r17, 0	
+	subi r16, 5*4+8
+	sbci r17, 0
 	in r0, SREG
 	cli
 	out SPL, r16
 	out SPH, r17
 	out SREG, r0
-	
+
 	push r25
 	push r24
 	inc r16
 	adc r17, r1
-	
+
 	movw r8, r18		/* backup of length*/
 	movw r10, r20
-	
+
 	movw r12, r22	/* backup pf msg-ptr */
-	
+
 	movw r24, r16
 	rcall sha1_init
 	/* if length >= 512 */
@@ -209,7 +209,7 @@ sha1_prolog:
 	mov r19, r9
 	cpi r19, 0x02
 	brlo 4f
-	
+
 	movw r24, r16
 	movw r22, r12
 	rcall sha1_nextBlock
@@ -222,22 +222,22 @@ sha1_prolog:
 	sbc r10, r1
 	sbc r11, r1
 	rjmp 1b
-	
+
 4:
 	movw r24, r16
 	movw r22, r12
 	movw r20, r8
 	rcall sha1_lastBlock
-	
+
 	pop r24
 	pop r25
 	movw r22, r16
-	rcall sha1_ctx2hash	
-	
+	rcall sha1_ctx2hash
+
 sha1_epilog:
 	in r30, SPL
 	in r31, SPH
-	adiw r30, 5*4+8 	
+	adiw r30, 5*4+8
 	in r0, SREG
 	cli
 	out SPL, r30
@@ -253,7 +253,7 @@ sha1_epilog:
 	pop r8
 	ret
 
-;###########################################################	
+;###########################################################
 
 
 ; block MUST NOT be larger than 64 bytes
@@ -308,8 +308,8 @@ sha1_lastBlock_prolog:
 	lsr r18
 	bst r21, 0	/* may be we should explain this ... */
 	bld r18, 5  /* now: r18 == length/8 (aka. length in bytes) */
-	
-	
+
+
 	movw r26, r22 /* X points to begin of msg */
 	tst r18
 	breq sha1_lastBlock_post_copy
@@ -319,27 +319,27 @@ sha1_lastBlock_copy_loop:
 	st Z+, r0
 	dec r1
 	brne sha1_lastBlock_copy_loop
-sha1_lastBlock_post_copy:	
-sha1_lastBlock_insert_stuffing_bit:	
+sha1_lastBlock_post_copy:
+sha1_lastBlock_insert_stuffing_bit:
 	ldi r19, 0x80
-	mov r0,r19 	
+	mov r0,r19
 	ldi r19, 0x07
 	and r19, r20 /* if we are in bitmode */
 	breq 2f	/* no bitmode */
-1:	
+1:
 	lsr r0
 	dec r19
 	brne 1b
 	ld r19, X
 /* maybe we should do some ANDing here, just for safety */
 	or r0, r19
-2:	
+2:
 	st Z+, r0
 	inc r18
 
 /* checking stuff here */
 	cpi r18, 64-8+1
-	brsh 0f 
+	brsh 0f
 	rjmp sha1_lastBlock_insert_zeros
 0:
 	/* oh shit, we landed here */
@@ -347,15 +347,15 @@ sha1_lastBlock_insert_stuffing_bit:
 	ldi r19, 64
 	sub r19, r18
 	breq 2f
-1:	
+1:
 	st Z+, r1
 	dec r19
-	brne 1b	
-2:	
+	brne 1b
+2:
 	sbiw r30, 63
 	sbiw r30,  1
 	movw r22, r30
-	
+
 	push r31
 	push r30
 	push r25
@@ -369,7 +369,7 @@ sha1_lastBlock_insert_stuffing_bit:
 	pop r25
 	pop r30
 	pop r31
-	
+
 	/* now we should subtract 512 from length */
 	movw r26, r24
 	adiw r26, 4*5+1 /* we can skip the lowest byte */
@@ -383,11 +383,11 @@ sha1_lastBlock_insert_stuffing_bit:
 	st X+, r19
 	dec r18
 	brne 1b
-	
+
 ;	clr r18 /* not neccessary ;-) */
 	/* reset Z pointer to begin of block */
 
-sha1_lastBlock_insert_zeros:	
+sha1_lastBlock_insert_zeros:
 	ldi r19, 64-8
 	sub r19, r18
 	breq sha1_lastBlock_insert_length
@@ -435,7 +435,7 @@ sha1_lastBlock_epilog:
 	ret
 
 /**/
-;###########################################################	
+;###########################################################
 
 .global sha1_nextBlock
 ; === sha1_nextBlock ===
@@ -482,27 +482,27 @@ sha1_nextBlock:
 	in r20, SPL
 	in r21, SPH
 	movw r18, r20			;backup SP
-;	movw r26, r20			; X points to free space on stack /* maybe removeable? */ 
+;	movw r26, r20			; X points to free space on stack /* maybe removeable? */
 	movw r30, r22			; Z points to message
 	subi r20, lo8(sha1_nextBlock_localSpace) ;sbiw can do only up to 63
 	sbci r21, hi8(sha1_nextBlock_localSpace)
-	movw r26, r20			; X points to free space on stack 
+	movw r26, r20			; X points to free space on stack
 	in r0, SREG
 	cli ; we want to be uninterrupted while updating SP
 	out SPL, r20
 	out SPH, r21
 	out SREG, r0
-	
+
 	push r18
 	push r19 /* push old SP on new stack */
 	push r24
 	push r25 /* param1 will be needed later */
-	
+
 	/* load a[] with state */
 	movw 28, r24 /* load pointer to state in Y */
 	adiw r26, 1 ; X++
 
-	ldi LoopC, 5*4	
+	ldi LoopC, 5*4
 1:	ld tmp1, Y+
 	st X+, tmp1
 	dec LoopC
@@ -511,7 +511,7 @@ sha1_nextBlock:
 	movw W1, r26 /* save pointer to w[0] */
 	/* load w[] with endian fixed message */
 		/* we might also use the changeendian32() function at bottom */
-	movw r30, r22 /* mv param2 (ponter to msg) to Z */	
+	movw r30, r22 /* mv param2 (ponter to msg) to Z */
 	ldi LoopC, 16
 1:
 	ldd tmp1, Z+3
@@ -525,8 +525,8 @@ sha1_nextBlock:
 	adiw r30, 4
 	dec LoopC
 	brne 1b
-	
-	;clr LoopC /* LoopC is named t in FIPS 180-2 */	
+
+	;clr LoopC /* LoopC is named t in FIPS 180-2 */
 	clr xtmp
 sha1_nextBlock_mainloop:
 	mov S, LoopC
@@ -542,7 +542,7 @@ sha1_nextBlock_mainloop:
 	ld T3, X+
 	ld T4, X+
 
-	/**/
+/*
 	push r26
 	push r27
 	push T4
@@ -559,7 +559,7 @@ sha1_nextBlock_mainloop:
 	pop T4
 	pop r27
 	pop r26
-	/**/
+*/
 
 	cpi LoopC, 16
 	brlt sha1_nextBlock_mainloop_core
@@ -600,24 +600,24 @@ sha1_nextBlock_mainloop:
 	st X+, T2
 	st X+, T3
 	st X+, T4
-	
-sha1_nextBlock_mainloop_core:	/* ther core function; T=ROTL5(a) ....*/	
+
+sha1_nextBlock_mainloop_core:	/* ther core function; T=ROTL5(a) ....*/
 								/* T already contains w[s] */
 	movw r26, W1
 	sbiw r26, 4*1		/* X points at a[4] aka e */
-	ld tmp1, X+ 
+	ld tmp1, X+
 	add T1, tmp1
-	ld tmp1, X+ 
+	ld tmp1, X+
 	adc T2, tmp1
-	ld tmp1, X+ 
+	ld tmp1, X+
 	adc T3, tmp1
-	ld tmp1, X+ 
+	ld tmp1, X+
 	adc T4, tmp1		/* T = w[s]+e */
 	sbiw r26, 4*5		/* X points at a[0] aka a */
-	ld F1, X+ 
-	ld F2, X+ 
-	ld F3, X+ 
-	ld F4, X+ 
+	ld F1, X+
+	ld F2, X+
+	ld F3, X+
+	ld F4, X+
 	mov tmp1, F4		/* X points at a[1] aka b */
 	ldi tmp2, 5
 1:
@@ -628,12 +628,12 @@ sha1_nextBlock_mainloop_core:	/* ther core function; T=ROTL5(a) ....*/
 	rol F4
 	dec tmp2
 	brne 1b
-	
+
 	add T1, F1
 	adc T2, F2
 	adc T3, F3
 	adc T4, F4 /* T = ROTL(a,5) + e + w[s] */
-	
+
 	/* now we have to do this fucking conditional stuff */
 	ldi r30, lo8(sha1_nextBlock_xTable)
 	ldi r31, hi8(sha1_nextBlock_xTable)
@@ -651,7 +651,7 @@ sha1_nextBlock_mainloop_core:	/* ther core function; T=ROTL5(a) ....*/
 	adc r31, xNULL
 	lsr xtmp
 	lsr xtmp
-	 
+
 	lpm tmp1, Z+
 	add T1, tmp1
 	lpm tmp1, Z+
@@ -661,13 +661,13 @@ sha1_nextBlock_mainloop_core:	/* ther core function; T=ROTL5(a) ....*/
 	lpm tmp1, Z+
 	adc T4, tmp1
 			/* T = ROTL(a,5) + e + kt + w[s] */
-	
+
 	/* Z-4 is just pointing to kt ... */
 	movw r28, r26 /* copy X in Y */
 	adiw r30, 3*4 /* now Z points to the rigth locatin in our jump-vector-table */
 	lsr r31
 	ror r30
-		
+
 	icall
 	mov F1, tmp1
 	icall
@@ -675,27 +675,27 @@ sha1_nextBlock_mainloop_core:	/* ther core function; T=ROTL5(a) ....*/
 	icall
 	mov F3, tmp1
 	icall
-	
+
 	add T1, F1
 	adc T2, F2
 	adc T3, F3
 	adc T4, tmp1 /* T = ROTL5(a) + f_t(b,c,d) + e + k_t + w[s] */
-				 /* X points still at a[1] aka b, Y points at a[2] aka c */	
+				 /* X points still at a[1] aka b, Y points at a[2] aka c */
 	/* update a[] */
 sha1_nextBlock_update_a:
 	/*first we move all vars in a[] "one up" e=d, d=c, c=b, b=a*/
 	//adiw r28, 3*4  /* Y should point at a[4] aka e */
 	movw r28, W1
 	sbiw r28, 4
-	
-	ldi tmp2, 4*4 
-1:	
+
+	ldi tmp2, 4*4
+1:
 	ld tmp1, -Y
 	std Y+4, tmp1
 	dec tmp2
 	brne 1b
 	/* Y points at a[0] aka a*/
-	
+
 	movw r28, W1
 	sbiw r28, 5*4
 	/* store T in a[0] aka a */
@@ -704,7 +704,7 @@ sha1_nextBlock_update_a:
 	st Y+, T3
 	st Y+, T4
 	/* Y points at a[1] aka b*/
-	
+
 	/* rotate c */
 	ldd T1, Y+1*4
 	ldd T2, Y+1*4+1
@@ -723,7 +723,7 @@ sha1_nextBlock_update_a:
 	std Y+1*4+1, T2
 	std Y+1*4+2, T3
 	std Y+1*4+3, T4
-	
+/*
 	push r27
 	push r26
 	movw r26, W1
@@ -731,17 +731,17 @@ sha1_nextBlock_update_a:
 	dbg_hexdump 4*5
 	pop r26
 	pop r27
-	
+*/
 	inc LoopC
 	cpi LoopC, 80
 	brge 1f
 	rjmp sha1_nextBlock_mainloop
 /**************************************/
-1:	
+1:
    /* littel patch */
 	sbiw r28, 4
 
-/* add a[] to state and inc length */	
+/* add a[] to state and inc length */
 	pop r27
 	pop r26		/* now X points to state (and Y still at a[0]) */
 	ldi tmp4, 5
@@ -755,7 +755,7 @@ sha1_nextBlock_update_a:
 	brne 2b
 	dec tmp4
 	brne 1b
-	
+
 	/* now length += 512 */
 	adiw r26, 1 /* we skip the least significant byte */
 	ld tmp1, X
@@ -769,7 +769,7 @@ sha1_nextBlock_update_a:
 	st X+, tmp1
 	dec tmp2
 	brne 1b
-	
+
 ; EPILOG
 sha1_nextBlock_epilog:
 /* now we should clean up the stack */
@@ -780,7 +780,7 @@ sha1_nextBlock_epilog:
 	out SPL, r20
 	out SPH, r21
 	out SREG, r0
-	
+
 	clr r1
 	pop r29
 	pop r28
@@ -797,13 +797,13 @@ sha1_nextBlock_epilog:
 sha1_nextBlock_xTable:
 .byte 20,40,60,0
 sha1_nextBlock_KTable:
-.int	0x5a827999 
-.int	0x6ed9eba1 
-.int	0x8f1bbcdc 
+.int	0x5a827999
+.int	0x6ed9eba1
+.int	0x8f1bbcdc
 .int	0xca62c1d6
 sha1_nextBlock_JumpTable:
 rjmp sha1_nextBlock_Ch
-	nop	
+	nop
 rjmp sha1_nextBlock_Parity
 	nop
 rjmp sha1_nextBlock_Maj
@@ -821,7 +821,7 @@ sha1_nextBlock_Ch:
 	and tmp2, tmp3
 	eor tmp1, tmp2
 	ret
-	
+
 sha1_nextBlock_Maj:
 	ld tmp1, Y+
 	mov tmp2, tmp1
@@ -841,14 +841,14 @@ sha1_nextBlock_Parity:
 	ldd tmp2, Y+7	/* load from d */
 	eor tmp1, tmp2
 	ret
-/*	
+/*
 ch_str:			.asciz "\r\nCh"
 maj_str:		.asciz "\r\nMaj"
 parity_str:	.asciz "\r\nParity"
 */
-;###########################################################	
+;###########################################################
 
-.global sha1_init 
+.global sha1_init
 ;void sha1_init(sha1_ctx_t *state){
 ;	DEBUG_S("\r\nSHA1_INIT");
 ;	state->h[0] = 0x67452301;
@@ -865,8 +865,8 @@ sha1_init:
 	ldi r30, lo8((sha1_init_vector))
 	ldi r31, hi8((sha1_init_vector))
 	ldi r22, 5*4 /* bytes to copy */
-sha1_init_vloop:	
-	lpm r23, Z+ 
+sha1_init_vloop:
+	lpm r23, Z+
 	st X+, r23
 	dec r22
 	brne sha1_init_vloop
@@ -876,7 +876,7 @@ sha1_init_lloop:
 	dec r22
 	brne sha1_init_lloop
 	ret
-	
+
 sha1_init_vector:
 .int 0x67452301;
 .int 0xefcdab89;
