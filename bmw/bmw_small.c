@@ -28,6 +28,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <avr/pgmspace.h>
+#include "memxor.h"
 #include "bmw_small.h"
 
 
@@ -430,7 +431,7 @@ void bmw_small_f1(uint32_t* q, const void* m, const void* h){
 }
 
 static
-void bmw_small_f2(uint32_t* h, const uint32_t* q, const void* m){
+void bmw_small_f2(uint32_t* h, uint32_t* q, const void* m){
 	uint32_t xl=0, xh;
 	uint8_t i;
 	for(i=16;i<24;++i){
@@ -462,6 +463,7 @@ void bmw_small_f2(uint32_t* h, const uint32_t* q, const void* m){
 		h[8+i] ^= xh ^ q[24+i];
 		h[8+i] += ROTL32(h[(4+i)%8],i+9);
 	}
+/*
 	h[ 8] += SHL32(xl, 8) ^ q[23] ^ q[ 8];
 	h[ 9] += SHR32(xl, 6) ^ q[16] ^ q[ 9];
 	h[10] += SHL32(xl, 6) ^ q[17] ^ q[10];
@@ -470,6 +472,18 @@ void bmw_small_f2(uint32_t* h, const uint32_t* q, const void* m){
 	h[13] += SHR32(xl, 4) ^ q[20] ^ q[13];
 	h[14] += SHR32(xl, 7) ^ q[21] ^ q[14];
 	h[15] += SHR32(xl, 2) ^ q[22] ^ q[15];
+*/
+	memxor(q+9, q+16, 7*4);
+	q[8] ^= q[23];
+	h[ 8] += SHL32(xl, 8) ^ q[ 8];
+	h[ 9] += SHR32(xl, 6) ^ q[ 9];
+	h[10] += SHL32(xl, 6) ^ q[10];
+	h[11] += SHL32(xl, 4) ^ q[11];
+	h[12] += SHR32(xl, 3) ^ q[12];
+	h[13] += SHR32(xl, 4) ^ q[13];
+	h[14] += SHR32(xl, 7) ^ q[14];
+	h[15] += SHR32(xl, 2) ^ q[15];
+
 }
 
 void bmw_small_nextBlock(bmw_small_ctx_t* ctx, const void* block){
