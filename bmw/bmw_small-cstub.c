@@ -77,51 +77,9 @@
 void bmw_small_f1(uint32_t* q, const void* m, const void* h);
 void bmw_small_f0(uint32_t* h, const void* m, uint32_t* q);
 void bmw_small_f2(uint32_t* h, uint32_t* q, const void* m);
+void bmw_small_nextBlock(bmw_small_ctx_t* ctx, const void* block);
 
 /*
-static
-void bmw_small_f2(uint32_t* h, const uint32_t* q, const void* m){
-	uint32_t xl=0, xh;
-	uint8_t i;
-	for(i=16;i<24;++i){
-		xl ^= q[i];
-	}
-	xh = xl;
-	for(i=24;i<32;++i){
-		xh ^= q[i];
-	}
-#if DEBUG
-	cli_putstr_P(PSTR("\r\n XL = "));
-	cli_hexdump_rev(&xl, 4);
-	cli_putstr_P(PSTR("\r\n XH = "));
-	cli_hexdump_rev(&xh, 4);
-#endif
-	memcpy(h, m, 16*4);
-	h[0] ^= SHL32(xh, 5) ^ SHR32(q[16], 5);
-	h[5] ^= SHL32(xh, 6) ^ SHR32(q[21], 6);
-	h[3] ^= SHR32(xh, 1) ^ SHL32(q[19], 5);
-	h[4] ^= SHR32(xh, 3) ^ q[20];
-	h[6] ^= SHR32(xh, 4) ^ SHL32(q[22], 6);
-	h[2] ^= SHR32(xh, 5) ^ SHL32(q[18], 5);
-	h[1] ^= SHR32(xh, 7) ^ SHL32(q[17], 8);
-	h[7] ^= SHR32(xh,11) ^ SHL32(q[23], 2);
-	for(i=0; i<8; ++i){
-		h[i] += xl ^ q[24+i] ^ q[i];
-	}
-	for(i=0; i<8; ++i){
-		h[8+i] ^= xh ^ q[24+i];
-		h[8+i] += ROTL32(h[(4+i)%8],i+9);
-	}
-	h[11] += SHL32(xl, 4) ^ q[18] ^ q[11];
-	h[10] += SHL32(xl, 6) ^ q[17] ^ q[10];
-	h[ 8] += SHL32(xl, 8) ^ q[23] ^ q[ 8];
-	h[15] += SHR32(xl, 2) ^ q[22] ^ q[15];
-	h[12] += SHR32(xl, 3) ^ q[19] ^ q[12];
-	h[13] += SHR32(xl, 4) ^ q[20] ^ q[13];
-	h[ 9] += SHR32(xl, 6) ^ q[16] ^ q[ 9];
-	h[14] += SHR32(xl, 7) ^ q[21] ^ q[14];
-}
-*/
 void bmw_small_nextBlock(bmw_small_ctx_t* ctx, const void* block){
 	uint32_t q[32];
 	dump_x(block, 16, 'M');
@@ -133,39 +91,35 @@ void bmw_small_nextBlock(bmw_small_ctx_t* ctx, const void* block){
 	ctx->counter += 1;
 	ctx_dump(ctx);
 }
+*/
 
 void bmw_small_lastBlock(bmw_small_ctx_t* ctx, const void* block, uint16_t length_b){
-	uint8_t buffer[64];
+	struct {
+		uint8_t  buffer[64];
+		uint32_t ctr;
+	} pctx;
 	while(length_b >= BMW_SMALL_BLOCKSIZE){
 		bmw_small_nextBlock(ctx, block);
 		length_b -= BMW_SMALL_BLOCKSIZE;
 		block = (uint8_t*)block + BMW_SMALL_BLOCKSIZE_B;
 	}
-	memset(buffer, 0, 64);
-	memcpy(buffer, block, (length_b+7)/8);
-	buffer[length_b>>3] |= 0x80 >> (length_b&0x07);
+	memset(pctx.buffer, 0, 64);
+	memcpy(pctx.buffer, block, (length_b+7)/8);
+	pctx.buffer[length_b>>3] |= 0x80 >> (length_b&0x07);
 	if(length_b+1>64*8-64){
-		bmw_small_nextBlock(ctx, buffer);
-		memset(buffer, 0, 64-8);
+		bmw_small_nextBlock(ctx, pctx.buffer);
+		memset(pctx.buffer, 0, 64-8);
 		ctx->counter -= 1;
 	}
-	*((uint64_t*)&(buffer[64-8])) = (uint64_t)(ctx->counter*512LL)+(uint64_t)length_b;
-	bmw_small_nextBlock(ctx, buffer);
+	*((uint64_t*)&(pctx.buffer[64-8])) = (uint64_t)(ctx->counter*512LL)+(uint64_t)length_b;
+	bmw_small_nextBlock(ctx, pctx.buffer);
 	uint8_t i;
-	uint32_t q[32];
-	memset(buffer, 0xaa, 64);
+	memset(pctx.buffer, 0xaa, 64);
 	for(i=0; i<16;++i){
-		buffer[i*4] = i+0xa0;
+		pctx.buffer[i*4] = i+0xa0;
 	}
-//	dump_x(buffer, 16, 'A');
-	dump_x(ctx->h, 16, 'M');
-	bmw_small_f0((uint32_t*)buffer, ctx->h, q);
-	dump_x(buffer, 16, 'a');
-	dump_x(q, 16, 'Q');
-	bmw_small_f1(q, ctx->h, (uint32_t*)buffer);
-	dump_x(q, 32, 'Q');
-	bmw_small_f2((uint32_t*)buffer, q, ctx->h);
-	memcpy(ctx->h, buffer, 64);
+	bmw_small_nextBlock((bmw_small_ctx_t*)&pctx, ctx->h);
+	memcpy(ctx->h, pctx.buffer, 64);
 }
 
 void bmw224_init(bmw224_ctx_t* ctx){

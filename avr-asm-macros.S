@@ -17,15 +17,15 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/* 
+/*
  * File:        avr-asm-macros.S
  * Author:      Daniel Otte
  * Date:        2008-08-13
  * License:     GPLv3 or later
  * Description: some macros which are quite usefull
- * 
+ *
  */
- 
+
 #include <avr/io.h>
 
 /*******************************************************************************
@@ -34,14 +34,14 @@
 
 .macro push_ p1:req, p2:vararg
 	push \p1
-.ifnb \p2	
+.ifnb \p2
 	push_ \p2
 .endif
 .endm
 
 .macro pop_ p1:req, p2:vararg
 	pop \p1
-.ifnb \p2	
+.ifnb \p2
 	pop_ \p2
 .endif
 .endm
@@ -50,13 +50,13 @@
 	push \from
 .if     \to-\from
 	push_range "(\from+1)",\to
-.endif		
+.endif
 .endm
 
 .macro pop_range from:req, to:req
 	pop \to
 .if     \to-\from
-	pop_range \from,"(\to-1)"	
+	pop_range \from,"(\to-1)"
 .endif
 .endm
 
@@ -64,7 +64,7 @@
 	in r0, _SFR_IO_ADDR(SREG)
 	in \reg1, _SFR_IO_ADDR(SPL)
 	in \reg2, _SFR_IO_ADDR(SPH)
-	sbiw \reg1, \size 
+	sbiw \reg1, \size
 	cli
 	out _SFR_IO_ADDR(SPH), \reg2
 	out _SFR_IO_ADDR(SREG), r0
@@ -75,7 +75,7 @@
 	in r0, _SFR_IO_ADDR(SREG)
 	in \reg1, _SFR_IO_ADDR(SPL)
 	in \reg2, _SFR_IO_ADDR(SPH)
-	adiw \reg1, \size 
+	adiw \reg1, \size
 	cli
 	out _SFR_IO_ADDR(SPH), \reg2
 	out _SFR_IO_ADDR(SREG), r0
@@ -88,7 +88,7 @@
 	in \reg1, _SFR_IO_ADDR(SPL)
 	in \reg2, _SFR_IO_ADDR(SPH)
 	subi \reg1, lo8(\size)
-	sbci \reg2, hi8(\size)	 
+	sbci \reg2, hi8(\size)
 	cli
 	out _SFR_IO_ADDR(SPH), \reg2
 	out _SFR_IO_ADDR(SREG), r0
@@ -100,7 +100,7 @@
 	in \reg1, _SFR_IO_ADDR(SPL)
 	in \reg2, _SFR_IO_ADDR(SPH)
 	adiw \reg1, 63
-	adiw \reg1, (\size-63) 
+	adiw \reg1, (\size-63)
 	cli
 	out _SFR_IO_ADDR(SPH), \reg2
 	out _SFR_IO_ADDR(SREG), r0
@@ -113,7 +113,7 @@
 	in \reg2, _SFR_IO_ADDR(SPH)
 	adiw \reg1, 63
 	adiw \reg1, 63
-	adiw \reg1, (\size-63*2) 
+	adiw \reg1, (\size-63*2)
 	cli
 	out _SFR_IO_ADDR(SPH), \reg2
 	out _SFR_IO_ADDR(SREG), r0
@@ -131,7 +131,7 @@
 	add \reg1, r16
 	adc \reg2, r17
 	pop r17
-	pop r16 
+	pop r16
 	cli
 	out _SFR_IO_ADDR(SPH), \reg2
 	out _SFR_IO_ADDR(SREG), r0

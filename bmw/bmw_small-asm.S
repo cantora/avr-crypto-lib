@@ -800,8 +800,8 @@ q0 =  6
 q1 =  7
 .global bmw_small_f1
 bmw_small_f1:
-	push_range 2, 7
-	push_range 28, 29
+;	push_range 2, 7
+;	push_range 28, 29
 	push r16
 	movw q0, r24
 	movw m0, r22
@@ -843,8 +843,8 @@ bmw_small_f1:
 	cpi r16, 16
 	brne 1b
 	pop r16
-	pop_range 28, 29
-	pop_range 2, 7
+;	pop_range 28, 29
+;	pop_range 2, 7
 	ret
 
 /*******************************************************************************
@@ -960,9 +960,9 @@ f0_jumptable:
 
 .global bmw_small_f0
 bmw_small_f0:
-	push_range 28, 29
-    push_range 4, 11
-    push_range 16, 17
+;	push_range 28, 29
+;    push_range 4, 11
+;    push_range 16, 17
     /* h[i] ^= m[i]; q[i]= 0 */
 	movw r26, h0 ; h
 	movw r30, m0 ; m
@@ -1105,9 +1105,9 @@ bmw_small_f0:
 	adc acc0, acc1
 	st Z+, acc0
 
-    pop_range 16, 17
-    pop_range 4, 11
-	pop_range 28, 29
+;   pop_range 16, 17
+;   pop_range 4, 11
+;	pop_range 28, 29
     ret
 
 /*******************************************************************************
@@ -1220,8 +1220,8 @@ bmw_small_f2:
 	st X+, r0
 	dec r18
 	brne 1b
-	push_range 28, 29
-	push_range  2, 17
+;	push_range 28, 29
+;	push_range  2, 17
 	movw q0, r22
 	movw h0, r24
 	/* calc xl */
@@ -1655,8 +1655,8 @@ bmw_small_f2:
 	rcall tshiftr
 	modify_h_2 5
 bmw_small_f2_exit:
-	pop_range  2, 17
-	pop_range 28, 29
+;	pop_range  2, 17
+;	pop_range 28, 29
 	ret
 
 cli_putb:
@@ -1695,3 +1695,75 @@ cli_putchar:
 	call cli_putc
 	pop_range 18, 31
 	ret
+
+/*******************************************************************************
+* void bmw_small_nextBlock(bmw_small_ctx_t* ctx, const void* block){
+*	uint32_t q[32];
+*	dump_x(block, 16, 'M');
+*	bmw_small_f0(ctx->h, block, q);
+*	dump_x(q, 16, 'Q');
+*	bmw_small_f1(q, block, ctx->h);
+*	dump_x(q, 32, 'Q');
+*	bmw_small_f2(ctx->h, q, block);
+*	ctx->counter += 1;
+*	ctx_dump(ctx);
+* }
+*
+* param ctx:   r24:r25
+* param block: r22:r23
+*/
+h0 =  2
+h1 =  3
+b0 =  4
+b1 =  5
+q0 =  6
+q1 =  7
+.global bmw_small_nextBlock
+bmw_small_nextBlock:
+	push_range 28, 29
+	push_range  2, 17
+	stack_alloc_large 32*4, 30, 31
+	adiw r30, 1
+	movw q0, r30
+	movw h0, r24
+	movw b0, r22
+	/* increment counter */
+	movw r30, r24
+	adiw r30, 60
+	ldd r22, Z+4
+	ldd r23, Z+5
+	ldd r24, Z+6
+	ldd r25, Z+7
+	ldi r21, 1
+	add r22, r21
+	adc r23, r1
+	adc r24, r1
+	adc r25, r1
+	std Z+4, r22
+	std Z+5, r23
+	std Z+6, r24
+	std Z+7, r25
+	/* call bmw_small_f0(ctx->h, block, q) */
+	movw r24, h0
+	movw r22, b0
+	movw r20, q0
+	push_ q1, q0, b1, b0, h1, h0
+	rcall bmw_small_f0
+	/*	call bmw_small_f1(q, block, ctx->h) */
+	pop_ 20, 21, 22, 23, 24, 25,
+	push_ 21, 20, 25, 24, 23, 22
+	rcall bmw_small_f1
+	/*	call bmw_small_f2(ctx->h, q, block) */
+	pop_ 20, 21, 22, 23, 24, 25,
+	rcall bmw_small_f2
+	stack_free_large3 32*4
+	pop_range  2, 17
+	pop_range 28, 29
+	ret
+
+
+
+
+
+
+
