@@ -29,7 +29,8 @@
 #include "avr-asm-macros.S"
 
 shiftcodetable:
-	.byte 0x00 ;  0
+;	.byte 0x00 ;  0
+shiftcodetable_1:
 	.byte 0x01 ;  1
 	.byte 0x02 ;  2
 	.byte 0x03 ;  3
@@ -47,7 +48,7 @@ shiftcodetable_9:
 	.byte 0x2A ; 14
 	.byte 0x29 ; 15
 	.byte 0x20 ; 16
-	.byte 0x21 ; 17 unused but necesseray for padding
+;	.byte 0x21 ; 17 unused but necesseray for padding
 
 
 
@@ -163,9 +164,8 @@ rotl32p9:
 .global rotl_addel
 rotl_addel:
 	andi r20, 0x0f
-	inc r20
-	ldi r30, lo8(shiftcodetable)
-	ldi r31, hi8(shiftcodetable)
+	ldi r30, lo8(shiftcodetable_1)
+	ldi r31, hi8(shiftcodetable_1)
 	add r30, r20
 	adc r31, r1
 	lpm r20, Z
@@ -183,8 +183,7 @@ rotl_addel:
 	movw r22, r30
 2:  bst  r20, 3
 	andi r20, 0x07
-	brne 3f
-	ret
+	breq some_ret
 3:
 	brts rotr32; 4f
 	rjmp rotl32
@@ -1659,6 +1658,8 @@ bmw_small_f2_exit:
 ;	pop_range 28, 29
 	ret
 
+#if DEBUG_FUNCTIONS
+
 cli_putb:
 	push r2
 	push_range 18, 26
@@ -1696,6 +1697,8 @@ cli_putchar:
 	pop_range 18, 31
 	ret
 
+#endif
+
 /*******************************************************************************
 * void bmw_small_nextBlock(bmw_small_ctx_t* ctx, const void* block){
 *	uint32_t q[32];
@@ -1719,7 +1722,11 @@ b1 =  5
 q0 =  6
 q1 =  7
 .global bmw_small_nextBlock
+.global bmw224_nextBlock
+.global bmw256_nextBlock
 bmw_small_nextBlock:
+bmw224_nextBlock:
+bmw256_nextBlock:
 	push_range 28, 29
 	push_range  2, 17
 	stack_alloc_large 32*4, 30, 31
@@ -1762,8 +1769,311 @@ bmw_small_nextBlock:
 	ret
 
 
+/*******************************************************************************
+* void bmw224_init(bmw224_ctx_t* ctx){
+*	uint8_t i;
+*	ctx->h[0] = 0x00010203;
+*	for(i=1; i<16; ++i){
+*		ctx->h[i] = ctx->h[i-1]+ 0x04040404;
+*	}
+*	ctx->counter=0;
+* }
+*
+* param ctx:  r24:r25
+*/
+.global bmw224_init
+bmw224_init:
+	movw r26, r24
+	ldi r22, 0x03
+	ldi r23, 0x02
+	ldi r24, 0x01
+	ldi r25, 0x00
+bmw_small_init:
+	st X+, r22
+	st X+, r23
+	st X+, r24
+	st X+, r25
+	ldi r18, 16-1
+	ldi r20, 0x04
+1:
+	add r22, r20
+	adc r23, r20
+	adc r24, r20
+	adc r25, r20
+	st X+, r22
+	st X+, r23
+	st X+, r24
+	st X+, r25
+	dec r18
+	brne 1b
+	st X+, r1
+	st X+, r1
+	st X+, r1
+	st X+, r1
+	ret
 
+.global bmw256_init
+bmw256_init:
+	movw r26, r24
+	ldi r22, 0x43
+	ldi r23, 0x42
+	ldi r24, 0x41
+	ldi r25, 0x40
+	rjmp bmw_small_init
 
+/*******************************************************************************
+* void bmw_small_lastBlock(bmw_small_ctx_t* ctx, const void* block, uint16_t length_b){
+*	struct {
+*		uint8_t  buffer[64];
+*		uint32_t ctr;
+*	} pctx;
+*	while(length_b >= BMW_SMALL_BLOCKSIZE){
+*		bmw_small_nextBlock(ctx, block);
+*		length_b -= BMW_SMALL_BLOCKSIZE;
+*		block = (uint8_t*)block + BMW_SMALL_BLOCKSIZE_B;
+*	}
+*	memset(pctx.buffer, 0, 64);
+*	memcpy(pctx.buffer, block, (length_b+7)/8);
+*	pctx.buffer[length_b>>3] |= 0x80 >> (length_b&0x07);
+*	if(length_b+1>64*8-64){
+*		bmw_small_nextBlock(ctx, pctx.buffer);
+*		memset(pctx.buffer, 0, 64-8);
+*		ctx->counter -= 1;
+*	}
+*	*((uint64_t*)&(pctx.buffer[64-8])) = (uint64_t)(ctx->counter*512LL)+(uint64_t)length_b;
+*	bmw_small_nextBlock(ctx, pctx.buffer);
+*	uint8_t i;
+*	memset(pctx.buffer, 0xaa, 64);
+*	for(i=0; i<16;++i){
+*		pctx.buffer[i*4] = i+0xa0;
+*	}
+*	bmw_small_nextBlock((bmw_small_ctx_t*)&pctx, ctx->h);
+*	memcpy(ctx->h, pctx.buffer, 64);
+* }
+*
+* param ctx:      r24:r25
+* param block:    r22:r23
+* param length_b: r20:r21
+*/
+ctx0 =  2
+ctx1 =  3
+blc0 =  4
+blc1 =  5
+len0 = 28
+len1 = 29
+buf0 =  6
+buf1 =  7
 
+.global bmw_small_lastBlock
+.global bmw224_lastBlock
+.global bmw256_lastBlock
+bmw_small_lastBlock:
+bmw224_lastBlock:
+bmw256_lastBlock:
+/*	while(length_b >= BMW_SMALL_BLOCKSIZE){
+		bmw_small_nextBlock(ctx, block);
+		length_b -= BMW_SMALL_BLOCKSIZE;
+		block = (uint8_t*)block + BMW_SMALL_BLOCKSIZE_B;
+	}
+*/
+	push_range 2, 7
+	push_range 28, 29
+	movw ctx0, r24
+	movw blc0, r22
+	movw len0, r20
+1:
+	cpi len1, hi8(512)
+	brlo 2f
+	movw r24, ctx0
+	movw r22, blc0
+	rcall bmw_small_nextBlock
+	ldi r24, 64
+	add blc0, r24
+	adc blc1, r1
+	subi len1, hi8(512)
+	rjmp 1b
+2:
+/*	struct {
+		uint8_t  buffer[64];
+		uint32_t ctr;
+	} pctx;
+*/
+	stack_alloc_large 68
+	adiw r30, 1
+	movw buf0, r30
+/*	memset(pctx.buffer, 0, 64);
+	memcpy(pctx.buffer, block, (length_b+7)/8);
+	pctx.buffer[length_b>>3] |= 0x80 >> (length_b&0x07);
+*/	movw r24, len0
+	lsr r25
+	ror r24
+	lsr r24
+	lsr r24
+;	inc r24
+	ldi r23, 63
+	sub r23, r24
+	movw r26, blc0
+	tst r24
+	breq 301f
+30: ld r20, X+
+	st Z+, r20
+	dec r24
+	brne 30b
+301:
+	clr r20
+	mov r21, len0
+	ldi r24, 0x80
+	andi r21, 0x07
+	breq 305f
+	ld r20, X+
+303:
+	lsr r24
+	dec r21
+	brne 303b
+305:
+	or r20, r24
+	st Z+, r20
+	tst r23
+	breq 32f
+31: st Z+, r1
+	dec r23
+	brne 31b
+32:
+/*	if(length_b+1>64*8-64){ ; = 64*7-1 = 447 max(length_b)=511
+		bmw_small_nextBlock(ctx, pctx.buffer);
+		memset(pctx.buffer, 0, 64-8);
+		ctx->counter -= 1;
+	}
+*/
+	tst len1
+	breq 400f
+	cpi len0, 192
+	brlo 400f
+	movw r24, ctx0
+	movw r22, buf0
+	rcall bmw_small_nextBlock
+	movw r26, buf0
+	ldi r20, 64-8
+350:
+	st X+, r1
+	dec r20
+	brne 350b
+	movw r30, ctx0
+	adiw r30, 60
+	ldd r21, Z+4
+	ldd r22, Z+5
+	ldd r23, Z+6
+	ldd r24, Z+7
+	subi r21, 1
+	sbc r22, r1
+	sbc r23, r1
+	sbc r24, r1
+	rjmp 410f
+/*	*((uint64_t*)&(pctx.buffer[64-8])) = (uint64_t)(ctx->counter*512LL)+(uint64_t)length_b;
+	bmw_small_nextBlock(ctx, pctx.buffer);
+*/
+400:
+	movw r30, ctx0
+	adiw r30, 60
+	ldd r21, Z+4
+	ldd r22, Z+5
+	ldd r23, Z+6
+	ldd r24, Z+7
+410:
+	clr r25
+	lsl r21
+	rol r22
+	rol r23
+	rol r24
+	rol r25
+	mov r20, len0
+	add r21, len1
+	adc r22, r1
+	adc r23, r1
+	adc r24, r1
+	adc r25, r1
+	movw r30, buf0
+	adiw r30, 64-8
+	st Z+, r20
+	st Z+, r21
+	st Z+, r22
+	st Z+, r23
+	st Z+, r24
+	st Z+, r25
+	st Z+, r1
+	st Z+, r1
+	movw r24, ctx0
+	movw r22, buf0
+	rcall bmw_small_nextBlock
+/*	memset(pctx.buffer, 0xaa, 64);
+	for(i=0; i<16;++i){
+		pctx.buffer[i*4] = i+0xa0;
+	}
+*/
+	ldi r18, 0xa0
+	ldi r19, 0xaa
+	movw r26, buf0
+500:
+	st X+, r18
+	st X+, r19
+	st X+, r19
+	st X+, r19
+	inc r18
+	sbrs r18, 4
+	rjmp 500b
+/*	bmw_small_nextBlock((bmw_small_ctx_t*)&pctx, ctx->h);
+	memcpy(ctx->h, pctx.buffer, 64);
+*/
+	movw r24, buf0
+	movw r22, ctx0
+	rcall bmw_small_nextBlock
+	ldi r18, 64
+	movw r26, ctx0
+	movw r30, buf0
+600:
+	ld r20, Z+
+	st X+, r20
+	dec r18
+	brne 600b
 
+	stack_free_large 68
+	pop_range 28, 29
+	pop_range 2, 7
+	ret
 
+/*******************************************************************************
+* void bmw224_ctx2hash(void* dest, const bmw224_ctx_t* ctx){
+*	memcpy(dest, &(ctx->h[9]), 224/8);
+* }
+*
+* param dest:  r24:r25
+* param ctx:   r22:r23
+*/
+.global bmw224_ctx2hash
+bmw224_ctx2hash:
+	movw r26, r24
+	movw r30, r22
+	adiw r30, 9*4
+	ldi r22, 28
+	rjmp 1f
+
+/*******************************************************************************
+* void bmw256_ctx2hash(void* dest, const bmw256_ctx_t* ctx){
+*	memcpy(dest, &(ctx->h[8]), 256/8);
+* }
+*
+* param dest:  r24:r25
+* param ctx:   r22:r23
+*/
+.global bmw256_ctx2hash
+bmw256_ctx2hash:
+	movw r26, r24
+	movw r30, r22
+	adiw r30, 8*4
+	ldi r22, 32
+1:
+	ld r23, Z+
+	st X+, r23
+	dec r22
+	brne 1b
+	ret
