@@ -2077,3 +2077,136 @@ bmw256_ctx2hash:
 	dec r22
 	brne 1b
 	ret
+
+/*******************************************************************************
+* void bmw256(void* dest, const void* msg, uint32_t length_b){
+*	bmw_small_ctx_t ctx;
+*	bmw256_init(&ctx);
+*	while(length_b>=BMW_SMALL_BLOCKSIZE){
+*		bmw_small_nextBlock(&ctx, msg);
+*		length_b -= BMW_SMALL_BLOCKSIZE;
+*		msg = (uint8_t*)msg + BMW_SMALL_BLOCKSIZE_B;
+*	}
+*	bmw_small_lastBlock(&ctx, msg, length_b);
+*	bmw256_ctx2hash(dest, &ctx);
+* }
+*
+* param dest:     r24:r25
+* param msg:      r22:r23
+* param length_b: r18:r21
+*/
+ctx0 =   2
+ctx1 =   3
+msg0 =   4
+msg1 =   5
+len0 =   6
+len1 =   7
+len2 =   8
+len3 =   9
+dst0 =  10
+dst1 =  11
+.global bmw256
+bmw256:
+	push_range 2, 11
+	stack_alloc_large 64+4
+	adiw r30, 1
+	movw ctx0, r30
+	movw dst0, r24
+	movw msg0, r22
+	movw len0, r18
+	movw len2, r20
+	movw r24, ctx0
+	rcall bmw256_init
+20:
+	mov r18, len2
+	or  r18, len3
+	breq 50f
+	movw r24, ctx0
+	movw r22, msg0
+	rcall bmw_small_nextBlock
+	ldi r20, 2
+	sub len1, r20
+	sbc len2, r1
+	sbc len3, r1
+	ldi r20, 64
+	add msg0, r20
+	adc msg1, r1
+	rjmp 20b
+50:
+	movw r24, ctx0
+	movw r22, msg0
+	movw r20, len0
+	rcall bmw_small_lastBlock
+	movw r24, dst0
+	movw r22, ctx0
+	rcall bmw256_ctx2hash
+	stack_free_large 64+4
+	pop_range 2, 11
+	ret
+
+
+/*******************************************************************************
+* void bmw224(void* dest, const void* msg, uint32_t length_b){
+*	bmw_small_ctx_t ctx;
+*	bmw224_init(&ctx);
+*	while(length_b>=BMW_SMALL_BLOCKSIZE){
+*		bmw_small_nextBlock(&ctx, msg);
+*		length_b -= BMW_SMALL_BLOCKSIZE;
+*		msg = (uint8_t*)msg + BMW_SMALL_BLOCKSIZE_B;
+*	}
+*	bmw_small_lastBlock(&ctx, msg, length_b);
+*	bmw224_ctx2hash(dest, &ctx);
+* }
+*
+* param dest:     r24:r25
+* param msg:      r22:r23
+* param length_b: r18:r21
+*/
+ctx0 =   2
+ctx1 =   3
+msg0 =   4
+msg1 =   5
+len0 =   6
+len1 =   7
+len2 =   8
+len3 =   9
+dst0 =  10
+dst1 =  11
+.global bmw224
+bmw224:
+	push_range 2, 11
+	stack_alloc_large 64+4
+	adiw r30, 1
+	movw ctx0, r30
+	movw dst0, r24
+	movw msg0, r22
+	movw len0, r18
+	movw len2, r20
+	movw r24, ctx0
+	rcall bmw224_init
+20:
+	mov r18, len2
+	or  r18, len3
+	breq 50f
+	movw r24, ctx0
+	movw r22, msg0
+	rcall bmw_small_nextBlock
+	ldi r20, 2
+	sub len1, r20
+	sbc len2, r1
+	sbc len3, r1
+	ldi r20, 64
+	add msg0, r20
+	adc msg1, r1
+	rjmp 20b
+50:
+	movw r24, ctx0
+	movw r22, msg0
+	movw r20, len0
+	rcall bmw_small_lastBlock
+	movw r24, dst0
+	movw r22, ctx0
+	rcall bmw224_ctx2hash
+	stack_free_large 64+4
+	pop_range 2, 11
+	ret
