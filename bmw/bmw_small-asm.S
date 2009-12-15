@@ -2107,43 +2107,9 @@ dst0 =  10
 dst1 =  11
 .global bmw256
 bmw256:
-	push_range 2, 11
-	stack_alloc_large 64+4
-	adiw r30, 1
-	movw ctx0, r30
-	movw dst0, r24
-	movw msg0, r22
-	movw len0, r18
-	movw len2, r20
-	movw r24, ctx0
-	rcall bmw256_init
-20:
-	mov r18, len2
-	or  r18, len3
-	breq 50f
-	movw r24, ctx0
-	movw r22, msg0
-	rcall bmw_small_nextBlock
-	ldi r20, 2
-	sub len1, r20
-	sbc len2, r1
-	sbc len3, r1
-	ldi r20, 64
-	add msg0, r20
-	adc msg1, r1
-	rjmp 20b
-50:
-	movw r24, ctx0
-	movw r22, msg0
-	movw r20, len0
-	rcall bmw_small_lastBlock
-	movw r24, dst0
-	movw r22, ctx0
-	rcall bmw256_ctx2hash
-	stack_free_large 64+4
-	pop_range 2, 11
-	ret
-
+	push r16
+	ldi r16, 1
+	rjmp bmw_small_all
 
 /*******************************************************************************
 * void bmw224(void* dest, const void* msg, uint32_t length_b){
@@ -2174,6 +2140,10 @@ dst0 =  10
 dst1 =  11
 .global bmw224
 bmw224:
+	push r16
+	clr r16
+
+bmw_small_all:
 	push_range 2, 11
 	stack_alloc_large 64+4
 	adiw r30, 1
@@ -2183,7 +2153,11 @@ bmw224:
 	movw len0, r18
 	movw len2, r20
 	movw r24, ctx0
-	rcall bmw224_init
+	ldi r30, pm_lo8(init_lut)
+	ldi r31, pm_hi8(init_lut)
+	add r30, r16
+	adc r31, r1
+	icall
 20:
 	mov r18, len2
 	or  r18, len3
@@ -2206,7 +2180,19 @@ bmw224:
 	rcall bmw_small_lastBlock
 	movw r24, dst0
 	movw r22, ctx0
-	rcall bmw224_ctx2hash
+	ldi r30, pm_lo8(c2h_lut)
+	ldi r31, pm_hi8(c2h_lut)
+	add r30, r16
+	adc r31, r1
+	icall
 	stack_free_large 64+4
 	pop_range 2, 11
+	pop r16
 	ret
+
+init_lut:
+	rjmp bmw224_init
+	rjmp bmw256_init
+c2h_lut:
+	rjmp bmw224_ctx2hash
+	rjmp bmw256_ctx2hash

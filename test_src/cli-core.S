@@ -38,7 +38,7 @@
  *    param cmdlist:  r24:r25
  */
 TMP_CNT_0 = 26
-TMP_CNT_1 = 27 
+TMP_CNT_1 = 27
 .global max_cmd_length
 max_cmd_length:
 	movw r30, r24
@@ -68,10 +68,10 @@ max_cmd_length:
 	brge 1b
 	movw r24, TMP_CNT_0
 	rjmp 1b
-		 
+
 /******************************************************************************/
 .global echo_ctrl
-echo_ctrl: 
+echo_ctrl:
 	call strstrip
 	tst r24
 	brne 3f
@@ -95,14 +95,14 @@ echo_ctrl:
 	cpi r20, 'n'
 	breq exit_1
 	cpi r20, 'f'
-	breq exit_0	
+	breq exit_0
 	ret
-exit_1: 	
+exit_1:
 	ldi r20, 1
 	rjmp exit
 exit_0:
 	ldi r20, 0
-exit:	
+exit:
 	sts cli_echo, r20
 	ret
 print_echo_status:
@@ -128,12 +128,12 @@ print_echo_status:
 	clr r25
 	ldi r24, '\n'
 	rcall cli_putc
-	ret		
+	ret
 pecho:
 .asciz "\r\necho is o"
 
 /******************************************************************************/
-/* int8_t search_and_call(char* cmd, uint16_t maxcmdlength, PGM_VOID_P cmdlist)	
+/* int8_t search_and_call(char* cmd, uint16_t maxcmdlength, PGM_VOID_P cmdlist)
  *    param cmd:          r24:r25
  *    param maxcmdlength: r22:r23
  *    param cmdlist:      r20:r21
@@ -146,7 +146,7 @@ CMD_1 = 17
 snc_auto_help:
 	movw r24, r22
 	movw r22, r20
-	rcall cli_auto_help	
+	rcall cli_auto_help
 snc_return_1:
 	ldi r24, 1
 	rjmp snc_return
@@ -154,7 +154,7 @@ snc_return_2:
 	ldi r24, 2
 snc_return:
 	clr r25
-	ret	 
+	ret
 
 .global search_and_call
 search_and_call:
@@ -183,7 +183,7 @@ search_and_call:
 	tst r18
 	brne 1f
 2:	rjmp snc_auto_help
-1:	
+1:
 	push r28
 	push r29
 	push CMD_0
@@ -237,7 +237,7 @@ snc_found:
 	icall
 	ldi r24, 1
 	rjmp 5f
-4:	ldi r24, 2	
+4:	ldi r24, 2
 snc_return_0:
 	clr r24
 5:	pop LEN_1
@@ -261,7 +261,7 @@ nocommand_str:
  *   param cmdlist:   r22:r23
  */
 ITM_0 = 12
-ITM_1 = 13 
+ITM_1 = 13
 CMD_0 = 14
 CMD_1 = 15
 LEN_0 = 16
@@ -300,7 +300,7 @@ cli_option_listing:
 	movw r24, ITM_0
 	rcall cli_putstr_P
 	rjmp 1b
-99:	
+99:
 	ldi r24, lo8(prompt_str)
 	ldi r25, hi8(prompt_str)
 	rcall cli_putstr_P
@@ -310,9 +310,9 @@ cli_option_listing:
 	pop_range 12, 17
 	ret
 
-prompt_str:	
+prompt_str:
 .asciz "\r\n>"
-itemprefix_str:	
+itemprefix_str:
 .asciz "\r\n   "
 
 /******************************************************************************/
@@ -322,7 +322,7 @@ itemprefix_str:
  */
 
 TMP_0 = 14
-TMP_1 = 15 
+TMP_1 = 15
 LEN_0 = 16
 LEN_1 = 17
 LST_0 = 28
@@ -341,7 +341,7 @@ cli_auto_help:
 	lpm r25, Z+
 	movw r28, r30
 	adiw r24, 0
-	breq 99f	
+	breq 99f
 	movw TMP_0, r24
 	rcall cli_putstr_P
 	movw r24, TMP_0
@@ -357,9 +357,9 @@ cli_auto_help:
 	brne 2b
 4:	ldi r24, lo8(sep_str)
 	ldi r25, hi8(sep_str)
+	rcall cli_putstr_P
 	ldi r22, lo8(none_str)
 	ldi r23, hi8(none_str)
-	rcall cli_putstr_P
 	movw r30, r28
 	lpm r24, Z+
 	lpm r25, Z+
@@ -369,7 +369,7 @@ cli_auto_help:
 	ldi r22, lo8(yes_str)
 	ldi r23, hi8(yes_str)
 5:	movw r24, r22
-	rcall cli_putstr_P	
+	rcall cli_putstr_P
 	ldi r24, lo8(sep2_str)
 	ldi r25, hi8(sep2_str)
 	rcall cli_putstr_P
@@ -388,7 +388,7 @@ cli_auto_help:
 	rcall cli_putc
 	adiw r28, CMDLIST_ENTRY_SIZE-4
 	rjmp 1b
-99:	
+99:
 	pop_range 28, 29
 	pop_range 14, 17
 	ret
