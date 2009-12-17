@@ -106,7 +106,6 @@ void testrun_sha1(void){
 	sha1(&hash,"abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq",448);
 //	cli_putstr_P(PSTR("\r\nsha1(\"abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq\") = \r\n\t"));
 	cli_hexdump(hash,SHA1_HASH_BITS/8);
-/*
 	cli_putstr("\r\nsha1(1,000,000 * 'a') = \r\n\t");
 	{
 		uint8_t block[SHA1_BLOCK_BITS/8];
@@ -121,9 +120,7 @@ void testrun_sha1(void){
 		sha1_ctx2hash(&hash, &s);
 	}
 	cli_hexdump(hash,SHA1_HASH_BITS/8);
-*/
 
-	cli_putstr("\r\nx");
 }
 
 

@@ -209,12 +209,12 @@ void sha1_lastBlock(sha1_ctx_t *state, const void* block, uint16_t length){
 void sha1_ctx2hash (sha1_hash_t *dest, sha1_ctx_t *state){
 #if defined LITTLE_ENDIAN
 	uint8_t i;
-	for(i=0; i<8; ++i){
+	for(i=0; i<5; ++i){
 		((uint32_t*)dest)[i] = change_endian32(state->h[i]);
 	}
 #elif BIG_ENDIAN
 	if (dest != state->h)
-		memcpy(dest, state->h, SHA256_HASH_BITS/8);
+		memcpy(dest, state->h, SHA1_HASH_BITS/8);
 #else
 # error unsupported endian type!
 #endif

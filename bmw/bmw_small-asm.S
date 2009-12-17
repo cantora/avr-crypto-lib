@@ -538,12 +538,11 @@ addelement:
 	mov j, r24
 	movw h0, r20
 	movw m0, r22
-	mov r25, r24
-	lsl r25
-	lsl r25
+	lsl r24
+	lsl r24
 	ldi r30, lo8(const_lut)
 	ldi r31, hi8(const_lut)
-	add r30, r25
+	add r30, r24
 	adc r31, r1
 	lpm acc0, Z+
 	lpm acc1, Z+
