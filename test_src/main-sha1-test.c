@@ -113,7 +113,7 @@ void testrun_sha1(void){
 		sha1_ctx_t s;
 		memset(block,'a',SHA1_BLOCK_BITS/8);
 		sha1_init(&s);
-		for(i=0;i<15625; ++i){ / * (1000000/(SHA1_BLOCK_BITS/8)) * /
+		for(i=0;i<15625; ++i){ /* (1000000/(SHA1_BLOCK_BITS/8)) */
 			sha1_nextBlock(&s, block);
 		}
 		sha1_lastBlock(&s,block,0);
