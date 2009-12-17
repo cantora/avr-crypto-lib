@@ -96,7 +96,7 @@ void sha1_nextBlock (sha1_ctx_t *state, const void* block){
 	uint32_t a[5];
 	uint32_t w[16];
 	uint32_t temp;
-	uint8_t t,s;
+	uint8_t t,s,fi, fib;
 	pf_t f[] = {ch,parity,maj,parity};
 	uint32_t k[4]={	0x5a827999,
 					0x6ed9eba1,
@@ -108,26 +108,25 @@ void sha1_nextBlock (sha1_ctx_t *state, const void* block){
 		w[t] = change_endian32(((uint32_t*)block)[t]);
 	}
 
+#if DEBUG
 	uint8_t dbgi;
 	for(dbgi=0; dbgi<16; ++dbgi){
 		DEBUG_S("\n\rBlock:");
 		DEBUG_B(dbgi);
 		DEBUG_C(':');
-		#ifdef DEBUG
-			cli_hexdump(&(w[dbgi]) ,4);
-		#endif
+		cli_hexdump(&(w[dbgi]) ,4);
 	}
-
+#endif
 
 	/* load the state */
 	memcpy(a, state->h, 5*sizeof(uint32_t));
 
 
 	/* the fun stuff */
-	for(t=0; t<=79; ++t){
+	for(fi=0,fib=0,t=0; t<=79; ++t){
 		s = t & MASK;
 		if(t>=16){
-			#ifdef DEBUG
+			#if DEBUG
 			 DEBUG_S("\r\n ws = "); cli_hexdump(&(w[s]), 4);
 			#endif
 			w[s] = rotl32( w[(s+13)&MASK] ^ w[(s+8)&MASK] ^
@@ -138,23 +137,23 @@ void sha1_nextBlock (sha1_ctx_t *state, const void* block){
 		}
 
 		uint32_t dtemp;
-		temp = rotl32(a[0],5) + (dtemp=f[t/20](a[1],a[2],a[3])) + a[4] + k[t/20] + w[s];
+		temp = rotl32(a[0],5) + (dtemp=f[fi](a[1],a[2],a[3])) + a[4] + k[fi] + w[s];
 		memmove(&(a[1]), &(a[0]), 4*sizeof(uint32_t)); /* e=d; d=c; c=b; b=a; */
 		a[0] = temp;
 		a[2] = rotl32(a[2],30); /* we might also do rotr32(c,2) */
-
+		fib++;
+		if(fib==20){
+			fib=0;
+			fi = (fi+1)%4;
+		}
+		#if DEBUG
 		/* debug dump */
 		DEBUG_S("\r\nt = "); DEBUG_B(t);
 		DEBUG_S("; a[]: ");
-		#ifdef DEBUG
 		 cli_hexdump(a, 5*4);
-		#endif
 		DEBUG_S("; k = ");
-		#ifdef DEBUG
 		 cli_hexdump(&(k[t/20]), 4);
-		#endif
 		DEBUG_S("; f(b,c,d) = ");
-		#ifdef DEBUG
 		 cli_hexdump(&dtemp, 4);
 		#endif
 	}
@@ -176,6 +175,7 @@ void sha1_lastBlock(sha1_ctx_t *state, const void* block, uint16_t length){
 		block = (uint8_t*)block + 512/8;
 	}
 	state->length += length;
+	lb[length/8] = 0;
 	memcpy (lb, block, (length+7)/8);
 
 	/* set the final one bit */
@@ -190,7 +190,7 @@ void sha1_lastBlock(sha1_ctx_t *state, const void* block, uint16_t length){
 	}
 
 	/* pad with zeros */
-	memset(lb+length, 0, 56-length);
+	memset(lb+length, 0, 64-length);
 	/* store the 64bit length value */
 #if defined LITTLE_ENDIAN
 	 	/* this is now rolled up */
