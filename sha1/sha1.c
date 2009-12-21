@@ -35,6 +35,7 @@
 #  undef DEBUG
 #endif
 
+#include "cli.h"
 
 #define LITTLE_ENDIAN
 
@@ -111,9 +112,14 @@ void sha1_nextBlock (sha1_ctx_t *state, const void* block){
 #if DEBUG
 	uint8_t dbgi;
 	for(dbgi=0; dbgi<16; ++dbgi){
+		/*
 		DEBUG_S("\n\rBlock:");
 		DEBUG_B(dbgi);
 		DEBUG_C(':');
+		*/
+		cli_putstr_P(PSTR("\r\nBlock:"));
+		cli_hexdump(&dbgi, 1);
+		cli_putc(':');
 		cli_hexdump(&(w[dbgi]) ,4);
 	}
 #endif
@@ -168,29 +174,24 @@ void sha1_nextBlock (sha1_ctx_t *state, const void* block){
 /********************************************************************************************************/
 
 void sha1_lastBlock(sha1_ctx_t *state, const void* block, uint16_t length){
-	uint8_t lb[SHA1_BLOCK_BITS/8]; /* local block */
-	while(length>=512){
+	uint8_t lb[SHA1_BLOCK_BYTES]; /* local block */
+	while(length>=SHA1_BLOCK_BITS){
 		sha1_nextBlock(state, block);
-		length -=512;
-		block = (uint8_t*)block + 512/8;
+		length -= SHA1_BLOCK_BITS;
+		block = (uint8_t*)block + SHA1_BLOCK_BYTES;
 	}
 	state->length += length;
-	lb[length/8] = 0;
-	memcpy (lb, block, (length+7)/8);
+	memset(lb, 0, SHA1_BLOCK_BYTES);
+	memcpy (lb, block, (length+7)>>3);
 
 	/* set the final one bit */
-	lb[length/8] |= 0x80>>(length & 0x07);
-	length=(length)/8 +1; /* from now on length contains the number of BYTES in lb */
+	lb[length>>3] |= 0x80>>(length & 0x07);
 
-	if (length>64-8){ /* not enouth space for 64bit length value */
-		memset(lb+length, 0, 64-length);
+	if (length>512-64-1){ /* not enouth space for 64bit length value */
 		sha1_nextBlock(state, lb);
 		state->length -= 512;
-		length = 0;
+		memset(lb, 0, SHA1_BLOCK_BYTES);
 	}
-
-	/* pad with zeros */
-	memset(lb+length, 0, 64-length);
 	/* store the 64bit length value */
 #if defined LITTLE_ENDIAN
 	 	/* this is now rolled up */

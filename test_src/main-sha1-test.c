@@ -140,6 +140,37 @@ void testrun_sha1_2(void){
 	cli_hexdump(hash,SHA1_HASH_BYTES);
 }
 
+/*
+Msg = a38b899cae4edb191d88d861c842b6e32b9b67db66bdbdde8911d2b30fafa765a8190b963c28bf162c46d7b5dbde63556d114f43ceab88c7f65560f96c0c34c0
+MD = 722246b014af03ef3ba31364fc732a4ab8f38587
+*/
+
+void testrun_sha1_506(void){
+	uint8_t data[] = {
+		0xa3, 0x8b, 0x89, 0x9c, 0xae, 0x4e, 0xdb, 0x19,
+		0x1d, 0x88, 0xd8, 0x61, 0xc8, 0x42, 0xb6, 0xe3,
+		0x2b, 0x9b, 0x67, 0xdb, 0x66, 0xbd, 0xbd, 0xde,
+		0x89, 0x11, 0xd2, 0xb3, 0x0f, 0xaf, 0xa7, 0x65,
+		0xa8, 0x19, 0x0b, 0x96, 0x3c, 0x28, 0xbf, 0x16,
+		0x2c, 0x46, 0xd7, 0xb5, 0xdb, 0xde, 0x63, 0x55,
+		0x6d, 0x11, 0x4f, 0x43, 0xce, 0xab, 0x88, 0xc7,
+		0xf6, 0x55, 0x60, 0xf9, 0x6c, 0x0c, 0x34, 0xc0 };
+	uint8_t ref[] = {
+		0x72, 0x22, 0x46, 0xb0, 0x14, 0xaf, 0x03, 0xef,
+		0x3b, 0xa3, 0x13, 0x64, 0xfc, 0x73, 0x2a, 0x4a,
+		0xb8, 0xf3, 0x85, 0x87 };
+	sha1_hash_t hash;
+	sha1(&hash,data,506);
+	cli_putstr_P(PSTR("\r\nsha1(<tv506>) = \r\n\t"));
+	cli_hexdump(hash,SHA1_HASH_BYTES);
+	cli_putstr_P(PSTR("\r\nshould        = \r\n\t"));
+	cli_hexdump(ref,SHA1_HASH_BYTES);
+	if(memcmp(ref, hash, SHA1_HASH_BYTES)==0){
+		cli_putstr_P(PSTR("\r\n[ok]"));
+	} else {
+		cli_putstr_P(PSTR("\r\n[fail]"));
+	}
+}
 
 void testrun_performance_sha1(void){
 	hfal_performance_multiple(algolist);
@@ -153,6 +184,7 @@ void testrun_performance_sha1(void){
 const char nessie_str[]      PROGMEM = "nessie";
 const char test_str[]        PROGMEM = "test";
 const char test2_str[]       PROGMEM = "test2";
+const char test506_str[]     PROGMEM = "test506";
 const char performance_str[] PROGMEM = "performance";
 const char echo_str[]        PROGMEM = "echo";
 const char shavs_list_str[]  PROGMEM = "shavs_list";
@@ -165,6 +197,7 @@ cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ nessie_str,          NULL, testrun_nessie_sha1},
 	{ test_str,            NULL, testrun_sha1},
 	{ test2_str,           NULL, testrun_sha1_2},
+	{ test506_str,         NULL, testrun_sha1_506},
 	{ performance_str,     NULL, testrun_performance_sha1},
 	{ echo_str,        (void*)1, (void_fpt)echo_ctrl},
 	{ shavs_list_str,      NULL, shavs_listalgos},

@@ -118,6 +118,7 @@ uint8_t buffer_add(char c){
 		shavs_ctx.buffer_idx=0;
 		shavs_ctx.in_byte=0;
 		cli_putc('.');
+		memset(shavs_ctx.buffer, 0, shavs_ctx.buffersize_B);
 	}
 	if(c>='0' && c<='9'){
 		v=c-'0';
@@ -129,14 +130,13 @@ uint8_t buffer_add(char c){
 			return 1;
 		}
 	}
-
 	t=shavs_ctx.buffer[shavs_ctx.buffer_idx];
 	if(shavs_ctx.in_byte){
-		t = (t&0xF0) | v;
+		t |= v;
 		shavs_ctx.buffer[shavs_ctx.buffer_idx]=t;
 		shavs_ctx.buffer_idx++;
 	}else{
-		t = (t&0x0F) | (v<<4);
+		t |= v<<4;
 		shavs_ctx.buffer[shavs_ctx.buffer_idx]=t;
 	}
 	shavs_ctx.in_byte ^= 1;
@@ -177,16 +177,17 @@ void shavs_test1(void){
 			cli_putstr_P(PSTR("\r\nERROR: select algorithm first!"));
 		return;
 	}
+	char c;
 	uint8_t diggest[pgm_read_word(shavs_algo->hashsize_b)/8];
 	shavs_ctx.buffersize_B=pgm_read_word(&(shavs_algo->blocksize_b))/8;
-	uint8_t buffer[shavs_ctx.buffersize_B];
+	uint8_t buffer[shavs_ctx.buffersize_B+1];
 	shavs_ctx.buffer = buffer;
 	cli_putstr_P(PSTR("\r\nbuffer_size = 0x"));
 	cli_hexdump_rev(&(shavs_ctx.buffersize_B), 2);
 	cli_putstr_P(PSTR(" bytes"));
 	for(;;){
 		shavs_ctx.blocks = 0;
-		char c;
+		memset(buffer, 0, shavs_ctx.buffersize_B);
 		length = getLength();
 		if(length<0){
 			return;
@@ -217,7 +218,6 @@ void shavs_test1(void){
 		cli_hexdump_rev(&expect_input, 4);
 #endif
 		ret = hfal_hash_init(shavs_algo, &(shavs_ctx.ctx));
-		//ret=0;
 		if(ret){
 			cli_putstr_P(PSTR("\r\n HFAL init returned with: "));
 			cli_hexdump(&ret, 1);
@@ -281,6 +281,9 @@ void shavs_test1(void){
 			}
 		}
 #if DEBUG
+		cli_putstr_P(PSTR("\r\nBuffer-A:"));
+		cli_hexdump_block(buffer, shavs_ctx.buffersize_B, 5, 8);
+
 		cli_putstr_P(PSTR("\r\n starting finalisation"));
 		cli_putstr_P(PSTR("\r\n\tblocks     == "));
 		cli_hexdump_rev(&(shavs_ctx.blocks),4);
@@ -300,11 +303,9 @@ void shavs_test1(void){
 		cli_hexdump_rev(&temp,2);
 		_delay_ms(500);
 #endif
-#if !DEBUG
 		uint16_t temp=length-(shavs_ctx.blocks)*((shavs_ctx.buffersize_B)*8);
-//		cli_putstr_P(PSTR("\r\n\t (temp)      == "));
-		cli_hexdump_rev(&temp,2);
-#endif
+/*		cli_putstr_P(PSTR("\r\n\t (temp)      == "));
+		cli_hexdump_rev(&temp,2); */
 		hfal_hash_lastBlock( &(shavs_ctx.ctx), buffer, /* be aware of freaking compilers!!! */
 //							length-(shavs_ctx.blocks)*((shavs_ctx.buffersize_B)*8));
 		                    temp );

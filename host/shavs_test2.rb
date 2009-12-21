@@ -28,6 +28,10 @@ $buffer_size = 0
 $conffile_check = Hash.new
 $conffile_check.default = 0
 
+################################################################################
+# readconfigfile                                                               #
+################################################################################
+
 def readconfigfile(fname, conf)
   return conf if $conffile_check[fname]==1
   $conffile_check[fname]=1
@@ -56,12 +60,20 @@ def readconfigfile(fname, conf)
   return conf
 end
 
+################################################################################
+# reset_system                                                                 #
+################################################################################
+
 def reset_system
   $sp.print("exit\r")
   sleep 0.1
   $sp.print("exit\r")
   sleep 0.1
 end
+
+################################################################################
+# scan_system                                                                  #
+################################################################################
 
 def scan_system
   algos = Hash.new
@@ -75,12 +87,16 @@ def scan_system
   end
 end
 
+################################################################################
+# init_system                                                                  #
+################################################################################
+
 def init_system(algo_select)
   $sp.print("echo off \r")
   print("DBG i: " + "echo off \r"+"\n") if $debug
  sleep 1
   $sp.print("shavs_set #{algo_select}\r")
-  print("DBG i: " + "shavs_set #{$algo_select} \r"+"\n") # if $debug
+  print("DBG i: " + "shavs_set #{$algo_select} \r"+"\n") if $debug
   sleep 1
   $sp.print("shavs_test1 \r")
   print("DBG i: " + "shavs_test1 \r"+"\n") if $debug
@@ -89,6 +105,10 @@ def init_system(algo_select)
   end while not m=/buffer_size[\s]*=[\s]*0x([0-9A-Fa-f]*)/.match(line)
   $buffer_size = m[1].to_i(16)
 end
+
+################################################################################
+# get_md                                                                       #
+################################################################################
 
 def get_md
   begin
@@ -99,12 +119,16 @@ def get_md
   return line
 end
 
+################################################################################
+# send_md                                                                      #
+################################################################################
+
 def send_md(md_string)
   $sp.print("Msg = ")
   for i in 0..md_string.length-1
     $sp.print(md_string[i].chr)
 #	print("DBG s: "+ md_string[i].chr) if $debug
-    sleep(0.01)
+#   sleep(0.001)
 	if((i%($buffer_size*2)==0)&&(i!=0))
 	  begin
 		line=$sp.gets()
@@ -112,6 +136,10 @@ def send_md(md_string)
 	end
   end
 end
+
+################################################################################
+# run_test                                                                     #
+################################################################################
 
 def run_test(filename, skip=0)
   nerrors = 0
@@ -125,14 +153,19 @@ def run_test(filename, skip=0)
   until file.eof
     begin
       lb=file.gets()
-    end while not (file.eof or (/[\s]*Len[\s]*=.*/.match(lb)))
-    len = /[\s]*Len[\s]*=[\s]*([0-9]*)/.match(lb)[1].to_i
-    puts("DBG sending: "+lb) if $debug
-	return if file.eof
+#	  printf("DBG info: file read: %s", lb)
+    end while not (file.eof or (/[\s]*Len[\s]*=/.match(lb)))
+#	puts("got ya")
+	if file.eof
+	  file.close()
+	  return nerrors
+	end
+	len = /[\s]*Len[\s]*=[\s]*([0-9]*)/.match(lb)[1].to_i
 	if(skip>0)
 	  skip -= 1
 	  redo
 	end
+    puts("DBG sending: "+lb) if $debug
 	$sp.print(lb.strip)
 	$sp.print("\r")
     begin
@@ -158,13 +191,19 @@ def run_test(filename, skip=0)
 	else
 	  putc('!')
 	#  printf("<%d>",len)
-	  printf("\nError @%05d: %s \n           != %s - ",len, a, b)
+	  printf("\nError @%05d: %s [should]\n           != %s [is]- ",len, a, b)
 	  nerrors += 1
 	end
 	pos += 1
   end
-  return nerrors.to_i
+  file.close()
+  return nerrors
 end
+
+
+################################################################################
+# MAIN                                                                         #
+################################################################################
 
 opts = Getopt::Std.getopts("s:f:i:hdca")
 
@@ -203,6 +242,10 @@ $sp.flow_control = SerialPort::SOFT
 reset_system()
 algos=scan_system()
 #puts algos.inspect
+
+if opts["d"]
+  $debug = true
+end
 
 if opts["s"]
   algos_rev = algos.invert
