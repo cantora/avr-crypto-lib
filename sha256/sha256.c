@@ -18,15 +18,15 @@
 */
 /**
  * \file		sha256.c
- * \author		Daniel Otte 
+ * \author		Daniel Otte
  * \date		16.05.2006
- * 
- * \par License:	
+ *
+ * \par License:
  * 	GPL
- * 
+ *
  * \brief SHA-256 implementation.
- * 
- * 
+ *
+ *
  */
 
 #include <stdint.h>
@@ -52,7 +52,7 @@ uint32_t sha256_init_vector[]={
 /*************************************************************************/
 
 /**
- * \brief \c sh256_init initialises a sha256 context for hashing. 
+ * \brief \c sh256_init initialises a sha256 context for hashing.
  * \c sh256_init c initialises the given sha256 context for hashing
  * @param state pointer to a sha256 context
  * @return none
@@ -125,10 +125,10 @@ void sha256_nextBlock (sha256_ctx_t *state, const void* block){
 		memcpy((void*)w, block, 64);
 #endif
 		for (i=16; i<64; ++i){
-			w[i] = SIGMA_b(w[i-2]) + w[i-7] + SIGMA_a(w[i-15]) + w[i-16];	
+			w[i] = SIGMA_b(w[i-2]) + w[i-7] + SIGMA_a(w[i-15]) + w[i-16];
 		}
 
-	/* init working variables */	
+	/* init working variables */
 		memcpy((void*)a,(void*)(state->h), 8*4);
 
 	/* do the, fun stuff, */
@@ -143,9 +143,9 @@ void sha256_nextBlock (sha256_ctx_t *state, const void* block){
 	/* update, the, state, */
 		for (i=0; i<8; ++i){
 			state->h[i] += a[i];
-		}	
+		}
 		state->length += 512;
-} 
+}
 
 
 /*************************************************************************/
@@ -156,13 +156,19 @@ void sha256_nextBlock (sha256_ctx_t *state, const void* block){
  * @param block Pointer to the message wich should be hashed.
  * @param length is the length of only THIS block in BITS not in bytes!
  *  bits are big endian, meaning high bits come first.
- * 	if you have a message with bits at the end, the byte must be padded with zeros 
+ * 	if you have a message with bits at the end, the byte must be padded with zeros
  */
 void sha256_lastBlock(sha256_ctx_t *state, const void* block, uint16_t length){
 	uint8_t lb[SHA256_BLOCK_BITS/8]; /* local block */
+	while(length>=SHA256_BLOCK_BITS){
+		sha256_nextBlock(state, block);
+		length -= SHA256_BLOCK_BITS;
+		block = (uint8_t*)block+SHA256_BLOCK_BYTES;
+	}
+
 	state->length += length;
 	memcpy (&(lb[0]), block, length/8);
-	
+
 	/* set the final one bit */
 	if (length & 0x7){ // if we have single bits at the end
 		lb[length/8] = ((uint8_t*)(block))[length/8];
@@ -176,13 +182,13 @@ void sha256_lastBlock(sha256_ctx_t *state, const void* block, uint16_t length){
 		memset((void*)(&(lb[length])), 0, 64-length);
 		sha256_nextBlock(state, lb);
 		state->length -= 512;
-		length = 0;	
+		length = 0;
 	}
 	memset((void*)(&(lb[length])), 0, 56-length);
 	/* store the 64bit length value */
 #if defined LITTLE_ENDIAN
 	 	/* this is now rolled up */
-	uint8_t i; 	
+	uint8_t i;
 	for (i=1; i<=8; ++i){
 		lb[55+i] = (uint8_t)(state->length>>(64- 8*i));
 	}

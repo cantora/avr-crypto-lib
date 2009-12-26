@@ -205,7 +205,7 @@ end
 # MAIN                                                                         #
 ################################################################################
 
-opts = Getopt::Std.getopts("s:f:i:hdca")
+opts = Getopt::Std.getopts("s:f:i:j:hdca")
 
 conf = Hash.new
 conf = readconfigfile("/etc/testport.conf", conf)
@@ -266,6 +266,7 @@ algo_tasks.each do |algoa|
     next
   else
 	i=0
+	i = opts["j"] if opts["j"]
 	logfile=File.open(conf["PORT"]["testlogbase"]+algo+".txt", "a")
 	while conf[algo]["file_#{i}"] != nil
 	  puts("Testing #{algo} with #{conf[algo]["file_#{i}"]}")

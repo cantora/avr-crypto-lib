@@ -135,11 +135,12 @@ uint8_t buffer_add(char c){
 		t |= v;
 		shavs_ctx.buffer[shavs_ctx.buffer_idx]=t;
 		shavs_ctx.buffer_idx++;
+		shavs_ctx.in_byte = 0;
 	}else{
 		t |= v<<4;
 		shavs_ctx.buffer[shavs_ctx.buffer_idx]=t;
+		shavs_ctx.in_byte = 1;
 	}
-	shavs_ctx.in_byte ^= 1;
 	return 0;
 }
 
@@ -180,7 +181,7 @@ void shavs_test1(void){
 	char c;
 	uint8_t diggest[pgm_read_word(shavs_algo->hashsize_b)/8];
 	shavs_ctx.buffersize_B=pgm_read_word(&(shavs_algo->blocksize_b))/8;
-	uint8_t buffer[shavs_ctx.buffersize_B+1];
+	uint8_t buffer[shavs_ctx.buffersize_B+5];
 	shavs_ctx.buffer = buffer;
 	cli_putstr_P(PSTR("\r\nbuffer_size = 0x"));
 	cli_hexdump_rev(&(shavs_ctx.buffersize_B), 2);
