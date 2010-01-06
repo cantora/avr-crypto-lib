@@ -190,6 +190,7 @@ const char echo_str[]        PROGMEM = "echo";
 const char shavs_list_str[]  PROGMEM = "shavs_list";
 const char shavs_set_str[]   PROGMEM = "shavs_set";
 const char shavs_test1_str[] PROGMEM = "shavs_test1";
+const char shavs_test2_str[] PROGMEM = "shavs_test2";
 const char dump_str[]        PROGMEM = "dump";
 
 
@@ -203,6 +204,7 @@ cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ shavs_list_str,      NULL, shavs_listalgos},
 	{ shavs_set_str,   (void*)1, (void_fpt)shavs_setalgo},
 	{ shavs_test1_str,     NULL, shavs_test1},
+	{ shavs_test2_str,     NULL, shavs_test2},
 	{ dump_str,        (void*)1, (void_fpt)dump},
 	{ NULL,                NULL, NULL}
 };

@@ -18,10 +18,10 @@
 */
 /**
  * \file	shavs.h
- * \author  Daniel Otte 
+ * \author  Daniel Otte
  * \date    2006-05-16
  * \license	GPLv3 or later
- * 
+ *
  */
 
 #ifndef SHAVS_H_
@@ -36,5 +36,7 @@ extern hfdesc_t** shavs_algolist;
 void shavs_listalgos(void);
 void shavs_setalgo(char* param);
 void shavs_test1(void);
+void shavs_test2(void);
+
 
 #endif /* SHAVS */

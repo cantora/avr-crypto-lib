@@ -21,9 +21,10 @@
  *
  * License: GPLv3 or later
 */
-; sha-256 implementation in assembler	
+; sha-256 implementation in assembler
 SHA256_BLOCK_BITS = 512
 SHA256_HASH_BITS = 256
+
 
 .macro precall
 	/* push r18 - r27, r30 - r31*/
@@ -111,7 +112,7 @@ SREG = 0x3F
 ; [h0][h1][h2][h3][h4][h5][h6][h7][length]
 ; hn is 32 bit large, length is 64 bit large
 
-;###########################################################	
+;###########################################################
 
 .global sha256_ctx2hash
 ; === sha256_ctx2hash ===
@@ -125,21 +126,21 @@ sha256_ctx2hash:
 	movw r30, r24
 	ldi r21, 8
 	sbiw r26, 4
-1:	
+1:
 	ldi r20, 4
 	adiw r26, 8
-2:	
+2:
 		ld r0, -X
-		st Z+, r0	
+		st Z+, r0
 	dec r20
 	brne 2b
-	
+
 	dec r21
 	brne 1b
-	
+
 	ret
 
-;###########################################################	
+;###########################################################
 
 .global sha256
 ; === sha256 ===
@@ -160,71 +161,66 @@ sha256_prolog:
 	push r13
 	push r16
 	push r17
-	in r16, SPL
-	in r17, SPH
-	subi r16, 8*4+8 
-	sbci r17, 0	
+	in r30, SPL
+	in r31, SPH
+	sbiw r30, 8*4+8
 	in r0, SREG
 	cli
-	out SPL, r16
-	out SPH, r17
+	out SPL, r30
 	out SREG, r0
-	
+	out SPH, r31
+
 	push r25
 	push r24
-	inc r16
-	adc r17, r1
-	
+	adiw r30, 1
+	movw r16, r30
 	movw r8, r18		/* backup of length*/
 	movw r10, r20
-	
+
 	movw r12, r22	/* backup pf msg-ptr */
-	
+
 	movw r24, r16
 	rcall sha256_init
-	/* if length >= 512 */
+	/* if length > 0xffff */
 1:
 	tst r11
-	brne 4f
+	brne 2f
 	tst r10
-	brne 4f
-	mov r19, r9
-	cpi r19, 0x02
-	brlo 4f
-	
+	breq 4f
+2:
 	movw r24, r16
 	movw r22, r12
 	rcall sha256_nextBlock
-	ldi r19, 0x64
-	add r22, r19
-	adc r23, r1
+	ldi r19, 64
+	add r12, r19
+	adc r13, r1
 	/* length -= 512 */
 	ldi r19, 0x02
 	sub r9, r19
 	sbc r10, r1
 	sbc r11, r1
 	rjmp 1b
-	
+
 4:
 	movw r24, r16
 	movw r22, r12
 	movw r20, r8
 	rcall sha256_lastBlock
-	
+
 	pop r24
 	pop r25
 	movw r22, r16
-	rcall sha256_ctx2hash	
-	
+	rcall sha256_ctx2hash
+
 sha256_epilog:
 	in r30, SPL
 	in r31, SPH
-	adiw r30, 8*4+8 	
+	adiw r30, 8*4+8
 	in r0, SREG
 	cli
 	out SPL, r30
-	out SPH, r31
 	out SREG, r0
+	out SPH, r31
 	pop r17
 	pop r16
 	pop r13
@@ -235,7 +231,7 @@ sha256_epilog:
 	pop r8
 	ret
 
-;###########################################################	
+;###########################################################
 
 
 ; block MUST NOT be larger than 64 bytes
@@ -269,8 +265,10 @@ sha256_lastBlock:
 	pop r24
 	pop r25
 	subi r21, 0x02
-	subi r23, -2
-	rjmp sha256_lastBlock	
+	ldi r19, 64
+	add r22, r19
+	adc r23, r1
+	rjmp sha256_lastBlock
 sha256_lastBlock_prolog:
 	/* allocate space on stack */
 	in r30, SPL
@@ -290,8 +288,8 @@ sha256_lastBlock_prolog:
 	lsr r18
 	bst r21, 0	/* may be we should explain this ... */
 	bld r18, 5  /* now: r18 == length/8 (aka. length in bytes) */
-	
-	
+
+
 	movw r26, r22 /* X points to begin of msg */
 	tst r18
 	breq sha256_lastBlock_post_copy
@@ -301,27 +299,27 @@ sha256_lastBlock_copy_loop:
 	st Z+, r0
 	dec r1
 	brne sha256_lastBlock_copy_loop
-sha256_lastBlock_post_copy:	
-sha256_lastBlock_insert_stuffing_bit:	
+sha256_lastBlock_post_copy:
+sha256_lastBlock_insert_stuffing_bit:
 	ldi r19, 0x80
-	mov r0,r19 	
+	mov r0,r19
 	ldi r19, 0x07
 	and r19, r20 /* if we are in bitmode */
 	breq 2f	/* no bitmode */
-1:	
+1:
 	lsr r0
 	dec r19
 	brne 1b
 	ld r19, X
 /* maybe we should do some ANDing here, just for safety */
 	or r0, r19
-2:	
+2:
 	st Z+, r0
 	inc r18
 
 /* checking stuff here */
 	cpi r18, 64-8+1
-	brsh 0f 
+	brsh 0f
 	rjmp sha256_lastBlock_insert_zeros
 0:
 	/* oh shit, we landed here */
@@ -329,15 +327,15 @@ sha256_lastBlock_insert_stuffing_bit:
 	ldi r19, 64
 	sub r19, r18
 	breq 2f
-1:	
+1:
 	st Z+, r1
 	dec r19
-	brne 1b	
-2:	
+	brne 1b
+2:
 	sbiw r30, 63
 	sbiw r30,  1
 	movw r22, r30
-	
+
 	push r31
 	push r30
 	push r25
@@ -351,7 +349,7 @@ sha256_lastBlock_insert_stuffing_bit:
 	pop r25
 	pop r30
 	pop r31
-	
+
 	/* now we should subtract 512 from length */
 	movw r26, r24
 	adiw r26, 4*8+1 /* we can skip the lowest byte */
@@ -365,11 +363,11 @@ sha256_lastBlock_insert_stuffing_bit:
 	st X+, r19
 	dec r18
 	brne 1b
-	
+
 ;	clr r18 /* not neccessary ;-) */
 	/* reset Z pointer to begin of block */
 
-sha256_lastBlock_insert_zeros:	
+sha256_lastBlock_insert_zeros:
 	ldi r19, 64-8
 	sub r19, r18
 	breq sha256_lastBlock_insert_length
@@ -417,7 +415,7 @@ sha256_lastBlock_epilog:
 	ret
 
 /**/
-;###########################################################	
+;###########################################################
 
 .global sha256_nextBlock
 ; === sha256_nextBlock ===
@@ -471,11 +469,11 @@ sha256_nextBlock:
 	in r20, SPL
 	in r21, SPH
 	movw r18, r20			;backup SP
-;	movw r26, r20			; X points to free space on stack 
+;	movw r26, r20			; X points to free space on stack
 	movw r30, r22			; Z points to message
 	subi r20, lo8(sha256_nextBlock_localSpace) ;sbiw can do only up to 63
 	sbci r21, hi8(sha256_nextBlock_localSpace)
-	movw r26, r20			; X points to free space on stack 
+	movw r26, r20			; X points to free space on stack
 	in r0, SREG
 	cli ; we want to be uninterrupted while updating SP
 	out SPL, r20
@@ -488,29 +486,29 @@ sha256_nextBlock:
  ; now we fill the w array with message (think about endianess)
  	adiw r26, 1 ; X++
  	ldi r20, 16
-sha256_nextBlock_wcpyloop: 	
+sha256_nextBlock_wcpyloop:
  	ld r23, Z+
  	ld r22, Z+
  	ld r19, Z+
  	ld r18, Z+
  	st X+, r18
  	st X+, r19
- 	st X+, r22	
+ 	st X+, r22
 	st X+, r23
 	dec r20
 	brne sha256_nextBlock_wcpyloop
 /*	for (i=16; i<64; ++i){
-		w[i] = SIGMA_b(w[i-2]) + w[i-7] + SIGMA_a(w[i-15]) + w[i-16];	
+		w[i] = SIGMA_b(w[i-2]) + w[i-7] + SIGMA_a(w[i-15]) + w[i-16];
 	} */
 	/* r25,r24,r23,r24 (r21,r20) are function values
 	   r19,r18,r17,r16 are the accumulator
 	   r15,r14,r13,rBck1 are backup1
-	   r11,r10,r9 ,r8  are xor accu   
+	   r11,r10,r9 ,r8  are xor accu
 	   r1 is round counter 								*/
 
 	ldi r20, 64-16
 	mov LoopC, r20
-sha256_nextBlock_wcalcloop:		 
+sha256_nextBlock_wcalcloop:
 	movw r30, r26 ; cp X to Z
 	sbiw r30, 63
 	sbiw r30, 1 		; substract 64 = 16*4
@@ -544,7 +542,7 @@ sigma0_shr:
 	lsr Bck4
 	ror Bck3
 	ror Bck2
-	ror Bck1	
+	ror Bck1
 	dec Func2
 	brne sigma0_shr
 	eor XAccu1, Bck1
@@ -586,7 +584,7 @@ sigma0_shr:
 sigma1_shr:
 	lsr Bck4
 	ror Bck3
-	ror Bck2	
+	ror Bck2
 	dec Func2
 	brne sigma1_shr
 	eor XAccu1, Bck2
@@ -612,17 +610,17 @@ sigma1_shr:
 	push r30
 	push r31
 	ldi r25, 8*4 /* 8 32-bit values to copy from ctx to a array */
-init_a_array:	
+init_a_array:
 	ld r1, Z+
 	st X+, r1
 	dec r25
 	brne init_a_array
-	
+
 /* now the real fun begins */
 /* for (i=0; i<64; ++i){
 			t1 = a[7] + SIGMA1(a[4]) + CH(a[4],a[5],a[6]) + k[i] + w[i];
 			t2 = SIGMA0(a[0]) + MAJ(a[0],a[1],a[2]);
-			memmove(&(a[1]), &(a[0]), 7*4); 	// a[7]=a[6]; a[6]=a[5]; a[5]=a[4]; a[4]=a[3]; a[3]=a[2]; a[2]=a[1]; a[1]=a[0]; 
+			memmove(&(a[1]), &(a[0]), 7*4); 	// a[7]=a[6]; a[6]=a[5]; a[5]=a[4]; a[4]=a[3]; a[3]=a[2]; a[2]=a[1]; a[1]=a[0];
 			a[4] += t1;
 			a[0] = t1 + t2;
 		} */
@@ -630,7 +628,7 @@ init_a_array:
 	sbiw r26, 8*4  /* X still points at a[7]+1*/
 	movw r28, r26
 	ldi r30, lo8(sha256_kv)
-	ldi r31, hi8(sha256_kv)		
+	ldi r31, hi8(sha256_kv)
 	dec r27  /* X - (64*4 == 256) */
 	ldi r25, 64
 	mov LoopC, r25
@@ -667,18 +665,18 @@ sha256_main_loop:
 	eor T4, Bck4 /* done, CH(x,y,z) is in T */
 	/* now SIGMA1(a[4]) */
 	ldd Bck4, Y+4*4		/* think about using it from Func reg above*/
-	ldd Bck1, Y+4*4+1	
+	ldd Bck1, Y+4*4+1
 	ldd Bck2, Y+4*4+2
-	ldd Bck3, Y+4*4+3 /* load prerotate by 8-bit */	
+	ldd Bck3, Y+4*4+3 /* load prerotate by 8-bit */
 	movw Func1, Bck1
 	movw Func3, Bck3
-	ldi r20, 2 
-	rcall bitrotl		/* rotr(x,6) */ 
+	ldi r20, 2
+	rcall bitrotl		/* rotr(x,6) */
 	movw XAccu1, Func1
 	movw XAccu3, Func3
 	movw Func1, Bck1
 	movw Func3, Bck3
-	ldi r20, 3 
+	ldi r20, 3
 	rcall bitrotr 	/* rotr(x,11) */
 	eor XAccu1, Func1
 	eor XAccu2, Func2
@@ -686,7 +684,7 @@ sha256_main_loop:
 	eor XAccu4, Func4
 	movw Func1, Bck3 /* this prerotates furteh 16 bits*/
 	movw Func3, Bck1 /* so we have now prerotated by 24 bits*/
-	ldi r20, 1 
+	ldi r20, 1
 	rcall bitrotr 	/* rotr(x,11) */
 	eor XAccu1, Func1
 	eor XAccu2, Func2
@@ -770,7 +768,7 @@ sha256_main_loop:
 	rcall bitrotr
 	movw Accu1, Func1
 	movw Accu3, Func3 /* Accu = shr(a[0], 2) */
-	movw Func1, Bck3 
+	movw Func1, Bck3
 	movw Func3, Bck1 /* prerotate by 16 bits */
 	ldi r20, 3
 	rcall bitrotl
@@ -823,12 +821,12 @@ a_shift_loop:
 	std Y+4*0+1, Accu2
 	std Y+4*0+2, Accu3
 	std Y+4*0+3, Accu4 /* a array updated */
-	
-	
+
+
 	dec LoopC
 	breq update_state
 	rjmp sha256_main_loop ;brne sha256_main_loop
-update_state:	
+update_state:
 	/* update state */
 	/* pointers to state should still exist on the stack ;-) */
 	pop r31
@@ -838,7 +836,7 @@ update_state_loop:
 	ldd Accu1, Z+0
 	ldd Accu2, Z+1
 	ldd Accu3, Z+2
-	ldd Accu4, Z+3 
+	ldd Accu4, Z+3
 	ld Func1, Y+
 	ld Func2, Y+
 	ld Func3, Y+
@@ -854,25 +852,25 @@ update_state_loop:
 	dec r21
 	brne update_state_loop
 	/* now we just have to update the length */
-	adiw r30, 1 /* since we add 512, we can simply skip the LSB */ 
+	adiw r30, 1 /* since we add 512, we can simply skip the LSB */
 	ldi r21, 2
 	ldi r22, 6
 	ld r20, Z
 	add r20, r21
-	st Z+, r20	
+	st Z+, r20
 	clr r21
-sha256_nextBlock_fix_length:	
+sha256_nextBlock_fix_length:
 	brcc sha256_nextBlock_epilog
 	ld r20, Z
 	adc r20, r21
 	st Z+, r20
 	dec r22
 	brne sha256_nextBlock_fix_length
-	
+
 ; EPILOG
 sha256_nextBlock_epilog:
 /* now we should clean up the stack */
-	
+
 	pop r21
 	pop r20
 	in r0, SREG
@@ -880,7 +878,7 @@ sha256_nextBlock_epilog:
 	out SPL, r20
 	out SPH, r21
 	out SREG, r0
-	
+
 	clr r1
 	pop r29
 	pop r28
@@ -897,10 +895,10 @@ sha256_nextBlock_epilog:
 	pop r7
 	pop r6
 	pop r5
-	pop r4 
+	pop r4
 	ret
 
-sha256_kv: ; round-key-vector stored in ProgMem 
+sha256_kv: ; round-key-vector stored in ProgMem
 .word	0x2f98, 0x428a, 0x4491, 0x7137, 0xfbcf, 0xb5c0, 0xdba5, 0xe9b5, 0xc25b, 0x3956, 0x11f1, 0x59f1, 0x82a4, 0x923f, 0x5ed5, 0xab1c
 .word	0xaa98, 0xd807, 0x5b01, 0x1283, 0x85be, 0x2431, 0x7dc3, 0x550c, 0x5d74, 0x72be, 0xb1fe, 0x80de, 0x06a7, 0x9bdc, 0xf174, 0xc19b
 .word	0x69c1, 0xe49b, 0x4786, 0xefbe, 0x9dc6, 0x0fc1, 0xa1cc, 0x240c, 0x2c6f, 0x2de9, 0x84aa, 0x4a74, 0xa9dc, 0x5cb0, 0x88da, 0x76f9
@@ -910,10 +908,10 @@ sha256_kv: ; round-key-vector stored in ProgMem
 .word	0xc116, 0x19a4, 0x6c08, 0x1e37, 0x774c, 0x2748, 0xbcb5, 0x34b0, 0x0cb3, 0x391c, 0xaa4a, 0x4ed8, 0xca4f, 0x5b9c, 0x6ff3, 0x682e
 .word	0x82ee, 0x748f, 0x636f, 0x78a5, 0x7814, 0x84c8, 0x0208, 0x8cc7, 0xfffa, 0x90be, 0x6ceb, 0xa450, 0xa3f7, 0xbef9, 0x78f2, 0xc671
 
-	
-;###########################################################	
 
-.global sha256_init 
+;###########################################################
+
+.global sha256_init
 ;uint32_t sha256_init_vector[]={
 ;  	0x6A09E667, 0xBB67AE85, 0x3C6EF372, 0xA54FF53A,
 ;	0x510E527F, 0x9B05688C, 0x1F83D9AB, 0x5BE0CD19 };
@@ -929,26 +927,26 @@ sha256_init:
 	ldi r30, lo8((sha256_init_vector))
 	ldi r31, hi8((sha256_init_vector))
 	ldi r22, 32+8
-sha256_init_vloop:	
-	lpm r23, Z+ 
+sha256_init_vloop:
+	lpm r23, Z+
 	st X+, r23
 	dec r22
 	brne sha256_init_vloop
 	ret
-	
+
 sha256_init_vector:
 .word 0xE667, 0x6A09
-.word 0xAE85, 0xBB67 
-.word 0xF372, 0x3C6E 
-.word 0xF53A, 0xA54F 
-.word 0x527F, 0x510E 
-.word 0x688C, 0x9B05 
-.word 0xD9AB, 0x1F83 
+.word 0xAE85, 0xBB67
+.word 0xF372, 0x3C6E
+.word 0xF53A, 0xA54F
+.word 0x527F, 0x510E
+.word 0x688C, 0x9B05
+.word 0xD9AB, 0x1F83
 .word 0xCD19, 0x5BE0
 .word 0x0000, 0x0000
 .word 0x0000, 0x0000
 
-;###########################################################	
+;###########################################################
 
 .global rotl32
 ; === ROTL32 ===
@@ -971,7 +969,7 @@ rotl32:
 bitrotl:
 	clr r21
 	clc
-bitrotl_loop:	
+bitrotl_loop:
 	tst r20
 	breq fixrotl
 	rol r22
@@ -984,9 +982,9 @@ bitrotl_loop:
 fixrotl:
 	or r22, r21
 	ret
-	
 
-;###########################################################	
+
+;###########################################################
 
 .global rotr32
 ; === ROTR32 ===
@@ -1009,7 +1007,7 @@ rotr32:
 bitrotr:
 	clr r21
 	clc
-bitrotr_loop:	
+bitrotr_loop:
 	tst r20
 	breq fixrotr
 	ror r25
@@ -1022,10 +1020,10 @@ bitrotr_loop:
 fixrotr:
 	or r25, r21
 	ret
-	
-	
-;###########################################################	
-	
+
+
+;###########################################################
+
 .global change_endian32
 ; === change_endian32 ===
 ; function that changes the endianess of a 32-bit word
@@ -1037,6 +1035,6 @@ change_endian32:
 	mov r22, r25
 	mov r23, r24
 	mov r24, r21
-	mov r25, r20 
+	mov r25, r20
 	ret
 

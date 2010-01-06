@@ -170,7 +170,7 @@ int32_t getLength(void){
 	}
 }
 
-void shavs_test1(void){
+void shavs_test1(void){ /* KAT tests */
 	uint32_t length=0;
 	int32_t expect_input=0;
 
@@ -179,7 +179,7 @@ void shavs_test1(void){
 		return;
 	}
 	char c;
-	uint8_t diggest[pgm_read_word(shavs_algo->hashsize_b)/8];
+	uint8_t diggest[pgm_read_word(&(shavs_algo->hashsize_b))/8];
 	shavs_ctx.buffersize_B=pgm_read_word(&(shavs_algo->blocksize_b))/8;
 	uint8_t buffer[shavs_ctx.buffersize_B+5];
 	shavs_ctx.buffer = buffer;
@@ -325,3 +325,89 @@ void shavs_test1(void){
 	}
 }
 
+void shavs_test2(void){ /* MonteCarlo - tests */
+	uint16_t expected_input;
+	uint16_t count;
+	uint8_t v;
+	uint8_t index=0;
+	char c;
+	if(!shavs_algo){
+			cli_putstr_P(PSTR("\r\nERROR: select algorithm first!"));
+		return;
+	}
+	uint8_t ml=pgm_read_word(&(shavs_algo->hashsize_b))/8;
+	uint8_t m[ml*4+8];
+	for(;;){
+		while((c=cli_getc_cecho())!='S' && c!='s'){
+			if(!isblank(c)){
+				cli_putstr_P(PSTR("\r\nERROR: wrong input (1) [0x"));
+				cli_hexdump(&c, 1);
+				cli_putstr_P(PSTR("]!\r\n"));
+				return;
+			}
+		}
+		if((c=cli_getc_cecho())!='e' && c!='e'){
+				cli_putstr_P(PSTR("\r\nERROR: wrong input (2)!\r\n"));
+				return;
+		}
+		if((c=cli_getc_cecho())!='e' && c!='e'){
+				cli_putstr_P(PSTR("\r\nERROR: wrong input (3)!\r\n"));
+				return;
+		}
+		if((c=cli_getc_cecho())!='d' && c!='D'){
+				cli_putstr_P(PSTR("\r\nERROR: wrong input (4)!\r\n"));
+				return;
+		}
+		while((c=cli_getc_cecho())!='='){
+			if(!isblank(c)){
+				cli_putstr_P(PSTR("\r\nERROR: wrong input (5)!\r\n"));
+				return;
+			}
+		}
+		cli_putstr_P(PSTR("\r\n reading seed ml=0x"));
+		cli_hexdump_rev(&ml, 1);
+		expected_input = ml*2;
+		memset(m+2*ml, 0, ml);
+		do{
+			v=0xff;
+			c=cli_getc_cecho();
+			if(c>='0' && c<='9'){
+				v = c - '0';
+			}else{
+				c |= 'A'^'a';
+				if(c>='a' && c<='f'){
+					v = c - 'a' +10;
+				}
+			}
+			if(v<0x10){
+				c=m[ml*2+index/2];
+				if(index&1){
+					c |= v;
+				}else{
+					c |=v<<4;
+				}
+				m[ml*2+index/2]=c;
+				index++;
+				expected_input--;
+			}
+		}while(expected_input);
+		/* so we have the seed */
+		cli_putstr_P(PSTR("\r\nstarting processing"));
+		uint16_t j;
+		for(count=0; count<100; ++count){
+			memcpy(m, m+ml*2, ml);
+			memcpy(m+ml, m+ml*2, ml);
+			for(j=0; j<1000; ++j){
+				hfal_hash_mem(shavs_algo, m+ml*3, m, ml*3*8);
+				memmove(m, m+ml, 3*ml);
+			}
+			cli_putstr_P(PSTR("\r\n\r\nCOUNT = "));
+			if(count>10){
+				cli_putc(count/10+'0');
+			}
+			cli_putc(count%10+'0');
+			cli_putstr_P(PSTR("\r\nMD = "));
+			cli_hexdump(m+ml*2, ml);
+		}
+	}
+}

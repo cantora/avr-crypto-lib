@@ -178,20 +178,19 @@ sha1_prolog:
 	push r13
 	push r16
 	push r17
-	in r16, SPL
-	in r17, SPH
-	subi r16, 5*4+8
-	sbci r17, 0
+	in r30, SPL
+	in r31, SPH
+	sbiw r30, 5*4+8
 	in r0, SREG
 	cli
-	out SPL, r16
-	out SPH, r17
+	out SPL, r30
 	out SREG, r0
+	out SPH, r31
 
 	push r25
 	push r24
-	inc r16
-	adc r17, r1
+	adiw r30, 1
+	movw r16, r30
 
 	movw r8, r18		/* backup of length*/
 	movw r10, r20
@@ -203,19 +202,16 @@ sha1_prolog:
 	/* if length >= 512 */
 1:
 	tst r11
-	brne 4f
+	brne 2f
 	tst r10
-	brne 4f
-	mov r19, r9
-	cpi r19, 0x02
-	brlo 4f
-
+	breq 4f
+2:
 	movw r24, r16
 	movw r22, r12
 	rcall sha1_nextBlock
-	ldi r19, 0x64
-	add r22, r19
-	adc r23, r1
+	ldi r19, 64
+	add r12, r19
+	adc r13, r1
 	/* length -= 512 */
 	ldi r19, 0x02
 	sub r9, r19
@@ -241,8 +237,8 @@ sha1_epilog:
 	in r0, SREG
 	cli
 	out SPL, r30
-	out SPH, r31
 	out SREG, r0
+	out SPH, r31
 	pop r17
 	pop r16
 	pop r13
@@ -287,7 +283,9 @@ sha1_lastBlock:
 	pop r24
 	pop r25
 	subi r21, 2
-	subi r23, -2
+	ldi r19, 64
+	sub r22, r19
+	sbc r23, r1
 	rjmp sha1_lastBlock
 sha1_lastBlock_prolog:
 	/* allocate space on stack */
