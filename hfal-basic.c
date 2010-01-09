@@ -70,7 +70,6 @@ void hfal_hash_mem(const hfdesc_t* hash_descriptor, void* dest, const void* msg,
 	if(f){
 		((hf_mem_fpt)f)(dest, msg, length_b);
 	}else{
-
 		uint16_t bs,bsb;
 		uint8_t ctx[pgm_read_word(&(hash_descriptor->ctxsize_B))];
 		f=(void_fpt)pgm_read_word(&(hash_descriptor->init));

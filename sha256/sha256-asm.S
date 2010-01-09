@@ -273,13 +273,13 @@ sha256_lastBlock_prolog:
 	/* allocate space on stack */
 	in r30, SPL
 	in r31, SPH
-	in r1, SREG
+	in r0, SREG
 	subi r30, lo8(64)
 	sbci r31, hi8(64)
 	cli
 	out SPL, r30
+	out SREG,r0
 	out SPH, r31
-	out SREG,r1
 
 	adiw r30, 1 /* SP points to next free byte on stack */
 	mov r18, r20 /* r20 = LSB(length) */
@@ -403,15 +403,14 @@ sha256_lastBlock_insert_length:
 sha256_lastBlock_epilog:
 	in r30, SPL
 	in r31, SPH
-	in r1, SREG
+	in r0, SREG
 	adiw r30, 63 ; lo8(64)
 	adiw r30,  1  ; hi8(64)
 	cli
 	out SPL, r30
+	out SREG,r0
 	out SPH, r31
-	out SREG,r1
 	clr r1
-	clr r0
 	ret
 
 /**/
@@ -477,8 +476,8 @@ sha256_nextBlock:
 	in r0, SREG
 	cli ; we want to be uninterrupted while updating SP
 	out SPL, r20
-	out SPH, r21
 	out SREG, r0
+	out SPH, r21
 	push r18
 	push r19
 	push r24
@@ -876,9 +875,8 @@ sha256_nextBlock_epilog:
 	in r0, SREG
 	cli ; we want to be uninterrupted while updating SP
 	out SPL, r20
-	out SPH, r21
 	out SREG, r0
-
+	out SPH, r21
 	clr r1
 	pop r29
 	pop r28
@@ -972,13 +970,14 @@ bitrotl:
 bitrotl_loop:
 	tst r20
 	breq fixrotl
+2:
 	rol r22
 	rol r23
 	rol r24
 	rol r25
 	rol r21
 	dec r20
-	rjmp bitrotl_loop
+	brne 2b
 fixrotl:
 	or r22, r21
 	ret
@@ -1010,13 +1009,14 @@ bitrotr:
 bitrotr_loop:
 	tst r20
 	breq fixrotr
+2:
 	ror r25
 	ror r24
 	ror r23
 	ror r22
 	ror r21
 	dec r20
-	rjmp bitrotr_loop
+	brne 2b
 fixrotr:
 	or r25, r21
 	ret

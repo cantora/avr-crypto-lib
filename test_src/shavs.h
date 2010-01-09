@@ -37,6 +37,7 @@ void shavs_listalgos(void);
 void shavs_setalgo(char* param);
 void shavs_test1(void);
 void shavs_test2(void);
+void shavs_test3(void);
 
 
 #endif /* SHAVS */

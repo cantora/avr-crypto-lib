@@ -291,13 +291,13 @@ sha1_lastBlock_prolog:
 	/* allocate space on stack */
 	in r30, SPL
 	in r31, SPH
-	in r1, SREG
+	in r0, SREG
 	subi r30, lo8(64)
 	sbci r31, hi8(64) /* ??? */
 	cli
 	out SPL, r30
+	out SREG, r0
 	out SPH, r31
-	out SREG,r1
 
 	adiw r30, 1 /* SP points to next free byte on stack */
 	mov r18, r20 /* r20 = LSB(length) */
@@ -421,15 +421,14 @@ sha1_lastBlock_insert_length:
 sha1_lastBlock_epilog:
 	in r30, SPL
 	in r31, SPH
-	in r1, SREG
+	in r0, SREG
 	adiw r30, 63 ; lo8(64)
 	adiw r30,  1  ; hi8(64)
 	cli
 	out SPL, r30
+	out SREG, r0
 	out SPH, r31
-	out SREG,r1
 	clr r1
-	clr r0
 	ret
 
 /**/
@@ -488,8 +487,8 @@ sha1_nextBlock:
 	in r0, SREG
 	cli ; we want to be uninterrupted while updating SP
 	out SPL, r20
-	out SPH, r21
 	out SREG, r0
+	out SPH, r21
 
 	push r18
 	push r19 /* push old SP on new stack */
@@ -776,8 +775,8 @@ sha1_nextBlock_epilog:
 	in r0, SREG
 	cli ; we want to be uninterrupted while updating SP
 	out SPL, r20
-	out SPH, r21
 	out SREG, r0
+	out SPH, r21
 
 	clr r1
 	pop r29

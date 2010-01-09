@@ -18,7 +18,7 @@
 */
 /*
  * skein test-suit
- * 
+ *
 */
 
 #include "config.h"
@@ -51,7 +51,7 @@ const hfdesc_t* algolist[] PROGMEM = {
 	(hfdesc_t*)&skein256_256_desc,
 	(hfdesc_t*)&skein256_384_desc,
 	(hfdesc_t*)&skein256_512_desc,
-	
+
 	(hfdesc_t*)&skein512_128_desc,
 	(hfdesc_t*)&skein512_160_desc,
 	(hfdesc_t*)&skein512_224_desc,
@@ -59,7 +59,7 @@ const hfdesc_t* algolist[] PROGMEM = {
 	(hfdesc_t*)&skein512_384_desc,
 	(hfdesc_t*)&skein512_512_desc,
 	(hfdesc_t*)&skein512_1024_desc,
-	
+
 	(hfdesc_t*)&skein1024_128_desc,
 	(hfdesc_t*)&skein1024_160_desc,
 	(hfdesc_t*)&skein1024_224_desc,
@@ -77,23 +77,23 @@ void testrun_stdtest_skein256(uint16_t outsize_b){
 	uint8_t message[64];
 	uint8_t hash[(outsize_b+7)/8];
 	uint8_t i;
-		
+
 	cli_putstr_P(PSTR("\r\n\r\nTest vectors for Skein (256 bits):"));
 	for(i=0; i<64; ++i)
 		message[i] = 0xFF-i;
-	
+
 	cli_putstr_P(PSTR("\r\nmessage:    "));
 	cli_hexdump(message, 1);
 	skein256(hash, outsize_b, message, 8);
 	cli_putstr_P(PSTR("\r\nhash:"));
 	cli_hexdump_block(hash, (outsize_b+7)/8, 4, 16);
-	
+
 	cli_putstr_P(PSTR("\r\nmessage:"));
 	cli_hexdump_block(message, 32, 4, 16);
 	skein256(hash, outsize_b, message, 32*8);
 	cli_putstr_P(PSTR("\r\nhash:"));
 	cli_hexdump_block(hash, (outsize_b+7)/8, 4, 16);
-	
+
 	cli_putstr_P(PSTR("\r\nmessage:"));
 	cli_hexdump_block(message, 64, 4, 16);
 	skein256(hash, outsize_b, message, 64*8);
@@ -105,23 +105,23 @@ void testrun_stdtest_skein512(uint16_t outsize_b){
 	uint8_t message[128];
 	uint8_t hash[(outsize_b+7)/8];
 	uint8_t i;
-		
+
 	cli_putstr_P(PSTR("\r\n\r\nTest vectors for Skein (512 bits):"));
 	for(i=0; i<128; ++i)
 		message[i] = 0xFF-i;
-	
+
 	cli_putstr_P(PSTR("\r\nmessage:    "));
 	cli_hexdump(message, 1);
 	skein512(hash, outsize_b, message, 8);
 	cli_putstr_P(PSTR("\r\nhash:"));
 	cli_hexdump_block(hash, (outsize_b+7)/8, 4, 16);
-	
+
 	cli_putstr_P(PSTR("\r\nmessage:"));
 	cli_hexdump_block(message, 64, 4, 16);
 	skein512(hash, outsize_b, message, 64*8);
 	cli_putstr_P(PSTR("\r\nhash:"));
 	cli_hexdump_block(hash, (outsize_b+7)/8, 4, 16);
-	
+
 	cli_putstr_P(PSTR("\r\nmessage:"));
 	cli_hexdump_block(message, 128, 4, 16);
 	skein512(hash, outsize_b, message, 128*8);
@@ -133,23 +133,23 @@ void testrun_stdtest_skein1024(uint16_t outsize_b){
 	uint8_t message[256];
 	uint8_t hash[(outsize_b+7)/8];
 	uint16_t i;
-		
+
 	cli_putstr_P(PSTR("\r\n\r\nTest vectors for Skein (1024 bits):"));
 	for(i=0; i<256; ++i)
 		message[i] = 0xFF-i;
-	
+
 	cli_putstr_P(PSTR("\r\nmessage:    "));
 	cli_hexdump(message, 1);
 	skein1024(hash, outsize_b, message, 8);
 	cli_putstr_P(PSTR("\r\nhash:"));
 	cli_hexdump_block(hash, (outsize_b+7)/8, 4, 16);
-	
+
 	cli_putstr_P(PSTR("\r\nmessage:"));
 	cli_hexdump_block(message, 128, 4, 16);
 	skein1024(hash, outsize_b, message, 128*8);
 	cli_putstr_P(PSTR("\r\nhash:"));
 	cli_hexdump_block(hash, (outsize_b+7)/8, 4, 16);
-	
+
 	cli_putstr_P(PSTR("\r\nmessage:"));
 	cli_hexdump_block(message, 256, 4, 16);
 	skein1024(hash, outsize_b, message, 256*8);
@@ -166,21 +166,21 @@ void testrun_stdtest_skein(void){
 void zeromsg_test_skein(uint16_t outsize_b){
 	char str[8];
 	uint8_t hash[(outsize_b+7)/8];
-	
+
 	skein256(hash, outsize_b, NULL, 0);
 	cli_putstr_P(PSTR("\r\nskein256-"));
 	utoa(outsize_b, str, 10);
 	cli_putstr(str);
 	cli_putstr_P(PSTR(" :"));
 	cli_hexdump_block(hash, (outsize_b+7)/8, 4, 16);
-	
+
 	skein512(hash, outsize_b, NULL, 0);
 	cli_putstr_P(PSTR("\r\nskein512-"));
 	utoa(outsize_b, str, 10);
 	cli_putstr(str);
 	cli_putstr_P(PSTR(" :"));
 	cli_hexdump_block(hash, (outsize_b+7)/8, 4, 16);
-	
+
 	skein1024(hash, outsize_b, NULL, 0);
 	cli_putstr_P(PSTR("\r\nskein1024-"));
 	utoa(outsize_b, str, 10);
@@ -227,6 +227,8 @@ const char echo_str[]        PROGMEM = "echo";
 const char shavs_list_str[]  PROGMEM = "shavs_list";
 const char shavs_set_str[]   PROGMEM = "shavs_set";
 const char shavs_test1_str[] PROGMEM = "shavs_test1";
+const char shavs_test2_str[] PROGMEM = "shavs_test2";
+const char shavs_test3_str[] PROGMEM = "shavs_test3";
 
 cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ nessie_str,          NULL, testrun_nessie_skein},
@@ -236,15 +238,17 @@ cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ shavs_list_str,      NULL, shavs_listalgos},
 	{ shavs_set_str,   (void*)1, (void_fpt)shavs_setalgo},
 	{ shavs_test1_str,     NULL, shavs_test1},
+	{ shavs_test2_str,     NULL, shavs_test2},
+	{ shavs_test3_str,     NULL, shavs_test3},
 	{ echo_str,        (void*)1, (void_fpt)echo_ctrl},
 	{ NULL,                NULL, NULL}
 };
 
 int main (void){
 	DEBUG_INIT();
-	
+
 	cli_rx = (cli_rx_fpt)uart0_getc;
-	cli_tx = (cli_tx_fpt)uart0_putc;	 	
+	cli_tx = (cli_tx_fpt)uart0_putc;
 	shavs_algolist=(hfdesc_t**)algolist;
 	shavs_algo=(hfdesc_t*)&skein256_256_desc;
 	for(;;){
@@ -255,7 +259,7 @@ int main (void){
 		cli_putstr_P(PSTR(" "));
 		cli_putstr(__TIME__);
 		cli_putstr_P(PSTR(")\r\nloaded and running\r\n"));
-		
+
 		cmd_interface(cmdlist);
 	}
 }
