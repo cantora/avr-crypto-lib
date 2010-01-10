@@ -72,19 +72,19 @@ void hfal_hash_mem(const hfdesc_t* hash_descriptor, void* dest, const void* msg,
 	}else{
 		uint16_t bs,bsb;
 		uint8_t ctx[pgm_read_word(&(hash_descriptor->ctxsize_B))];
-		f=(void_fpt)pgm_read_word(&(hash_descriptor->init));
+		f=(void_fpt)(pgm_read_word(&(hash_descriptor->init)));
 		((hf_init_fpt)f)(ctx);
 		bs=pgm_read_word(&(hash_descriptor->blocksize_b));
 		bsb=bs/8;
-		f=(void_fpt)pgm_read_word(&(hash_descriptor->nextBlock));
-		while(length_b>=bs){
+		f=(void_fpt)(pgm_read_word(&(hash_descriptor->nextBlock)));
+		while(length_b>bs){
 			((hf_nextBlock_fpt)f)(ctx, msg);
 			length_b -= bs;
 			msg = (uint8_t*)msg + bsb;
 		}
-		f=(void_fpt)pgm_read_word(&(hash_descriptor->lastBlock));
+		f=(void_fpt)(pgm_read_word(&(hash_descriptor->lastBlock)));
 		((hf_lastBlock_fpt)f)(ctx, msg, length_b);
-		f=(void_fpt)pgm_read_word(&(hash_descriptor->ctx2hash));
+		f=(void_fpt)(pgm_read_word(&(hash_descriptor->ctx2hash)));
 		((hf_ctx2hash_fpt)f)(dest, ctx);
 	}
 }

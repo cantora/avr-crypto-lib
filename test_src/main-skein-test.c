@@ -36,6 +36,7 @@
 #include "performance_test.h"
 #include "hfal-performance.h"
 #include "hfal-nessie.h"
+#include "hfal-basic.h"
 
 
 #include <stdint.h>
@@ -213,6 +214,33 @@ void testrun_nessie_skein(void){
 	hfal_nessie_multiple(algolist);
 }
 
+void test_monte2(void){
+	uint8_t data[] = {
+	0x6c, 0xd4, 0xc0, 0xc5, 0xcb, 0x2c, 0xa2, 0xa0,
+	0xf1, 0xd1, 0xae, 0xce, 0xba, 0xc0, 0x3b, 0x52,
+	0xe6, 0x4e, 0xa0, 0x3d, 0x1a, 0x16, 0x54, 0x37,
+	0x29, 0x36, 0x54, 0x5b, 0x92, 0xbb, 0xc5, 0x48,
+	0x4a, 0x59, 0xdb, 0x74, 0xbb, 0x60, 0xf9, 0xc4,
+	0x0c, 0xeb, 0x1a, 0x5a, 0xa3, 0x5a, 0x6f, 0xaf,
+	0xe8, 0x03, 0x49, 0xe1, 0x4c, 0x25, 0x3a, 0x4e,
+	0x8b, 0x1d, 0x77, 0x61, 0x2d, 0xdd, 0x81, 0xac,
+	0xe9, 0x26, 0xae, 0x8b, 0x0a, 0xf6, 0xe5, 0x31,
+	0x76, 0xdb, 0xff, 0xcc, 0x2a, 0x6b, 0x88, 0xc6,
+	0xbd, 0x76, 0x5f, 0x93, 0x9d, 0x3d, 0x17, 0x8a,
+	0x9b, 0xde, 0x9e, 0xf3, 0xaa, 0x13, 0x1c, 0x61,
+	0xe3, 0x1c, 0x1e, 0x42, 0xcd, 0xfa, 0xf4, 0xb4,
+	0xdc, 0xde, 0x57, 0x9a, 0x37, 0xe1, 0x50, 0xef,
+	0xbe, 0xf5, 0x55, 0x5b, 0x4c, 0x1c, 0xb4, 0x04,
+	0x39, 0xd8, 0x35, 0xa7, 0x24, 0xe2, 0xfa, 0xe7 };
+
+   uint8_t hash[256/8];
+   skein256(hash, 256, data, 1024);
+   cli_putstr_P(PSTR("\r\n hash(data) = "));
+   cli_hexdump(hash, 32);
+   hfal_hash_mem(&skein256_256_desc,hash, data, 1024);
+   cli_putstr_P(PSTR("\r\n hash(data) = "));
+   cli_hexdump(hash, 32);
+}
 
 /*****************************************************************************
  *  main																	 *
@@ -224,6 +252,7 @@ const char test_str[]        PROGMEM = "test";
 const char ztest_str[]       PROGMEM = "zerotest";
 const char performance_str[] PROGMEM = "performance";
 const char echo_str[]        PROGMEM = "echo";
+const char monte2_str[]      PROGMEM = "monte2";
 const char shavs_list_str[]  PROGMEM = "shavs_list";
 const char shavs_set_str[]   PROGMEM = "shavs_set";
 const char shavs_test1_str[] PROGMEM = "shavs_test1";
@@ -231,17 +260,18 @@ const char shavs_test2_str[] PROGMEM = "shavs_test2";
 const char shavs_test3_str[] PROGMEM = "shavs_test3";
 
 cmdlist_entry_t cmdlist[] PROGMEM = {
-	{ nessie_str,          NULL, testrun_nessie_skein},
-	{ performance_str,     NULL, performance_skein},
-	{ test_str,            NULL, testrun_stdtest_skein},
-	{ ztest_str,       (void*)1, (void_fpt)zeromsg_test_common},
-	{ shavs_list_str,      NULL, shavs_listalgos},
-	{ shavs_set_str,   (void*)1, (void_fpt)shavs_setalgo},
-	{ shavs_test1_str,     NULL, shavs_test1},
-	{ shavs_test2_str,     NULL, shavs_test2},
-	{ shavs_test3_str,     NULL, shavs_test3},
-	{ echo_str,        (void*)1, (void_fpt)echo_ctrl},
-	{ NULL,                NULL, NULL}
+	{ nessie_str,          NULL, testrun_nessie_skein            },
+	{ performance_str,     NULL, performance_skein               },
+	{ test_str,            NULL, testrun_stdtest_skein           },
+	{ ztest_str,       (void*)1, (void_fpt)zeromsg_test_common   },
+	{ shavs_list_str,      NULL, shavs_listalgos                 },
+	{ shavs_set_str,   (void*)1, (void_fpt)shavs_setalgo         },
+	{ monte2_str,          NULL, test_monte2                     },
+	{ shavs_test1_str,     NULL, shavs_test1                     },
+	{ shavs_test2_str,     NULL, shavs_test2                     },
+	{ shavs_test3_str,     NULL, shavs_test3                     },
+	{ echo_str,        (void*)1, (void_fpt)echo_ctrl             },
+	{ NULL,                NULL, NULL                            }
 };
 
 int main (void){
