@@ -88,10 +88,10 @@ void test_monte(void){
      0x38, 0xF0, 0xDF, 0x70, 0x1D, 0xA9, 0x3C, 0x3B,
      0xF2, 0xC9, 0xC8, 0x68, 0x96, 0xE7, 0xE6, 0xC7 };
    uint8_t hash[SHA256_HASH_BYTES];
-   sha256(hash, data1, 3*32*8);
+   sha256((sha256_hash_t*)hash, data1, 3*32*8);
    cli_putstr_P(PSTR("\r\n hash(data1) = "));
    cli_hexdump(hash, 32);
-   sha256(hash, data2, 3*32*8);
+   sha256((sha256_hash_t*)hash, data2, 3*32*8);
    cli_putstr_P(PSTR("\r\n hash(data2) = "));
    cli_hexdump(hash, 32);
 }
@@ -116,7 +116,7 @@ void test_monte2(void){
 	0x39, 0xd8, 0x35, 0xa7, 0x24, 0xe2, 0xfa, 0xe7 };
 
    uint8_t hash[SHA256_HASH_BYTES];
-   sha256(hash, data, 1024);
+   sha256((sha256_hash_t*)hash, data, 1024);
    cli_putstr_P(PSTR("\r\n hash(data) = "));
    cli_hexdump(hash, 32);
 }
@@ -139,19 +139,19 @@ const char shavs_test3_str[] PROGMEM = "shavs_test3";
 const char dump_str[]        PROGMEM = "dump";
 
 cmdlist_entry_t cmdlist[] PROGMEM = {
-	{ nessie_str,          NULL, testrun_nessie_sha256},
-	{ test_str,            NULL, testrun_nessie_sha256},
-	{ monte_str,           NULL, test_monte},
-	{ monte2_str,          NULL, test_monte2},
-	{ performance_str,     NULL, testrun_performance_sha256},
-	{ echo_str,        (void*)1, (void_fpt)echo_ctrl},
-	{ shavs_list_str,      NULL, shavs_listalgos},
-	{ shavs_set_str,   (void*)1, (void_fpt)shavs_setalgo},
-	{ shavs_test1_str,     NULL, shavs_test1},
-	{ shavs_test2_str,     NULL, shavs_test2},
-	{ shavs_test3_str,     NULL, shavs_test3},
-	{ dump_str,        (void*)1, (void_fpt)dump},
-	{ NULL,                NULL, NULL}
+	{ nessie_str,          NULL, testrun_nessie_sha256          },
+	{ test_str,            NULL, testrun_nessie_sha256          },
+	{ monte_str,           NULL, test_monte                     },
+	{ monte2_str,          NULL, test_monte2                    },
+	{ performance_str,     NULL, testrun_performance_sha256     },
+	{ echo_str,        (void*)1, (void_fpt)echo_ctrl            },
+	{ shavs_list_str,      NULL, shavs_listalgos                },
+	{ shavs_set_str,   (void*)1, (void_fpt)shavs_setalgo        },
+	{ shavs_test1_str,     NULL, shavs_test1                    },
+	{ shavs_test2_str,     NULL, shavs_test2                    },
+	{ shavs_test3_str,     NULL, shavs_test3                    },
+	{ dump_str,        (void*)1, (void_fpt)dump                 },
+	{ NULL,                NULL, NULL                           }
 };
 
 int main (void){

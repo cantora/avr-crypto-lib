@@ -26,7 +26,7 @@
  */
 
 #include <avr/pgmspace.h>
-#include "blopckcipher_descriptor.h"
+#include "blockcipher_descriptor.h"
 #include "aes.h"
 #include "aes128_enc.h"
 #include "aes128_dec.h"

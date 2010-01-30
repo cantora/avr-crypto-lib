@@ -41,11 +41,11 @@ const uint8_t aes128_keysize_desc[] PROGMEM = { KS_TYPE_LIST, 1, KS_INT(128),
 
 const bcdesc_t aes128_desc PROGMEM = {
 	BCDESC_TYPE_BLOCKCIPHER,
-	BC_INIT_TYPE_2,
+	BC_INIT_TYPE_1,
 	aes128_str,
 	sizeof(aes128_ctx_t),
 	128,
-	{(void_fpt)aes_init},
+	{(void_fpt)aes128_init},
 	{(void_fpt)aes128_enc},
 	{(void_fpt)aes128_dec},
 	(bc_free_fpt)NULL,

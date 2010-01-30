@@ -18,7 +18,7 @@
 */
 /*
  * shabal test-suit
- * 
+ *
 */
 
 #include "config.h"
@@ -48,7 +48,7 @@ const hfdesc_t* algolist[] PROGMEM = {
 	(hfdesc_t*)&shabal224_desc,
 	(hfdesc_t*)&shabal256_desc,
 	(hfdesc_t*)&shabal384_desc,
-	(hfdesc_t*)&shabal512_desc,	
+	(hfdesc_t*)&shabal512_desc,
 	NULL
 };
 
@@ -111,7 +111,7 @@ void shabal_ctx_dump(shabal_ctx_t* ctx){
 		cli_putc('0'+i/100);
 	if(i>=10)
 		cli_putc('0'+(i/10)%10);
-	cli_putc('0'+i%10);	
+	cli_putc('0'+i%10);
 	cli_putstr_P(PSTR("\r\n  a = "));
 	cli_hexdump_block(ctx->a, 12*4, 5, 4*8);
 	cli_putstr_P(PSTR("\r\n  b_buffer = "));
@@ -121,7 +121,7 @@ void shabal_ctx_dump(shabal_ctx_t* ctx){
 	if(ctx->b == &(ctx->b_buffer[0]))
 		cli_putstr_P(PSTR("\r\nb --> b_buffer"));
 	if(ctx->b == &(ctx->c_buffer[0]))
-		cli_putstr_P(PSTR("\r\nb --> c_buffer"));	
+		cli_putstr_P(PSTR("\r\nb --> c_buffer"));
 	if(ctx->c == &(ctx->b_buffer[0]))
 		cli_putstr_P(PSTR("\r\nc --> b_buffer"));
 	if(ctx->c == &(ctx->c_buffer[0]))
@@ -132,7 +132,7 @@ void shabal_ctx_dump(shabal_ctx_t* ctx){
 	cli_putstr_P(PSTR("\r\n b (should) = "));
 	cli_hexdump(&p, 2);
 	cli_putstr_P(PSTR("\r\n c = "));
-	cli_hexdump(&(ctx->c), 2);	
+	cli_hexdump(&(ctx->c), 2);
 	p = ctx->c_buffer;
 	cli_putstr_P(PSTR("\r\n c (should) = "));
 	cli_hexdump(&p, 2);
@@ -200,26 +200,30 @@ const char echo_str[]        PROGMEM = "echo";
 const char shavs_list_str[]  PROGMEM = "shavs_list";
 const char shavs_set_str[]   PROGMEM = "shavs_set";
 const char shavs_test1_str[] PROGMEM = "shavs_test1";
+const char shavs_test2_str[] PROGMEM = "shavs_test2";
+const char shavs_test3_str[] PROGMEM = "shavs_test3";
 
 cmdlist_entry_t cmdlist[] PROGMEM = {
-	{ nessie_str,          NULL, testrun_nessie_shabal},
-	{ test_str,            NULL, testrun_stdtest_shabal},
-	{ testinit192_str,     NULL, testinit_192},
-	{ testinit_str,        NULL, testinit},
-	{ testshort_str,       NULL, testshort},
-	{ performance_str,     NULL, performance_shabal},
-	{ shavs_list_str,      NULL, shavs_listalgos},
-	{ shavs_set_str,   (void*)1, (void_fpt)shavs_setalgo},
-	{ shavs_test1_str,     NULL, shavs_test1},
-	{ echo_str,        (void*)1, (void_fpt)echo_ctrl},
-	{ NULL,                NULL, NULL}
+	{ nessie_str,          NULL, testrun_nessie_shabal          },
+	{ test_str,            NULL, testrun_stdtest_shabal         },
+	{ testinit192_str,     NULL, testinit_192                   },
+	{ testinit_str,        NULL, testinit                       },
+	{ testshort_str,       NULL, testshort                      },
+	{ performance_str,     NULL, performance_shabal             },
+	{ shavs_list_str,      NULL, shavs_listalgos                },
+	{ shavs_set_str,   (void*)1, (void_fpt)shavs_setalgo        },
+	{ shavs_test1_str,     NULL, shavs_test1                    },
+	{ shavs_test2_str,     NULL, shavs_test2                    },
+	{ shavs_test3_str,     NULL, shavs_test3                    },
+	{ echo_str,        (void*)1, (void_fpt)echo_ctrl            },
+	{ NULL,                NULL, NULL                           }
 };
 
 int main (void){
 	DEBUG_INIT();
-	
+
 	cli_rx = (cli_rx_fpt)uart0_getc;
-	cli_tx = (cli_tx_fpt)uart0_putc;	 	
+	cli_tx = (cli_tx_fpt)uart0_putc;
 	shavs_algolist=(hfdesc_t**)algolist;
 	shavs_algo=(hfdesc_t*)&shabal256_desc;
 	for(;;){
@@ -230,7 +234,7 @@ int main (void){
 		cli_putstr_P(PSTR(" "));
 		cli_putstr(__TIME__);
 		cli_putstr_P(PSTR(")\r\nloaded and running\r\n"));
-		
+
 		cmd_interface(cmdlist);
 	}
-}	
+}

@@ -1,7 +1,7 @@
 /* bcal_noekeon.h */
 
 #include <avr/pgmspace.h>
-#include "blopckcipher_descriptor.h"
+#include "blockcipher_descriptor.h"
 #include "noekeon.h"
 #include "keysize_descriptor.h"
 

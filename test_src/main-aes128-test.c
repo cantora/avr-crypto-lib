@@ -30,10 +30,10 @@
 #include "nessie_bc_test.h"
 #include "cli.h"
 #include "performance_test.h"
-
 #include <stdint.h>
 #include <string.h>
 #include <stdlib.h>
+#include <avr/pgmspace.h>
 
 char* algo_name = "AES-128";
 
@@ -99,6 +99,7 @@ void testrun_testkey_aes128(void){
 void testrun_testkey_aes(void){
 	testrun_testkey_aes128();
 }
+
 /*****************************************************************************/
 
 void testrun_performance_aes128(void){
