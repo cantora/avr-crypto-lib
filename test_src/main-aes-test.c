@@ -37,6 +37,7 @@
 #include "bcal_aes192.h"
 #include "bcal_aes256.h"
 #include "bcal-cbc.h"
+#include "bcal-cfb_byte.h"
 
 #include <stdint.h>
 #include <string.h>
@@ -106,6 +107,7 @@ void testrun_test_aes(void){
 	bcal_cipher_dec(data, &bcal_ctx);
 	cli_putstr_P(PSTR("\r\n plaintext:  "));
 	cli_hexdump(data, 16);
+	bcal_cipher_free(&bcal_ctx);
 }
 
 void testrun_testkey_aes128(void){
@@ -180,25 +182,37 @@ void testrun_testkey_aes(void){
 	testrun_testkey_aes256();
 }
 
+uint8_t modes_key[]   PROGMEM={ 0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6,
+		                        0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c
+                              };
+uint8_t modes_iv[]    PROGMEM={ 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+		                        0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
+                              };
+uint8_t modes_plain[] PROGMEM={ 0x6b, 0xc1, 0xbe, 0xe2, 0x2e, 0x40, 0x9f, 0x96,
+		                        0xe9, 0x3d, 0x7e, 0x11, 0x73, 0x93, 0x17, 0x2a,
+		                        /* --- */
+		                        0xae, 0x2d, 0x8a, 0x57, 0x1e, 0x03, 0xac, 0x9c,
+		                        0x9e, 0xb7, 0x6f, 0xac, 0x45, 0xaf, 0x8e, 0x51,
+		                        /* --- */
+		                        0x30, 0xc8, 0x1c, 0x46, 0xa3, 0x5c, 0xe4, 0x11,
+		                        0xe5, 0xfb, 0xc1, 0x19, 0x1a, 0x0a, 0x52, 0xef,
+		                        /* --- */
+		                        0xf6, 0x9f, 0x24, 0x45, 0xdf, 0x4f, 0x9b, 0x17,
+		                        0xad, 0x2b, 0x41, 0x7b, 0xe6, 0x6c, 0x37, 0x10
+                              };
 
 void testrun_aes128_cbc(void){
-	uint8_t key[]     = { 0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6,
-			              0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c };
-	uint8_t iv[]      = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
-			              0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f };
-	uint8_t plain[]   = { 0x6b, 0xc1, 0xbe, 0xe2, 0x2e, 0x40, 0x9f, 0x96,
-			              0xe9, 0x3d, 0x7e, 0x11, 0x73, 0x93, 0x17, 0x2a,
-			              /* --- */
-			              0xae, 0x2d, 0x8a, 0x57, 0x1e, 0x03, 0xac, 0x9c,
-			              0x9e, 0xb7, 0x6f, 0xac, 0x45, 0xaf, 0x8e, 0x51,
-			              /* --- */
-			              0x30, 0xc8, 0x1c, 0x46, 0xa3, 0x5c, 0xe4, 0x11,
-			              0xe5, 0xfb, 0xc1, 0x19, 0x1a, 0x0a, 0x52, 0xef,
-			              /* --- */
-			              0xf6, 0x9f, 0x24, 0x45, 0xdf, 0x4f, 0x9b, 0x17,
-			              0xad, 0x2b, 0x41, 0x7b, 0xe6, 0x6c, 0x37, 0x10 };
+	uint8_t key[16];
+	uint8_t iv[16];
+	uint8_t plain[64];
+
 	bcal_cbc_ctx_t ctx;
 	uint8_t r;
+
+	memcpy_P(key,   modes_key,   16);
+	memcpy_P(iv,    modes_iv,    16);
+	memcpy_P(plain, modes_plain, 64);
+
 	cli_putstr_P(PSTR("\r\n** AES128-CBC-TEST **"));
 	r = bcal_cbc_init(&aes128_desc, key, 128, &ctx);
 	cli_putstr_P(PSTR("\r\n  init = 0x"));
@@ -220,6 +234,41 @@ void testrun_aes128_cbc(void){
 	bcal_cbc_free(&ctx);
 }
 
+void testrun_aes128_cfb8(void){
+	uint8_t key[16];
+	uint8_t iv[16];
+	uint8_t plain[64];
+
+	bcal_cfb_B_ctx_t ctx;
+	uint8_t r;
+
+	memcpy_P(key,   modes_key,   16);
+	memcpy_P(iv,    modes_iv,    16);
+	memcpy_P(plain, modes_plain, 64);
+
+	cli_putstr_P(PSTR("\r\n** AES128-CFB8-TEST **"));
+	r = bcal_cfb_B_init(&aes128_desc, key, 128, 8, &ctx);
+	cli_putstr_P(PSTR("\r\n  init = 0x"));
+	cli_hexdump(&r, 1);
+	cli_putstr_P(PSTR("\r\n  key:   "));
+	cli_hexdump(key, 128/8);
+	cli_putstr_P(PSTR("\r\n  IV:    "));
+	cli_hexdump(iv, 128/8);
+	cli_putstr_P(PSTR("\r\n  plaintext:"));
+	cli_hexdump_block(plain, 4*128/8, 4, 8);
+	if(r)
+		return;
+	bcal_cfb_B_encMsg(iv, plain, 64, &ctx);
+	cli_putstr_P(PSTR("\r\n  ciphertext:  "));
+	cli_hexdump_block(plain, 64, 4, 8);
+
+	bcal_cfb_B_decMsg(iv, plain, 64, &ctx);
+	cli_putstr_P(PSTR("\r\n  plaintext:   "));
+	cli_hexdump_block(plain, 64, 4, 8);
+
+	bcal_cfb_B_free(&ctx);
+
+}
 
 /*****************************************************************************/
 
@@ -355,7 +404,8 @@ void testrun_performance_aes(void){
 const char nessie_str[]      PROGMEM = "nessie";
 const char test_str[]        PROGMEM = "test";
 const char testkey_str[]     PROGMEM = "testkey";
-const char testcbc128_str[]  PROGMEM = "testcbc128";
+const char testcbc_str[]     PROGMEM = "testcbc";
+const char testcfb8_str[]    PROGMEM = "testcfb8";
 const char performance_str[] PROGMEM = "performance";
 const char dump_str[]        PROGMEM = "dump";
 const char echo_str[]        PROGMEM = "echo";
@@ -364,7 +414,8 @@ cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ nessie_str,      NULL, testrun_nessie_aes },
 	{ test_str,        NULL, testrun_test_aes},
 	{ testkey_str,     NULL, testrun_testkey_aes},
-	{ testcbc128_str,  NULL, testrun_aes128_cbc},
+	{ testcbc_str,     NULL, testrun_aes128_cbc},
+	{ testcfb8_str,    NULL, testrun_aes128_cfb8},
 	{ performance_str, NULL, testrun_performance_aes},
 	{ dump_str,    (void*)1, (void_fpt)dump},
 	{ echo_str,    (void*)1, (void_fpt)echo_ctrl},

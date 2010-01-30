@@ -28,7 +28,7 @@ uint8_t bcal_cbc_init(const bcdesc_t* desc, const void* key, uint16_t keysize, b
 	ctx->blocksize_B = (bcal_cipher_getBlocksize_b(desc)+7)/8;
 	ctx->prev_block = malloc(ctx->blocksize_B);
 
-	if(!(ctx->prev_block)){
+	if(ctx->prev_block==NULL){
 		return 0x11;
 	}
 	return bcal_cipher_init(desc, key, keysize, &(ctx->cctx));
@@ -64,16 +64,15 @@ void bcal_cbc_decRand(void* block, const void* prev_block, bcal_cbc_ctx_t* ctx){
 
 void bcal_cbc_encMsg(const void* iv, void* msg, uint16_t msg_blocks, bcal_cbc_ctx_t* ctx){
 	bcal_cbc_loadIV(iv, ctx);
-	while(msg_blocks){
+	while(msg_blocks--){
 		bcal_cbc_encNext(msg, ctx);
-		msg_blocks -= 1;
 		msg = (uint8_t*)msg + ctx->blocksize_B;
 	}
 }
 
 void bcal_cbc_decMsg(const void* iv, void* msg, uint16_t msg_blocks, bcal_cbc_ctx_t* ctx){
 	msg=(uint8_t*)msg + (msg_blocks-1)*ctx->blocksize_B;
-	while(msg_blocks>1){
+	while(msg_blocks > 1){
 		bcal_cbc_decRand(msg, (uint8_t*)msg-ctx->blocksize_B, ctx);
 		msg_blocks -= 1;
 		msg=(uint8_t*)msg-ctx->blocksize_B;
