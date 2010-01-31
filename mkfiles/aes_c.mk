@@ -13,7 +13,8 @@ $(ALGO_NAME)_OBJ      := aes_enc.o aes_dec.o aes_sbox.o aes_invsbox.o \
 $(ALGO_NAME)_TEST_BIN := main-aes-test.o $(CLI_STD)  \
                          nessie_bc_test.o nessie_common.o performance_test.o memxor.o \
                          bcal_aes128.o bcal_aes192.o bcal_aes256.o bcal-basic.o bcal-cbc.o \
-                         keysize_descriptor.o dump-asm.o dump-decl.o bcal-cfb_byte.o
+                         keysize_descriptor.o dump-asm.o dump-decl.o bcal-cfb_byte.o \
+                         bcal-cfb_bit.o
 $(ALGO_NAME)_NESSIE_TEST      := test nessie
 $(ALGO_NAME)_PERFORMANCE_TEST := performance
 
