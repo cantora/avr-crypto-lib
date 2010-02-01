@@ -31,7 +31,7 @@ typedef struct{
 	uint8_t      blocksize_B;
 } bcal_cbc_ctx_t;
 
-uint8_t bcal_cbc_init(const bcdesc_t* desc, const void* key, uint16_t keysize, bcal_cbc_ctx_t* ctx);
+uint8_t bcal_cbc_init(const bcdesc_t* desc, const void* key, uint16_t keysize_b, bcal_cbc_ctx_t* ctx);
 void bcal_cbc_free(bcal_cbc_ctx_t* ctx);
 void bcal_cbc_loadIV(const void* iv, bcal_cbc_ctx_t* ctx);
 void bcal_cbc_encNext(void* block, bcal_cbc_ctx_t* ctx);

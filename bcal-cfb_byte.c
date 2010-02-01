@@ -25,7 +25,7 @@
 #include "memxor.h"
 
 
-uint8_t bcal_cfb_B_init(const bcdesc_t* desc, const void* key, uint16_t keysize, uint16_t size_b, bcal_cfb_B_ctx_t* ctx){
+uint8_t bcal_cfb_B_init(const bcdesc_t* desc, const void* key, uint16_t keysize_b, uint16_t size_b, bcal_cfb_B_ctx_t* ctx){
 	ctx->desc = (bcdesc_t*)desc;
 	ctx->blocksize_B = (bcal_cipher_getBlocksize_b(desc)+7)/8;
 	ctx->in_block=malloc(ctx->blocksize_B);
@@ -36,7 +36,7 @@ uint8_t bcal_cfb_B_init(const bcdesc_t* desc, const void* key, uint16_t keysize,
 		return 0x12;
 	}
 	ctx->size_B = size_b/8;
-	return bcal_cipher_init(desc, key, keysize, &(ctx->cctx));
+	return bcal_cipher_init(desc, key, keysize_b, &(ctx->cctx));
 }
 
 void bcal_cfb_B_free(bcal_cfb_B_ctx_t* ctx){
@@ -45,7 +45,9 @@ void bcal_cfb_B_free(bcal_cfb_B_ctx_t* ctx){
 }
 
 void bcal_cfb_B_loadIV(const void* iv, bcal_cfb_B_ctx_t* ctx){
-	memcpy(ctx->in_block, iv, ctx->blocksize_B);
+	if(iv){
+		memcpy(ctx->in_block, iv, ctx->blocksize_B);
+	}
 }
 
 void bcal_cfb_B_encNext(void* block, bcal_cfb_B_ctx_t* ctx){

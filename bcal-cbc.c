@@ -23,7 +23,7 @@
 #include "bcal-basic.h"
 #include "memxor.h"
 
-uint8_t bcal_cbc_init(const bcdesc_t* desc, const void* key, uint16_t keysize, bcal_cbc_ctx_t* ctx){
+uint8_t bcal_cbc_init(const bcdesc_t* desc, const void* key, uint16_t keysize_b, bcal_cbc_ctx_t* ctx){
 	ctx->desc = (bcdesc_t*)desc;
 	ctx->blocksize_B = (bcal_cipher_getBlocksize_b(desc)+7)/8;
 	ctx->prev_block = malloc(ctx->blocksize_B);
@@ -31,7 +31,7 @@ uint8_t bcal_cbc_init(const bcdesc_t* desc, const void* key, uint16_t keysize, b
 	if(ctx->prev_block==NULL){
 		return 0x11;
 	}
-	return bcal_cipher_init(desc, key, keysize, &(ctx->cctx));
+	return bcal_cipher_init(desc, key, keysize_b, &(ctx->cctx));
 }
 
 void bcal_cbc_free(bcal_cbc_ctx_t* ctx){
@@ -41,7 +41,9 @@ void bcal_cbc_free(bcal_cbc_ctx_t* ctx){
 
 
 void bcal_cbc_loadIV(const void* iv, bcal_cbc_ctx_t* ctx){
-	memcpy(ctx->prev_block, iv, ctx->blocksize_B);
+	if(iv){
+		memcpy(ctx->prev_block, iv, ctx->blocksize_B);
+	}
 }
 
 void bcal_cbc_encNext(void* block, bcal_cbc_ctx_t* ctx){

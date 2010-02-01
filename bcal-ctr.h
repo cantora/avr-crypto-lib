@@ -1,4 +1,4 @@
-/* bcal-cbc.h */
+/* bcal-ctr.h */
 /*
     This file is part of the AVR-Crypto-Lib.
     Copyright (C) 2010 Daniel Otte (daniel.otte@rub.de)
@@ -17,30 +17,29 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef BCALCFB_BYTE_H_
-#define BCALCFB_BYTE_H_
+#ifndef BCALCTR_H_
+#define BCALCTR_H_
 
 #include <stdint.h>
 #include "bcal-basic.h"
 #include "blockcipher_descriptor.h"
 
+typedef void(*inc_fp_t)(void* block, uint8_t size_B);
 
 typedef struct{
 	bcdesc_t*    desc;
 	bcgen_ctx_t  cctx;
 	uint8_t*     in_block;
+	inc_fp_t     inc_func;
 	uint8_t      blocksize_B;
-	uint8_t      size_B;
-} bcal_cfb_B_ctx_t;
+} bcal_ctr_ctx_t;
 
+uint8_t bcal_ctr_init(const bcdesc_t* desc, const void* key, uint16_t keysize_b, inc_fp_t inc_func, bcal_ctr_ctx_t* ctx);
+void bcal_ctr_free(bcal_ctr_ctx_t* ctx);
+void bcal_ctr_loadIV(const void* iv, bcal_ctr_ctx_t* ctx);
+void bcal_ctr_encNext(void* block, bcal_ctr_ctx_t* ctx);
+void bcal_ctr_decNext(void* block, bcal_ctr_ctx_t* ctx);
+void bcal_ctr_encMsg(const void* iv, void* msg, uint32_t msg_len_b, bcal_ctr_ctx_t* ctx);
+void bcal_ctr_decMsg(const void* iv, void* msg, uint32_t msg_len_b, bcal_ctr_ctx_t* ctx);
 
-uint8_t bcal_cfb_B_init(const bcdesc_t* desc, const void* key, uint16_t keysize_b, uint16_t size_b, bcal_cfb_B_ctx_t* ctx);
-void bcal_cfb_B_free(bcal_cfb_B_ctx_t* ctx);
-void bcal_cfb_B_loadIV(const void* iv, bcal_cfb_B_ctx_t* ctx);
-void bcal_cfb_B_encNext(void* block, bcal_cfb_B_ctx_t* ctx);
-void bcal_cfb_B_decNext(void* block, bcal_cfb_B_ctx_t* ctx);
-void bcal_cfb_B_encMsg(const void* iv, void* msg, uint16_t msg_blocks, bcal_cfb_B_ctx_t* ctx);
-void bcal_cfb_B_decMsg(const void* iv, void* msg, uint16_t msg_blocks, bcal_cfb_B_ctx_t* ctx);
-
-
-#endif /* BCALCFB_BYTE_H_ */
+#endif /* BCALCTR_H_ */

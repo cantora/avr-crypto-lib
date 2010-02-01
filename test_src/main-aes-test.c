@@ -39,6 +39,8 @@
 #include "bcal-cbc.h"
 #include "bcal-cfb_byte.h"
 #include "bcal-cfb_bit.h"
+#include "bcal-ofb.h"
+#include "bcal-ctr.h"
 
 #include <stdint.h>
 #include <string.h>
@@ -183,24 +185,36 @@ void testrun_testkey_aes(void){
 	testrun_testkey_aes256();
 }
 
-uint8_t modes_key[]   PROGMEM={ 0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6,
-		                        0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c
-                              };
-uint8_t modes_iv[]    PROGMEM={ 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
-		                        0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
-                              };
-uint8_t modes_plain[] PROGMEM={ 0x6b, 0xc1, 0xbe, 0xe2, 0x2e, 0x40, 0x9f, 0x96,
-		                        0xe9, 0x3d, 0x7e, 0x11, 0x73, 0x93, 0x17, 0x2a,
-		                        /* --- */
-		                        0xae, 0x2d, 0x8a, 0x57, 0x1e, 0x03, 0xac, 0x9c,
-		                        0x9e, 0xb7, 0x6f, 0xac, 0x45, 0xaf, 0x8e, 0x51,
-		                        /* --- */
-		                        0x30, 0xc8, 0x1c, 0x46, 0xa3, 0x5c, 0xe4, 0x11,
-		                        0xe5, 0xfb, 0xc1, 0x19, 0x1a, 0x0a, 0x52, 0xef,
-		                        /* --- */
-		                        0xf6, 0x9f, 0x24, 0x45, 0xdf, 0x4f, 0x9b, 0x17,
-		                        0xad, 0x2b, 0x41, 0x7b, 0xe6, 0x6c, 0x37, 0x10
-                              };
+uint8_t modes_key[]   PROGMEM = {
+		0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6,
+		0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c,
+		0x1f, 0x35, 0x2c, 0x07, 0x3b, 0x61, 0x08, 0xd7,
+		0x2d, 0x98, 0x10, 0xa3, 0x09, 0x14, 0xdf, 0xf4
+	};
+uint8_t modes_iv[]    PROGMEM = {
+		0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+		0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
+    };
+
+uint8_t modes_ctriv[] PROGMEM = {
+		0xf0, 0xf1, 0xf2, 0xf3, 0xf4, 0xf5, 0xf6, 0xf7,
+		0xf8, 0xf9, 0xfa, 0xfb, 0xfc, 0xfd, 0xfe, 0xff
+	};
+
+uint8_t modes_plain[] PROGMEM = {
+		0x6b, 0xc1, 0xbe, 0xe2, 0x2e, 0x40, 0x9f, 0x96,
+		0xe9, 0x3d, 0x7e, 0x11, 0x73, 0x93, 0x17, 0x2a,
+		/* --- */
+		0xae, 0x2d, 0x8a, 0x57, 0x1e, 0x03, 0xac, 0x9c,
+		0x9e, 0xb7, 0x6f, 0xac, 0x45, 0xaf, 0x8e, 0x51,
+		/* --- */
+		0x30, 0xc8, 0x1c, 0x46, 0xa3, 0x5c, 0xe4, 0x11,
+		0xe5, 0xfb, 0xc1, 0x19, 0x1a, 0x0a, 0x52, 0xef,
+		/* --- */
+		0xf6, 0x9f, 0x24, 0x45, 0xdf, 0x4f, 0x9b, 0x17,
+		0xad, 0x2b, 0x41, 0x7b, 0xe6, 0x6c, 0x37, 0x10
+    };
+
 
 void testrun_aes128_cbc(void){
 	uint8_t key[16];
@@ -223,15 +237,15 @@ void testrun_aes128_cbc(void){
 	cli_putstr_P(PSTR("\r\n  IV:    "));
 	cli_hexdump(iv, 128/8);
 	cli_putstr_P(PSTR("\r\n  plaintext:"));
-	cli_hexdump_block(plain, 4*128/8, 4, 8);
+	cli_hexdump_block(plain, 4*128/8, 4, 16);
 	if(r)
 		return;
 	bcal_cbc_encMsg(iv, plain, 4, &ctx);
 	cli_putstr_P(PSTR("\r\n  ciphertext:  "));
-	cli_hexdump_block(plain, 4*128/8, 4, 8);
+	cli_hexdump_block(plain, 4*128/8, 4, 16);
 	bcal_cbc_decMsg(iv, plain, 4, &ctx);
 	cli_putstr_P(PSTR("\r\n  plaintext:   "));
-	cli_hexdump_block(plain, 4*128/8, 4, 8);
+	cli_hexdump_block(plain, 4*128/8, 4, 16);
 	bcal_cbc_free(&ctx);
 }
 
@@ -256,16 +270,16 @@ void testrun_aes128_cfb8(void){
 	cli_putstr_P(PSTR("\r\n  IV:    "));
 	cli_hexdump(iv, 128/8);
 	cli_putstr_P(PSTR("\r\n  plaintext:"));
-	cli_hexdump_block(plain, 4*128/8, 4, 8);
+	cli_hexdump_block(plain, 4*128/8, 4, 16);
 	if(r)
 		return;
 	bcal_cfb_B_encMsg(iv, plain, 64, &ctx);
 	cli_putstr_P(PSTR("\r\n  ciphertext:  "));
-	cli_hexdump_block(plain, 64, 4, 8);
+	cli_hexdump_block(plain, 64, 4, 16);
 
 	bcal_cfb_B_decMsg(iv, plain, 64, &ctx);
 	cli_putstr_P(PSTR("\r\n  plaintext:   "));
-	cli_hexdump_block(plain, 64, 4, 8);
+	cli_hexdump_block(plain, 64, 4, 16);
 
 	bcal_cfb_B_free(&ctx);
 
@@ -292,7 +306,7 @@ void testrun_aes128_cfb1(void){
 	cli_putstr_P(PSTR("\r\n  IV:    "));
 	cli_hexdump(iv, 128/8);
 	cli_putstr_P(PSTR("\r\n  plaintext:"));
-	cli_hexdump_block(plain, 2, 4, 8);
+	cli_hexdump_block(plain, 2, 4, 16);
 	if(r)
 		return;
 	uint8_t i, bit_offset, byte_offset;
@@ -307,7 +321,7 @@ void testrun_aes128_cfb1(void){
 		cli_putc((plain[byte_offset]&(1<<(7-bit_offset)))?'1':'0');
 	}
 	cli_putstr_P(PSTR("\r\n  ciphertext:  "));
-	cli_hexdump_block(plain, 2, 4, 8);
+	cli_hexdump_block(plain, 2, 4, 16);
 
 	bcal_cfb_b_loadIV(iv, &ctx);
 	for(i=0; i<16; ++i){
@@ -320,20 +334,86 @@ void testrun_aes128_cfb1(void){
 		cli_putc((plain[byte_offset]&(1<<(7-bit_offset)))?'1':'0');
 	}
 	cli_putstr_P(PSTR("\r\n  plaintext:   "));
-	cli_hexdump_block(plain, 2, 4, 8);
+	cli_hexdump_block(plain, 2, 4, 16);
 
 
 	bcal_cfb_b_encMsg(iv, plain, 0, 64*8, &ctx);
 	cli_putstr_P(PSTR("\r\n  ciphertext:  "));
-	cli_hexdump_block(plain, 64, 4, 8);
+	cli_hexdump_block(plain, 64, 4, 16);
 
 	bcal_cfb_b_decMsg(iv, plain, 0, 64*8, &ctx);
 	cli_putstr_P(PSTR("\r\n  plaintext:   "));
-	cli_hexdump_block(plain, 64, 4, 8);
+	cli_hexdump_block(plain, 64, 4, 16);
 
 	bcal_cfb_b_free(&ctx);
-
 }
+
+void testrun_aes128_ofb(void){
+	uint8_t key[16];
+	uint8_t iv[16];
+	uint8_t plain[64];
+
+	bcal_ofb_ctx_t ctx;
+	uint8_t r;
+
+	memcpy_P(key,   modes_key,   16);
+	memcpy_P(iv,    modes_iv,    16);
+	memcpy_P(plain, modes_plain, 64);
+
+	cli_putstr_P(PSTR("\r\n** AES128-OFB-TEST **"));
+	r = bcal_ofb_init(&aes128_desc, key, 128, &ctx);
+	cli_putstr_P(PSTR("\r\n  init = 0x"));
+	cli_hexdump(&r, 1);
+	cli_putstr_P(PSTR("\r\n  key:   "));
+	cli_hexdump(key, 128/8);
+	cli_putstr_P(PSTR("\r\n  IV:    "));
+	cli_hexdump(iv, 128/8);
+	cli_putstr_P(PSTR("\r\n  plaintext:"));
+	cli_hexdump_block(plain, 4*128/8, 4, 16);
+	if(r)
+		return;
+	bcal_ofb_encMsg(iv, plain, 4*128, &ctx);
+	cli_putstr_P(PSTR("\r\n  ciphertext:  "));
+	cli_hexdump_block(plain, 4*128/8, 4, 16);
+	bcal_ofb_decMsg(iv, plain, 4*128, &ctx);
+	cli_putstr_P(PSTR("\r\n  plaintext:   "));
+	cli_hexdump_block(plain, 4*128/8, 4, 16);
+	bcal_ofb_free(&ctx);
+}
+
+void testrun_aes128_ctr(void){
+	uint8_t key[16];
+	uint8_t iv[16];
+	uint8_t plain[64];
+
+	bcal_ctr_ctx_t ctx;
+	uint8_t r;
+
+	memcpy_P(key,   modes_key,   16);
+	memcpy_P(iv,    modes_ctriv, 16);
+	memcpy_P(plain, modes_plain, 64);
+
+	cli_putstr_P(PSTR("\r\n** AES128-CTR-TEST **"));
+	r = bcal_ctr_init(&aes128_desc, key, 128, NULL, &ctx);
+	cli_putstr_P(PSTR("\r\n  init = 0x"));
+	cli_hexdump(&r, 1);
+	cli_putstr_P(PSTR("\r\n  key:   "));
+	cli_hexdump(key, 128/8);
+	cli_putstr_P(PSTR("\r\n  IV:    "));
+	cli_hexdump(iv, 128/8);
+	cli_putstr_P(PSTR("\r\n  plaintext:"));
+	cli_hexdump_block(plain, 4*128/8, 4, 16);
+	if(r)
+		return;
+	bcal_ctr_encMsg(iv, plain, 4*128, &ctx);
+	cli_putstr_P(PSTR("\r\n  ciphertext:  "));
+	cli_hexdump_block(plain, 4*128/8, 4, 16);
+	bcal_ctr_decMsg(iv, plain, 4*128, &ctx);
+	cli_putstr_P(PSTR("\r\n  plaintext:   "));
+	cli_hexdump_block(plain, 4*128/8, 4, 16);
+	bcal_ctr_free(&ctx);
+}
+
 /*****************************************************************************/
 
 void testrun_performance_aes128(void){
@@ -471,6 +551,8 @@ const char testkey_str[]     PROGMEM = "testkey";
 const char testcbc_str[]     PROGMEM = "testcbc";
 const char testcfb8_str[]    PROGMEM = "testcfb8";
 const char testcfb1_str[]    PROGMEM = "testcfb1";
+const char testofb_str[]     PROGMEM = "testofb";
+const char testctr_str[]     PROGMEM = "testctr";
 const char performance_str[] PROGMEM = "performance";
 const char dump_str[]        PROGMEM = "dump";
 const char echo_str[]        PROGMEM = "echo";
@@ -482,6 +564,8 @@ cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ testcbc_str,     NULL, testrun_aes128_cbc},
 	{ testcfb8_str,    NULL, testrun_aes128_cfb8},
 	{ testcfb1_str,    NULL, testrun_aes128_cfb1},
+	{ testofb_str,     NULL, testrun_aes128_ofb},
+	{ testctr_str,     NULL, testrun_aes128_ctr},
 	{ performance_str, NULL, testrun_performance_aes},
 	{ dump_str,    (void*)1, (void_fpt)dump},
 	{ echo_str,    (void*)1, (void_fpt)echo_ctrl},
