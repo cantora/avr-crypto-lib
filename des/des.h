@@ -46,7 +46,7 @@
  * 
  * This function encrypts a block of 64 bits (8 bytes) with the DES algorithm.
  * Key expansion is done automatically. The key is 64 bits long, but note that
- * only 56 bits are used (the LSB of each byte is droped). The input and output
+ * only 56 bits are used (the LSB of each byte is dropped). The input and output
  * blocks may overlap.
  * 
  * \param out pointer to the block (64 bit = 8 byte) where the ciphertext is written to
@@ -60,7 +60,7 @@ void des_enc(void* out, const void* in, const void* key);
  * 
  * This function decrypts a block of 64 bits (8 bytes) with the DES algorithm.
  * Key expansion is done automatically. The key is 64 bits long, but note that
- * only 56 bits are used (the LSB of each byte is droped). The input and output
+ * only 56 bits are used (the LSB of each byte is dropped). The input and output
  * blocks may overlap.
  * 
  * \param out pointer to the block (64 bit = 8 byte) where the plaintext is written to
@@ -74,7 +74,7 @@ void des_dec(void* out, const void* in, const void* key);
  * 
  * This function encrypts a block of 64 bits (8 bytes) with the Tripple-DES (EDE)
  * algorithm. Key expansion is done automatically. The key is 192 bits long, but
- * note that only 178 bits are used (the LSB of each byte is droped). The input
+ * note that only 178 bits are used (the LSB of each byte is dropped). The input
  * and output blocks may overlap.
  * 
  * \param out pointer to the block (64 bit = 8 byte) where the ciphertext is written to
@@ -88,7 +88,7 @@ void tdes_enc(void* out, const void* in, const void* key);
  * 
  * This function decrypts a block of 64 bits (8 bytes) with the Tripple-DES (EDE)
  * algorithm. Key expansion is done automatically. The key is 192 bits long, but
- * note that only 178 bits are used (the LSB of each byte is droped). The input
+ * note that only 178 bits are used (the LSB of each byte is dropped). The input
  * and output blocks may overlap.
  * 
  * \param out pointer to the block (64 bit = 8 byte) where the plaintext is written to

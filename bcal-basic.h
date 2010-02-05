@@ -27,7 +27,7 @@
 #include <avr/pgmspace.h>
 
 uint8_t bcal_cipher_init(const bcdesc_t* cipher_descriptor,
-                         const void* key, uint16_t keysize, bcgen_ctx_t* ctx);
+                         const void* key, uint16_t keysize_b, bcgen_ctx_t* ctx);
 void bcal_cipher_free(bcgen_ctx_t* ctx);
 void bcal_cipher_enc(void* block, const bcgen_ctx_t* ctx);
 void bcal_cipher_dec(void* block, const bcgen_ctx_t* ctx);

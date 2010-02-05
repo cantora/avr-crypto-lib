@@ -51,7 +51,7 @@ const bcdesc_t tdes_desc PROGMEM = {
 	BC_INIT_TYPE_1,
 	tdes_str,
 	24,
-	128,
+	64,
 	{(void_fpt)NULL},
 	{(void_fpt)tdes_dummy_enc},
 	{(void_fpt)tdes_dummy_dec},

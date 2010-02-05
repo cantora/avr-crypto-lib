@@ -1,0 +1,3245 @@
+#  CAVS 5.0
+#  CMACVer information for "cmactestvectors"
+#  Algorithms tested:Alg = AES KeySize = 256 Mode = Verify  
+#  Generated on Thu Mar 30 14:33:33 2006
+
+
+Count = 0
+Klen = 32 
+Mlen = 0
+Tlen = 4
+Key = a32bf5e1f03c2280e71c6e1ae21312d4ff163eee16ebb1fdee8e887bb0d45382
+Msg = 00
+Mac = 5a9d2560
+Result = F (1 - MAC changed - for 0-len msg)
+
+Count = 1
+Klen = 32 
+Mlen = 0
+Tlen = 4
+Key = 1076043c5e4d6f67d348af5254447ede0661cd4513b2ad67ab396f5e49120a58
+Msg = 00
+Mac = 046ac63d
+Result = F (4 - Key or Key1 changed)
+
+Count = 2
+Klen = 32 
+Mlen = 0
+Tlen = 4
+Key = 8af594c4fc3168efc437779f60a1c35b88517735590429fcb32a5cb2e0f64940
+Msg = 00
+Mac = 548a93e7
+Result = F (3 - MAC changed)
+
+Count = 3
+Klen = 32 
+Mlen = 0
+Tlen = 4
+Key = 2637faefc4d4e910d7807bd651e8fb6f7ebea23effaebb76109405e80cec5919
+Msg = 00
+Mac = 78d44a82
+Result = F (2 - Key or Key2 changed)
+
+Count = 4
+Klen = 32 
+Mlen = 0
+Tlen = 4
+Key = c64d27fa500ffc677d669cda6c06baca03481a76d97c9bd6538174d10d94beb0
+Msg = 00
+Mac = 379550a8
+Result = P
+
+Count = 5
+Klen = 32 
+Mlen = 0
+Tlen = 4
+Key = 98ad92ed6c2d5fd6fdd498e5e1368b01f40c213a9291b553092b267d4d4e2b66
+Msg = 00
+Mac = 99aad01b
+Result = P
+
+Count = 6
+Klen = 32 
+Mlen = 0
+Tlen = 4
+Key = 30c9c45e1bb71a3d1e0b4394e78885df102d76b0f5b76c51c66735abdb050866
+Msg = 00
+Mac = 64d60531
+Result = F (2 - Key or Key2 changed)
+
+Count = 7
+Klen = 32 
+Mlen = 0
+Tlen = 4
+Key = 8f569f9a197d1b8d442cbaf19fcb108f1b934784b4a0d7f1534791f5f3a9e2d8
+Msg = 00
+Mac = e76bd699
+Result = F (1 - MAC changed - for 0-len msg)
+
+Count = 8
+Klen = 32 
+Mlen = 0
+Tlen = 4
+Key = 6dd0e6d89125da593605184e89b261c37c245e0d1c0c91f420138c18bd62618d
+Msg = 00
+Mac = 08703a83
+Result = F (3 - MAC changed)
+
+Count = 9
+Klen = 32 
+Mlen = 0
+Tlen = 4
+Key = 68da490e3840c6c6b9f72d2df62e0280c3b3e9a8f55b73bfd2a538cfc69a26dd
+Msg = 00
+Mac = b60aac96
+Result = F (4 - Key or Key1 changed)
+
+Count = 10
+Klen = 32 
+Mlen = 0
+Tlen = 4
+Key = 07524f5a291a9ebc53ea7b795c4f15958a7e9720fc31a9ad48b1390662347b1e
+Msg = 00
+Mac = 84047695
+Result = F (4 - Key or Key1 changed)
+
+Count = 11
+Klen = 32 
+Mlen = 0
+Tlen = 4
+Key = e86c65de751a9abf91c5de639338618e3df81e9994cd5517ef7d3cb84fdbf26d
+Msg = 00
+Mac = 218a0571
+Result = F (1 - MAC changed - for 0-len msg)
+
+Count = 12
+Klen = 32 
+Mlen = 0
+Tlen = 4
+Key = 9147e57b5234cdfa772423c3fe27897e3f4da2d788b8d23004f54692e18d35ea
+Msg = 00
+Mac = b96bc46b
+Result = F (3 - MAC changed)
+
+Count = 13
+Klen = 32 
+Mlen = 0
+Tlen = 4
+Key = 66db3c474db544b5b5ac0f83fff01ffae4a224dcae37cdeaa81edea9d3a28366
+Msg = 00
+Mac = 3b6e5d8c
+Result = P
+
+Count = 14
+Klen = 32 
+Mlen = 0
+Tlen = 4
+Key = d34721932cc155570314132f80d17e476cb03d384f24c437d933d58c80854647
+Msg = 00
+Mac = d7cd5ca5
+Result = F (2 - Key or Key2 changed)
+
+Count = 15
+Klen = 32 
+Mlen = 0
+Tlen = 4
+Key = 3466a16fb4481ae6e8245aead1cb7e7397950d3b1da62e20d97018cae379c98f
+Msg = 00
+Mac = 3934cfbc
+Result = F (3 - MAC changed)
+
+Count = 16
+Klen = 32 
+Mlen = 0
+Tlen = 4
+Key = d9c61ae78f1ecfd4eddb5548bd2585ca3dd62224db2ebaba41c9cd1b8fcd32d6
+Msg = 00
+Mac = ab034f37
+Result = F (4 - Key or Key1 changed)
+
+Count = 17
+Klen = 32 
+Mlen = 0
+Tlen = 4
+Key = 8cd3742589656a7a1f21f8c985371d65d037bafb0ad4457685e7c11f6eb7ee09
+Msg = 00
+Mac = 96cb2655
+Result = F (1 - MAC changed - for 0-len msg)
+
+Count = 18
+Klen = 32 
+Mlen = 0
+Tlen = 4
+Key = 8e19d344ffd5b0bab994eed142d3e41641ad1395e2acab4c7cdf51e0722c1f8f
+Msg = 00
+Mac = b9da602b
+Result = P
+
+Count = 19
+Klen = 32 
+Mlen = 0
+Tlen = 4
+Key = ca4ce80d5e1c0260c40c0a02f286cf5455934a3fc4fc2f75b5afc2f9b163ece1
+Msg = 00
+Mac = 37c706ab
+Result = F (2 - Key or Key2 changed)
+
+Count = 20
+Klen = 32 
+Mlen = 0
+Tlen = 9
+Key = 7e772ae91586c40c1c64988610a5bda06307c634d94b441d33438dec0b2dbcdc
+Msg = 00
+Mac = 85970e178fd027d2b7
+Result = F (3 - MAC changed)
+
+Count = 21
+Klen = 32 
+Mlen = 0
+Tlen = 9
+Key = a05cd57eb1400f619ffa97e3053ea27a5747d152dcc856e6fa2659ceb4e49ad7
+Msg = 00
+Mac = fad7e15e6489656725
+Result = F (2 - Key or Key2 changed)
+
+Count = 22
+Klen = 32 
+Mlen = 0
+Tlen = 9
+Key = 8e55a57aa16cbc6689ecceb647e9742ddf647803ff659592e24a7d52745e2107
+Msg = 00
+Mac = 7b1fd0b86e005f5e0f
+Result = P
+
+Count = 23
+Klen = 32 
+Mlen = 0
+Tlen = 9
+Key = 49ba7aaabcd51175ebd993853ca23fac88b74fcb7d217d464179c5b558456ddd
+Msg = 00
+Mac = aae4d87126c3457ca6
+Result = F (1 - MAC changed - for 0-len msg)
+
+Count = 24
+Klen = 32 
+Mlen = 0
+Tlen = 9
+Key = 657de0d317a1f26640bc1dac5be8699b53edc86e4bfdfaf797a2ae350bf4ea29
+Msg = 00
+Mac = 986beb68808d6c5db6
+Result = F (4 - Key or Key1 changed)
+
+Count = 25
+Klen = 32 
+Mlen = 0
+Tlen = 9
+Key = 1fa2b2a8890ac3d51d418e69c8499c138fe52f5edea433d91d1a71758571062e
+Msg = 00
+Mac = d1884ec6264205d1ef
+Result = P
+
+Count = 26
+Klen = 32 
+Mlen = 0
+Tlen = 9
+Key = fc165850e0b3e4c2812aaf15b44d54402568faa1486de342924e425ae8ab4d17
+Msg = 00
+Mac = 41730dcf7ba4d94ad5
+Result = F (1 - MAC changed - for 0-len msg)
+
+Count = 27
+Klen = 32 
+Mlen = 0
+Tlen = 9
+Key = 3a9f34c41746ae49f2b89235a8655ba63274680e8613012cbb0b953b6d974569
+Msg = 00
+Mac = 0bcc63ce0312821ad6
+Result = F (2 - Key or Key2 changed)
+
+Count = 28
+Klen = 32 
+Mlen = 0
+Tlen = 9
+Key = aa8ef9d2aaecf4e5a886a787d31ddf2176197aef742777bff2264ff5514488d3
+Msg = 00
+Mac = 066699ab7c18f6ffbc
+Result = F (4 - Key or Key1 changed)
+
+Count = 29
+Klen = 32 
+Mlen = 0
+Tlen = 9
+Key = bfa4c9cba7de859b6749822b677d896ce0a0b75aee2d2edee6f40af3e9639709
+Msg = 00
+Mac = 2f5cb7d8998984fefa
+Result = F (3 - MAC changed)
+
+Count = 30
+Klen = 32 
+Mlen = 0
+Tlen = 9
+Key = 8e88e8cc47d7cfdd08f68d973a7beaf401cb4d1311992ddac3a9c9e067da198a
+Msg = 00
+Mac = d1af129a18e861a49a
+Result = F (3 - MAC changed)
+
+Count = 31
+Klen = 32 
+Mlen = 0
+Tlen = 9
+Key = 5dafba8a7608fd0f390f3d912ff37b5991dfc885157bb7ab08b512bf9dc1cc37
+Msg = 00
+Mac = 4e252773fc5203b824
+Result = F (1 - MAC changed - for 0-len msg)
+
+Count = 32
+Klen = 32 
+Mlen = 0
+Tlen = 9
+Key = 4c91c542eb42399336e9eac70195ff7e390e6de7270c608ff2a6dc76660da468
+Msg = 00
+Mac = 3972f2ad9cb931ba6b
+Result = F (2 - Key or Key2 changed)
+
+Count = 33
+Klen = 32 
+Mlen = 0
+Tlen = 9
+Key = 962b60927979cc8b1a3ecdd9798218f08f700065ec653ca39f47e9e05618d34f
+Msg = 00
+Mac = 173436914edff52422
+Result = P
+
+Count = 34
+Klen = 32 
+Mlen = 0
+Tlen = 9
+Key = a0685796e73345257233a51d7a82befc9e183a15ef8ed77b48285f20de13da3e
+Msg = 00
+Mac = f1879f361a389ae2b6
+Result = F (4 - Key or Key1 changed)
+
+Count = 35
+Klen = 32 
+Mlen = 0
+Tlen = 9
+Key = 726d07b6a49875e2fd37d7419591a96b7612f74ea5407ec55ff10e6da2bb32b4
+Msg = 00
+Mac = 6a9adcf21e3b35dce3
+Result = F (4 - Key or Key1 changed)
+
+Count = 36
+Klen = 32 
+Mlen = 0
+Tlen = 9
+Key = 2c10ae1686ea953eb5b186d6e85ee9b967aed1b68f1a252b160a01d697465ae9
+Msg = 00
+Mac = ff256e2428c6c6771b
+Result = F (2 - Key or Key2 changed)
+
+Count = 37
+Klen = 32 
+Mlen = 0
+Tlen = 9
+Key = 9b80e95160d34a64c6fa02f043694aa1dae167f1343a6903f16118cf409d2c80
+Msg = 00
+Mac = 819bd185d05e285ede
+Result = P
+
+Count = 38
+Klen = 32 
+Mlen = 0
+Tlen = 9
+Key = 963dc81801a9bdcc6b16aaa05a4a521ec2b27cc0c04945fa8ababa7ba7c9a6b1
+Msg = 00
+Mac = c85ae112a01b9e6daf
+Result = F (3 - MAC changed)
+
+Count = 39
+Klen = 32 
+Mlen = 0
+Tlen = 9
+Key = 48b0f3a74998b919df4a8747d33c88fad039f0edbe61e9e94b71d02fca44a216
+Msg = 00
+Mac = 40740f40657f277fc0
+Result = F (1 - MAC changed - for 0-len msg)
+
+Count = 40
+Klen = 32 
+Mlen = 0
+Tlen = 16
+Key = c404da8726c61a71a6c9ce61f4c756868d221af64428c4082195adfe6f5994e8
+Msg = 00
+Mac = 7eb0233b13ffed4f074749e258dc5401
+Result = F (3 - MAC changed)
+
+Count = 41
+Klen = 32 
+Mlen = 0
+Tlen = 16
+Key = ac6405770db9df9dc17276d1778f9a35224d650558f7c412f8ff3273104dc777
+Msg = 00
+Mac = ccfde42dba2ea8a18f82fb65f70c607f
+Result = F (1 - MAC changed - for 0-len msg)
+
+Count = 42
+Klen = 32 
+Mlen = 0
+Tlen = 16
+Key = 6e1e19b332fd366d1276c036c672c869894c0e57c1e3c7f1e2ee9dc89090f838
+Msg = 00
+Mac = 65dd648652c76a2d5c4aedec74129072
+Result = P
+
+Count = 43
+Klen = 32 
+Mlen = 0
+Tlen = 16
+Key = 55ace654e800ee722ca2ff98f2e6b248c8f31c93870f0083281d42b7d9639f4d
+Msg = 00
+Mac = 0b9791bc1ac8eb0d0870be9cc843ec9b
+Result = F (4 - Key or Key1 changed)
+
+Count = 44
+Klen = 32 
+Mlen = 0
+Tlen = 16
+Key = 0c801cbe27e9dfbc999613af500451a0bf2ac2de905d7cfb96710f1803215a62
+Msg = 00
+Mac = 540adcc674b713f084bfcf316ee6e238
+Result = F (2 - Key or Key2 changed)
+
+Count = 45
+Klen = 32 
+Mlen = 0
+Tlen = 16
+Key = a3eb3d3823bb1af81f59ca89cb7748c91f806319887a1461dd310f55949298f7
+Msg = 00
+Mac = b34144ba50431accea31db7ed8a86ff3
+Result = P
+
+Count = 46
+Klen = 32 
+Mlen = 0
+Tlen = 16
+Key = c7f079f2b68e8d270711e5bcaf23d2d120fcf885ced9f80ceba94c02750972fe
+Msg = 00
+Mac = c4855611150eb3e8ac4ebc34dc68119d
+Result = F (2 - Key or Key2 changed)
+
+Count = 47
+Klen = 32 
+Mlen = 0
+Tlen = 16
+Key = 43cb7895fc00fbe8b6fbd150fee315d1d783f52e0a4eab0abda0af4d47472ac9
+Msg = 00
+Mac = ee96d376b1895548652dd52eddcff7be
+Result = F (1 - MAC changed - for 0-len msg)
+
+Count = 48
+Klen = 32 
+Mlen = 0
+Tlen = 16
+Key = 38ba300e22903899daa0a4c643ce13c3a6d7a646b0401922ba8c33184eb261ef
+Msg = 00
+Mac = a5df91d3ad06ba4f75d88372286bbfa0
+Result = F (3 - MAC changed)
+
+Count = 49
+Klen = 32 
+Mlen = 0
+Tlen = 16
+Key = 80cc4326523f58df83de24bb6de40b61afc3c37ade0baeb57a8c670f20bf9b51
+Msg = 00
+Mac = ae165f7d08d8db1526ddddadf7aa2d22
+Result = F (4 - Key or Key1 changed)
+
+Count = 50
+Klen = 32 
+Mlen = 0
+Tlen = 16
+Key = 47c354466e2bc82272975a2a65e44341e93bd7fb95e50a0d9b603402a8b21130
+Msg = 00
+Mac = 028d2866b6ba6bc1c00c282b931cd8d6
+Result = F (3 - MAC changed)
+
+Count = 51
+Klen = 32 
+Mlen = 0
+Tlen = 16
+Key = 0f95e6f3b9d3b43439cf906f5b3154a766341d16fefc4f1f492bd98451afbad9
+Msg = 00
+Mac = e7febd35c56db7d56c639b7baef472b4
+Result = F (1 - MAC changed - for 0-len msg)
+
+Count = 52
+Klen = 32 
+Mlen = 0
+Tlen = 16
+Key = d9a538350e45cb66001f69495c3bca4933713522a27e4395b058e56079bfa86d
+Msg = 00
+Mac = 4b3cca6b4bf8ed836edd6c597eeddc13
+Result = F (2 - Key or Key2 changed)
+
+Count = 53
+Klen = 32 
+Mlen = 0
+Tlen = 16
+Key = 931943bfcec85862850aa1930977acbdeaf4190d752744817b2e254254907433
+Msg = 00
+Mac = 29562a78dbd98f07a687809e92912ddf
+Result = P
+
+Count = 54
+Klen = 32 
+Mlen = 0
+Tlen = 16
+Key = 03055a6b7a353caf30d3666a980e99642c0bb70d6cdadf1223a9da2eeb37b643
+Msg = 00
+Mac = 3cb0e51a3a0de6765da81ec50297420b
+Result = F (4 - Key or Key1 changed)
+
+Count = 55
+Klen = 32 
+Mlen = 0
+Tlen = 16
+Key = 50cc0dd9be68ce1f904387521b6fd7259b4c6d1ad29fcb3df2e44a12bde65fcc
+Msg = 00
+Mac = bbfc889e89801938e27b679aa2b980a2
+Result = F (1 - MAC changed - for 0-len msg)
+
+Count = 56
+Klen = 32 
+Mlen = 0
+Tlen = 16
+Key = 974b4244fa52d0f806fab9d7da6dd37098d5ed672615b3c82fb8d29a6b265cb8
+Msg = 00
+Mac = ea3452bc4d8baba71a660576eb010dcd
+Result = F (2 - Key or Key2 changed)
+
+Count = 57
+Klen = 32 
+Mlen = 0
+Tlen = 16
+Key = 602a057cf22d163c18d12e2fd126ea0760783890ab24d22ce1aa057f5f04b76b
+Msg = 00
+Mac = 2586a82d50fdd155490aa25f8465126b
+Result = P
+
+Count = 58
+Klen = 32 
+Mlen = 0
+Tlen = 16
+Key = 7443524ed3059d0049472e835a84693d276915694f2b610e101e242daf84693f
+Msg = 00
+Mac = ee83b9d893beabdf8cead5825b60ffc2
+Result = F (4 - Key or Key1 changed)
+
+Count = 59
+Klen = 32 
+Mlen = 0
+Tlen = 16
+Key = 1f005faf248b321593964587852b830c7231504fe947d6a385f399441cfc52df
+Msg = 00
+Mac = 826ea67ad4f2b53871cb018db1f095d2
+Result = F (3 - MAC changed)
+
+Count = 60
+Klen = 32 
+Mlen = 16
+Tlen = 4
+Key = c9c48c7e7bf75b17de88beeba2b40ccce77078e9ae082d948d069d48a85515ea
+Msg = 652c6e115f84ddab24bcd70d4aaa33c7
+Mac = 4a05bc6e
+Result = P
+
+Count = 61
+Klen = 32 
+Mlen = 16
+Tlen = 4
+Key = eacc06194b62468f8a0482b8b3db4ab9ebc518efa8b22878204e89f601e0758f
+Msg = a6895836ae3f15a7a1cc74b62f392bd2
+Mac = d32fa230
+Result = F (2 - Key or Key2 changed)
+
+Count = 62
+Klen = 32 
+Mlen = 16
+Tlen = 4
+Key = e6a87ce66b4082abd9025a0560ed5b03a5a4e78bc26693f28e3f88ca20802afb
+Msg = 1c097737c8d5e3c9d4ae9e0328ed7216
+Mac = b40e7d7f
+Result = F (3 - MAC changed)
+
+Count = 63
+Klen = 32 
+Mlen = 16
+Tlen = 4
+Key = 2e32384f40b99b81e07da4a9e24ef3b7043d64e82501e445b59a836e6a34cb95
+Msg = 726334062f8be1cdafce0fa061704006
+Mac = a045d8fa
+Result = F (4 - Key or Key1 changed)
+
+Count = 64
+Klen = 32 
+Mlen = 16
+Tlen = 4
+Key = 08a04349d7fe00c8770191881f8f91c6e8f177338c8772496dba98ded93140fa
+Msg = 0673310caaf2a22940a66777bd39d115
+Mac = 0d46a7c3
+Result = F (1 - Message changed)
+
+Count = 65
+Klen = 32 
+Mlen = 16
+Tlen = 4
+Key = 286da0f075fae0bda4eadab06edf3a0f14ed562bab9e1c8bb73a4946fc45ddb1
+Msg = 68ca8fef71f67834ecef9600568a7b6f
+Mac = 7bc04841
+Result = F (3 - MAC changed)
+
+Count = 66
+Klen = 32 
+Mlen = 16
+Tlen = 4
+Key = a193c14cdc47a1ee6a7e9d5a44d3302e5ffc87f6e9fee2fccea13c6281222e6d
+Msg = bc56dbc25b9605c702bd7600f25c8c22
+Mac = 07000112
+Result = F (4 - Key or Key1 changed)
+
+Count = 67
+Klen = 32 
+Mlen = 16
+Tlen = 4
+Key = dd4da225c75483e4a1bcad83b2fec3e5e0bafa3c23572cce3beb28f89e5a4d73
+Msg = d21cbdbec09a9967508930b75e9e70b4
+Mac = 7e793cf9
+Result = F (1 - Message changed)
+
+Count = 68
+Klen = 32 
+Mlen = 16
+Tlen = 4
+Key = 634b9c7c97889e9147e869acc153d88cdc18908f882f371ba9c1e13c26e9cb8e
+Msg = 67229c61ea774996d6530f6c168aca62
+Mac = 26cc0f70
+Result = P
+
+Count = 69
+Klen = 32 
+Mlen = 16
+Tlen = 4
+Key = 3f2da264ec5e9b1931a2cec0bdbe7fdc15ed8e222d24a6db399ab88bc088a8d0
+Msg = 2d63828d236fd08f98dd618ec90203ae
+Mac = 1071b117
+Result = F (2 - Key or Key2 changed)
+
+Count = 70
+Klen = 32 
+Mlen = 16
+Tlen = 4
+Key = b72ef4c0f8a8fc85481bc2191e263831a7548dd325f2adc5931e0b4587219efa
+Msg = 21b8bbc90de7935475d49d014cf58a8f
+Mac = e5c65242
+Result = F (4 - Key or Key1 changed)
+
+Count = 71
+Klen = 32 
+Mlen = 16
+Tlen = 4
+Key = ca339b2b15b81abf62f53e0b9841c954392ce4b642ca1c15524faa560fdcf7ce
+Msg = c76281ae3858e9d8d85e71b9098cdae1
+Mac = d877af08
+Result = F (1 - Message changed)
+
+Count = 72
+Klen = 32 
+Mlen = 16
+Tlen = 4
+Key = fbeaf4814e3a6a31486ac0bd391c61f57ec4410e4a5cc1f4a75ad3e1b7df5e2f
+Msg = 033c463e7fea109c752261007ea44361
+Mac = 4260b78e
+Result = F (3 - MAC changed)
+
+Count = 73
+Klen = 32 
+Mlen = 16
+Tlen = 4
+Key = 2501c94a6b8f3ae31a4ce383a4b2e81556a6264831fdb137f53f81487eab6854
+Msg = d658ff740bd18d1a6523b87ed05be4bb
+Mac = 1205de6a
+Result = P
+
+Count = 74
+Klen = 32 
+Mlen = 16
+Tlen = 4
+Key = 976197185bac1c901b3279f1cfd68fe87b59adda06db0383489e5add640e0243
+Msg = 368e1211e5a6994719c4512a903d8bd5
+Mac = a6252281
+Result = F (2 - Key or Key2 changed)
+
+Count = 75
+Klen = 32 
+Mlen = 16
+Tlen = 4
+Key = a43683bf10bada56bea099fe4e9411dd25f76c7d70d5d8676518e8f4ccfb3660
+Msg = e82bad3a8347d39643cd30f2229eb2cb
+Mac = a083434b
+Result = P
+
+Count = 76
+Klen = 32 
+Mlen = 16
+Tlen = 4
+Key = 31c5d810428cbfe65bac5f42d3e7039560eb3198e9d525ee99f47e0533cf363d
+Msg = a03da814793c4e7b7cce06448e95feb5
+Mac = 7c11d55d
+Result = F (4 - Key or Key1 changed)
+
+Count = 77
+Klen = 32 
+Mlen = 16
+Tlen = 4
+Key = 04e18b6b2031ddea80b8971923825c99736485f32648218965c53acd2ef35bb0
+Msg = 2c1549d2fba9d4a277aca5e1e4253969
+Mac = e180a1a1
+Result = F (2 - Key or Key2 changed)
+
+Count = 78
+Klen = 32 
+Mlen = 16
+Tlen = 4
+Key = e81e2c234d549dd2709422b7ad5a96496cff3dd0a43062799e9f3eaafcf81c93
+Msg = 4424394ebe550fd269f0a51ba7257a80
+Mac = 717edf94
+Result = F (3 - MAC changed)
+
+Count = 79
+Klen = 32 
+Mlen = 16
+Tlen = 4
+Key = daa00dfb432775088466f31fce1a5e89d47b21d3801c90d1e5127ce176580474
+Msg = 4e39b9d173c168314c84715a4195b08b
+Mac = 6487db6f
+Result = F (1 - Message changed)
+
+Count = 80
+Klen = 32 
+Mlen = 16
+Tlen = 9
+Key = 3edc767a627ea3fc07521afb1a22cfaecfe138c2e6e1ae3a2c46177944bbc29d
+Msg = 8fc4b4273a2d7b0e0d594dd63d7632b6
+Mac = b1b4b28742d43b49b0
+Result = F (3 - MAC changed)
+
+Count = 81
+Klen = 32 
+Mlen = 16
+Tlen = 9
+Key = 2f36e0d19f035bf7a6c3e05ed45226ed41f9a74ad09e01a7b5379cdf35858dc1
+Msg = 7ca124243ba8782e4838dd001351672b
+Mac = ad6485d1d5905b8128
+Result = F (1 - Message changed)
+
+Count = 82
+Klen = 32 
+Mlen = 16
+Tlen = 9
+Key = e98661288064240f78adf0f42ea119abb15b5bd1befa6e0cefffda942ff60df3
+Msg = 39ea7b4b05456ea791ff61ab2b8224ba
+Mac = 0dd85081fc42dfa855
+Result = P
+
+Count = 83
+Klen = 32 
+Mlen = 16
+Tlen = 9
+Key = 17403e3726ba09681696ac1b6b98ead6192d89163d52a94f0db2542e0f0e5621
+Msg = 44568380ecafc2222db978c243d554e6
+Mac = a778ba734687ae352f
+Result = F (4 - Key or Key1 changed)
+
+Count = 84
+Klen = 32 
+Mlen = 16
+Tlen = 9
+Key = 601cd5fdfa543fc9c0c7da5b1cbe1c68c1abf91ff0624c01f78579f3f8405091
+Msg = b3aebc857e05c9611fc5e3470d556281
+Mac = 60fcb1ecb91210ebde
+Result = F (2 - Key or Key2 changed)
+
+Count = 85
+Klen = 32 
+Mlen = 16
+Tlen = 9
+Key = f69d4465f4e5e4649d38476a3e7a4f21ea45c57fcce64ceebba893aa0f56cf6a
+Msg = c0dfa1ec85bfb4df6ff7601361b5b4b3
+Mac = 3a6ed95a05fe81ff66
+Result = P
+
+Count = 86
+Klen = 32 
+Mlen = 16
+Tlen = 9
+Key = bd2b7112412eea5c843d73e2ce0e363831f7818211606c89e379bd0e3328085e
+Msg = 931f2347bd6831a7451f673b26db4b82
+Mac = 703bb82ee336307ed0
+Result = F (4 - Key or Key1 changed)
+
+Count = 87
+Klen = 32 
+Mlen = 16
+Tlen = 9
+Key = ae89c8b757dffeaee70d1d979cdf0fc25351352108ff065999ddf919cc28a5ab
+Msg = 978228377718030c0689a0a817e619ce
+Mac = b0191267ebf86d29d5
+Result = F (2 - Key or Key2 changed)
+
+Count = 88
+Klen = 32 
+Mlen = 16
+Tlen = 9
+Key = dbbdf69edbf7dd6d2242d341ca28cf82a5fc68bf186044512c09d43be2c73e55
+Msg = 2b1c2f34978a0c6102b5893003a42083
+Mac = 4b54160570a2289b44
+Result = F (3 - MAC changed)
+
+Count = 89
+Klen = 32 
+Mlen = 16
+Tlen = 9
+Key = d9e6b1e6347856291cf290c4ad53734eb8767a23b9391fa909dfa9d855b346f9
+Msg = 4ddd0bc4fe93b7925b65c51ddeb0ad4a
+Mac = fedad133f73302144a
+Result = F (1 - Message changed)
+
+Count = 90
+Klen = 32 
+Mlen = 16
+Tlen = 9
+Key = 0e3c205a708f0071401aa8de09d28a5a6e590ebeb476341880c37bfee1a50122
+Msg = 891b57fd6caa45a270072846deef1da0
+Mac = b8b9cfe7ac51dc546e
+Result = F (3 - MAC changed)
+
+Count = 91
+Klen = 32 
+Mlen = 16
+Tlen = 9
+Key = 9019d344ffd5b0bab994eed142d3e41641ad1395e2acab4c7cdf51e0722c1f8f
+Msg = e1d6694ff17d32fc0ef697972057eb76
+Mac = 0a1fb86e6644e811ed
+Result = F (4 - Key or Key1 changed)
+
+Count = 92
+Klen = 32 
+Mlen = 16
+Tlen = 9
+Key = ae3856f59fc2e8f3cb0dd7f88ba2d9eeeee3176efe428f8f45b0b7fc9058634a
+Msg = d1796ac55a1b08a7c7dee7d51c8158ad
+Mac = 3eccffba29ecbb681a
+Result = P
+
+Count = 93
+Klen = 32 
+Mlen = 16
+Tlen = 9
+Key = ea318dc272e7addb03e2f59a3f02518f850225de7cb4839dee8ea27dda668bad
+Msg = 0fb0dc5d3c2d9eabdbf68e3a4d7ca926
+Mac = f3ab9b6d9276500e8d
+Result = F (2 - Key or Key2 changed)
+
+Count = 94
+Klen = 32 
+Mlen = 16
+Tlen = 9
+Key = 8ddff5439906e19e6c25fb23a07e55306e77858cce34f09edf6b49dd8a745488
+Msg = d098924f0a3029b4a54964afeb0d99d3
+Mac = c56006953a6419523f
+Result = F (1 - Message changed)
+
+Count = 95
+Klen = 32 
+Mlen = 16
+Tlen = 9
+Key = e77f0b4a158f44a9222d58e3477d6ae9c980075dcd96a03c6c423ec0092e7185
+Msg = 3ff18c5cf638b32dea65521ef0098568
+Mac = 73909e749236db4716
+Result = F (2 - Key or Key2 changed)
+
+Count = 96
+Klen = 32 
+Mlen = 16
+Tlen = 9
+Key = e6ab75fa2ef75f13a0ad5b016bcbc0d334f6f16f156c812ae63a9a96bbaf9f9b
+Msg = 9212a8100f649cbcb6a56dc65ab4939e
+Mac = 98f7471ef554e3ab44
+Result = P
+
+Count = 97
+Klen = 32 
+Mlen = 16
+Tlen = 9
+Key = 932609aa594a6a66cf284b8a465b329dfab9e65499cd19ab02884a354c33eab0
+Msg = 6b6e91557309ec0273361a9b7fcd61dc
+Mac = 0526e13bc7497a34cd
+Result = F (4 - Key or Key1 changed)
+
+Count = 98
+Klen = 32 
+Mlen = 16
+Tlen = 9
+Key = c581646594de2da53ee452d71078b0aa0b6f5b39ef514bea985d52968dcd51eb
+Msg = 67b386d4c8c7e9140d277c8777dfa83b
+Mac = 58e6f44b97bbddd39b
+Result = F (3 - MAC changed)
+
+Count = 99
+Klen = 32 
+Mlen = 16
+Tlen = 9
+Key = e07da89530271e135a01c3cb771685c7ff4ac5b28140addc987ac4851ac2bf57
+Msg = f4be6be3ef9f82b2870dd906c10159b6
+Mac = 45365a71dfee474b48
+Result = F (1 - Message changed)
+
+Count = 100
+Klen = 32 
+Mlen = 16
+Tlen = 16
+Key = 154ef75bc6b1985a5e693868b13e8d2f4ae291911ad4d8a46a8520fb14ba2a28
+Msg = 49a7191071ef44ccd256b5c150fca0ae
+Mac = 97b74705e9e551b83711ef22b75b287c
+Result = F (4 - Key or Key1 changed)
+
+Count = 101
+Klen = 32 
+Mlen = 16
+Tlen = 16
+Key = 9a369de41038a8ce69282995722c01a6b92aca3f4f80bdc9cdf6d26895f028d0
+Msg = 3a9f34c41746ae49f2b89235a8655ba6
+Mac = 1d2931f323f7b9fe2858fe1a5d3f8c5e
+Result = F (1 - Message changed)
+
+Count = 102
+Klen = 32 
+Mlen = 16
+Tlen = 16
+Key = 9ad5028e9d8cde372e748f25a0a89763269d643738fad39c38aaf2f2562f0af5
+Msg = 9e8d1fb6ba480310dd8e60a947f09828
+Mac = 669d5c06ea9138ac5bf4845a87cb0ecd
+Result = P
+
+Count = 103
+Klen = 32 
+Mlen = 16
+Tlen = 16
+Key = b953770d762edf313b91e1e822f5a800d33629e90fdf591788a89ea8f63d8447
+Msg = bdada26759353c48ee0848cf90bf8d00
+Mac = 3b7cd8b569f97bed599f07e75b092e4f
+Result = F (2 - Key or Key2 changed)
+
+Count = 104
+Klen = 32 
+Mlen = 16
+Tlen = 16
+Key = 4002ed02f5790396f77d1a2028b35bf71cb20f0c88aab4b7f74950b7bfdf0574
+Msg = 252e26339a6cd33c9481c9f7d1c35b78
+Mac = f7503ef24df4d3c0505d6ba90856b329
+Result = F (3 - MAC changed)
+
+Count = 105
+Klen = 32 
+Mlen = 16
+Tlen = 16
+Key = 3e169948422f0df953dab447df14ada8169dc6815b9e93eaf58fbdb208589da2
+Msg = e0cdd48594b5578ffe1c6cafc0b4513e
+Mac = 2a498bf9d899fe33df3f6c9ae87f7285
+Result = F (2 - Key or Key2 changed)
+
+Count = 106
+Klen = 32 
+Mlen = 16
+Tlen = 16
+Key = d6d5d40555671d66bae3ec755dc90dda181cc7d00816be7c901a187da1eadfc4
+Msg = 51d795dc31a4277b9cd2939185d58ed7
+Mac = b831ef43ff607772388c2c4f19286ca4
+Result = F (4 - Key or Key1 changed)
+
+Count = 107
+Klen = 32 
+Mlen = 16
+Tlen = 16
+Key = 88fa810cfaaf82e60ecc65d2ce402a5de224597eb54c45ccd31c92ed969df552
+Msg = 2a40fe34f18e6b25b1d05880792f5d4e
+Mac = cfa3145e3e21376acedad0e01ae6bf98
+Result = P
+
+Count = 108
+Klen = 32 
+Mlen = 16
+Tlen = 16
+Key = 27f6f699f682a6cecbe31ce370927eb067d19534c5333638445e012f93104f61
+Msg = cc933b66ea01c68f5b33e260b8e5b27f
+Mac = cd7d3b962f30cdc4a72ca26d1905412d
+Result = F (1 - Message changed)
+
+Count = 109
+Klen = 32 
+Mlen = 16
+Tlen = 16
+Key = c4d6838359866251ea1ff3d216d6620a1bfc8afe3ed672236ea9181724146e8f
+Msg = 4dad70f3b7716591a2a142f1dd226ab9
+Mac = 4f486a2bd42c7ec1f269420f428d6298
+Result = F (3 - MAC changed)
+
+Count = 110
+Klen = 32 
+Mlen = 16
+Tlen = 16
+Key = 5dedcaac0a9203c1c2c2af4eae89f6e7de4bfd2a47b50d520bf3f109fb239f7e
+Msg = bc881f19dbaf599dfb912a008bf01e31
+Mac = 970c09cae6bd93d143856867611d84c1
+Result = F (4 - Key or Key1 changed)
+
+Count = 111
+Klen = 32 
+Mlen = 16
+Tlen = 16
+Key = 3a33ce9eb77cf076ae5b44ea4bdfec9c74e3a2714f8759a004e12109c4ef4cc9
+Msg = 3a9274ba14b33d1fec5afc0414a03965
+Mac = 41a2a8b5ff36cc3406ada52dcc2731ca
+Result = P
+
+Count = 112
+Klen = 32 
+Mlen = 16
+Tlen = 16
+Key = 0c17a2ed7af8be9f92639ed4ad207f290749a326154e4666193bd4f8f33e5904
+Msg = ef55877121fc1967805ad010599508ed
+Mac = 68e7667177cede8fdae8b288c2003827
+Result = F (3 - MAC changed)
+
+Count = 113
+Klen = 32 
+Mlen = 16
+Tlen = 16
+Key = 65bd9e5c6c109ac84d3fd5031aa19746f855d5c124325533370113b9a8eae4e3
+Msg = 46c64775cf45c4527ab7524122a3292a
+Mac = 1ac8727f54b26c699ef67a0324d4af79
+Result = F (2 - Key or Key2 changed)
+
+Count = 114
+Klen = 32 
+Mlen = 16
+Tlen = 16
+Key = c34c72ac2d8d79803a0a4d5cddc288c6910daf793521ad0c1bdb80cf5cbd33f6
+Msg = ed2e55bce290940d08136ca714a2e501
+Mac = 2709ac12e62f70c7f162045bb05a97fe
+Result = F (1 - Message changed)
+
+Count = 115
+Klen = 32 
+Mlen = 16
+Tlen = 16
+Key = 1512e153d08bb16f162cbcc6e48992bbe337c79fec3b99c9cbc3d3e94314f299
+Msg = fe68398d68c3a12669a1a7778c2e52bc
+Mac = 0646b7983abdd7d95a6b31406a509642
+Result = F (3 - MAC changed)
+
+Count = 116
+Klen = 32 
+Mlen = 16
+Tlen = 16
+Key = 205c0dbc99b9e3b484b5f1c4e910874eabead50ea686a300f94d437ea516c4a9
+Msg = e56f9ddf2bc4712f12c972371895b0d4
+Mac = 1ecab7baacfbd22aeca3f86c89fd429f
+Result = P
+
+Count = 117
+Klen = 32 
+Mlen = 16
+Tlen = 16
+Key = 4b35172f9c664794cbff496af7aee1f4aae7865aba33689d71cbb1d0ea650b86
+Msg = dc87c6f981b22e41660f3cee1cf3bc28
+Mac = e7b2a11e492e43fd2080b72e7e461c23
+Result = F (2 - Key or Key2 changed)
+
+Count = 118
+Klen = 32 
+Mlen = 16
+Tlen = 16
+Key = f691c9276b330d1a95f458d6cb517cf511d62b6e534a5f66ef27f849744da71a
+Msg = 7fc46a8aa0e8a232fc205e1744a207cd
+Mac = 38b1ac88987a7bd5c531d15f2c13e968
+Result = F (4 - Key or Key1 changed)
+
+Count = 119
+Klen = 32 
+Mlen = 16
+Tlen = 16
+Key = 9f133e5f8527f1b184830e07c3458c83a8ca9f9d9c6998760e610668ba0f22e2
+Msg = 3e782dbe2eec36b648ce3af1087ab24d
+Mac = 91413be694e02d2e6089df34a6e29859
+Result = F (1 - Message changed)
+
+Count = 120
+Klen = 32 
+Mlen = 48
+Tlen = 4
+Key = c7df116754b15b863b6e13d528597d5a974c1a5b495bc421f2b4fafb33c97885
+Msg = 96958fb24aed718f63cc9231aba91c6bb98d8a180acf5f025422180216d35f68744b819c42db22065fb9302c4445151a
+Mac = 012a9fc5
+Result = F (4 - Key or Key1 changed)
+
+Count = 121
+Klen = 32 
+Mlen = 48
+Tlen = 4
+Key = efe572ead9fafa4531f8324961ed010fb44b213cc58f2fca3821fe0ba77b31ea
+Msg = 096620751da0556cb2ae021eb59b98834bc785a66630640597ef703b23063fdc5858ada121f916c5d9a8c8ae5d9ab7d0
+Mac = 2817bb22
+Result = P
+
+Count = 122
+Klen = 32 
+Mlen = 48
+Tlen = 4
+Key = 34ce2127c3d51d3bade1d9a8c2cecfd169b6c14094144ce9f229c0b3659f2f34
+Msg = 93bf830ce72085d84be0c3e7063862570d599f0226ff12ae4d4a348457ca20c4d5d896b63b2d45e442ad4a868a84f43e
+Mac = fbd71583
+Result = F (2 - Key or Key2 changed)
+
+Count = 123
+Klen = 32 
+Mlen = 48
+Tlen = 4
+Key = 81cbff5ad85dbeff85c57d1e4b47bc4d3b3dc2c47dc584b44db7c8da44da8a53
+Msg = daafc6190970c49b516e8a4d6ebee59ab0c1c57fac0394923563c6448875b263c724a0e3a99c23dd6f67a9d81ad55048
+Mac = bdd4bdd9
+Result = F (1 - Message changed)
+
+Count = 124
+Klen = 32 
+Mlen = 48
+Tlen = 4
+Key = 48edbefc624024ec6ae252662f34b573aa1f24dc8f55158f22d911434cc1655f
+Msg = 6453314bcffcba5dd08d88b3c8f98d0cc915180840ad9be0d7d2b15399715fe4572a9a424b5e0a08fc8a0ea661d4009f
+Mac = 0aadb0f6
+Result = F (3 - MAC changed)
+
+Count = 125
+Klen = 32 
+Mlen = 48
+Tlen = 4
+Key = 994bf798f881953fc320fe750fb221bd617fbb327a0bcb2574df47080e8c0d8a
+Msg = f735ca8d6d4682e81c3adc71f5956261dcf543faa03cebc531f1d71f0de4a8f3fc1176c9fdc76600800a7f57d535b9b3
+Mac = dff43d81
+Result = P
+
+Count = 126
+Klen = 32 
+Mlen = 48
+Tlen = 4
+Key = a26ef24c8244422aba63ce09cf47f363a65555dca36c237411be9d00c4ded3db
+Msg = 16090d97a6239b9bd42d0ae76364f2c5478470ee1f3ccaa300df51f9745c8c75c27092d8701ab83c07506c6016f06141
+Mac = 1bd59594
+Result = F (2 - Key or Key2 changed)
+
+Count = 127
+Klen = 32 
+Mlen = 48
+Tlen = 4
+Key = b717a0f74da833ac2679ed3d75c1b34a70ae93fca761b231943b85d97357449f
+Msg = b6ca66364a34f55f8b7d3b72e9e1cdbc49464f65062b940035db06602ee649ad48d11bb8e30d7f8cac261a461c3ddd26
+Mac = 1c2899a1
+Result = F (3 - MAC changed)
+
+Count = 128
+Klen = 32 
+Mlen = 48
+Tlen = 4
+Key = 3a1bcb63953c032f14533e3615527d0739640b4fc7c6034f4fd8138d8d747fca
+Msg = 0f40cdb67c1a2061d1540439fef106e61a7820d0fa3de58702e1ff613b1cdb65a6baa367d0e46d75a7a1b2728c9d0101
+Mac = 67c5dfcf
+Result = F (4 - Key or Key1 changed)
+
+Count = 129
+Klen = 32 
+Mlen = 48
+Tlen = 4
+Key = 7de298f5d8ec63181f4befb6bc4bab913bd8201f0d36d4dd85f26ee627181ac4
+Msg = cbb90480e268431a4cc4a7ccdf507063855f7bd89fe2c4cba47f292c0be3713c6c588cb4e29a1c43b3e6353e33556194
+Mac = 9d980745
+Result = F (1 - Message changed)
+
+Count = 130
+Klen = 32 
+Mlen = 48
+Tlen = 4
+Key = 1a60cf5c1dd331437bb8c8f159aa8f05266b136480337b315447c5f947ce522d
+Msg = 2714df37b4a4cdd4f0f506e5c59ed460e1e47952acddc0247dd5d81d0df062292c11c9d9b2fbd2aab9b6748a0935e998
+Mac = b0066b93
+Result = F (2 - Key or Key2 changed)
+
+Count = 131
+Klen = 32 
+Mlen = 48
+Tlen = 4
+Key = 0405159926a6606fb8eecaadd06f2f07631753895bfa8b7ce951ba8d1dc37f2c
+Msg = 783fd581a47a2ab0ca29f312b289cbe376dc3b98865fde72ee7bc254dc3f12d25c0ef28a6795abb71c0008034d6e009d
+Mac = 8a74518d
+Result = P
+
+Count = 132
+Klen = 32 
+Mlen = 48
+Tlen = 4
+Key = 99eb575c2339e970c9e15a20ef0f3892b3b2c1dc6725f9c4440ff9c95c888a68
+Msg = 563b93e689b817a79eb1c31926c0dc3cb08e74adf43c3c275101994a7a14fa9b6ccc68cda3055f3f8dc7dcc53f22b7ab
+Mac = 8ff10b41
+Result = F (3 - MAC changed)
+
+Count = 133
+Klen = 32 
+Mlen = 48
+Tlen = 4
+Key = 20f2df9dc8463eb03a272c6bb7e983d281ce4b5b871c80a14472145ce55b3891
+Msg = f73029f27099a3aa1580a9a051b0ae13b97894e6f1ffb798ccd82c76b4d64b0f4d226ae9558aec72cf1c7b3960f4915e
+Mac = c6865a4b
+Result = F (1 - Message changed)
+
+Count = 134
+Klen = 32 
+Mlen = 48
+Tlen = 4
+Key = d3dbff3a46d83265bdd16d8045e75e5221a4785178df47ad4edf0090b3c35da5
+Msg = d3fc963aeb33b9baece8a8fd35154bd69c44d05056e9ac9c17f5dc4d79a871c8a2a74bf5214e253b1a47d2aca35cc57c
+Mac = fef0276c
+Result = F (4 - Key or Key1 changed)
+
+Count = 135
+Klen = 32 
+Mlen = 48
+Tlen = 4
+Key = d50dfebf7262aafb3ec184c416dd8504cf864cab29cdb5f40269ade9ca594529
+Msg = d90787d8a57319e47e2e5338bd026691393906275c5f1b8d7d4ab9d86958520343f82a928f6c0c7689cd3c31bb4fac3a
+Mac = 915c8926
+Result = F (4 - Key or Key1 changed)
+
+Count = 136
+Klen = 32 
+Mlen = 48
+Tlen = 4
+Key = 885a2147d0f72eb5070a0927eee3138890f052d4c831182d03ecdf2c47a27875
+Msg = 9772b9cc8e4d3192f525bafce7fe5fb9e5a6c5b1c8deb945faba0bd8e64b9f8ead7bc1531b37b920d9d49f79e4ab713b
+Mac = 84fdb8d6
+Result = P
+
+Count = 137
+Klen = 32 
+Mlen = 48
+Tlen = 4
+Key = f562732979a19759531472669362a3c1f51ffd43fe92371548bce5cd1b95a7d9
+Msg = d983692affe6eae35d6eb0ba9aab56eecdee3e6bfab830e6d8714328d85d01aa62cdc663629269de03b71e8fba709b67
+Mac = 989080f3
+Result = F (1 - Message changed)
+
+Count = 138
+Klen = 32 
+Mlen = 48
+Tlen = 4
+Key = a158a45e8485d8ca63b618d429feb7d2dd1129b6bf06bbed945b82873e3a9197
+Msg = 3466a16fb4481ae6e8245aead1cb7e7397950d3b1da62e20d97018cae379c98f4b5efb93b01954340e7fdda5d80cb5d8
+Mac = 002c8d33
+Result = F (3 - MAC changed)
+
+Count = 139
+Klen = 32 
+Mlen = 48
+Tlen = 4
+Key = 78fc6f76f0c1c2d8f761fe0601cc690294b9ebe3018d65d44e7e445f74f856ec
+Msg = 5ac35ff13bd0669950acc2f23d36686cc6f84e7b9daad73d77f8925d658625376230843c2896679849d8fa137a9ed635
+Mac = 4a06db37
+Result = F (2 - Key or Key2 changed)
+
+Count = 140
+Klen = 32 
+Mlen = 48
+Tlen = 9
+Key = 15f10581d7a14ddb6f30e58d2bbc3bd99ea30b1cfd50e045c955d88baebaa760
+Msg = 51a745bfc60051939fb3c1e6f5031941fce5d04e886cf5e9d085197972e46881b83e19721ab909c404a1a244d95c02b0
+Mac = 4cb4960661b305f6fe
+Result = P
+
+Count = 141
+Klen = 32 
+Mlen = 48
+Tlen = 9
+Key = 1be8e618ab69fc4de957774ce0dde930ca9a82368546287c4399ca098268f20e
+Msg = 9230978d5475639b20776c8e58de4ded770976b2a4526aa987932c195be9f3a644b72576e3ee8393288ca19068639a70
+Mac = c5b092f3a3801d77e3
+Result = F (2 - Key or Key2 changed)
+
+Count = 142
+Klen = 32 
+Mlen = 48
+Tlen = 9
+Key = db18fb1e3c804bd85a87588aef0568fcf41de380c7cda02686c3622ebb72a3c3
+Msg = 569747d486d56720d491841b32c2441cad192aebfb3fc725545e2fe284e2ab943d81ad33b1780997601861252f82e1ad
+Mac = 13a59d432782eb11fb
+Result = F (4 - Key or Key1 changed)
+
+Count = 143
+Klen = 32 
+Mlen = 48
+Tlen = 9
+Key = 216795ba3148fab1167908e3ac7422b70dfbd11eb4ab0cc9e3d4b79a41886958
+Msg = 4924ee9ce1d792b9ac4bf49a3768ad847cc83d04ad6bf53a30ac1478e873300cb6add7593ff9772df0a47b4e40d8b756
+Mac = f742b7cf6d3cfe224e
+Result = F (1 - Message changed)
+
+Count = 144
+Klen = 32 
+Mlen = 48
+Tlen = 9
+Key = 763740b16c050fe34185d30aace4156289deb41fcee07aadc16af23c68b87e7c
+Msg = c4a8269a29aac9f970ea0e5ee9c5efa68f9765b83d25390a1e381667668be4ef3fe7515f068db092b8d40748a7136327
+Mac = 8c600e00289c81871e
+Result = F (3 - MAC changed)
+
+Count = 145
+Klen = 32 
+Mlen = 48
+Tlen = 9
+Key = fe97d45dafe5f42622652aa38dbd944d18c9b07a4a3d6f28c48c8bf62f091b73
+Msg = ce8730aa0befd84b98319badb362c3430c3fad401f29c5b7c26eb200facacd5d132ed8ddf0bfed819f22b49e30f7d982
+Mac = 866f02afbcd8384c48
+Result = F (2 - Key or Key2 changed)
+
+Count = 146
+Klen = 32 
+Mlen = 48
+Tlen = 9
+Key = e06992a8e7128b228458a16a562a987c750d72a706609eef10e56daf8b7dc583
+Msg = 9d3fe6fb91810723bb5da3fc6112cde2c2f459e7fabfe4c5252b1517c7c121c86cec95cb8b53500cb066cea7da37ad59
+Mac = 1bd95656664cec9f8a
+Result = F (4 - Key or Key1 changed)
+
+Count = 147
+Klen = 32 
+Mlen = 48
+Tlen = 9
+Key = 80dd66da85df6de15dd265c7850ddb321811db51a00e63782ca9180aa3fc389c
+Msg = 3faf198b58f4c94413524069470f4001ed0db0ae33954a8dd054945e94a311e5430cb88fa309a559d40e0feee0ca7a0f
+Mac = 742e65416d745ccbc2
+Result = F (1 - Message changed)
+
+Count = 148
+Klen = 32 
+Mlen = 48
+Tlen = 9
+Key = c2e34387816c931c76b293e4049968021182c2f7671d5f19597ed142a97480c5
+Msg = 7bdcfc3f3edb6612d71cc6ca6786762a349b0558595888e4bc5c3006414d22273d7882a32eb7d1cea9987a3593bba726
+Mac = 39bb469636e610cfb6
+Result = F (3 - MAC changed)
+
+Count = 149
+Klen = 32 
+Mlen = 48
+Tlen = 9
+Key = 2f45551d11bdce4afbe6dbcfac5743a1534ce771eba5b1d4cb32c7a0792d0499
+Msg = 489b9ed3e83d6d81c912c72dddd3cc82edb5307ade9b992e328a48edd25dfc8b0aba13fbd544f3205b12a8e1b861ce7c
+Mac = 62e6d001914e9559ac
+Result = P
+
+Count = 150
+Klen = 32 
+Mlen = 48
+Tlen = 9
+Key = a88ff9ccd03fb2862ebbb2672c1bc4d820aa1721c38d4c2be5a5ce8a5fb662ba
+Msg = 79f7377b15c52bc8f128605122703505ac20759649a037ce663202266f2735954c53a6a62cbe8acd819c95fb4b806270
+Mac = aa08ba01410d314cca
+Result = P
+
+Count = 151
+Klen = 32 
+Mlen = 48
+Tlen = 9
+Key = 1b5be9f3a644b72576e3ee8393288ca19068639a70b01c01c3587b1b12dbe54b
+Msg = b255fbccbdb0b5776cd0107c6413fcd34bdf5da535401a0d5fd2702120e28d2c1cd05a3ebbb798e7da502e3fc014c129
+Mac = acf8c87d0521773c09
+Result = F (4 - Key or Key1 changed)
+
+Count = 152
+Klen = 32 
+Mlen = 48
+Tlen = 9
+Key = bee77b8837156a8cf7b627b88af7b8484f899c13cfa4b8b34e4c94e6a0d3c734
+Msg = 878cb04b53e0bd4543b8788a5232564a401dbde8360ac2acaca637b88a47e53d8dc416eeed8a57b53dec7ba592bbe331
+Mac = 26653ccdf62760df7e
+Result = F (1 - Message changed)
+
+Count = 153
+Klen = 32 
+Mlen = 48
+Tlen = 9
+Key = a9e50c23aa5c6520d7ab35b83b3b93b352278019ccedce8f906a3ae40205dce8
+Msg = c1b9d9d28d5736537e679ba73a49f7cf509e76176dad5498d206f40005642c96c7d8e3784724df279565d84659f6d19f
+Mac = 4f6f8d4af7aa5901b5
+Result = F (2 - Key or Key2 changed)
+
+Count = 154
+Klen = 32 
+Mlen = 48
+Tlen = 9
+Key = a6bc9b8854aa271e21d5339722cba1997603a0ebd61edbda6e6cf0dbebb22371
+Msg = 8609400a49e77152209410c51602150c823b2eaa2cf9072eb170c9ad296fe16f06a702e93f4a6debafd9701bb8372ca2
+Mac = 382fc92ad82320aadf
+Result = F (3 - MAC changed)
+
+Count = 155
+Klen = 32 
+Mlen = 48
+Tlen = 9
+Key = 1a76de5d299fa19c180bec4f8574e12040fa6f534e18775634d72d9a7241c2a2
+Msg = 0465b6d4fbee0c3eb12d6e02f012183211e34ddf6edf5ede1a2208cbcfc8024f2755d79f0f55f245793ff723529f5ab5
+Mac = 56b7df770ab62e0821
+Result = F (3 - MAC changed)
+
+Count = 156
+Klen = 32 
+Mlen = 48
+Tlen = 9
+Key = 01b820aa77c1ff6295d7b49e0d2eb3d605a47376cba3c2e0c4495bb5a6c6ba51
+Msg = 9b7a09c97132702006e53d472505abdd09b0e8a66f7cc875ef74bb4f8b5efdcd89400cc27e225f1eac1455128d736c75
+Mac = 995313010e42401313
+Result = P
+
+Count = 157
+Klen = 32 
+Mlen = 48
+Tlen = 9
+Key = 09d57aceb9314fce79f53ca175e208bfd4da24a8a5fd3a29161108dbe7276fee
+Msg = 058e27752c4d8ba0e2ce6443af842594437590db14497b2749a0d340d7a9e1deeaf1cc188678601f6e0a0d2c45cc33b7
+Mac = eb8528b71754c98da2
+Result = F (4 - Key or Key1 changed)
+
+Count = 158
+Klen = 32 
+Mlen = 48
+Tlen = 9
+Key = 39e694ddb408b32a1360921ebfff060e4d7c5edaae503c6fa581a3907e7e50d7
+Msg = 4ee2ac5920935570e85502cfdb924650b6265fc35e6f049bc6a35ee713675484fe9d0b917a7dad2497e76a3ba7f7bdf6
+Mac = 201d68f2e826a4b398
+Result = F (1 - Message changed)
+
+Count = 159
+Klen = 32 
+Mlen = 48
+Tlen = 9
+Key = b3390b43c2446cda0e6826761ae50bf3601e826ba29d7d597d56abfe4130ee04
+Msg = 02412ca7f67a89ba7af63b6e432645c421307f49392df4eb9595880be0f7ded36aee78ca735020a5a5a88761e2e72d8e
+Mac = 13f754a1f02b74fd4e
+Result = F (2 - Key or Key2 changed)
+
+Count = 160
+Klen = 32 
+Mlen = 48
+Tlen = 16
+Key = 0549c0705341642789d06556a4c9dffcb8c0a3f440112d1cb625d7b761f04c10
+Msg = b753770d762edf313b91e1e822f5a800d33629e90fdf591788a89ea8f63d84476741b250d6931c3400d07a207319f8d9
+Mac = c03b0808d6ceaa306c6cc82302d9ce8b
+Result = F (2 - Key or Key2 changed)
+
+Count = 161
+Klen = 32 
+Mlen = 48
+Tlen = 16
+Key = 34533fd08eb40bdd55d687073f22c32c7e93262d45220dfd8981b4f7050b5a75
+Msg = cd847c689cc8d723496b366d7023c7d047e108e0dd032c14a4cbc0d42e108ed33433c29fdc554b773bc7845c19c2146a
+Mac = d4dd44ab9c38a63c195ed1f4154e7b66
+Result = P
+
+Count = 162
+Klen = 32 
+Mlen = 48
+Tlen = 16
+Key = ac4423c58ce0dc2fd5b68bd317a5dfb519e878031e474cee688e4ab8fb3f3e0e
+Msg = 6407ebcabcab3b5fab11ae5debdedf41190c727308ed016d5b6c59205397e793e55a6dce108df9f66d3218b908f747ed
+Mac = 81ac39f292c4da67d6753154ba1c05a6
+Result = F (3 - MAC changed)
+
+Count = 163
+Klen = 32 
+Mlen = 48
+Tlen = 16
+Key = 3d932327b046202debf537bdfbc607cb94ea07c305c719cc6c57634a26cb5aa6
+Msg = 63aa828f9b0c67ff32d69edc5098465ca94651385d8e88a52069cf8698f1abe00672018e29c3213660d7027b0e8fcf74
+Mac = 856cc6b79a1418beb622e76b864b6e37
+Result = F (1 - Message changed)
+
+Count = 164
+Klen = 32 
+Mlen = 48
+Tlen = 16
+Key = c656009028b872b58b596e5fef46a2160e5d40d740a6fe09a0e762b26a723ceb
+Msg = f70673899f06cac7619001e216a36ee56acfb2019bea9ae07d054337c29e829b78188295d368aff82d10d3724b517f62
+Mac = eea5244716b18c8090bdf083973448e1
+Result = F (4 - Key or Key1 changed)
+
+Count = 165
+Klen = 32 
+Mlen = 48
+Tlen = 16
+Key = 7d54a0b6356400286a6370d2bdb6ceea1ce696d0f4feb096a1358cc02acd7148
+Msg = a020b890597d463d9832125dea69291ed55c7413b3d030d7c0df9ff371fbfd010730b61265a9d64e1e76c1dad38d24ff
+Mac = b53aa1f401930ea1935b368aee26bf1f
+Result = F (3 - MAC changed)
+
+Count = 166
+Klen = 32 
+Mlen = 48
+Tlen = 16
+Key = 7e9cf309e89b82f786bf5211dd1296cc58ddc6cfd4184505612440f047bdd940
+Msg = e38929ad661a54d72d3ad106ec5aa14a461b2d7494062e71e57dcad743f1ffbe395645d192d46fa562c0d3494bcaaa1e
+Mac = fe6028c505b340d92978a21067c46b2c
+Result = F (1 - Message changed)
+
+Count = 167
+Klen = 32 
+Mlen = 48
+Tlen = 16
+Key = ba6e6d77f888c9a7ddb9deb31540fc7f82c835a2ed47b46cf927512855a4629e
+Msg = 94b4b63cfa02929b41370f0b7a355c91e2543e6d06fa554f2b6ca1c8ece345ff25e38aa510c8262baea2bf326942ab43
+Mac = c95f2377f6b6199a3d9818c248a441e4
+Result = F (4 - Key or Key1 changed)
+
+Count = 168
+Klen = 32 
+Mlen = 48
+Tlen = 16
+Key = eb77eddc0ea9b1bc2389f583569cfcf89f091aa9a3f2bee0d904b0d3eb4d961b
+Msg = 838bfb040a0c7bbd7a281e2b69f1408e2450b4ba434aff758181c421cbfe809b972d78627729effcee3a9b95829d5aea
+Mac = 0c436db736f0e6db3328c7e7fca44425
+Result = F (2 - Key or Key2 changed)
+
+Count = 169
+Klen = 32 
+Mlen = 48
+Tlen = 16
+Key = 6792ab08a98ac7dfe0f6996d65156ca2faf723a6b99dcc1b4a5c78a2598249a0
+Msg = b9c8285032ef3cb84bee9eb91564fe8ff100e2fca1445332a589d5f3c4449df7e987ff8e30cb268641ec074fdd75975d
+Mac = 97fd06d1db6fcc2d0987debd76754cf4
+Result = P
+
+Count = 170
+Klen = 32 
+Mlen = 48
+Tlen = 16
+Key = 4403a24f19fb877d3ad96a9fb7f78dfb8eed7a092c05a2812fef44b970b6902e
+Msg = 10df2d80817fb5f152e1550483503904c21a894897f23db9df93338e7ba67e5a49e6024953823ea647c268a128eebf50
+Mac = afc7da2824df951709889387ef963c3e
+Result = F (4 - Key or Key1 changed)
+
+Count = 171
+Klen = 32 
+Mlen = 48
+Tlen = 16
+Key = 6a5c7482c85777d9de02ee550fc2f5aa0e0f76319f27043ba10407a54b8c1aac
+Msg = c2a28be48f98ccf328bae4729300ba3e875a4af18947ec1155a3d9877fc0eb525ab9a47c1903724d344531c00e6af233
+Mac = 7626f39906be32707f9b933bd615380c
+Result = F (2 - Key or Key2 changed)
+
+Count = 172
+Klen = 32 
+Mlen = 48
+Tlen = 16
+Key = 2f4261e9d6f691bb79fcee994997427088cb0f0ce364813c033aa2315fb4cd28
+Msg = d2215f59bd4878a55744628802832402911ad1ea50b7ac8445d68f51b6388e2bec91d7913682dc3f30c6b50144b0bfca
+Mac = 745bb074d2c8e8729d85881aed25a3e1
+Result = P
+
+Count = 173
+Klen = 32 
+Mlen = 48
+Tlen = 16
+Key = fe7aa00d1545510840ae8f1fc7f470a110f1375907efd305c2bca80a66019265
+Msg = bd9d34fb6f6969cedea4622361d8d4ebf3a330e136afca19b8e33adc75db02b39e9672c2996fc957494f9dc38f207d69
+Mac = 31e1be40bb95ca12a5ae4cec8e48f75c
+Result = F (3 - MAC changed)
+
+Count = 174
+Klen = 32 
+Mlen = 48
+Tlen = 16
+Key = e9d8873181557c535d3d90f3281f663b329680b2bb78a80d6d508f492a0fb5f6
+Msg = 2adea9b1d2717dceef015acd6f4b5d67f4fbccdd9267f844d37d6820fffa33359adeae9a2d1c470f4a95b190ca47422b
+Mac = 51f6ac445fa3084e85127c9240095cf4
+Result = F (1 - Message changed)
+
+Count = 175
+Klen = 32 
+Mlen = 48
+Tlen = 16
+Key = ac944fb5f06e15ab79d134b65f43aa2cb562313117256f2382646d35689b4a59
+Msg = 93a780d6a08dd8f02ba3b25276ad0e0a29486bae50d9e7f1a5c3a77312dd79de7223b82e98ab715092dbc3ef2eda8c8b
+Mac = 0057439cd221b60de4057f5bb922a08b
+Result = F (1 - Message changed)
+
+Count = 176
+Klen = 32 
+Mlen = 48
+Tlen = 16
+Key = cfaeecfd18ccd4c58576436fe2919da1cc9686402238f536ba47897352d42131
+Msg = 28cf346560b70a7b99de605b984640b3e3a98bb577604918bd833d5fbb52bc5d87d3c0f902bd392fc295a3575017ddaa
+Mac = 24641775d3f72717225528d05d926de5
+Result = F (2 - Key or Key2 changed)
+
+Count = 177
+Klen = 32 
+Mlen = 48
+Tlen = 16
+Key = 06ba846536d76658d6ce3fd58397b440254818efc794dfd4a692565c87c09296
+Msg = 3282dba0d6d65edd0e9a0a3340b106bd633eb8dcacb988e36943e7142d3690cc2d010efaea337fd510d597cf9efde8c4
+Mac = f8e6a9bf79c1c289b9a3438a686de9f4
+Result = F (3 - MAC changed)
+
+Count = 178
+Klen = 32 
+Mlen = 48
+Tlen = 16
+Key = bdfdcf56bdc275c49223f2b3d85e5977dc9ef8b8fecfdeda5ab19bbda72b47a7
+Msg = bf36ae5dfd3f8540595cda8021b503a60542e98ec3e1c31c04a6242b807238c669c74a9b07da8aaca0ea0e489ad1163a
+Mac = d80d2a3497550aaaa2d87f95f962192c
+Result = P
+
+Count = 179
+Klen = 32 
+Mlen = 48
+Tlen = 16
+Key = a6179a282d45f4b01359a41b9f8ad6750153eb2d3ac6780e3923927044a949b0
+Msg = c93981938b4894dd66c917795ec3ccb8ce2e9480524d7a44e33ef33344d064b09e94e5036737454e870e4ec2bef34a12
+Mac = 463a7fcc3226ac3ce1504627468b1772
+Result = F (4 - Key or Key1 changed)
+
+Count = 180
+Klen = 32 
+Mlen = 15
+Tlen = 4
+Key = c72f3e5c92edd6625954b2d816fa641a89353658f2d311e91a0b9de292b4aae8
+Msg = 569747d486d56720d491841b32c244
+Mac = 34e6c023
+Result = F (4 - Key or Key1 changed)
+
+Count = 181
+Klen = 32 
+Mlen = 15
+Tlen = 4
+Key = e5b05b62a586d831a581356f314cc336caf8a13a25efdf597729e374f0a20c7e
+Msg = 09d28d7a0559b3183bcb642fbb3f6b
+Mac = 718021a3
+Result = F (1 - Message changed)
+
+Count = 182
+Klen = 32 
+Mlen = 15
+Tlen = 4
+Key = 3f12624e673376e94ca1159200b878ab2e045034a3b164e40d437b7803887c4c
+Msg = 7c44324a4c982dae59ff89268ecf15
+Mac = bb6ae38e
+Result = P
+
+Count = 183
+Klen = 32 
+Mlen = 15
+Tlen = 4
+Key = 9f514d7b3e03b605936b8ba49cd8ecc89fc872741d08c389041d644726e3cf11
+Msg = fa12b0d55c1765ab36af677f694b3c
+Mac = efef4be6
+Result = F (2 - Key or Key2 changed)
+
+Count = 184
+Klen = 32 
+Mlen = 15
+Tlen = 4
+Key = 4a3224fb619e0b0549155c3494eddfc3df65aef4b2f23906a8d38c61d0ebd515
+Msg = ce9a8c69a894477be6be5acb9ced19
+Mac = 111efcd5
+Result = F (3 - MAC changed)
+
+Count = 185
+Klen = 32 
+Mlen = 15
+Tlen = 4
+Key = cc0057d96f4d0749e2eb7f2aa5af538e17c40fa6309683cc71ef5ec71b60ff4b
+Msg = 4c85ff528612e63071004bb11eb05e
+Mac = d360b0a3
+Result = F (2 - Key or Key2 changed)
+
+Count = 186
+Klen = 32 
+Mlen = 15
+Tlen = 4
+Key = bf81fac5722de5783d63bebb4cf03158d08b2371f70145c21b8fe9273a8f155e
+Msg = fd3dd5b8fb9de535b616c3006afc44
+Mac = d3b0db0d
+Result = P
+
+Count = 187
+Klen = 32 
+Mlen = 15
+Tlen = 4
+Key = b27db71af0df7092df4ac21fee40bbe8b5c7d3d687b41ff94a29c728855dbae8
+Msg = 59c4590bd93384609121b80def17e9
+Mac = aecd13e5
+Result = F (4 - Key or Key1 changed)
+
+Count = 188
+Klen = 32 
+Mlen = 15
+Tlen = 4
+Key = d020aa0c99c6f4bd14e8130a7340f2fe1fdf66eead5cbeba0e309c4f05610370
+Msg = 181b2a6a51d50fc46961362dd36f5e
+Mac = b63c9d04
+Result = F (3 - MAC changed)
+
+Count = 189
+Klen = 32 
+Mlen = 15
+Tlen = 4
+Key = 006ed44302d49f2bb1d0d063e1f386233b5b39939783403aad5f96b9eda9ddb9
+Msg = 7c04b8934cb8618cc4616d8c96b551
+Mac = b405effc
+Result = F (1 - Message changed)
+
+Count = 190
+Klen = 32 
+Mlen = 15
+Tlen = 4
+Key = a9b76a6d019d31e75f5ca9a8eb8dd13a523c5b1d6af66a7415239aff67974149
+Msg = 4f033e7e17ac7d4b4d771ea5c9a5ea
+Mac = cc584bd2
+Result = P
+
+Count = 191
+Klen = 32 
+Mlen = 15
+Tlen = 4
+Key = 11645109d44d446c3e961728a8c291fe9cc81fb594c4bc6c04ed13309bc7e8ca
+Msg = ac2f0dde1e788a9e78d85d919bbb0d
+Mac = 4ca27f5a
+Result = F (1 - Message changed)
+
+Count = 192
+Klen = 32 
+Mlen = 15
+Tlen = 4
+Key = c82c065bdd43fef2d8501e04919c14d44b2e5d3c8a4cb850253eda3e9b556379
+Msg = f918963dd2a6dfc93b8441ed2ecc3e
+Mac = de999ed5
+Result = F (3 - MAC changed)
+
+Count = 193
+Klen = 32 
+Mlen = 15
+Tlen = 4
+Key = ffde2e97c3b8582efd4c16c6fc39db166eff75c726b6ecca2000adeebf3ce7b2
+Msg = 4b294b6589f595b73b218bae12adf7
+Mac = 8a451fbc
+Result = F (2 - Key or Key2 changed)
+
+Count = 194
+Klen = 32 
+Mlen = 15
+Tlen = 4
+Key = 10c82465d75027d273183b8ba5a666d0c3cac1a7c46c29c79b8738b5c476732d
+Msg = 2f75a53b7c61a432f806ad7a3c29b8
+Mac = a2afc5c3
+Result = F (4 - Key or Key1 changed)
+
+Count = 195
+Klen = 32 
+Mlen = 15
+Tlen = 4
+Key = a2caa6397e6193a3f0428f0cdb4a5a44a3e00b1aaa70af72141b3398ceac84d4
+Msg = dc85ccdee44e1079259a45d26a123b
+Mac = 0f881e55
+Result = F (2 - Key or Key2 changed)
+
+Count = 196
+Klen = 32 
+Mlen = 15
+Tlen = 4
+Key = 633b2835ff7b6c9d6c8f635a9050d6212034b3361ec1b182a04837e6d4cf7bcf
+Msg = edba59c74951ba6d3b11fe54b076c1
+Mac = b9d3ae4a
+Result = F (1 - Message changed)
+
+Count = 197
+Klen = 32 
+Mlen = 15
+Tlen = 4
+Key = 6dc0728c206b6806e0e11dddb1ad440f6ad21de50104e2c80918615679baeab5
+Msg = 78cdd3a0cff12e79c4d287bb5a3c0c
+Mac = 0277ac5d
+Result = F (3 - MAC changed)
+
+Count = 198
+Klen = 32 
+Mlen = 15
+Tlen = 4
+Key = 6f2f8719411bc787a90eb1c24f576636805fbb31e08c8eea5d645bc161f60ac8
+Msg = 44f6dc658e797579efbbc0a87a1407
+Mac = 0b495c76
+Result = F (4 - Key or Key1 changed)
+
+Count = 199
+Klen = 32 
+Mlen = 15
+Tlen = 4
+Key = 48e236fec9b10defd81e3b476cd1190a480e27cc802facc539529d28b04fc0b1
+Msg = 029edf8e18e999d3350b0651a92691
+Mac = 03c2cad0
+Result = P
+
+Count = 200
+Klen = 32 
+Mlen = 15
+Tlen = 9
+Key = 5b182d7b9c0b7e52fb829ea62ab9e83284efb6bd45c52f9ff6e860822cef8f66
+Msg = bb0f7ba9bed400e6e2157517dbc2e1
+Mac = a6453b072a090c578c
+Result = P
+
+Count = 201
+Klen = 32 
+Mlen = 15
+Tlen = 9
+Key = 7588b84dd2638319287a3850bf3d948c5caf9f8272c884859618a04c33aed9f4
+Msg = 6c1684e4fa881aa089d1a02ebfcc12
+Mac = f0c8d5a4c292714f68
+Result = F (4 - Key or Key1 changed)
+
+Count = 202
+Klen = 32 
+Mlen = 15
+Tlen = 9
+Key = bcf38c259e15f8a8fe79813037970c22ed13fd5e50ef9f139d00c6d7e79eb3f7
+Msg = 61dad2ad06b03de62ff57087e06abb
+Mac = 92bb65f2f136fb0701
+Result = F (2 - Key or Key2 changed)
+
+Count = 203
+Klen = 32 
+Mlen = 15
+Tlen = 9
+Key = 1e9d1112670b26f6905250b7ca66030cc3d7e218df01283fc58347371ef2cf62
+Msg = 47148036d2b9019e16b3030dad830f
+Mac = 5bb785a108018586d3
+Result = F (3 - MAC changed)
+
+Count = 204
+Klen = 32 
+Mlen = 15
+Tlen = 9
+Key = 1e8ba98ce0db35b53e7973f0ea9fc9de909567bd0c1d1fe7da0f769bcd41fb00
+Msg = 020a46b479b356a67a67549d07ad00
+Mac = 00ce7e779ad63e0483
+Result = F (1 - Message changed)
+
+Count = 205
+Klen = 32 
+Mlen = 15
+Tlen = 9
+Key = 7755294f2a2735e96696be0c01f06b1203f1983db58a049afae0c92be2989244
+Msg = 6a056230c7e8069eafdd6023a7a442
+Mac = b0f4dd63fac039008f
+Result = P
+
+Count = 206
+Klen = 32 
+Mlen = 15
+Tlen = 9
+Key = 122f605647a9d0a6b48708cc1b0e846278d4d6c48b2f482294edc3d35c45efec
+Msg = ff15138a407f8b41fddbfd9738b221
+Mac = d25ecf3377afa9da07
+Result = F (2 - Key or Key2 changed)
+
+Count = 207
+Klen = 32 
+Mlen = 15
+Tlen = 9
+Key = 4a9f8541397a28ff48b196ba4957ea2ed92643139fb822f1d1fb1336f9df9086
+Msg = 8c75ccfe76d39b13ed8d567170729a
+Mac = 4de7aa0a6f0f88bac5
+Result = F (4 - Key or Key1 changed)
+
+Count = 208
+Klen = 32 
+Mlen = 15
+Tlen = 9
+Key = d7d3951f3d2264bf7b544ebd894c3eadbfd65a68a3307dae00c9e7103848330d
+Msg = 6c7477b80fea24c0fe3ffee99f4c49
+Mac = e0daf9757d5227cf23
+Result = F (1 - Message changed)
+
+Count = 209
+Klen = 32 
+Mlen = 15
+Tlen = 9
+Key = 5c487e9fe15c9599716c656f608d780f31441537ff52c2e41cd1080cf780768f
+Msg = c2d2db02fa3da2db24d9b61c24d12e
+Mac = 51b33dd3e01d9e8929
+Result = F (3 - MAC changed)
+
+Count = 210
+Klen = 32 
+Mlen = 15
+Tlen = 9
+Key = 5a3b4e1434293b6826cd275d5e2173dfe69a1028e35be89218aa79a9aba0c385
+Msg = 8861fbe95cfb26c20994c5ebbd2832
+Mac = 05af2cba9541cdbb57
+Result = F (2 - Key or Key2 changed)
+
+Count = 211
+Klen = 32 
+Mlen = 15
+Tlen = 9
+Key = 5eabcd3c9ddda2b875b0593f1b52f90fe19d836d09997048db425a19f58bfa0d
+Msg = c9a9903470aed1c7f6a0ac5b074b53
+Mac = 48d393c2da0d37d16d
+Result = F (3 - MAC changed)
+
+Count = 212
+Klen = 32 
+Mlen = 15
+Tlen = 9
+Key = 86841c82f519e3d734df4ea2f28fbc12a98d983d2f26897a8c16e80b094e7700
+Msg = d7b6a69b1d635c8197b75ad6e52068
+Mac = 91d3a79922ae15aee2
+Result = F (4 - Key or Key1 changed)
+
+Count = 213
+Klen = 32 
+Mlen = 15
+Tlen = 9
+Key = b9d5a96868e2727c1e27abf48aa81a1138d14abfb40ad3c7f28cdb46ed73dd5e
+Msg = c607cdbb618e570028b3bb97578857
+Mac = 5b75d940df40ffe455
+Result = F (1 - Message changed)
+
+Count = 214
+Klen = 32 
+Mlen = 15
+Tlen = 9
+Key = be9c35014a17aa2e586f574207daef34491193afe749f4adc565bb47686a29cb
+Msg = a5231c453ee56bd3605da775bad10e
+Mac = a6f74a82bea389a745
+Result = P
+
+Count = 215
+Klen = 32 
+Mlen = 15
+Tlen = 9
+Key = c5ac19c88ac4c52878090576a583d58f04aada4f94cc3d0edaaeba6a8e76f447
+Msg = a80d7cc5dbbae481084c2cf9faad9f
+Mac = 1b00a041af86ae3f7d
+Result = F (2 - Key or Key2 changed)
+
+Count = 216
+Klen = 32 
+Mlen = 15
+Tlen = 9
+Key = 1734716c1349578c87b8ee5e8597005844978c50cde71684f85542dd97b7a175
+Msg = 95cff75859daf82ba103be58de3d7f
+Mac = f7ae0d5deb8c3ae1af
+Result = F (1 - Message changed)
+
+Count = 217
+Klen = 32 
+Mlen = 15
+Tlen = 9
+Key = da6535df3ff48824f5820a567ae54e8a1c8427186803be57e423e1a701e39eb5
+Msg = 107f92253326aafb9d62c5740ccab4
+Mac = 0035565d8060c9e8f0
+Result = F (3 - MAC changed)
+
+Count = 218
+Klen = 32 
+Mlen = 15
+Tlen = 9
+Key = 9ef5998d41e6668c5d8ccaa290d685e7a13dbd361505388b01c0ceaf1c151e18
+Msg = e85feaa6c71605d5034ce5eec611a9
+Mac = bc062b7224c6270071
+Result = F (4 - Key or Key1 changed)
+
+Count = 219
+Klen = 32 
+Mlen = 15
+Tlen = 9
+Key = f51ec7524b0594a18232d6bdbf08f3cca176acd8197b95747ce9c9a3d669dbf5
+Msg = af554099379250586aeab71987b04b
+Mac = 33c6f20f4f47f78abd
+Result = P
+
+Count = 220
+Klen = 32 
+Mlen = 15
+Tlen = 16
+Key = 2188b65e7fc13985355a7cd82de0e3f51b83f226b4761ae31e99d298a556eaa8
+Msg = 8581226d3263056f6d344da5e6b157
+Mac = 7603f407be398b897f4dd5c665d2cbba
+Result = F (4 - Key or Key1 changed)
+
+Count = 221
+Klen = 32 
+Mlen = 15
+Tlen = 16
+Key = 488e1dbbb24b37bdf6d9b9f2698fb000a6e4c7b7cbd51899e587429aa82ebc24
+Msg = 56084f95e34c04311fa80438332e67
+Mac = 07012666702d86709347f0106c74e603
+Result = P
+
+Count = 222
+Klen = 32 
+Mlen = 15
+Tlen = 16
+Key = 4173b7d0865065400f701346099d7891f89d51b8a957fa7c68383b4e74d56411
+Msg = 8c04c43d195cff03a276d5546f0776
+Mac = 7b8fcb548eaca4e2bc5370202a533e37
+Result = F (3 - MAC changed)
+
+Count = 223
+Klen = 32 
+Mlen = 15
+Tlen = 16
+Key = dd4af4c3e01b229596b65c0917dd2b10de2d865b2df651ccab4a232a52544c18
+Msg = d6cb014f06ad48f2f1af2fb583a688
+Mac = 27da1263998b0f1be1f421c686b2eeae
+Result = F (2 - Key or Key2 changed)
+
+Count = 224
+Klen = 32 
+Mlen = 15
+Tlen = 16
+Key = aa01b6da5038d37ebd2e8202bdca193573f3f7cf4eb016af398ee066124344f9
+Msg = 69476481bc8c078141afcaf7e2f8a3
+Mac = 23e34e325bbcfa5bc26a911b07b169e4
+Result = F (1 - Message changed)
+
+Count = 225
+Klen = 32 
+Mlen = 15
+Tlen = 16
+Key = ddd10c86495e2ffe7f2000834512a084d9cb57fbe2a429aba71daaa57f7d1311
+Msg = 87ad8c1d4cca21d9eab450c30affae
+Mac = 24375426f3cdf3e0dca9fff59bef3b43
+Result = F (1 - Message changed)
+
+Count = 226
+Klen = 32 
+Mlen = 15
+Tlen = 16
+Key = a7e164a826bfe6098b30ee22ef397ac56bd9a086d1ebdbc19d4da3df284240d4
+Msg = 42121d7b13a49aa9d4bc79d637190e
+Mac = 8347712e3a728ffe4dc0b06c5517396d
+Result = F (4 - Key or Key1 changed)
+
+Count = 227
+Klen = 32 
+Mlen = 15
+Tlen = 16
+Key = 01daf69ce8bcc21ef71377121ddda7198666fe7a6ec9bdc438b46ab5ba6bc65b
+Msg = 45ec0f8fc6ad41de6b4717ad480fe7
+Mac = 8ca6561e9aee02fc76e84906be614a0a
+Result = P
+
+Count = 228
+Klen = 32 
+Mlen = 15
+Tlen = 16
+Key = a2a0f7b136bc5a9a8012fa13485a7eb519085ab59f20505b544a36b65c29f98f
+Msg = 652e624b74f95b992171b963536d50
+Mac = b7d464bcc186fea14b95de6d4cae1679
+Result = F (3 - MAC changed)
+
+Count = 229
+Klen = 32 
+Mlen = 15
+Tlen = 16
+Key = 85e9a32542f008c532f2cb64d8b4a8a0ec5c425d538eba0b4dd67f28f0466805
+Msg = a908965c652b6b630377528b342c9d
+Mac = 1e3c0d3533805de278a78a0f484c00ef
+Result = F (2 - Key or Key2 changed)
+
+Count = 230
+Klen = 32 
+Mlen = 15
+Tlen = 16
+Key = 957b926265f6a6e002198b826a3e4805efbcea1230081c784720f8ba44291dc9
+Msg = fc01484fd4e7746ae4d78bb8888302
+Mac = 5fbda6654bc03f0390d669a37c6f5848
+Result = F (1 - Message changed)
+
+Count = 231
+Klen = 32 
+Mlen = 15
+Tlen = 16
+Key = ff407d395ae6a6ac7b5b00b55d00775e73c745cce197c4c1ecf28066afd59148
+Msg = e9d3a1c90bc602355969b685629e63
+Mac = f0632d66b51e21a5e36e76a106af5a50
+Result = P
+
+Count = 232
+Klen = 32 
+Mlen = 15
+Tlen = 16
+Key = 6a8fb7d46ec38a505d0bad3602546b712f764b41b15b9d83816453333f08122f
+Msg = bb7e9136e0846068ab4209fd7a6d03
+Mac = 9d07f173bd9de7a1ea301e5d90768ced
+Result = F (2 - Key or Key2 changed)
+
+Count = 233
+Klen = 32 
+Mlen = 15
+Tlen = 16
+Key = 8deb7c3b58e7b73b841f1d23bddfd55179191fce2cbf2fd4bb713b8d3458d31e
+Msg = 52a3529065e655639693cacf384533
+Mac = bac560bed950042d919b9294a12e40a5
+Result = F (3 - MAC changed)
+
+Count = 234
+Klen = 32 
+Mlen = 15
+Tlen = 16
+Key = a1d37fcf560a08f0fd3660915e8a4390aef5307b119912a56180207a2b8a020f
+Msg = 3e66816b2cdbab95f9dbb68d05152a
+Mac = 71123822cdc9d52e1d10f7c314479262
+Result = F (4 - Key or Key1 changed)
+
+Count = 235
+Klen = 32 
+Mlen = 15
+Tlen = 16
+Key = 82bd8a088cf50a4cb6d68d8ecd408351d37d1fceb123aaf42a3b1cad0ea2ed63
+Msg = 081cd9e855f454af999d3d898c7cb4
+Mac = 11d30d0dc88805f5793b6b9671a1d8b8
+Result = F (4 - Key or Key1 changed)
+
+Count = 236
+Klen = 32 
+Mlen = 15
+Tlen = 16
+Key = 1a4e28e9a3b146fb70855952fe636a614474c8d297ce0578cb0142859becacfd
+Msg = 8ea9097094500eb127d6008cbbe7ab
+Mac = 463ce7822620368bd2ad671de91da0b8
+Result = F (1 - Message changed)
+
+Count = 237
+Klen = 32 
+Mlen = 15
+Tlen = 16
+Key = 0cd6e4690036579dffabdb9d94696dc7b950f9a1edb316bd865df0e049d68562
+Msg = fce414ff3a47d24c0221f034c1bade
+Mac = 248a4a32324f861108049e2bac6da685
+Result = P
+
+Count = 238
+Klen = 32 
+Mlen = 15
+Tlen = 16
+Key = c426f54511a3780d061f3871271398de806aa7b04894e9eec1d65b3460e4b1f0
+Msg = 71068cd9424bd206036f7729a5a9a1
+Mac = a8e03fbb2b69e4368370311a5ad5c132
+Result = F (2 - Key or Key2 changed)
+
+Count = 239
+Klen = 32 
+Mlen = 15
+Tlen = 16
+Key = 22f29aca73b76271c34390afee4a1975b8dae7d6763c2b0c0b1bf5bc16e7027b
+Msg = 7b08600fd054e0a310dcb522e2b769
+Mac = 2fc919160d746e96548bb1a863a5b325
+Result = F (3 - MAC changed)
+
+Count = 240
+Klen = 32 
+Mlen = 47
+Tlen = 4
+Key = d2ef60d491be000ed6544b44318dfd50e338fd909fc83d3d914ce2f89fa2a6a6
+Msg = 0a64265b7f3c36a571390b0304bb176a660719f3628f4c3a3274de039549a324221a0b9fdcac520e0607f64439326e
+Mac = 18ed0e09
+Result = F (2 - Key or Key2 changed)
+
+Count = 241
+Klen = 32 
+Mlen = 47
+Tlen = 4
+Key = ab8720301ee8fcd9a7fdebc304d9c044c0278ff1abc8be648bbe5f3d0f49bd67
+Msg = b1e7df59396474bde41872b278495bc41a122c0b5a5985b8700209edc56208d2b6f75ce594569091ef64480314c9dc
+Mac = 938c4822
+Result = F (4 - Key or Key1 changed)
+
+Count = 242
+Klen = 32 
+Mlen = 47
+Tlen = 4
+Key = a1f70323ae3d2cfb6a77747f085bcda830453060ac21e98b648b35488c350e74
+Msg = fdad292b3592fe5fbdd2f59edc24357ca4de0d1f7968954fd0f192cd35629be693907a47b0b6d513f7220e337a2e67
+Mac = 597dc9b9
+Result = F (1 - Message changed)
+
+Count = 243
+Klen = 32 
+Mlen = 47
+Tlen = 4
+Key = 6d1f13cdd061553454ebb651775248826e0d7a09c584debd476a30ff1d4d93f0
+Msg = e784b3c6992bc3c06ea79f7a937f82d7b0cee7f0c798930a605ed5c6e3f00d9845836b7ae603f9e2baabdcf1a8d2d7
+Mac = 66986755
+Result = F (3 - MAC changed)
+
+Count = 244
+Klen = 32 
+Mlen = 47
+Tlen = 4
+Key = 4119f61d9fa892b5d5463599065e2e2b1b02d7ad5b30c8a93b544b90770f10a1
+Msg = 488e1dbbb24b37bdf6d9b9f2698fb000a6e4c7b7cbd51899e587429aa82ebc24642d695e347f6cae79553d7d8600fc
+Mac = bf3bb722
+Result = P
+
+Count = 245
+Klen = 32 
+Mlen = 47
+Tlen = 4
+Key = 14a4109229bdecce4b18d07e687bbfa8402f2b096dfa17a9a44d79b338bde284
+Msg = 961de561a52378ff0590c983535e7c5562df2befd5fea342edc951559f2cf730eaffa3f86744e25b22a9312fa855b4
+Mac = 322a1bfc
+Result = F (2 - Key or Key2 changed)
+
+Count = 246
+Klen = 32 
+Mlen = 47
+Tlen = 4
+Key = 08e001cc52c067cb0ab954c03946a42836ea20b8b422a3f2ff987cf78399149c
+Msg = 8983d7b57b3748f736c5a704cff26efe35089787cfe15f785f414ad62c69670260e8d52fafb58619397b43f5b234f0
+Mac = 997f8ffa
+Result = F (1 - Message changed)
+
+Count = 247
+Klen = 32 
+Mlen = 47
+Tlen = 4
+Key = e76fa3bfb3b21208568986fdc0b3147340d0283348186c51734decb9c6ee770b
+Msg = 282aef33e5c2fbcd147d35234c660b33a5057272ca2892b64fe3bf5445d5ac850caddb0f69ed5821d8eea77e2424fb
+Mac = d4d56526
+Result = F (4 - Key or Key1 changed)
+
+Count = 248
+Klen = 32 
+Mlen = 47
+Tlen = 4
+Key = 5e463fb2ef699b92b812d298e60e8e9a838f45ffead257827efe56349b50a4c0
+Msg = 5291f0eb66a505fb897b01ccff9a5dc9196110dba8a7a52eb79e90377afdc2f6815e7b7831e460a17522cd28b1386c
+Mac = 9bf6da27
+Result = P
+
+Count = 249
+Klen = 32 
+Mlen = 47
+Tlen = 4
+Key = bc151d3ee1d39ec56f05b3c9d9a57ac04e74c10f319b1cceca9234cb3b4162d2
+Msg = f44683a07e354ebcf6ad89604834b2e10b5e220a6bef9b60664020aa3ce409b1208a564534254480b44b1e4f71db56
+Mac = 042d6ecd
+Result = F (3 - MAC changed)
+
+Count = 250
+Klen = 32 
+Mlen = 47
+Tlen = 4
+Key = 9397cd9862322a37a35b30ea7f27eb9812d3f7816fb6a1cfe474496e80750b1e
+Msg = a96b2acc763b53c27fa0e317b790870e6703e6077dfb8ea327c12e29a17107284cb89d5effddb2d9a1fe745cf89df6
+Mac = 713a611b
+Result = F (3 - MAC changed)
+
+Count = 251
+Klen = 32 
+Mlen = 47
+Tlen = 4
+Key = e56415e192355a3280055b185532156b19effba4ee2e46e7fbc48c41aac7942e
+Msg = 3eebe4e64c49757618b500a84a0988c31d62476bb524a0c6b43e55de08affa460649aa01bdb4f89f84b728a9d6b3a0
+Mac = 01a05df3
+Result = P
+
+Count = 252
+Klen = 32 
+Mlen = 47
+Tlen = 4
+Key = b184969c04d20878259492a865a13f63308aef539bd895f43f94a33e480dc383
+Msg = 2bb99bc5867a2403868cf9a4804036278ca0ca8c3754ce5b78c716e7e68506d427e8a7d7acf3fabd9b7e8daf0d934b
+Mac = 808784bc
+Result = F (2 - Key or Key2 changed)
+
+Count = 253
+Klen = 32 
+Mlen = 47
+Tlen = 4
+Key = 68e9bd5aa9fa391a0e1a279fcd331f34d50529d0106323ebe89f63910a439db5
+Msg = 53f926f67362cc970c5ec52926e3fc74b42c91aa730adb55157fae8d9f89d96e103cf3c94313581a16886ebacce22d
+Mac = 488436d5
+Result = F (4 - Key or Key1 changed)
+
+Count = 254
+Klen = 32 
+Mlen = 47
+Tlen = 4
+Key = 11e7c250b9f4d1bedb85750b8af5ee84af1810c24f70a17e0ca403a6ef2d12af
+Msg = bcb0da680ede13b76f0cdca3151ddd467e2b19a56e78153f35a83ce5302e82cb920548e064a07f5bcb2311968ad37c
+Mac = 201c5ffa
+Result = F (1 - Message changed)
+
+Count = 255
+Klen = 32 
+Mlen = 47
+Tlen = 4
+Key = 5702692d6cbd8a131ad32aca6eac6412f825efd2d28545afdfb204de51a59436
+Msg = e744ee5cbccd7a851c64d35e2ba8f08d4796a91da39e7a2d31fc84e5c645d4af7940e8a34cf86f420e0f51687f55ef
+Mac = 82de5bfa
+Result = F (3 - MAC changed)
+
+Count = 256
+Klen = 32 
+Mlen = 47
+Tlen = 4
+Key = 2abe880d84f83efad021e7d7eedf9c29e673abd5929ceb2a98b84c229c2db2e5
+Msg = 9cb5db0ac724ff8acad4076b771f7285534413b0ed6a07e26ee2ea9772ad4a76163e5c315280eead8a1b9d635ff448
+Mac = 4be7decb
+Result = P
+
+Count = 257
+Klen = 32 
+Mlen = 47
+Tlen = 4
+Key = bbcad6b7f3d5de66d0bee3535688b1ac48fcb9ab494058c841ab5c2d02d8c46a
+Msg = 3272b20c1b47a802f0e6b5627f6ad24e351f6f869ef1158028244abc2a45b552246082cd4973083b3a23a98515aefa
+Mac = 9d252d8b
+Result = F (1 - Message changed)
+
+Count = 258
+Klen = 32 
+Mlen = 47
+Tlen = 4
+Key = 5ea23e52c8046824ab96431c63cdc2760edf90414d7af4b749b5f8caf447caff
+Msg = 07448f5bdbe1af504122d086138d2ae6ea67c1f48584e74b6a5d0247cf638f01ba936780684b412dec5c7988186010
+Mac = af449f60
+Result = F (2 - Key or Key2 changed)
+
+Count = 259
+Klen = 32 
+Mlen = 47
+Tlen = 4
+Key = bc90fe9615f4b023c710056a5d50866539975c21808d5bba333b40879bd53792
+Msg = 3a800d3a67318d3c144c155bd9da1a8009adb4b98ae80bdee4c20b74978660d1b2de9e81a152bfe9470cd32a4ddef3
+Mac = 67b786fb
+Result = F (4 - Key or Key1 changed)
+
+Count = 260
+Klen = 32 
+Mlen = 47
+Tlen = 9
+Key = 7e86eae864beb3782e2c43795866a84f021e9c6051f706801197c4ab9efea8fa
+Msg = 38ba300e22903899daa0a4c643ce13c3a6d7a646b0401922ba8c33184eb261efe6ce9ec6f61795aa2d110a64f80476
+Mac = efae99c9cbd689ba03
+Result = F (2 - Key or Key2 changed)
+
+Count = 261
+Klen = 32 
+Mlen = 47
+Tlen = 9
+Key = 2d521b079c3fe04e460485c6e93bc9806311b4b9104c85fe528ced9471d07a16
+Msg = b403d5bde1111dd40d757b5ec49294fa7436d5f58827b579d4ff3a01333abf106e8ef423607b26e45822c1a0bf5a13
+Mac = 3fd97fa73d7312ed40
+Result = F (1 - Message changed)
+
+Count = 262
+Klen = 32 
+Mlen = 47
+Tlen = 9
+Key = bb7b9d02a5bc23d928581cc617ac02afcd713ab0093e8fbefd4edf8aa18414a8
+Msg = 6cf5aef2898d58e52795ddbbaf1d1fa61b8cfcd9663e67494172beb0086457d8f4b65d169214da14741814d4266b1d
+Mac = 40ce03bffd6e254c38
+Result = P
+
+Count = 263
+Klen = 32 
+Mlen = 47
+Tlen = 9
+Key = c9f5d5b683ff4fc61b1c87b1e466017a2317e146bb9bae100aea569e0e1472b4
+Msg = 72e2b7f96059d2690e9494138800fff994dcb06137a577e07bd245b870c24b6471f36070a874a38ed59d62e74afd3b
+Mac = 9ed466542bfb57b068
+Result = F (3 - MAC changed)
+
+Count = 264
+Klen = 32 
+Mlen = 47
+Tlen = 9
+Key = 0b6a0dc3f6cbb0c3750ee570c93c1acdfc09c9bd7212ab69c46328e1cb3c1106
+Msg = f242db24fa98cea5aa3242cafc329af42411427670eda892732488a562216d9ebe7675b4332b5459c1569b6919ec3b
+Mac = ee644aa00cd32f83bb
+Result = F (4 - Key or Key1 changed)
+
+Count = 265
+Klen = 32 
+Mlen = 47
+Tlen = 9
+Key = 9ab233838e2dfdb48ac3d696de182307c01a6d809033bfed61c350bbb4cd6232
+Msg = 330744fb7e34c898733468132dc2c81406e0b2cdba6c5b2dc8f4e8561bcb3052ea5cc401ddbf2d56718a74c39deae8
+Mac = e6d71c0fc783aa67a4
+Result = F (1 - Message changed)
+
+Count = 266
+Klen = 32 
+Mlen = 47
+Tlen = 9
+Key = 52f0912c169bf22afd849b40c640623c1d9c6dff6c26a223f5f05fe11e906b31
+Msg = 444afc882dceec8415c056c22673d4c5e4233f55087e1f248b6265b101e95d6d28a3de1dc122c47f9ebc9f30fd8cad
+Mac = fb3d8f95ec1923ca45
+Result = P
+
+Count = 267
+Klen = 32 
+Mlen = 47
+Tlen = 9
+Key = f2a17c65aa8ebbd31d3cdb3ec3d89f67284b9e9b346da587b075574e06b516d9
+Msg = b0ab14fe450ec78bdfb5b273754e1303ebbe954ed8cb2e7f8c18486d52571f70f2ba6a747aaa3d4b3ebc2e481ee1b7
+Mac = bbec01324742b8696f
+Result = F (3 - MAC changed)
+
+Count = 268
+Klen = 32 
+Mlen = 47
+Tlen = 9
+Key = 34025e9307a44e796e5f8ea56741c6b170de0202aae9fcfe37059e78e6d8c36f
+Msg = 9cc45636c1cd12b664b716a2f741f3d829688557533775af13df01b6360a007ddc6d2082d69c732753232a63bcd2a0
+Mac = 519c47a05b5afa937d
+Result = F (4 - Key or Key1 changed)
+
+Count = 269
+Klen = 32 
+Mlen = 47
+Tlen = 9
+Key = 368583270fcd5fb34eaa3b07d8b7553cf6685e0c08f0d0d9776281f0ea167910
+Msg = 46d8affa5675b493cc8f2e09026b6358908fc8edc06f19694349a8a2224ef6eaf70280955ce5dbb5a4530328c9a9f1
+Mac = 95dcaab4ffc7042434
+Result = F (2 - Key or Key2 changed)
+
+Count = 270
+Klen = 32 
+Mlen = 47
+Tlen = 9
+Key = 68e9b779210b9840ca5a13d92515bb951134f851c59e654b5a9c76348a8e5e86
+Msg = e8b304e9de7dda07e4916743c95312b55d22476a8225274f85487d50ae81f4c2155888feb8a63b4fcb9d090f4f081d
+Mac = 25aaf057cb9080ab3a
+Result = F (2 - Key or Key2 changed)
+
+Count = 271
+Klen = 32 
+Mlen = 47
+Tlen = 9
+Key = 5c77d49dd4ef0b5ab34b4bdf987c51444dfb4361540aea35c23c1b89513776d0
+Msg = ce82892e875359344cb654176760ab5626f1cdad2527d2e9ce521afa2108314ab119f64defc5fd5aab2d31b9d808be
+Mac = bcc2195633823570cd
+Result = F (1 - Message changed)
+
+Count = 272
+Klen = 32 
+Mlen = 47
+Tlen = 9
+Key = 5b8e228bd2ae76ba09f802143fc68dd5153f6f86387052bc3f9f3602d7dbb814
+Msg = a88ef9d2aaecf4e5a886a787d31ddf2176197aef742777bff2264ff5514488d35f6487f7cec4a625e5dc86477589a7
+Mac = 4ea8b97c69705c9315
+Result = P
+
+Count = 273
+Klen = 32 
+Mlen = 47
+Tlen = 9
+Key = 75b029f4dd6f43d9d2e524b024b1bc37e4af454dc9cccc62d219ed2c2d1ede9b
+Msg = 7af63e6178610d01b0b369367090b4ecc76009e345ff1f0202b670efe16b9adc161405a4e672c616aefbc390271818
+Mac = 5bbb9e97379f696384
+Result = F (3 - MAC changed)
+
+Count = 274
+Klen = 32 
+Mlen = 47
+Tlen = 9
+Key = 8f0d5227ee3539976c90eb77278dad4ba46d47041f4b0024225ac922566fb910
+Msg = 118a144344c6211fea66c8ce2610eb42765e8b029332d420984a596b6514a0e546c3e178d0a20be40ca808fcd84d42
+Mac = 4bc4f7629689aace99
+Result = F (4 - Key or Key1 changed)
+
+Count = 275
+Klen = 32 
+Mlen = 47
+Tlen = 9
+Key = 7ad0c0f482cacb2e02fc5f2c14dfa9bc604f9e4ca7d731519b2fc9e9f403f2be
+Msg = b1289dddb326dbbf77d035e991006d26690bd69083f4b56103e0ed0570cadc74b87880be74aedee76ea1a4f660ae0d
+Mac = b36eb596dddffebf30
+Result = F (4 - Key or Key1 changed)
+
+Count = 276
+Klen = 32 
+Mlen = 47
+Tlen = 9
+Key = f37ead5f75dd1bb0f35616cea74a465418360ab23d40bc6be510368257e1952e
+Msg = 138fb5de4073ff5df121fb9fcaf59f9198db3a17426f084dfd630414be21fdcaf5b2ec5878df8572bd960c1a4d8f6a
+Mac = ad9e0ed3e26deadb91
+Result = F (3 - MAC changed)
+
+Count = 277
+Klen = 32 
+Mlen = 47
+Tlen = 9
+Key = f772e08f88bf2874eaad63f31c47418ded32aa1e1d3bff0dc332a3c6ecfbba6a
+Msg = 3b9a098a4c2859eb76ff1c0b1a45eee6d37e54bf65b04e67f0c42bbc6a30a1704bd31d0c8a205834c97f2b2ccdf0a4
+Mac = 27ade610e6209cb255
+Result = F (2 - Key or Key2 changed)
+
+Count = 278
+Klen = 32 
+Mlen = 47
+Tlen = 9
+Key = c397be14a27ad9b71e11319708fdb5785c56e95c69412fb232c546cb15da108d
+Msg = 687b5d1aabcc5d7f8949e338bfcb301131b3f780d5376494cdf95d28d3de085cda1d8d46f2961de46d66335540b819
+Mac = f5028f9343c229b3c4
+Result = P
+
+Count = 279
+Klen = 32 
+Mlen = 47
+Tlen = 9
+Key = 1d6045bd4e62ba2405b985986e6ed693e9f1ae2a0e0dfc9aee1a07239c750b19
+Msg = bc1ef6d5b87d13127cf9844e5be5630c5989e77098c57f0117f722ad991fe00ee241beeb290bc002cbb847043d349d
+Mac = 0e1f303f5edc16b698
+Result = F (1 - Message changed)
+
+Count = 280
+Klen = 32 
+Mlen = 47
+Tlen = 16
+Key = 109b82a953e4b23981ffb95bb0f6890f6d7138ddb2da9b1812c016643779b276
+Msg = d3bcd7b096c31158df66efa6765c1d2cf8ddc4fc7cb4515f779677caddb2770d89899fcedf001036b0b3c5ea5d8dd1
+Mac = 44634458a35adf431f6ded0d78c1c376
+Result = P
+
+Count = 281
+Klen = 32 
+Mlen = 47
+Tlen = 16
+Key = f8ae6df8af74993fbbeb9c3bfec0839118630ed5d9aebf51fcc731021247abe4
+Msg = a8ab2d22448c96038a3d420a99e603cc7ef0f311b77613e1f3f632e21a4d11e18de2c4aeaf215b2da42bc2aa59cbe6
+Mac = 72ff86ed436be7082e6a78b92b644773
+Result = F (1 - Message changed)
+
+Count = 282
+Klen = 32 
+Mlen = 47
+Tlen = 16
+Key = 5f2177931d54dca74db7170c19a0b46e8eb94565ef04569b4f1da3305ec0885d
+Msg = 5aefc3c0cd48e12a896cb04ab9675bb76d9d060e9abbfa8a62ed02d59652141e7aad346cc85d9632f78f0323bcb27d
+Mac = 83143ab92ab45363783916be2e2278f3
+Result = F (3 - MAC changed)
+
+Count = 283
+Klen = 32 
+Mlen = 47
+Tlen = 16
+Key = e06992a8e7128b228458a16a562a987c750d72a706609eef10e56daf8b7dc583
+Msg = 9d3fe6fb91810723bb5da3fc6112cde2c2f459e7fabfe4c5252b1517c7c121c86cec95cb8b53500cb066cea7da37ad
+Mac = f216ecec2fa8d5f4a78d1d9a5d4ab852
+Result = F (2 - Key or Key2 changed)
+
+Count = 284
+Klen = 32 
+Mlen = 47
+Tlen = 16
+Key = 86977d1c40ffb1814d612c65de355c116b211d7d5610800acf84ca73f52dc001
+Msg = 99eb575c2339e970c9e15a20ef0f3892b3b2c1dc6725f9c4440ff9c95c888a68d17df29845550e9791d4a1e8ba40ec
+Mac = 389fcc2e3b7a0fe645b28d19113f80e3
+Result = F (4 - Key or Key1 changed)
+
+Count = 285
+Klen = 32 
+Mlen = 47
+Tlen = 16
+Key = 6c82f1e9e341794c12ed033fc571e5921fb17efa8cb5c859fa0a2d3f47659cb1
+Msg = 51155a4ce8b0b01568e055cc93ae3b6812726d9a67f4a20b24d112e55a2088945556b9ce8667d4d0c12e5aeba90f30
+Mac = 9963b0ab9651e81ba4f19af0f92732ea
+Result = F (4 - Key or Key1 changed)
+
+Count = 286
+Klen = 32 
+Mlen = 47
+Tlen = 16
+Key = c54e26f47661bb08039ba7bbc6049e82add9b7a828e270424600f3661b069898
+Msg = 755f47b856608676eb6f2b4e4ccfbebcd6fa21222d94bb63809dd7ad0fea4696ead64c6bfb35bac44689575c707984
+Mac = 730a6775be573cd9f934b62bfff132a9
+Result = F (1 - Message changed)
+
+Count = 287
+Klen = 32 
+Mlen = 47
+Tlen = 16
+Key = 80b8e86d90482b0eaf1c5bbd295ccf02b10070ba02e675c6c5217104b595907e
+Msg = 2f25726b90e5cadd0f2aefd14b6d882149e7fa6fb2f539af3bc1dfe5641f7b3065b52b08655f6dc4eed2325f9e7f34
+Mac = b0d1db9cbd3cd624f25d4e206a766b37
+Result = F (2 - Key or Key2 changed)
+
+Count = 288
+Klen = 32 
+Mlen = 47
+Tlen = 16
+Key = ddb030b45075cb6ad824294a8c4549a394379b78f4b97026a5b0ae48ea24c8d8
+Msg = a27399c706e0c14106dd159f1b490b518da3356f9e6e164204da34069da06eee5f2e90698e0425a4315e8d50c6134f
+Mac = 67e90fe3979340bb410e01c5345068d6
+Result = F (3 - MAC changed)
+
+Count = 289
+Klen = 32 
+Mlen = 47
+Tlen = 16
+Key = 7544079cf78720e78ca37d01e9c79b4199a48066f2864ed848c41830605bf4f9
+Msg = ad12d98e83d8e7809721c20dd5f3e906dd410fa511b4cb71ebab91619580e144b30dbe60836e625a2909305644ccea
+Mac = 0704c325ed93ad73b1dfb8cd7c104587
+Result = P
+
+Count = 290
+Klen = 32 
+Mlen = 47
+Tlen = 16
+Key = 9b80e95160d34a64c6fa02f043694aa1dae167f1343a6903f16118cf409d2c80
+Msg = 7e8b8b83606b92b635e77649fc4b5c9e259b4b7400343bad76b16f54f70c05deb305ccb00dc855e24cca4d4394f409
+Mac = 245f0cb8afd0f2e639c3d8805e48ed4b
+Result = F (3 - MAC changed)
+
+Count = 291
+Klen = 32 
+Mlen = 47
+Tlen = 16
+Key = 0a6eb43e7a672fdac1882c06153e32bbe257aa516d149d37b77fbfe7a4fead19
+Msg = 6ff07dd7368062ae651c53cb79df4e47f8c4b60bfa17f7e3e82968d5844875b029eefde75439f9a0649b5f099ed346
+Mac = aa84831c571a3cd8a8109a5f94db6f06
+Result = P
+
+Count = 292
+Klen = 32 
+Mlen = 47
+Tlen = 16
+Key = 45b038799d279559572f23039bdbf2579a2d5372cf413e7f84c8f0cf99b8d82d
+Msg = 17c1b4636cfd77f3721013e39beac64447bd0e71f35e7794b1edb16cd5b8e54ef25d496a052ff350efdbebb3294c83
+Mac = 6753d152205287b7ccc140ef8b928933
+Result = F (1 - Message changed)
+
+Count = 293
+Klen = 32 
+Mlen = 47
+Tlen = 16
+Key = 2a9df10ee09eb6a5a00aac5bfeb1afa46bd353d6b591863cd0a27065d5479ec2
+Msg = f426a1eefd5c4a4e09f19d62e74af76101f93507313f233bd6cf37f026d58049c637d900981b6208d4a931715a1244
+Mac = 491486a04792c3ea6ca2224fa8110de7
+Result = F (2 - Key or Key2 changed)
+
+Count = 294
+Klen = 32 
+Mlen = 47
+Tlen = 16
+Key = d55b377b9b28a6e85ff24171fcbb504aa07f2d741a69a9915447abf71d3c1a03
+Msg = 170327340a4262dc4923259944e50baa07f023f2c05495077b71898731f744ab0112941ebdde6f0fa821d7857e3900
+Mac = de281e3a8b74f4bb52036d2d3804bafe
+Result = F (4 - Key or Key1 changed)
+
+Count = 295
+Klen = 32 
+Mlen = 47
+Tlen = 16
+Key = 582b1e9a17fea454488ec8a74fbbbf889e3c3485d9348cfb3b066e88366b83c3
+Msg = fecacd025380cbe35e942d22b695576102d95355b06720ceea134cf1c5ebc5c8bcd2ecfe5e6bebe3433948b64404bb
+Mac = 6f6f30a0b0cc58907db9181ffc62d4a8
+Result = F (2 - Key or Key2 changed)
+
+Count = 296
+Klen = 32 
+Mlen = 47
+Tlen = 16
+Key = 2d618f530efa52a19c287f38c040e6347563f5e12b53352b68861755b579f1ee
+Msg = 7ed7cb24ebce70db15a33cdb3048a6cb10d3c08aec30177f6313da2abc313fff72b02375f0dcf15a991bc4690b23d0
+Mac = ec65790ae2f90bde9d5219f5b22ec1d0
+Result = P
+
+Count = 297
+Klen = 32 
+Mlen = 47
+Tlen = 16
+Key = 28cc8ce4026d4a05d49923a6a5420d7da6ed4853ccc32bb6bde524eeef01fb32
+Msg = 152fd0d1169c784e80fdbb8ee1b24c09211bdd3c1eaae256933c97353ea944904299bf76ca9a33f7ef702121dcaca4
+Mac = 37b20a43873b624469346779fd447c0e
+Result = F (4 - Key or Key1 changed)
+
+Count = 298
+Klen = 32 
+Mlen = 47
+Tlen = 16
+Key = 1329341b7c8b7a4838ce92a28ced17a219ddc2756acc955dcaa7595558de4bf4
+Msg = b929c3ab804848ae006c2d498dea831bdafbaad3696567f3465736d4f594e2eaa9d3524ab766a669491b83275760aa
+Mac = 26fe88cb25bb1777641a151386170281
+Result = F (3 - MAC changed)
+
+Count = 299
+Klen = 32 
+Mlen = 47
+Tlen = 16
+Key = 8f472a4ea7c3a93aef09bf7fc7c6f3db0941065c999827c53d4c6633af006b00
+Msg = 44b082269ff8d0129a08de656696a50ad28386a77a4b25213fa07b62f652275a5d72054353b7022a48202fabf2db14
+Mac = a8fdbb0f5b97a33e2544dc67fdbb7297
+Result = F (1 - Message changed)
+
+Count = 300
+Klen = 32 
+Mlen = 52
+Tlen = 4
+Key = 75dcd191e9ca594b09bfbaa5c27ffd96fed9ff96272318b1eae3fbda3bcfdd81
+Msg = 22eead7c9a8b071affe3ad5ddaa9972b0898a3be6a59e4a8dea73d156eb12f51c8c0f08aee19bdd62f25707856cf555f212e3aef
+Mac = 2173ee29
+Result = F (4 - Key or Key1 changed)
+
+Count = 301
+Klen = 32 
+Mlen = 52
+Tlen = 4
+Key = 2fee8d7eedccd9288966fd1fb4f65e0b0503764bf0846c39f548e8af179525ca
+Msg = a5744835a273a54f04795058026fd9b73a0d6fecf605466bae7d3cabcec3bb7ab83ce1930d9ede72295f9e67ec6ea9eac020472e
+Mac = db26657a
+Result = F (2 - Key or Key2 changed)
+
+Count = 302
+Klen = 32 
+Mlen = 52
+Tlen = 4
+Key = c8019ca6e92fa229e00526c7c74ca2a28a4a105c90dcadce9ec5fdfdf8460f49
+Msg = bb5ac71034c1601dc61c595207fd0e6c4daeafac661894da89e3d08a8ddf089e59a3860c9c7489e2be68df8716cab6435dc1b001
+Mac = 1315f967
+Result = P
+
+Count = 303
+Klen = 32 
+Mlen = 52
+Tlen = 4
+Key = 67e3d7f1336bbffc0a464e3108b11dd14003790600e0c4bc57b019b3d54f2fd2
+Msg = 12ffca6688761e7f40839a65c29da57058fa7594705c8bdc432e7c13b4cff7c47b2e046682978ad08fcc14f32458d4c7a420e986
+Mac = 8518d946
+Result = F (3 - MAC changed)
+
+Count = 304
+Klen = 32 
+Mlen = 52
+Tlen = 4
+Key = 981ca0942b41dd1f077622e631c12d40ef592a3975b97a40c0f3b220c347e732
+Msg = 63f5cef611fac73616dd82177bd2730e748f8b1b91ae0a4c37539582510e887743038d001f486e901c8e27fe440440886c785917
+Mac = cf3fd7af
+Result = F (1 - Message changed)
+
+Count = 305
+Klen = 32 
+Mlen = 52
+Tlen = 4
+Key = d7a152c7bd0910e982809abcf0b7ac9e47002289e161bad212e71a17523d1573
+Msg = 8498763bb81010a808a117a03518f872a650ecfe0b4bc2694081de16747882d28a954c4fbf3200d48ef18832d14f39fa287c58ed
+Mac = 223d2917
+Result = P
+
+Count = 306
+Klen = 32 
+Mlen = 52
+Tlen = 4
+Key = 422384019ad38beb2695559d18e1487c9852670b66b519a6c0602c7486c51997
+Msg = f7cf8e9cfdedd813dbcc0f307f2c44cf26eb2eddd979cd6b378c4c0075152c34a3729f7a31e5323eb145af30def342dfde10da89
+Mac = 87f8c983
+Result = F (1 - Message changed)
+
+Count = 307
+Klen = 32 
+Mlen = 52
+Tlen = 4
+Key = 47b038799d279559572f23039bdbf2579a2d5372cf413e7f84c8f0cf99b8d82d
+Msg = 15c1b4636cfd77f3721013e39beac64447bd0e71f35e7794b1edb16cd5b8e54ef25d496a052ff350efdbebb3294c836cb3cbebc1
+Mac = 12f6c3be
+Result = F (2 - Key or Key2 changed)
+
+Count = 308
+Klen = 32 
+Mlen = 52
+Tlen = 4
+Key = 1ffeab67dbb7f08dca05ea289cea6d5056644821f787126c5ace27ad5db3ed3d
+Msg = 46bbc557bea54d2f2db34fe7075cf15fc00e8101292b64e9fc525048b5dfbc0aa4b594b6413b3096bfa48719e474a075173f4a90
+Mac = 3c47a821
+Result = F (4 - Key or Key1 changed)
+
+Count = 309
+Klen = 32 
+Mlen = 52
+Tlen = 4
+Key = 1e08336b4ef349e9d694f766065023020ee3a8ffb647a6c950d71b33ebb4b804
+Msg = 2ddf192ca1642576ba780e8f36ef250f9d42d35524e29279d2cc3c82e15e88d96769d1fe36871a7a00af5015bf06ce4853f827f5
+Mac = c0ab97f4
+Result = F (3 - MAC changed)
+
+Count = 310
+Klen = 32 
+Mlen = 52
+Tlen = 4
+Key = bfef5a04715bc112c33502225b57207b74dd55c1322d041a3635ef9071f4aab7
+Msg = e2b1a02f1f677311a39bdc0c53e9114a3d7ea2f08634095ba3fe82a9cc871d7cae1611fa61b553199992671920a577528493a22f
+Mac = c892067b
+Result = F (2 - Key or Key2 changed)
+
+Count = 311
+Klen = 32 
+Mlen = 52
+Tlen = 4
+Key = ba30a22d943be09346b6fdd2054c069755bec7507d88ddee3cc213e9b844eb85
+Msg = aa1ea5589649995d26ff80c9bbf4d384b2d70d6c801f5e3c0107a3b20dd796f14d6642244cddbb64d1bd0bdc6d246f2a504cc409
+Mac = 13dddae1
+Result = F (4 - Key or Key1 changed)
+
+Count = 312
+Klen = 32 
+Mlen = 52
+Tlen = 4
+Key = 90f018f6cca6f69f46193c2eb8a62501d7c49d639038a6619288fad90cb1f1d3
+Msg = 4828e1ca42f18ee9b56aecb1f327926df1dbb29a0412f93eeb22b77c105e40640b8e9210689c38ecaa906e558fbe8566963e890e
+Mac = a5a499ba
+Result = F (1 - Message changed)
+
+Count = 313
+Klen = 32 
+Mlen = 52
+Tlen = 4
+Key = c2d4cf3b10b220c9218e98732d944b4eff3082d04c15afed4384a68065cb09ed
+Msg = bea9b6198009e0f22ba8657d7c1e0bb690e2fb72fa0f75421368c19a919969325bc0a5ad9c2b17791663b8f6ba6a13da7542b1d4
+Mac = e5e67da2
+Result = F (3 - MAC changed)
+
+Count = 314
+Klen = 32 
+Mlen = 52
+Tlen = 4
+Key = f4675f72771eb1509da9609901010ac34ff2de8d5ada54e468ae1b08d03d53eb
+Msg = cef73f51ca035695a2d326ae02ed6583088db73f025189a47a363da370c38829e684193ba2ba7c452f513daf251250b2aa1ab06a
+Mac = b07d2f85
+Result = P
+
+Count = 315
+Klen = 32 
+Mlen = 52
+Tlen = 4
+Key = 74a5a7d1f2228b570b162c3763696924f10217ee55d1f6a66b13e40320d15104
+Msg = 457b46c036d6e03353551e886725c97321caa8b21611a0a007461e0867a8ba37181a1455761b02f596f8eeeacf40795c7a79641c
+Mac = ce6c7c22
+Result = F (1 - Message changed)
+
+Count = 316
+Klen = 32 
+Mlen = 52
+Tlen = 4
+Key = 97f08e57fe357f80d01bf9d5ce6a6c909b4b38291f1227c92c5b3b036158abbf
+Msg = f3ebc9d2f9295d6a7b0db4989415e76248033b4c182751c1d4e09db5b16119899cb13b2fcdf5248e9ef21a289ece38fae11664a3
+Mac = 31c1004a
+Result = F (2 - Key or Key2 changed)
+
+Count = 317
+Klen = 32 
+Mlen = 52
+Tlen = 4
+Key = c92620f366b485d4d37b4496cb1b1171b62cad727ac95921934f90606662f596
+Msg = db4afaa3680ac36edb7670cebffa8fafa3feb7da78bb0f6c3a4d0f87d3098b473c10edf8e524c28657bb783418526591ce040ca9
+Mac = d24101de
+Result = P
+
+Count = 318
+Klen = 32 
+Mlen = 52
+Tlen = 4
+Key = ab079c3ded1a0b3d48376650dc490050b38745caad994a4abdfca9d955a78bc3
+Msg = feaaf12b80e927ef3dcd61ca57c6e53666d7330410e13cb6db24cf293e035477fe07bc1bb827b856b94729d216fed886fa9c68d9
+Mac = 93ec250b
+Result = F (4 - Key or Key1 changed)
+
+Count = 319
+Klen = 32 
+Mlen = 52
+Tlen = 4
+Key = 81c7120cff3262a8c1659acc36a63a038bfc7eac71e33d50204311339ca3b829
+Msg = 05002950272846786e5adc7a62d0c9050943713f00b26facc9608452671cd31b28c4517ac30c7751a27c3a1381b83c263804448b
+Mac = 890aeac4
+Result = F (3 - MAC changed)
+
+Count = 320
+Klen = 32 
+Mlen = 52
+Tlen = 9
+Key = 95f475c54f723afd4fbac8623aee8a3b86bb4bc1e02fb08ccacb064c89da3eb9
+Msg = d0d950d385f290b6380127e604c4ab34c9a9a1a2d1e34117b2bd7a57752e3631f7aedffb9049223bf3f2f3a75519d150d2804b1a
+Mac = 93649584e12c9a902a
+Result = F (1 - Message changed)
+
+Count = 321
+Klen = 32 
+Mlen = 52
+Tlen = 9
+Key = c6986d813e0ebcc51cac6c50ef2383de0abf23dac1d75fdcdc684d7045fd5c19
+Msg = d02a38f094f1edf26437340d84c30d4f9c2ff64cb8e010b7923c7d3314160c66196d184f7457adda3338edb22537b25799f37570
+Mac = 60d23cda1a1552528f
+Result = F (3 - MAC changed)
+
+Count = 322
+Klen = 32 
+Mlen = 52
+Tlen = 9
+Key = bcedac9db0751f633e64bc881a336d5e1ce27e128b31ff849a13695632608444
+Msg = 48be6dd81def0da5f3f88b9df9612595fdcac462d4c8824afdef69b981307d351d66fd94a32be76d9ef0bacc354d7f2a52950a9c
+Mac = 63d18a953cd902b480
+Result = F (4 - Key or Key1 changed)
+
+Count = 323
+Klen = 32 
+Mlen = 52
+Tlen = 9
+Key = 756f704b11ee3b510a23801f0d15f22b04196a783b5c2fc6c1bc740612dc2210
+Msg = a1acbda19becadfc45fb99292c4020dc7f3b89ca74604f19e826dd15465b9624a9ba18fc45bfc21303ba74576b239520c72d5b63
+Mac = 97e53f31a9b4026728
+Result = P
+
+Count = 324
+Klen = 32 
+Mlen = 52
+Tlen = 9
+Key = 26b877fc9306f87477bbf6642a583b7b711e5817017e475c42d24e84524a2675
+Msg = 101cfeb62216c19d213935e98866c91b60d1eeb6b4ab27fe44fe5f007dd880d2a9ab411c64f440d74f1b5055089a14825962cd69
+Mac = d54c01262702c63035
+Result = F (2 - Key or Key2 changed)
+
+Count = 325
+Klen = 32 
+Mlen = 52
+Tlen = 9
+Key = 4a9b9ed3e83d6d81c912c72dddd3cc82edb5307ade9b992e328a48edd25dfc8b
+Msg = 02e1914ba8207ec4c578abdecca0c0383735b672710ddf2af4c8272aaea799dfaaa2250eecb4a0c29d7a0c8968fc1adf23cbedeb
+Mac = 25a6c81b4cb185a58d
+Result = F (4 - Key or Key1 changed)
+
+Count = 326
+Klen = 32 
+Mlen = 52
+Tlen = 9
+Key = e70336b9caf9b45ccd6d24ecba0f41cabd6e3117c5c807242d208c2a9c923f3c
+Msg = c17672c7da9ece7bac9fa69c888c95ef6e7b2661e8dbdcf93208760c9d1d70b0350acd72a2e6144c4c8699d1c34efdab5d47f847
+Mac = 4a7d2aa01da97bb355
+Result = F (1 - Message changed)
+
+Count = 327
+Klen = 32 
+Mlen = 52
+Tlen = 9
+Key = 81696ae5eda094418fd1f77321e1b6a86d818d3ab1045827476dd5c185cdaaa7
+Msg = 65010561451cc241a63cd4ef265cddde830ac1a8f86aa33eca7d10421ea379b10d5fe7c5fa5bea1a23acd20f7756226fa8134251
+Mac = b27c6854be0a79c456
+Result = F (3 - MAC changed)
+
+Count = 328
+Klen = 32 
+Mlen = 52
+Tlen = 9
+Key = 2ac2745b5d2499509380ca2a03801e7396b5f0ed9e7e328ec52c03c94363840f
+Msg = 76374791f4f4afbc8645e8d0540279014db0e59e19a5384e4f6ddf9ae96dbcabf5c67a558d7c1e5508d8dfd7720a383c3a133b19
+Mac = fe1c69f7ec31aeb26a
+Result = P
+
+Count = 329
+Klen = 32 
+Mlen = 52
+Tlen = 9
+Key = bb69812efa0bafb09324f080a7a1967d28f454589200989cd9351aec9ffcb58c
+Msg = a213f3aca8a97598c7df5d855388be881a050a9a3fc486404607fa6b6be7ad9c3898904d56eeba8da42014ea86cd5693803c32be
+Mac = ff4fa7f01236af1a5d
+Result = F (2 - Key or Key2 changed)
+
+Count = 330
+Klen = 32 
+Mlen = 52
+Tlen = 9
+Key = e26b4010a8f82dd10929e604964e4b9acc084956ae5ca485ac07f3e9c911ecf6
+Msg = e32a3dbfb4542cef77577c305bfaea230b8a9e1b257c49daed53709b43c40856d218423f8bd3a88f52936988f63af1b3674fbd6d
+Mac = 6915418c93f9700e43
+Result = F (4 - Key or Key1 changed)
+
+Count = 331
+Klen = 32 
+Mlen = 52
+Tlen = 9
+Key = 8cf9365ff8de472dcbf2aa70038677aaabcd264909425d291844075b3903a625
+Msg = 9a610799044d0597607322d23c7c73d87a0e172049f0c74b546fafa939007cff3c26b7883d965139e79a7f492bb3c8f1ec825b71
+Mac = b698bb753f95f02af0
+Result = P
+
+Count = 332
+Klen = 32 
+Mlen = 52
+Tlen = 9
+Key = be19c4ba65701ddcbb80fa5f25a792ad35c1a2a22c9d0f9cbdaeccd11403fee6
+Msg = 8ed3742589656a7a1f21f8c985371d65d037bafb0ad4457685e7c11f6eb7ee09a577bdaccc1006d09f217dad8344e35061947940
+Mac = 7ac5665706497b4aea
+Result = F (1 - Message changed)
+
+Count = 333
+Klen = 32 
+Mlen = 52
+Tlen = 9
+Key = 01b91acaefd35e895017a0d96410503741d242f680de044036466f5826127c21
+Msg = a91711895ed47e909d5b61c2b44e1e04c5d985f2c8a0fa77d3f6d39a9950029b32f9f43f1a07b9687b8d64e8af12b5970042f5a4
+Mac = 0d22cdefd1558148fe
+Result = F (3 - MAC changed)
+
+Count = 334
+Klen = 32 
+Mlen = 52
+Tlen = 9
+Key = 73445148f9575ba0cf7c3964b3824ef4d1fab39b9e91367a039da3c2bdf54327
+Msg = 3d9fa545c1e7975038f93a16160c3e96312ad254c928c4f4c6dbea074289c025479e523cdaa05d273865b1835f84d9bed009fe70
+Mac = ecb4b14f64e822c04c
+Result = F (2 - Key or Key2 changed)
+
+Count = 335
+Klen = 32 
+Mlen = 52
+Tlen = 9
+Key = 378197d936a2045c8a4b58b5c416d3f1462719f4fc0e89754aeeca4a42dfa6e6
+Msg = f32a8d3cd687a5a4cd5080b4fceb79abb13b791f3d216a9f0343ef96ce0c527268f4be066801ae2d4b8da5b1c64b206b5b85c8ab
+Mac = 643e98705cba104810
+Result = F (2 - Key or Key2 changed)
+
+Count = 336
+Klen = 32 
+Mlen = 52
+Tlen = 9
+Key = 44b56994f0348b9018a8adf2d219c3b6bdf4993f3b69aee4de1146ab1dd4bb54
+Msg = 5c66673c9f7fbc9f967e4f71b699cec0ac56fa55e6fc4dd05547dffb71608a587e0c4cfc0e24eea0c845e3f667c8733906f51908
+Mac = 0584361564766836dc
+Result = F (4 - Key or Key1 changed)
+
+Count = 337
+Klen = 32 
+Mlen = 52
+Tlen = 9
+Key = 354e53879037f1e60b4299d4d1835d2a24bf44e4eadaf02d698f7ebc4f64ae63
+Msg = 9e4c61323f859c0d49d69d712e3985c645f4912ac1c1a7b9e42b2e0c703b23ff5f5469b8d35c61e5501cbb4429ea8c693885a0bc
+Mac = 13e9b5841121822424
+Result = P
+
+Count = 338
+Klen = 32 
+Mlen = 52
+Tlen = 9
+Key = 5c05cce15125b0a9e2ffc0e23e134933c25b317e1edc380fb37a7e1a40104664
+Msg = 924ec5fd672665e0bd6ef34c76890dfaba10be549cdc492bf96022a8a33c3e85bf108c7c6c8ec400a6d45f2c69f8e6f919e470b3
+Mac = 5aa198f1f37035ee62
+Result = F (1 - Message changed)
+
+Count = 339
+Klen = 32 
+Mlen = 52
+Tlen = 9
+Key = ac04643c377134cdc733d27d57ecb10a75806baf4512f1b1c82fe5355e484454
+Msg = 202cbd9e2e150dcd88961f19593f12b85404d8639c933a4fe1e51c5fcc1303989e6cd4d514c4dfbc8d0e1bf06e2eb388c608c2c1
+Mac = 9f3e755e4b60aa60f3
+Result = F (3 - MAC changed)
+
+Count = 340
+Klen = 32 
+Mlen = 52
+Tlen = 16
+Key = a9522e76b69647b3a423e648d023985f47c4e332f29921860e3d8e75dd399f71
+Msg = b98869c6dd7f94563e6be56356abd0e44c99d5a8c80ff7f5052a7070284da33cd0695266ee7c1181d758fb8d97a6a31e882a4eba
+Mac = 854249d7a4a4c6e0b5d99631b49a7976
+Result = F (2 - Key or Key2 changed)
+
+Count = 341
+Klen = 32 
+Mlen = 52
+Tlen = 16
+Key = 29d9c2495be203b0ea2d815fa9c95b045ff91b1282e49a15428e1e43ca07c653
+Msg = 4f9135bdba35e13b01609e89c83ac726e255745fba87f9c3f1f5b0d84871f90cc1067eee01d0bc9ef911bf82c5822c3bd4e785d8
+Mac = 84b84a52c95f69f734562e94007d2408
+Result = P
+
+Count = 342
+Klen = 32 
+Mlen = 52
+Tlen = 16
+Key = 3948284dc5189c888e8823aa4263f06ac5c93095c9773d689e49153d4bfc0a6b
+Msg = 5b5dd953c9a6810acc64394ffd149826d99806292addd13fc3bb7dac701c5b4a2d615d15960128ed9f736b98854f6f0705b0f0da
+Mac = febb1eaee57385733fb9017d7d1b67ac
+Result = F (3 - MAC changed)
+
+Count = 343
+Klen = 32 
+Mlen = 52
+Tlen = 16
+Key = e00c9fcff80240a3951f4d90d0a84626c8cded32eadca78f6fb5243f257e42ba
+Msg = 602663e1f68038fe1116fb5f2e4136b83efb897cfbe69dfe7c915ad706f65a8726479d5ffcea7e9edac2e5da0eb0bfa1fb59ab61
+Mac = a4227687a2329fbfb9934c47580d743b
+Result = F (1 - Message changed)
+
+Count = 344
+Klen = 32 
+Mlen = 52
+Tlen = 16
+Key = 5e94c420f4ae149896e83fc63da826dbe14dbccc37135c56973660403d5befe0
+Msg = 0cb50e788f3b94e19d70182a84ba7984388d6e9d498c1ad913f2e1df3531795844d944f3c0baddad464df14f085050387bb1435c
+Mac = e6ed46fe48635337daba9d0c63250546
+Result = F (4 - Key or Key1 changed)
+
+Count = 345
+Klen = 32 
+Mlen = 52
+Tlen = 16
+Key = fe4d3d435d7917d681b995e6f1c6999fbfbbe194ba78db4be449bafc27c3c996
+Msg = ab63502ae9375cb57d172753e84c6830b012fa09b59cd648c0593f715f763cbcf1a44b04fd1b54dfc8dedc0f26417b1990a99033
+Mac = 9e3613b94adb0bdadce0369a95aeda87
+Result = F (1 - Message changed)
+
+Count = 346
+Klen = 32 
+Mlen = 52
+Tlen = 16
+Key = e7ff8e3d465d344582f2dd566e0d29ddd6205184cbc614563a04f524c3cfa328
+Msg = 1892199325db25f3b94c90b79a5c84b362117cc28dc6fbadd12b7e4fae8daff74558db0e6ddaa6fa0449fe4183084df2d526f341
+Mac = c17f5595a7a8450548e6d4d59a16a038
+Result = F (2 - Key or Key2 changed)
+
+Count = 347
+Klen = 32 
+Mlen = 52
+Tlen = 16
+Key = 781ef9afab90c71c232d1cd9fabd740131487f15977424eeec0ec7f647e6c798
+Msg = fc155e36424fc6fb40b5b8fa036cd3273fa88eef44cccb762dd3b0235beeb25e226ef298c1e5cd8c9888aec595d82761f0824114
+Mac = 2d4abf88e1d2dec8cc2881f5c48f927a
+Result = P
+
+Count = 348
+Klen = 32 
+Mlen = 52
+Tlen = 16
+Key = 1be8e618ab69fc4de957774ce0dde930ca9a82368546287c4399ca098268f20e
+Msg = 9230978d5475639b20776c8e58de4ded770976b2a4526aa987932c195be9f3a644b72576e3ee8393288ca19068639a70b01c01c3
+Mac = 3060825596d4fdd0257cb0d09bd5a1a0
+Result = F (4 - Key or Key1 changed)
+
+Count = 349
+Klen = 32 
+Mlen = 52
+Tlen = 16
+Key = 673110ad5b31bce92b770added8fe71611fc5acff17cb85aa88e17c1283204ac
+Msg = 5deb8bbf189f09ba08681c7634090b712f962df33234a1f16d203e319ff3cdafe5247640cfce7975b9b31fc25982efdf9455246f
+Mac = 20afa8ee99e10ef8731d04d0f95e1fae
+Result = F (3 - MAC changed)
+
+Count = 350
+Klen = 32 
+Mlen = 52
+Tlen = 16
+Key = 8da323081ec194932202261ff566a9d07951bd5001e1dcc56d7f9b0096b42cf7
+Msg = eb0f6c24fe1caf675dcc77c46598ab99cce867a42d84a017c04b07ea68273075f440f43e9e701410d8f81e4d4971958412054c46
+Mac = 6a39224e4684da6a3e2c7676526279b2
+Result = F (3 - MAC changed)
+
+Count = 351
+Klen = 32 
+Mlen = 52
+Tlen = 16
+Key = 1b0f5ea03f645de7d9837871ee6f7579176b5980270f2efa0e9c0447fd8d36e4
+Msg = a413f98c309815720c9f714bfba62226dfd63c198a8944e0d40ae7c8eb9bebccebbd67fdafab2f27e62893b1697a49c5ccb7a7b1
+Mac = e87ea5ab282b27a821ba9c276484699e
+Result = F (1 - Message changed)
+
+Count = 352
+Klen = 32 
+Mlen = 52
+Tlen = 16
+Key = 0c65dba8a3beba8cb4945b8193fe4a6fd84284f006ea3a046a1ad20646202fde
+Msg = ba40cbc04fca956e656a52a2c5923a0683dd0fa68b5050517de1b042bb35c700c0ae0682b3a5f0973bf4878596b805f0e555cdfe
+Mac = 83112230c157bf6659598bb40b4d00e4
+Result = P
+
+Count = 353
+Klen = 32 
+Mlen = 52
+Tlen = 16
+Key = 9116e010c40d732b37a9019adf12e3e4762c3a30da6a7bb5b4e72c7157b3e81e
+Msg = d2f0141cda9242969fe4a5a31acf140cff0505bf92890173bc71558f5eeb0b48e57e180a1f92d71a4d33b6797912300b09ccfbf8
+Mac = 97d70f2be6db9f0203d018120ab50e1a
+Result = F (4 - Key or Key1 changed)
+
+Count = 354
+Klen = 32 
+Mlen = 52
+Tlen = 16
+Key = 773e203380f8a7c987cea393234699de03a1d09ce204f0a8b6d5cf522b688717
+Msg = 47f3a464d9cf9e0a6fb72cd4f5b6b7d64021d4a69fd774beb3c85a2181b4d342c635a1218a0038b7f8682d946d24ebc7cf51a8fe
+Mac = d68585f70cd1f0436cfc64c82d170449
+Result = F (2 - Key or Key2 changed)
+
+Count = 355
+Klen = 32 
+Mlen = 52
+Tlen = 16
+Key = 303d7b815f67189d7428142b83153f0cf2c85f42d3e1230d714b585329c15f45
+Msg = 5d617aeec6536048d21e6c1fa1f84c75fb15b53dda1a066d28d42854c92ab82edc5068f63e3ea27b50616fb6fb90985bf1410bae
+Mac = 912d230f2b9b01e438c8cd0204dfee08
+Result = F (3 - MAC changed)
+
+Count = 356
+Klen = 32 
+Mlen = 52
+Tlen = 16
+Key = 5f50cd96ea9594c70961f39bf891a8eaffdfd65df556a880030a3718aa05aeb6
+Msg = 021da8539e4665af0db527809955bbac9fe080649fa61d05938a733c7f4dd16e4a0f6757cc12fef128c2e6975cf22f6a16691cf4
+Mac = b9637959f838d6d49555716ac50f5033
+Result = F (1 - Message changed)
+
+Count = 357
+Klen = 32 
+Mlen = 52
+Tlen = 16
+Key = fa810a2ef8a9600dfcf6a2022992ac8ec72db8108d38c7971e5443f5d30ae215
+Msg = 1175bf6fe46bd587d52e08b431a72fca93dbcc8fb36c83657f63d1296d2cfa5a0fe2437ee8ce62c17e2a33e0b02aac454a3d1374
+Mac = 4ee4a0795233ea2ed5fdb376f7346e52
+Result = F (4 - Key or Key1 changed)
+
+Count = 358
+Klen = 32 
+Mlen = 52
+Tlen = 16
+Key = dc75a34b29bf5a9e06e6f002aacc07a0690537c13746b0e36c1a200bc4d7d75e
+Msg = ed614d5bac7e2a6bcb787a0696788dcc842f28011822868205459cfe95cca2624b3ece95c8cb6366ebdfeac33cf7bf2b8bb4d065
+Mac = 8b5621417c47cbfb5362929ae9f3d368
+Result = F (2 - Key or Key2 changed)
+
+Count = 359
+Klen = 32 
+Mlen = 52
+Tlen = 16
+Key = 7f022ffa57f42cccc82d1f52527bb45e0de6dbec9bdb63605b8acb0edf8c55ff
+Msg = 69c996d5d492596caa7a9fe4a4a9fa5702acd849c5d357311ed75b3626c0dd36cf06860c1bf77c138c587ce6db4f296aed81a30f
+Mac = 660f603edc6355d6e34ba2ed276a742d
+Result = P

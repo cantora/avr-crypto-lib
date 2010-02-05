@@ -41,6 +41,8 @@
 #include "bcal-cfb_bit.h"
 #include "bcal-ofb.h"
 #include "bcal-ctr.h"
+#include "bcal-cmac.h"
+#include "cmacvs.h"
 
 #include <stdint.h>
 #include <string.h>
@@ -48,6 +50,13 @@
 #include <avr/pgmspace.h>
 
 char* algo_name = "AES";
+
+const bcdesc_t* algolist[] PROGMEM = {
+	(bcdesc_t*)&aes128_desc,
+	(bcdesc_t*)&aes192_desc,
+	(bcdesc_t*)&aes256_desc,
+	NULL
+};
 
 /*****************************************************************************
  *  additional validation-functions											 *
@@ -414,6 +423,110 @@ void testrun_aes128_ctr(void){
 	bcal_ctr_free(&ctx);
 }
 
+void testrun_aes128_cmac(void){
+	uint8_t key[16];
+	uint8_t tag[16];
+	uint8_t plain[64];
+	uint16_t length[] = { 0, 128, 320, 512 };
+	bcal_cmac_ctx_t ctx;
+	uint8_t r,i;
+
+	memcpy_P(key,   modes_key,   16);
+	memcpy_P(plain, modes_plain, 64);
+
+	cli_putstr_P(PSTR("\r\n** AES128-CMAC-TEST **"));
+
+	cli_putstr_P(PSTR("\r\n  key:   "));
+	cli_hexdump(key, 128/8);
+	for(i=0; i<4; ++i){
+		r = bcal_cmac_init(&aes128_desc, key, 128, &ctx);
+		cli_putstr_P(PSTR("\r\n  init = 0x"));
+		cli_hexdump(&r, 1);
+		cli_putstr_P(PSTR("\r\n  message: "));
+		cli_hexdump_block(plain, length[i]/8, 4, 16);
+		if(r)
+			return;
+		bcal_cmac(tag, 128, plain, length[i], &ctx);
+		cli_putstr_P(PSTR("\r\n  tag:     "));
+		cli_hexdump_block(tag, 128/8, 4, 16);
+		bcal_cmac_free(&ctx);
+	}
+}
+/*
+Klen = 16
+Mlen = 18
+Tlen = 2
+Key = 3250974e306b4b678f914b514d1e90f6
+Msg = cf132fd4ebc25fd3866f1a95a6193a1a9cdf
+*/
+void testrun_aes128_cmac72(void){
+	uint8_t key[16]= {
+			0x32, 0x50, 0x97, 0x4e, 0x30, 0x6b, 0x4b, 0x67,
+			0x8f, 0x91, 0x4b, 0x51, 0x4d, 0x1e, 0x90, 0xf6
+	};
+	uint8_t tag[2];
+	uint8_t plain[18] = {
+			0xcf, 0x13, 0x2f, 0xd4, 0xeb, 0xc2, 0x5f, 0xd3,
+			0x86, 0x6f, 0x1a, 0x95, 0xa6, 0x19, 0x3a, 0x1a,
+			0x9c, 0xdf,
+	};
+	bcal_cmac_ctx_t ctx;
+	uint8_t r;
+
+
+	cli_putstr_P(PSTR("\r\n** AES128-CMAC-72-TEST **"));
+
+	cli_putstr_P(PSTR("\r\n  key:   "));
+	cli_hexdump(key, 128/8);
+	r = bcal_cmac_init(&aes128_desc, key, 128, &ctx);
+	cli_putstr_P(PSTR("\r\n  init = 0x"));
+	cli_hexdump(&r, 1);
+	cli_putstr_P(PSTR("\r\n  message: "));
+	cli_hexdump_block(plain, 18, 4, 16);
+	if(r)
+		return;
+	bcal_cmac(tag, 16, plain, 18*8, &ctx);
+	cli_putstr_P(PSTR("\r\n  tag:     "));
+	cli_hexdump_block(tag, 2, 4, 16);
+	bcal_cmac_free(&ctx);
+}
+/*
+Count = 0
+Klen = 24
+Mlen = 0
+Tlen = 2
+Key = 2b2aaa666be161ed16648e862ac9bd1e317f71bc69e268b5
+Msg = 00
+*/
+void testrun_aes192_cmac0(void){
+	uint8_t key[24]= {
+			0x2b, 0x2a, 0xaa, 0x66, 0x6b, 0xe1, 0x61, 0xed,
+			0x16, 0x64, 0x8e, 0x86, 0x2a, 0xc9, 0xbd, 0x1e,
+			0x31, 0x7f, 0x71, 0xbc, 0x69, 0xe2, 0x68, 0xb5
+	};
+	uint8_t tag[2];
+	uint8_t plain[1] = {
+			0x00
+	};
+	bcal_cmac_ctx_t ctx;
+	uint8_t r;
+
+
+	cli_putstr_P(PSTR("\r\n** AES192-CMAC-0-TEST **"));
+
+	cli_putstr_P(PSTR("\r\n  key:   "));
+	cli_hexdump(key, 192/8);
+	r = bcal_cmac_init(&aes192_desc, key, 192, &ctx);
+	cli_putstr_P(PSTR("\r\n  init = 0x"));
+	cli_hexdump(&r, 1);
+	if(r)
+		return;
+	bcal_cmac(tag, 16, plain, 0*8, &ctx);
+	cli_putstr_P(PSTR("\r\n  tag:     "));
+	cli_hexdump_block(tag, 2, 4, 16);
+	bcal_cmac_free(&ctx);
+}
+
 /*****************************************************************************/
 
 void testrun_performance_aes128(void){
@@ -545,31 +658,45 @@ void testrun_performance_aes(void){
  *  main																	 *
  *****************************************************************************/
 
-const char nessie_str[]      PROGMEM = "nessie";
-const char test_str[]        PROGMEM = "test";
-const char testkey_str[]     PROGMEM = "testkey";
-const char testcbc_str[]     PROGMEM = "testcbc";
-const char testcfb8_str[]    PROGMEM = "testcfb8";
-const char testcfb1_str[]    PROGMEM = "testcfb1";
-const char testofb_str[]     PROGMEM = "testofb";
-const char testctr_str[]     PROGMEM = "testctr";
-const char performance_str[] PROGMEM = "performance";
-const char dump_str[]        PROGMEM = "dump";
-const char echo_str[]        PROGMEM = "echo";
+const char nessie_str[]       PROGMEM = "nessie";
+const char test_str[]         PROGMEM = "test";
+const char testkey_str[]      PROGMEM = "testkey";
+const char testcbc_str[]      PROGMEM = "testcbc";
+const char testcfb8_str[]     PROGMEM = "testcfb8";
+const char testcfb1_str[]     PROGMEM = "testcfb1";
+const char testofb_str[]      PROGMEM = "testofb";
+const char testctr_str[]      PROGMEM = "testctr";
+const char testcmac_str[]     PROGMEM = "testcmac";
+const char testcmac72_str[]   PROGMEM = "testcmac72";
+const char testcmac0_str[]    PROGMEM = "testcmac0";
+const char cmacvs_list_str[]  PROGMEM = "cmacvs_list";
+const char cmacvs_set_str[]   PROGMEM = "cmacvs_set";
+const char cmacvs_test1_str[] PROGMEM = "cmacvs_test1";
+const char cmacvs_test2_str[] PROGMEM = "cmacvs_test2";
+const char performance_str[]  PROGMEM = "performance";
+const char dump_str[]         PROGMEM = "dump";
+const char echo_str[]         PROGMEM = "echo";
 
 cmdlist_entry_t cmdlist[] PROGMEM = {
-	{ nessie_str,      NULL, testrun_nessie_aes },
-	{ test_str,        NULL, testrun_test_aes},
-	{ testkey_str,     NULL, testrun_testkey_aes},
-	{ testcbc_str,     NULL, testrun_aes128_cbc},
-	{ testcfb8_str,    NULL, testrun_aes128_cfb8},
-	{ testcfb1_str,    NULL, testrun_aes128_cfb1},
-	{ testofb_str,     NULL, testrun_aes128_ofb},
-	{ testctr_str,     NULL, testrun_aes128_ctr},
-	{ performance_str, NULL, testrun_performance_aes},
-	{ dump_str,    (void*)1, (void_fpt)dump},
-	{ echo_str,    (void*)1, (void_fpt)echo_ctrl},
-	{ NULL,            NULL, NULL}
+	{ nessie_str,          NULL, testrun_nessie_aes              },
+	{ test_str,            NULL, testrun_test_aes                },
+	{ testkey_str,         NULL, testrun_testkey_aes             },
+	{ testcbc_str,         NULL, testrun_aes128_cbc              },
+	{ testcfb8_str,        NULL, testrun_aes128_cfb8             },
+	{ testcfb1_str,        NULL, testrun_aes128_cfb1             },
+	{ testofb_str,         NULL, testrun_aes128_ofb              },
+	{ testctr_str,         NULL, testrun_aes128_ctr              },
+	{ testcmac_str,        NULL, testrun_aes128_cmac             },
+	{ testcmac72_str,      NULL, testrun_aes128_cmac72           },
+	{ testcmac0_str,       NULL, testrun_aes192_cmac0            },
+	{ cmacvs_list_str,     NULL, cmacvs_listalgos                },
+	{ cmacvs_set_str,  (void*)1, (void_fpt)cmacvs_setalgo        },
+	{ cmacvs_test1_str,    NULL, cmacvs_test1                    },
+	{ cmacvs_test2_str,    NULL, cmacvs_test2                    },
+	{ performance_str,     NULL, testrun_performance_aes         },
+	{ dump_str,        (void*)1, (void_fpt)dump                  },
+	{ echo_str,        (void*)1, (void_fpt)echo_ctrl             },
+	{ NULL,                NULL, NULL                            }
 };
 
 
@@ -578,6 +705,8 @@ int main (void){
 
 	cli_rx = (cli_rx_fpt)uart0_getc;
 	cli_tx = (cli_tx_fpt)uart0_putc;
+	cmacvs_algolist=(bcdesc_t**)algolist;
+	cmacvs_algo=(bcdesc_t*)&aes128_desc;
 	for(;;){
 		cli_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
 		cli_putstr(algo_name);

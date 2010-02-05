@@ -41,11 +41,11 @@ const uint8_t aes256_keysize_desc[] PROGMEM = { KS_TYPE_LIST, 1, KS_INT(256),
 
 const bcdesc_t aes256_desc PROGMEM = {
 	BCDESC_TYPE_BLOCKCIPHER,
-	BC_INIT_TYPE_2,
+	BC_INIT_TYPE_1,
 	aes256_str,
 	sizeof(aes256_ctx_t),
 	128,
-	{(void_fpt)aes_init},
+	{(void_fpt)aes256_init},
 	{(void_fpt)aes256_enc},
 	{(void_fpt)aes256_dec},
 	(bc_free_fpt)NULL,

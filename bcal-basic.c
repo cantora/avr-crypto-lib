@@ -25,21 +25,21 @@
 #include "keysize_descriptor.h"
 
 uint8_t bcal_cipher_init(const bcdesc_t* cipher_descriptor,
-                         const void* key, uint16_t keysize, bcgen_ctx_t* ctx){
+                         const void* key, uint16_t keysize_b, bcgen_ctx_t* ctx){
 	if(!is_valid_keysize_P((PGM_VOID_P)pgm_read_word(&(cipher_descriptor->valid_keysize_desc)),
-	                       keysize)){
+	                       keysize_b)){
 		return 1;
 	}
 	uint8_t flags;
 	bc_init_fpt init_fpt;
 	ctx->desc_ptr = (bcdesc_t*)cipher_descriptor;
-	ctx->keysize  = keysize;
+	ctx->keysize  = keysize_b;
 	flags = pgm_read_byte(cipher_descriptor->flags);
 	init_fpt.initvoid = (void_fpt)(pgm_read_word(&(cipher_descriptor->init.initvoid)));
 	if(init_fpt.initvoid == NULL){
-		if(!(ctx->ctx = malloc((keysize+7)/8)))
+		if(!(ctx->ctx = malloc((keysize_b+7)/8)))
 			return 2;
-		memcpy(ctx->ctx, key, (keysize+7)/8);
+		memcpy(ctx->ctx, key, (keysize_b+7)/8);
 		return 0;
 	}
 	if(!(ctx->ctx = malloc(pgm_read_word(&(cipher_descriptor->ctxsize_B)))))
@@ -47,7 +47,7 @@ uint8_t bcal_cipher_init(const bcdesc_t* cipher_descriptor,
 	if((flags&BC_INIT_TYPE)==BC_INIT_TYPE_1){
 		init_fpt.init1((void*)key, (ctx->ctx));
 	}else{
-		init_fpt.init2((void*)key, keysize, (ctx->ctx));
+		init_fpt.init2((void*)key, keysize_b, (ctx->ctx));
 	}
 	return 0;
 }

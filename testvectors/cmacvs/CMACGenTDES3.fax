@@ -1,0 +1,1589 @@
+#  CAVS 5.0
+#  CMACGen information for "cmactestvectors"
+#  Algorithms tested:Alg = TDES KeySize = 3 Mode = Generate  
+#  Generated on Thu Mar 30 14:33:26 2006
+
+
+Count = 0
+Klen = 3 
+Mlen = 0
+Tlen = 4
+Key1 = f8fba7b9b3e9d68a
+Key2 = 2f70bfd304d32a15
+Key3 = 9e13453e0d16928a
+Msg = 00
+Mac = eb61515b
+
+
+Count = 1
+Klen = 3 
+Mlen = 0
+Tlen = 4
+Key1 = ae0807dc0ecb546b
+Key2 = d3738a43462970c2
+Key3 = 7c0275c7d0d6c7ad
+Msg = 00
+Mac = 646f3602
+
+
+Count = 2
+Klen = 3 
+Mlen = 0
+Tlen = 4
+Key1 = d310f1f2ad2ae68a
+Key2 = 9270513720f76b23
+Key3 = 91fba7dac7d0efd5
+Msg = 00
+Mac = c3988c7c
+
+
+Count = 3
+Klen = 3 
+Mlen = 0
+Tlen = 4
+Key1 = 61e65ba4c4921385
+Key2 = e538b9f189ab807a
+Key3 = 62d3f80b7aad45da
+Msg = 00
+Mac = 76e41eae
+
+
+Count = 4
+Klen = 3 
+Mlen = 0
+Tlen = 4
+Key1 = bfb53d161998f8ef
+Key2 = bfa2c8d0808cc7fb
+Key3 = d9d54a6786f7a746
+Msg = 00
+Mac = 46b10d83
+
+
+Count = 5
+Klen = 3 
+Mlen = 0
+Tlen = 4
+Key1 = 5da81fdab6a44068
+Key2 = ab4a0243c72632b5
+Key3 = 9d43d929f29b0252
+Msg = 00
+Mac = dc84c95e
+
+
+Count = 6
+Klen = 3 
+Mlen = 0
+Tlen = 4
+Key1 = f225f2863d76a89e
+Key2 = feb37f1554c26185
+Key3 = d55edff71fc425fe
+Msg = 00
+Mac = 6967e39c
+
+
+Count = 7
+Klen = 3 
+Mlen = 0
+Tlen = 4
+Key1 = 049e94da3d6b1cba
+Key2 = 5b515734b9070be6
+Key3 = 32df89ad4a040e7c
+Msg = 00
+Mac = 843058c9
+
+
+Count = 8
+Klen = 3 
+Mlen = 0
+Tlen = 6
+Key1 = 312f015464bf0470
+Key2 = 1aa2432cba191c2c
+Key3 = 3b899b253d0bc8d0
+Msg = 00
+Mac = 42ef068e45b6
+
+
+Count = 9
+Klen = 3 
+Mlen = 0
+Tlen = 6
+Key1 = 7f6baeb067832f20
+Key2 = 23649da46e921c49
+Key3 = 570b43c81f1540c1
+Msg = 00
+Mac = c31e50d32bec
+
+
+Count = 10
+Klen = 3 
+Mlen = 0
+Tlen = 6
+Key1 = bf708c5e620e545d
+Key2 = 912602c4f7ae892c
+Key3 = 2aefd34a67ae7308
+Msg = 00
+Mac = 7e667dcc3f5c
+
+
+Count = 11
+Klen = 3 
+Mlen = 0
+Tlen = 6
+Key1 = 4cd6255b86043e75
+Key2 = 49c8f7e36bd9a761
+Key3 = df374976b9b9d9d3
+Msg = 00
+Mac = aa755c97187f
+
+
+Count = 12
+Klen = 3 
+Mlen = 0
+Tlen = 6
+Key1 = bf89d36125839b25
+Key2 = 29bcd3c43b25fb73
+Key3 = 38311f37f7974fc7
+Msg = 00
+Mac = d3206d0c03b0
+
+
+Count = 13
+Klen = 3 
+Mlen = 0
+Tlen = 6
+Key1 = bcdfe6bfd94f8f1f
+Key2 = 8667e051d38a9ee0
+Key3 = 26433734a7374394
+Msg = 00
+Mac = 21bcb97ab5bc
+
+
+Count = 14
+Klen = 3 
+Mlen = 0
+Tlen = 6
+Key1 = 0423fe3dbf76c8d5
+Key2 = b358a829c83bd568
+Key3 = 52297613df07a27f
+Msg = 00
+Mac = 9509e5489bb8
+
+
+Count = 15
+Klen = 3 
+Mlen = 0
+Tlen = 6
+Key1 = 4c100462c8804ff1
+Key2 = 5437ea6b041c9791
+Key3 = d0d51fb357385820
+Msg = 00
+Mac = c85d07955275
+
+
+Count = 16
+Klen = 3 
+Mlen = 0
+Tlen = 8
+Key1 = da6dc8a89dba6292
+Key2 = 6e1c1f98949819a4
+Key3 = 80e6fba4e3a7494f
+Msg = 00
+Mac = 6dc376b2e3a3cde4
+
+
+Count = 17
+Klen = 3 
+Mlen = 0
+Tlen = 8
+Key1 = f7d33dfee5253862
+Key2 = 3470297326857343
+Key3 = 46fb85e6ecc237ef
+Msg = 00
+Mac = 787298936048a495
+
+
+Count = 18
+Klen = 3 
+Mlen = 0
+Tlen = 8
+Key1 = 4fe35bc7bc26387f
+Key2 = f2cee02f6158f404
+Key3 = ab1ab3255b835dce
+Msg = 00
+Mac = 14b4a07be1c33ceb
+
+
+Count = 19
+Klen = 3 
+Mlen = 0
+Tlen = 8
+Key1 = 891a5de3ce4626da
+Key2 = 2a159485d62651ba
+Key3 = b97ae9aea78c5e92
+Msg = 00
+Mac = 57b1e3d96677a874
+
+
+Count = 20
+Klen = 3 
+Mlen = 0
+Tlen = 8
+Key1 = 3723abe5a82f9b15
+Key2 = 10df3267e31a972a
+Key3 = d001c75b19ecf151
+Msg = 00
+Mac = 999ddb9b1e17419d
+
+
+Count = 21
+Klen = 3 
+Mlen = 0
+Tlen = 8
+Key1 = fdaed698d025e36d
+Key2 = 13ae9e7625e9e502
+Key3 = 6e8a40e6c726b9d9
+Msg = 00
+Mac = 3046b0063714d08c
+
+
+Count = 22
+Klen = 3 
+Mlen = 0
+Tlen = 8
+Key1 = 89ce1c3d68370754
+Key2 = d5b5f72f83d07973
+Key3 = c2df5d1f0bdc19fe
+Msg = 00
+Mac = 0691fa5832929efe
+
+
+Count = 23
+Klen = 3 
+Mlen = 0
+Tlen = 8
+Key1 = 0eecf26b0d01c7f4
+Key2 = ad1c618c1c67fe7c
+Key3 = d55deac2e5fde970
+Msg = 00
+Mac = 3d426c34163df80c
+
+
+Count = 24
+Klen = 3 
+Mlen = 16
+Tlen = 4
+Key1 = 344a6732dc5e5431
+Key2 = e98a4f7c323dc1c4
+Key3 = 6b0275dc150e68e9
+Msg = 25db0710fb165d316e7c32dd25648ed0
+Mac = 862f0e2b
+
+
+Count = 25
+Klen = 3 
+Mlen = 16
+Tlen = 4
+Key1 = 25c104e08f31f1a8
+Key2 = 75a7a1ea9185a81f
+Key3 = f849e654629d7552
+Msg = e2e0f15264b98a581985a3d58abda128
+Mac = 75fcc06c
+
+
+Count = 26
+Klen = 3 
+Mlen = 16
+Tlen = 4
+Key1 = f264ab2a2f4a6ec8
+Key2 = d5a19d7a98868c01
+Key3 = bf89d36125839b25
+Msg = 28bcd3c53b24fb7206908d78059e856d
+Mac = d98d3472
+
+
+Count = 27
+Klen = 3 
+Mlen = 16
+Tlen = 4
+Key1 = 9298c7b3fe9749fe
+Key2 = 047cb90e1c2ffb85
+Key3 = f29e8f10f7b51f1c
+Msg = 4a20bc7bb41d5b237107758b5a28c1dd
+Mac = 2a9ad8e9
+
+
+Count = 28
+Klen = 3 
+Mlen = 16
+Tlen = 4
+Key1 = 016ece5da138bcf2
+Key2 = 617a327031689116
+Key3 = 1504671a23861a85
+Msg = e7f2c853bbdb234137d4335f3129a4fe
+Mac = 71cb1e64
+
+
+Count = 29
+Klen = 3 
+Mlen = 16
+Tlen = 4
+Key1 = d0975b497ad910e5
+Key2 = 45b031923b8ab320
+Key3 = 6408e5e5580e5b26
+Msg = 9b7a09c97132702006e53d472505abdd
+Mac = be428f39
+
+
+Count = 30
+Klen = 3 
+Mlen = 16
+Tlen = 4
+Key1 = 43577c9b8913e0e9
+Key2 = 1a5d9d3bef19fbad
+Key3 = e6ab6e1aa708bf3b
+Msg = 0724b384074a0b5c205b042eb5beb7bb
+Mac = 2396736e
+
+
+Count = 31
+Klen = 3 
+Mlen = 16
+Tlen = 4
+Key1 = 7c4cc715a861081c
+Key2 = 8064857c76101a23
+Key3 = 516e61d023e65edf
+Msg = 0c2229eb1387d59b2427b5f470841a93
+Mac = 7ee3dc34
+
+
+Count = 32
+Klen = 3 
+Mlen = 16
+Tlen = 6
+Key1 = 9b29e3bf6e4019dc
+Key2 = 4a2a3e9e9e6b13a7
+Key3 = f79b512adf706776
+Msg = 51f57e7aefc64d80c0e47e93dae1e487
+Mac = c64ca691bb7d
+
+
+Count = 33
+Klen = 3 
+Mlen = 16
+Tlen = 6
+Key1 = 1cd346926e91349d
+Key2 = 921a37f8e53dd651
+Key3 = a8fe0e521640d0a8
+Msg = 2550fc1f31b955987df2964b3b703373
+Mac = 0f0038ed6a98
+
+
+Count = 34
+Klen = 3 
+Mlen = 16
+Tlen = 6
+Key1 = e63b6173e6f440f1
+Key2 = 4a294a6489f494b6
+Key3 = 4a8fd308d5cdbaa4
+Msg = cb7bf45e4fde3d68c311351060bbf5d5
+Mac = b8f47cfe42a7
+
+
+Count = 35
+Klen = 3 
+Mlen = 16
+Tlen = 6
+Key1 = f81c7ca4493458e6
+Key2 = 9b7568324f32d340
+Key3 = c7cbb6b36d686e15
+Msg = 1a40aeb7cf5af26f5cd754fcd83ecec6
+Mac = 03f805a4a358
+
+
+Count = 36
+Klen = 3 
+Mlen = 16
+Tlen = 6
+Key1 = 4f9134bcba34e03b
+Key2 = 7626d34a5de67cc8
+Key3 = 64e0298a70851c4c
+Msg = 54b9619271b1c5bc34e6ee2c650f8574
+Mac = d7837df2782a
+
+
+Count = 37
+Klen = 3 
+Mlen = 16
+Tlen = 6
+Key1 = 58d6c191616275a1
+Key2 = 7031348002016837
+Key3 = 51136713d33b3226
+Msg = c7a2fb653939b5fa6dfb8d5301a69e2f
+Mac = d5e4fc223fa2
+
+
+Count = 38
+Klen = 3 
+Mlen = 16
+Tlen = 6
+Key1 = 0d92388cf8ec1385
+Key2 = 51b9ad454c2f40d5
+Key3 = 762ac47abc0179f8
+Msg = bf56901559c5ca0dbfe3bb9d28a1da6f
+Mac = 8072aca0cf09
+
+
+Count = 39
+Klen = 3 
+Mlen = 16
+Tlen = 6
+Key1 = 0e76043d5e4c6e67
+Key2 = ea4c3e5ba1b3ba13
+Key3 = 64d5a192b3a246ae
+Msg = e1e9cae93c6200a62779755b0cfd8a74
+Mac = 6cad7063919a
+
+
+Count = 40
+Klen = 3 
+Mlen = 16
+Tlen = 8
+Key1 = e33216578cfda13d
+Key2 = 6b2cdf920825c7b3
+Key3 = da52cd58b9c497e3
+Msg = aeb9d3026df4f8576b48528564121afb
+Mac = 67c86d9f1b5c4bed
+
+
+Count = 41
+Klen = 3 
+Mlen = 16
+Tlen = 8
+Key1 = 4979c8ec2c9d2c85
+Key2 = b602453e8ab004da
+Key3 = 80b5b06dda9e529e
+Msg = 66998a8abd7d5fc4263f6af6dc77f01e
+Mac = 0b429cd939556e70
+
+
+Count = 42
+Klen = 3 
+Mlen = 16
+Tlen = 8
+Key1 = e35b86f7bc5d209e
+Key2 = 4516bf160e5179e6
+Key3 = c1c7520461ae8adf
+Msg = 8a90073a4dbd61c90799f0f82b5d58e6
+Mac = 5a6cac47b6ad032a
+
+
+Count = 43
+Klen = 3 
+Mlen = 16
+Tlen = 8
+Key1 = 7f7c10518c153d2a
+Key2 = 1f23349bbad9b570
+Key3 = 2a230eb6ab7ca446
+Msg = fb7fcc48e063a665bd6705495515dd61
+Mac = ce0509ae5560aaf8
+
+
+Count = 44
+Klen = 3 
+Mlen = 16
+Tlen = 8
+Key1 = 02548c40405e5762
+Key2 = fed9404fc43b3e37
+Key3 = 4cd03ef8ea2304b5
+Msg = 65f196f65b51efc796d9ee43f67523c9
+Mac = 117cdc8030e1d43e
+
+
+Count = 45
+Klen = 3 
+Mlen = 16
+Tlen = 8
+Key1 = fbfd542073cd793b
+Key2 = 19b69de0a261089e
+Key3 = dfe5236db6c7808f
+Msg = 81498e13f4b630ade8d5203b69145fc7
+Mac = 54bf3058633ed140
+
+
+Count = 46
+Klen = 3 
+Mlen = 16
+Tlen = 8
+Key1 = 8c0d5226ef343897
+Key2 = 6e8c3420dc9d37c8
+Key3 = 9d37523134ba2cb5
+Msg = 47751b8b4565cc3550669e7d7f0678fb
+Mac = c9965a9d7dc7bd5f
+
+
+Count = 47
+Klen = 3 
+Mlen = 16
+Tlen = 8
+Key1 = c46efde5e65d7fc2
+Key2 = 0d329e37854049ef
+Key3 = 10da4032a8545b9b
+Msg = 03ea1f2fa34b77f916c7cce2dd23db88
+Mac = 2118fc18af04d6b2
+
+
+Count = 48
+Klen = 3 
+Mlen = 24
+Tlen = 4
+Key1 = e6081c2040892c7a
+Key2 = fdd692e604549d89
+Key3 = 6d7fb9e92c98a1dc
+Msg = 7ec75db901029d62043f552e0161edb6c352b0e11ded25f3
+Mac = c051fb9d
+
+
+Count = 49
+Klen = 3 
+Mlen = 24
+Tlen = 4
+Key1 = dabcf79edaf7dc6d
+Key2 = 1058d0f19e5b0ea8
+Key3 = f498a2c8f8370426
+Msg = d194602fdd75f11e6905e4a10eccad2b017a50808b867575
+Mac = a2d4e669
+
+
+Count = 50
+Klen = 3 
+Mlen = 24
+Tlen = 4
+Key1 = 2a2aab676be061ec
+Key2 = 98ef4a915e0126fe
+Key3 = d51f2073a402bffd
+Msg = 063cfa8ca36c9383b87db07e0de87565fd693a7bcd058386
+Mac = 7cd2f49a
+
+
+Count = 51
+Klen = 3 
+Mlen = 24
+Tlen = 4
+Key1 = 8f19d345fed5b0ba
+Key2 = 2683f4bffba7eaf7
+Key3 = 5bf4a82f1f859ba7
+Msg = b138122824e04e13cdf3305a69058bda7b5d16b89efc658d
+Mac = 49d44a59
+
+
+Count = 52
+Klen = 3 
+Mlen = 24
+Tlen = 4
+Key1 = 9eba7ca1e9259d68
+Key2 = e537bfd6ea4661b3
+Key3 = 469110efec13754c
+Msg = 4e98153fce27792047a96e123f9b4ba25d1890dcceaa6fbe
+Mac = f5ea6377
+
+
+Count = 53
+Klen = 3 
+Mlen = 24
+Tlen = 4
+Key1 = 6715202f1620f40b
+Key2 = 108626f46b9bc4c8
+Key3 = 5d57f8d0b5b3e925
+Msg = 701153c9a77b2569c858163f898e428a7887420f9d3df2c7
+Mac = 23c721a2
+
+
+Count = 54
+Klen = 3 
+Mlen = 24
+Tlen = 4
+Key1 = 1604204fa8a480a4
+Key2 = dc15c41c86d67368
+Key3 = 7c86e507dcce139e
+Msg = 2d647ca7c1d3ef57d95258a97be384c77c139cc7e7d0a721
+Mac = 9ed4039c
+
+
+Count = 55
+Klen = 3 
+Mlen = 24
+Tlen = 4
+Key1 = ef38920d794f7051
+Key2 = cdc43bea168a3e25
+Key3 = 4f4302e9f40bc786
+Msg = 87e4710aeee3128e70784175a176d842c995fd90e66749a6
+Mac = 56415a32
+
+
+Count = 56
+Klen = 3 
+Mlen = 24
+Tlen = 6
+Key1 = d9511ff8d08c3792
+Key2 = 621f38ad040e2301
+Key3 = c1752cfb61bc329b
+Msg = 88ce1d3c68360755d50b767a520f37123c80a0ebb73c237e
+Mac = 733df85bb921
+
+
+Count = 57
+Klen = 3 
+Mlen = 24
+Tlen = 6
+Key1 = 3e62941c52ae513e
+Key2 = 76ea07f7433e13f7
+Key3 = 34d0c8a8231fdfb3
+Msg = 164bbf5a1108c1ebdd65a4942ce03de90cdbb876b14d7e0b
+Mac = dcea89fd608b
+
+
+Count = 58
+Klen = 3 
+Mlen = 24
+Tlen = 6
+Key1 = 0b6bc110194c34ab
+Key2 = 3ef27f970dad311c
+Key3 = cea41a4ca2bf40b0
+Msg = 27a1dd5cb9c912fb64698fad135231ee1b1597eec173cd9f
+Mac = bec0d9123493
+
+
+Count = 59
+Klen = 3 
+Mlen = 24
+Tlen = 6
+Key1 = 043758f1a7bfb545
+Key2 = 156e8f5b6b0d20ae
+Key3 = 40a4fb290768b916
+Msg = d9474c4281d2621fd071205425d9f8daa17143fa815a346a
+Mac = 88c444fc8365
+
+
+Count = 60
+Klen = 3 
+Mlen = 24
+Tlen = 6
+Key1 = d65de5e35d0e4997
+Key2 = 0b64265b7f3d37a4
+Key3 = a416a10e8fe0d6e9
+Msg = f8ef259ca14760680ae34aad6f5a3254a28b86dcb7843259
+Mac = 4efc345327b1
+
+
+Count = 61
+Klen = 3 
+Mlen = 24
+Tlen = 6
+Key1 = 4f13b3cb8967f19e
+Key2 = 23ecb362fd26e952
+Key3 = f44683a17f344fbc
+Msg = 577571e8ef87e6c4eb20b6c7c8156c2283c402b509b3f6d5
+Mac = 6e151b21e855
+
+
+Count = 62
+Klen = 3 
+Mlen = 24
+Tlen = 6
+Key1 = f426a1effd5d4a4f
+Key2 = f1cb31cd7a2094b5
+Key3 = 5e8316cef29d8976
+Msg = d39a02c4ff758ffcf6f522520caf4532ce889cc68a28800f
+Mac = e7cacbdff911
+
+
+Count = 63
+Klen = 3 
+Mlen = 24
+Tlen = 6
+Key1 = 1f31a8e62c9226c4
+Key2 = 29f7b0c7a1f2cb8f
+Key3 = b58f8f1a4601087a
+Msg = e3c8a94ac99702318263f6853294e47e3cce6a9158ba1d4d
+Mac = 76882712c9e5
+
+
+Count = 64
+Klen = 3 
+Mlen = 24
+Tlen = 8
+Key1 = c28a3dfd6d86a2f2
+Key2 = 7f5454fd7f3843b0
+Key3 = d5d5dae6dc57bf40
+Msg = 84f42a23da7f20c1c4b6e3839b18430a4e6d3f6e61b423d4
+Mac = d5bd50153f6834de
+
+
+Count = 65
+Klen = 3 
+Mlen = 24
+Tlen = 8
+Key1 = c2041f587a57f7b0
+Key2 = 9e496efe04bf5e7f
+Key3 = e34385c275c873b6
+Msg = b860f34bffdfb67b43d5cf7c951d7b2caca4c3fb877b469f
+Mac = 3fd9082228bea2f3
+
+
+Count = 66
+Klen = 3 
+Mlen = 24
+Tlen = 8
+Key1 = 6dae0b0d73e9b925
+Key2 = 64010b43cd0b621a
+Key3 = b9f77f52fe2ff4d9
+Msg = 97049e5ee4ae3037e7381251a136daf40a48f6e59e924e83
+Mac = 011f2a23e7e17be1
+
+
+Count = 67
+Klen = 3 
+Mlen = 24
+Tlen = 8
+Key1 = 6dc264c15b32a494
+Key2 = f8f7c1513d585d6d
+Key3 = 675dbf34a4d5f4f2
+Msg = 8533e9b2099c09824b0390f901d38dfd4842ae90ec84a8a4
+Mac = e59bc558e9b6f92e
+
+
+Count = 68
+Klen = 3 
+Mlen = 24
+Tlen = 8
+Key1 = d55edff71fc425fe
+Key2 = 64f48a2a97192c57
+Key3 = 6115abc80be52acb
+Msg = 42a10eda2e3d5dbf44e5e4f48e918756c031457f604476f5
+Mac = 81e23a51eda6b4f5
+
+
+Count = 69
+Klen = 3 
+Mlen = 24
+Tlen = 8
+Key1 = b531e6f4346e3815
+Key2 = 459ed6d39ee645f1
+Key3 = e6d3ec7ce6457f4f
+Msg = 2d9d618e893e9face54b543c6b5892946a89bd1df8a74904
+Mac = cded1056615d85b8
+
+
+Count = 70
+Klen = 3 
+Mlen = 24
+Tlen = 8
+Key1 = e0c207aecde923f2
+Key2 = f298a2c21c8ac4c7
+Key3 = f84cd3a23dc8cea8
+Msg = e87dd34485382bda285ecff01c1dfe5b350bcb73b3751d0f
+Mac = 42802dab0691fd8b
+
+
+Count = 71
+Klen = 3 
+Mlen = 24
+Tlen = 8
+Key1 = 6db3f7547067d31a
+Key2 = abc1f27075da8a43
+Key3 = a47934837a9e01a7
+Msg = 3cf5bd7d23f2eac325a9d22dcc49710f27776dcc1d4d04f9
+Mac = 9d552f79c1ea97a7
+
+
+Count = 72
+Klen = 3 
+Mlen = 10
+Tlen = 4
+Key1 = 20ae32c49bab3bf8
+Key2 = f86bb66173fb54d5
+Key3 = 3e700868c46bc291
+Msg = 582bd9c8c36ec815d0a9
+Mac = 0d62f14f
+
+
+Count = 73
+Klen = 3 
+Mlen = 10
+Tlen = 4
+Key1 = 5d0e5bcb26feea3d
+Key2 = f26e380e297568fd
+Key3 = 5e681598ab08da8f
+Msg = 47e336f8ef04cc905e53
+Mac = 13a8633b
+
+
+Count = 74
+Klen = 3 
+Mlen = 10
+Tlen = 4
+Key1 = efdaf1cdc8588320
+Key2 = e054ec43234a2398
+Key3 = 989b314c469b51cd
+Msg = 7c5699caf91add90310d
+Mac = 13666372
+
+
+Count = 75
+Klen = 3 
+Mlen = 10
+Tlen = 4
+Key1 = cd3ed676d0c8b5a2
+Key2 = 1602262f3194207c
+Key3 = b0ecc7c1aef2efda
+Msg = 1dc4cc6675e721707d97
+Mac = 3c65c292
+
+
+Count = 76
+Klen = 3 
+Mlen = 10
+Tlen = 4
+Key1 = a46e62c75137ead3
+Key2 = b961ec649d43d543
+Key3 = dc76589273949d26
+Msg = 8cc5f9f3b40f16ef0b73
+Mac = 02443cf2
+
+
+Count = 77
+Klen = 3 
+Mlen = 10
+Tlen = 4
+Key1 = 26ba256454ea9b23
+Key2 = a82f5891fbf707b6
+Key3 = d6ab257f0dc2e55d
+Msg = 43a9a2a48b05382d54bf
+Mac = 895e3212
+
+
+Count = 78
+Klen = 3 
+Mlen = 10
+Tlen = 4
+Key1 = b0d57fb913d064b5
+Key2 = 5bc8fba7d5e0629e
+Key3 = cb9bd616ab648334
+Msg = e02a886cb62467a8ba31
+Mac = a3d3c70c
+
+
+Count = 79
+Klen = 3 
+Mlen = 10
+Tlen = 4
+Key1 = 0ba4e5e5d5addf07
+Key2 = 4654459bd56b087a
+Key3 = 7a268f7fe304e3e9
+Msg = eb9e6463a1a4125612b5
+Mac = 193281a0
+
+
+Count = 80
+Klen = 3 
+Mlen = 10
+Tlen = 6
+Key1 = 3bd332436823e580
+Key2 = 6bc1bc3efde9e51f
+Key3 = 1994c7f40d158643
+Msg = 1f15b48384e67eada9ce
+Mac = 3a3968dc2cb7
+
+
+Count = 81
+Klen = 3 
+Mlen = 10
+Tlen = 6
+Key1 = 3445c4a2940bf8b0
+Key2 = 40c8cb2f3b1a5838
+Key3 = 92545bcd9e9b80ad
+Msg = 315a6424f7367f021304
+Mac = 51cebcd095fa
+
+
+Count = 82
+Klen = 3 
+Mlen = 10
+Tlen = 6
+Key1 = cb92434c4c9da8c7
+Key2 = 16b6e68ca4314358
+Key3 = a80897578a7f2904
+Msg = 5668f0d0b994b00018e6
+Mac = 0b4d18225127
+
+
+Count = 83
+Klen = 3 
+Mlen = 10
+Tlen = 6
+Key1 = 6e68641aa7ea97a4
+Key2 = 5b5be51f8fdf457a
+Key3 = b916610b5bb538a4
+Msg = 1c821aa20a02fb20735f
+Mac = 4a490f059880
+
+
+Count = 84
+Klen = 3 
+Mlen = 10
+Tlen = 6
+Key1 = 79df3b2657201fba
+Key2 = 807fbfb94cfbe0d9
+Key3 = 49fe257c0ec2d5ce
+Msg = 1155ddbd6293d119e972
+Mac = 0b2af1f1e7d3
+
+
+Count = 85
+Klen = 3 
+Mlen = 10
+Tlen = 6
+Key1 = 80efce610d0e5e23
+Key2 = 233bec1c25efe540
+Key3 = 706d07b6a49875e3
+Msg = 5ff220952ac166e60cd8
+Mac = e2afff749deb
+
+
+Count = 86
+Klen = 3 
+Mlen = 10
+Tlen = 6
+Key1 = d52507d540e5f7bc
+Key2 = 7fd9c43e89328fa2
+Key3 = 298a917594b9e9fb
+Msg = f5d088b69a51f7db1c41
+Mac = 0ba9749e09c1
+
+
+Count = 87
+Klen = 3 
+Mlen = 10
+Tlen = 6
+Key1 = 3e02f2e37c67a46e
+Key2 = dcf1ef37cb37326d
+Key3 = 0438520b4523d30d
+Msg = 80bd8a088cf50a4cb6d6
+Mac = 9d94d4921cad
+
+
+Count = 88
+Klen = 3 
+Mlen = 10
+Tlen = 8
+Key1 = bf7379b316e6f113
+Key2 = 20d6ab4652f85b32
+Key3 = e0ced57fb908162f
+Msg = 588d6e3dae2cf2d2c69d
+Mac = 999695327222af2d
+
+
+Count = 89
+Klen = 3 
+Mlen = 10
+Tlen = 8
+Key1 = fbda861a3e1cd916
+Key2 = c7150220ba0210ad
+Key3 = baa26716c2765e04
+Msg = f74345bf419dd67330e9
+Mac = 93b5844afd798c07
+
+
+Count = 90
+Klen = 3 
+Mlen = 10
+Tlen = 8
+Key1 = 2adf64e55891e3ef
+Key2 = 8ab3e3076dfb83fe
+Key3 = 2f9875468ac185b5
+Msg = 66b96d3c3e56633212fb
+Mac = a8b231f21bc11c5f
+
+
+Count = 91
+Klen = 3 
+Mlen = 10
+Tlen = 8
+Key1 = 25132ae9912349ec
+Key2 = 43a208f4cba17c86
+Key3 = 07835bab1adcd9c2
+Msg = 6a432d8006e23011c0ab
+Mac = 33b4dfa8470848e5
+
+
+Count = 92
+Klen = 3 
+Mlen = 10
+Tlen = 8
+Key1 = b979f48046736262
+Key2 = 40465201f4d6eaae
+Key3 = b34f1a45ce10dc32
+Msg = 0ec82a455f3ec7abb8d8
+Mac = 383ca5d1d2712ff9
+
+
+Count = 93
+Klen = 3 
+Mlen = 10
+Tlen = 8
+Key1 = 64d6a18cd9f70751
+Key2 = 0e731008238532d9
+Key3 = d9cdb69d292fcdd9
+Msg = 26c999b0c6a60d7651ae
+Mac = dea8577c194741ef
+
+
+Count = 94
+Klen = 3 
+Mlen = 10
+Tlen = 8
+Key1 = 4379586d83fd457f
+Key2 = 911f6efb98e6adc1
+Key3 = 4a312ae69de92c9d
+Msg = 00ee573059f54e6896cb
+Mac = 0ab03e60a964243d
+
+
+Count = 95
+Klen = 3 
+Mlen = 10
+Tlen = 8
+Key1 = d370970e0b613232
+Key2 = f45104c26883073e
+Key3 = 3ea73eefa79d1397
+Msg = 4d4bdb7ecbb43bd4acad
+Mac = 57880db6626f8629
+
+
+Count = 96
+Klen = 3 
+Mlen = 20
+Tlen = 4
+Key1 = b9d991d5b91f2cf8
+Key2 = 91c46e54e69e9ece
+Key3 = b09119b53bc43d3d
+Msg = e9e8f59d6b214ecd6ea0769f57071f508017905b
+Mac = 52a5228b
+
+
+Count = 97
+Klen = 3 
+Mlen = 20
+Tlen = 4
+Key1 = cd9e79b0a7136173
+Key2 = d6d0a2e529ade6d0
+Key3 = 6792ab08a88ac7df
+Msg = 0f8573ad22c683405d768b1d292e523caa503fbd
+Mac = 7f284e78
+
+
+Count = 98
+Klen = 3 
+Mlen = 20
+Tlen = 4
+Key1 = e5e68a02251c46fe
+Key2 = 8c103e7aa20ed54c
+Key3 = cd6e29943d6e8a8a
+Msg = 4c048245b7e0d7ccd1c6d02345401d4ae07b88f8
+Mac = 64116790
+
+
+Count = 99
+Klen = 3 
+Mlen = 20
+Tlen = 4
+Key1 = c15d2ac4192986b3
+Key2 = fd16527058c445e9
+Key3 = c87f2c5e048915d6
+Msg = 481b1be0b76f7ce56a4d42bbb6430d8ee015e653
+Mac = 80de13ca
+
+
+Count = 100
+Klen = 3 
+Mlen = 20
+Tlen = 4
+Key1 = 92705716a8e50bfd
+Key2 = a840c7f7081598d0
+Key3 = a7343ef297d93e75
+Msg = 657ca1e725aef85f87628ad5e1687e26a539f837
+Mac = 20dfaa66
+
+
+Count = 101
+Klen = 3 
+Mlen = 20
+Tlen = 4
+Key1 = 643740c7ae3eb31f
+Key2 = 9e76d0c8bc8998b0
+Key3 = 6b0468162a85e6d6
+Msg = 86d6fdb9a27b5edba18a51e4236f9f4561d45999
+Mac = 8bf2e1cf
+
+
+Count = 102
+Klen = 3 
+Mlen = 20
+Tlen = 4
+Key1 = c2ae0dfdc78a02b6
+Key2 = 072c8c20b9a1c108
+Key3 = b64cd67c2fda83b0
+Msg = 1ac21efeb4017fc1f9c7b2e0ba712b4d2b32e469
+Mac = 36fed727
+
+
+Count = 103
+Klen = 3 
+Mlen = 20
+Tlen = 4
+Key1 = 25ba6b31cecd3402
+Key2 = a270a1ad687ca279
+Key3 = 0d5180efe0c78cbc
+Msg = b2b0b59941bca6c9e66fe5441933c7520d3a4462
+Mac = a47bc7ec
+
+
+Count = 104
+Klen = 3 
+Mlen = 20
+Tlen = 6
+Key1 = 49d66b2fdc921ab3
+Key2 = 0db01a492f2098b3
+Key3 = d5a783e31016071f
+Msg = cdff130df46b6d68e4d1d88d83120579a43f0eef
+Mac = 2295d626315e
+
+
+Count = 105
+Klen = 3 
+Mlen = 20
+Tlen = 6
+Key1 = e3853d64689d3bdf
+Key2 = 7fad616ef7b91313
+Key3 = 2558d5bae3100b45
+Msg = b174e35ec67759be9d4c103f6e1b1bf219157c26
+Mac = bd830d085569
+
+
+Count = 106
+Klen = 3 
+Mlen = 20
+Tlen = 6
+Key1 = 38e68cf7516dd0f1
+Key2 = 2f851986ef1c1685
+Key3 = ea7f83ab461fcd89
+Msg = 1f66e072e874b8294de9ae84c3330bfbf12ec9f0
+Mac = 33fbbee54b83
+
+
+Count = 107
+Klen = 3 
+Mlen = 20
+Tlen = 6
+Key1 = c8ef3b07c49b9220
+Key2 = 2552f158462fd386
+Key3 = f2c15e162a67bf40
+Msg = 602cfe96909135035946244b83066b204538a443
+Mac = 722a374e94e9
+
+
+Count = 108
+Klen = 3 
+Mlen = 20
+Tlen = 6
+Key1 = 80fe498c07b9704f
+Key2 = 15ef1046c22cceec
+Key3 = 79e3e3a1dabc9ed0
+Msg = 781ef9afab90c71c232d1cd9fabd740131487f15
+Mac = c3d73f0785c5
+
+
+Count = 109
+Klen = 3 
+Mlen = 20
+Tlen = 6
+Key1 = 3d4f7f37e549fead
+Key2 = 9dc7438a75a7ae6d
+Key3 = 6d3b54ea2f38bac2
+Msg = 6a50ae983dd566d593e4445ed2de6fcbfd4aa9e9
+Mac = 4d9cffa467f5
+
+
+Count = 110
+Klen = 3 
+Mlen = 20
+Tlen = 6
+Key1 = 312f015464bf0470
+Key2 = 1aa2432cba191c2c
+Key3 = 3b899b253d0bc8d0
+Msg = 485ecd9d47a661d6fab9e748d9bd3c6a4ffeca0c
+Mac = 14f4f1f803d8
+
+
+Count = 111
+Klen = 3 
+Mlen = 20
+Tlen = 6
+Key1 = 5d381032f791c21f
+Key2 = ef519b2349d0bc10
+Key3 = 0ec7312ac2daa8e3
+Msg = 8079df315f5a0694e5f4f2e5f9e6d45c7fd4ce62
+Mac = 4522b4178359
+
+
+Count = 112
+Klen = 3 
+Mlen = 20
+Tlen = 8
+Key1 = e6efdafe0702868a
+Key2 = fb8667f2c41920ad
+Key3 = 9b4ca7feba6737ef
+Msg = 8379947e82dc8a7b2850416388290660f10f395f
+Mac = cbec47bb6ad5a9df
+
+
+Count = 113
+Klen = 3 
+Mlen = 20
+Tlen = 8
+Key1 = d3926134b623327c
+Key2 = f21c19ea8a20f1f2
+Key3 = 1c4cdf3da1e00b43
+Msg = 44973b24de83884b7cb12734b46e03a97aed519d
+Mac = 2d73e70c4c3e589d
+
+
+Count = 114
+Klen = 3 
+Mlen = 20
+Tlen = 8
+Key1 = 23572658fdd9abf7
+Key2 = 1cc2d34cd68302a8
+Key3 = 801a380e2676798c
+Msg = f477cddd61ea83caad0c464530e9c3d89d73ee36
+Mac = 9f6bfd4e9316b775
+
+
+Count = 115
+Klen = 3 
+Mlen = 20
+Tlen = 8
+Key1 = 34316bead315cbe0
+Key2 = 6bfe898f3be50e92
+Key3 = 5bd675d9a837b629
+Msg = e3cd90b81ad3bcaf0002c5129e17022a283e7d2a
+Mac = d7bff44e70fa1c3d
+
+
+Count = 116
+Klen = 3 
+Mlen = 20
+Tlen = 8
+Key1 = 0b9b1029ab45c832
+Key2 = f786f776f7267a04
+Key3 = 70dc1c3dea9b9404
+Msg = 59070ac8696b6951218e5d9b119118611ba19ee6
+Mac = e9b969465284ff97
+
+
+Count = 117
+Klen = 3 
+Mlen = 20
+Tlen = 8
+Key1 = d9fef8efce9bdf51
+Key2 = 61585d869b1a0eba
+Key3 = 5434f731efa719a2
+Msg = 1cd347926e90349d177b07b07ab75fbc59512dbf
+Mac = 1eb1758a2ebea6cd
+
+
+Count = 118
+Klen = 3 
+Mlen = 20
+Tlen = 8
+Key1 = 3792b9868f94d9fe
+Key2 = 9ba1c41c7f0e6d9b
+Key3 = 857c3d01e0264af2
+Msg = ddd01266d14dcfd7c4e01548ed2f04239d9c887a
+Mac = 11a3685484bb9299
+
+
+Count = 119
+Klen = 3 
+Mlen = 20
+Tlen = 8
+Key1 = bafb26d55e79b54f
+Key2 = ef9b324375eadac1
+Key3 = 8a5243cb97b0d62f
+Msg = 9f95b486f1bd1fdc66337fb04e954da880ebc229
+Mac = a2cb9b3848a3b96f
+
+
+Count = 120
+Klen = 3 
+Mlen = 30
+Tlen = 4
+Key1 = c70297c18692c1f1
+Key2 = cdf1a4a10b9e9bef
+Key3 = f8c77032d0b58686
+Msg = da8f9f953309e4eeedcd02924535c0bddd6874f86173c8d86b9cbee8a4f2
+Mac = 6a8179f3
+
+
+Count = 121
+Klen = 3 
+Mlen = 30
+Tlen = 4
+Key1 = 85ab9202ae670213
+Key2 = 16e53e974c1f3dd6
+Key3 = ba3ed3ad8c15b907
+Msg = 2264a28bd02efe810e5a10cbefb63cce98e85c885d0407c5275e1396199d
+Mac = b823dbbd
+
+
+Count = 122
+Klen = 3 
+Mlen = 30
+Tlen = 4
+Key1 = 37191cfdd5576180
+Key2 = 7a04b3ade91a7f54
+Key3 = cde0373420d5c875
+Msg = 37843f5a95ecc4d35090946ab61a062783e35c55a7aaa6d74a8ce3bb0e30
+Mac = 77bd4d34
+
+
+Count = 123
+Klen = 3 
+Mlen = 30
+Tlen = 4
+Key1 = 70e008919e7331ba
+Key2 = a84a4ffb7c51f12c
+Key3 = 0185e33e32f2ce25
+Msg = 69273dfce62428d3dd0e423db96e7eb12126c9bb85b23d5bf7ad97a83d97
+Mac = d1652e44
+
+
+Count = 124
+Klen = 3 
+Mlen = 30
+Tlen = 4
+Key1 = 450845e53bfb255b
+Key2 = 76c82545c2670e89
+Key3 = 01c88937d99e3102
+Msg = 00dcf0b0ac739f86bebd780e28bb0ce915b9075ec2d0aafc8fae7c81569a
+Mac = 2155cec2
+
+
+Count = 125
+Klen = 3 
+Mlen = 30
+Tlen = 4
+Key1 = 9dfe2f579eae40fb
+Key2 = 040e9da27391fb2a
+Key3 = 0ea84992df67c23d
+Msg = 7753361bee60f85ae3acd1d69e2f6ae13870c0d8ad48d40231e9a5bcc81e
+Mac = 99c6a320
+
+
+Count = 126
+Klen = 3 
+Mlen = 30
+Tlen = 4
+Key1 = 0229e59e5b570192
+Key2 = 54c4e3aba7a4fb80
+Key3 = 5786d96e76b6d607
+Msg = 2553e973e592f14eba1d6fbdf514d00613101aaae2b72d97e58e4a9ff80f
+Mac = 3d0f760a
+
+
+Count = 127
+Klen = 3 
+Mlen = 30
+Tlen = 4
+Key1 = eab3bf168aeffec7
+Key2 = eca113cb628ab504
+Key3 = 9129fddf9410a7f4
+Msg = 869c1eb73cac8fbf541c5e36811a105f8d9ecc91064db438349e761c4d3b
+Mac = 32c49533
+
+
+Count = 128
+Klen = 3 
+Mlen = 30
+Tlen = 6
+Key1 = 1c019e9b167f2c1c
+Key2 = d04a15c7688991e6
+Key3 = 49c702a854642973
+Msg = 2639a85786ba8bbf5b50c170920cae8cd6b979eda7aac00cacb68b214a80
+Mac = 34a549bb01dd
+
+
+Count = 129
+Klen = 3 
+Mlen = 30
+Tlen = 6
+Key1 = cb4c977afbaee56e
+Key2 = a7e50d23ab5d6420
+Key3 = 73e0bfdfc2f4b5a1
+Msg = a746a67ef8b571168c2ac448b3c1183f3b2249f0940ee25032379bc53355
+Mac = a2f1042230d3
+
+
+Count = 130
+Klen = 3 
+Mlen = 30
+Tlen = 6
+Key1 = 8afe23a7f75d6125
+Key2 = b0854ae54ca74a01
+Key3 = 6b86df3d971a1502
+Msg = b4a4e9cf2e4bf4ec569126873332ddd438a4469c189dd0e1dcd5e1c5320d
+Mac = ee995766cc3b
+
+
+Count = 131
+Klen = 3 
+Mlen = 30
+Tlen = 6
+Key1 = 70e5b00d230eb0d0
+Key2 = 0d62e97567f77cfd
+Key3 = abea620dcb8ac845
+Msg = deb6d14a72746948641466fb8a27e2a96045e7bef25c7ac0fd47d88551a3
+Mac = 4ffb463be19b
+
+
+Count = 132
+Klen = 3 
+Mlen = 30
+Tlen = 6
+Key1 = a21c86702cc20ea7
+Key2 = 08fdf731fb6e0ee3
+Key3 = 702c4f13b3c4aeb9
+Msg = 8fb44c9bd950496e41b67befb6acdd3fa77006a60ea94f28ae9e385998a6
+Mac = 237c0fdacc13
+
+
+Count = 133
+Klen = 3 
+Mlen = 30
+Tlen = 6
+Key1 = 8a5243cb97b0d62f
+Key2 = 9e94b586f1bc1fdc
+Key3 = 20b9bac2323b52f4
+Msg = 024225c194dda881bb6b3189f506c6dd06f1ebfc3dce0bb7fa111a426db4
+Mac = e5170c3a87ea
+
+
+Count = 134
+Klen = 3 
+Mlen = 30
+Tlen = 6
+Key1 = ba010757736d4c34
+Key2 = 0d85bf61fe45fe58
+Key3 = 0bfea497ba52b091
+Msg = 950d77f5bb57a685f52ce3d72376c240155e1c4705bcb2b665d112f1dc38
+Mac = 64b6521b2917
+
+
+Count = 135
+Klen = 3 
+Mlen = 30
+Tlen = 6
+Key1 = a21a867607705107
+Key2 = d0a4d57a4f316470
+Key3 = dce66154ce0d3837
+Msg = bbdb3e3d7b04cfa82297c01a3750ebda7b3d34061d2361202d1f2dc95389
+Mac = 4e887731cd88
+
+
+Count = 136
+Klen = 3 
+Mlen = 30
+Tlen = 8
+Key1 = 7c86e507dcce139e
+Key2 = 2c647ca7c1d3ef57
+Key3 = 835bb0c7265745ae
+Msg = 00c0fa4c03c6f66f96617062dc72d3b3bc955e7394027a3b2bb14b6de8c2
+Mac = b16ad9880f87ae8f
+
+
+Count = 137
+Klen = 3 
+Mlen = 30
+Tlen = 8
+Key1 = 4f5b4aeab57f0d4f
+Key2 = 1f79400d325885d3
+Key3 = e908d954c7a7929b
+Msg = f2f49c8949e432de444171586e376c0f8e47302e358cf75493439e3a8e8a
+Mac = de88566bd671f7e1
+
+
+Count = 138
+Klen = 3 
+Mlen = 30
+Tlen = 8
+Key1 = 62232501b9e9c1b5
+Key2 = 54209d7c075d2c31
+Key3 = 73a2f289a84c49ce
+Msg = adaf4bfffab79ffb60b94647faac634929c56e694052881881e60b1149b6
+Mac = a05674f2c905d153
+
+
+Count = 139
+Klen = 3 
+Mlen = 30
+Tlen = 8
+Key1 = 343edf3b1f7c7f92
+Key2 = b34f156446203d58
+Key3 = 681fae13104aef3e
+Msg = 905a46159d199ba490a70187ebcd287c01e12717afa2c9c0476328fbcd6c
+Mac = 264a54e8ab0c3a37
+
+
+Count = 140
+Klen = 3 
+Mlen = 30
+Tlen = 8
+Key1 = 6e627fb3315b1c86
+Key2 = 1f388389b9971fd0
+Key3 = 0e76043d5e4c6e67
+Msg = eb4c3e5aa0b3ba122d2556a969ae3bb16b9fcd12493d8a5d25b6345c6b59
+Mac = ccb488224ce490dd
+
+
+Count = 141
+Klen = 3 
+Mlen = 30
+Tlen = 8
+Key1 = 5b9215b932c870e9
+Key2 = 8c73d9cb3b0d5e85
+Key3 = f86dae7534b3323d
+Msg = 8e0b59122b7e5c2fa5e5ea7b1cae477b141b3e20cb4513eccb60b856bb40
+Mac = c82c73040eb32171
+
+
+Count = 142
+Klen = 3 
+Mlen = 30
+Tlen = 8
+Key1 = 01e0d61ffdae5b02
+Key2 = e9bc92cdd9a8d33d
+Key3 = 2ab3010eec6826fd
+Msg = ea8274daa738c9b9b54d0da219ff9761011917b9b21827a9c28b23ee87c0
+Mac = a1f0c3131068018c
+
+
+Count = 143
+Klen = 3 
+Mlen = 30
+Tlen = 8
+Key1 = 92dc739107df8c16
+Key2 = 0dbf9d616413ce76
+Key3 = b357ae0e2ad6b6a1
+Msg = e8db7a65bd1db8e2e0277d2a8be0676dfd175817c3b9d8a53648b4b74588
+Mac = d12b2746eb648f23
+
