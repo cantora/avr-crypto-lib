@@ -42,6 +42,7 @@
 #include "bcal-ofb.h"
 #include "bcal-ctr.h"
 #include "bcal-cmac.h"
+#include "bcal-eax.h"
 #include "cmacvs.h"
 
 #include <stdint.h>
@@ -526,6 +527,158 @@ void testrun_aes192_cmac0(void){
 	cli_hexdump_block(tag, 2, 4, 16);
 	bcal_cmac_free(&ctx);
 }
+/*
+MSG:
+KEY:    233952DEE4D5ED5F9B9C6D6FF80FF478
+NONCE:  62EC67F9C3A4A407FCB2A8C49031A8B3
+HEADER: 6BFB914FD07EAE6B
+CIPHER: E037830E8389F27B025A2D6527E79D01
+*/
+
+void testrun_aes128_eax(void){
+	uint8_t key[16]= {
+			0x23, 0x39, 0x52, 0xDE, 0xE4, 0xD5, 0xED, 0x5F,
+			0x9B, 0x9C, 0x6D, 0x6F, 0xF8, 0x0F, 0xF4, 0x78
+	};
+	uint8_t nonce[16] = {
+			0x62, 0xEC, 0x67, 0xF9, 0xC3, 0xA4, 0xA4, 0x07,
+			0xFC, 0xB2, 0xA8, 0xC4, 0x90, 0x31, 0xA8, 0xB3
+	};
+	uint8_t header[8] = {
+			0x6B, 0xFB, 0x91, 0x4F, 0xD0, 0x7E, 0xAE, 0x6B
+	};
+	uint8_t tag[16];
+
+	bcal_eax_ctx_t ctx;
+	uint8_t r;
+
+
+	cli_putstr_P(PSTR("\r\n** AES128-EAX-TEST **"));
+
+	cli_putstr_P(PSTR("\r\n  key:     "));
+	cli_hexdump(key, 16);
+	cli_putstr_P(PSTR("\r\n  nonce:   "));
+	cli_hexdump(nonce, 16);
+	cli_putstr_P(PSTR("\r\n  header:  "));
+	cli_hexdump(header, 8);
+	r = bcal_eax_init(&aes128_desc, key, 128, &ctx);
+	cli_putstr_P(PSTR("\r\n  init = 0x"));
+	cli_hexdump(&r, 1);
+	if(r)
+		return;
+	bcal_eax_loadNonce(nonce, 16*8, &ctx);
+	bcal_eax_addLastHeader(header, 8*8, &ctx);
+	bcal_eax_encLastBlock(NULL, 0, &ctx);
+	bcal_eax_ctx2tag(tag, 128, &ctx);
+	cli_putstr_P(PSTR("\r\n  tag:     "));
+	cli_hexdump_block(tag, 16, 4, 16);
+	bcal_eax_free(&ctx);
+}
+
+/*
+MSG:    F7FB
+KEY:    91945D3F4DCBEE0BF45EF52255F095A4
+NONCE:  BECAF043B0A23D843194BA972C66DEBD
+HEADER: FA3BFD4806EB53FA
+CIPHER:
+ */
+void testrun_aes128_eax2(void){
+	uint8_t key[16]= {
+			0x91, 0x94, 0x5D, 0x3F, 0x4D, 0xCB, 0xEE, 0x0B,
+			0xF4, 0x5E, 0xF5, 0x22, 0x55, 0xF0, 0x95, 0xA4,
+	};
+	uint8_t msg[2] = { 0xF7, 0xFB };
+	uint8_t nonce[16] = {
+			0xBE, 0xCA, 0xF0, 0x43, 0xB0, 0xA2, 0x3D, 0x84,
+			0x31, 0x94, 0xBA, 0x97, 0x2C, 0x66, 0xDE, 0xBD,
+	};
+	uint8_t header[8] = {
+			0xFA, 0x3B, 0xFD, 0x48, 0x06, 0xEB, 0x53, 0xFA
+	};
+	uint8_t tag[16];
+
+	bcal_eax_ctx_t ctx;
+	uint8_t r;
+
+
+	cli_putstr_P(PSTR("\r\n** AES128-EAX2-TEST **"));
+
+	cli_putstr_P(PSTR("\r\n  key:     "));
+	cli_hexdump(key, 16);
+	cli_putstr_P(PSTR("\r\n  msg:     "));
+	cli_hexdump(msg, 2);
+	cli_putstr_P(PSTR("\r\n  nonce:   "));
+	cli_hexdump(nonce, 16);
+	cli_putstr_P(PSTR("\r\n  header:  "));
+	cli_hexdump(header, 8);
+	r = bcal_eax_init(&aes128_desc, key, 128, &ctx);
+	cli_putstr_P(PSTR("\r\n  init = 0x"));
+	cli_hexdump(&r, 1);
+	if(r)
+		return;
+	bcal_eax_loadNonce(nonce, 16*8, &ctx);
+	bcal_eax_addLastHeader(header, 8*8, &ctx);
+	bcal_eax_encLastBlock(msg, 2*8, &ctx);
+	bcal_eax_ctx2tag(tag, 128, &ctx);
+	cli_putstr_P(PSTR("\r\n  cipher:  "));
+	cli_hexdump_block(msg, 2, 4, 16);
+	cli_putstr_P(PSTR("\r\n  tag:     "));
+	cli_hexdump_block(tag, 16, 4, 16);
+	bcal_eax_free(&ctx);
+}
+/*
+MSG:    1A47CB4933
+KEY:    01F74AD64077F2E704C0F60ADA3DD523
+NONCE:  70C3DB4F0D26368400A10ED05D2BFF5E
+HEADER: 234A3463C1264AC6
+CIPHER:
+*/
+void testrun_aes128_eax3(void){
+	uint8_t key[16]= {
+			0x01, 0xF7, 0x4A, 0xD6, 0x40, 0x77, 0xF2, 0xE7,
+			0x04, 0xC0, 0xF6, 0x0A, 0xDA, 0x3D, 0xD5, 0x23
+	};
+	uint8_t msg[5] = {
+			0x1A, 0x47, 0xCB, 0x49, 0x33
+	};
+	uint8_t nonce[16] = {
+			0x70, 0xC3, 0xDB, 0x4F, 0x0D, 0x26, 0x36, 0x84,
+			0x00, 0xA1, 0x0E, 0xD0, 0x5D, 0x2B, 0xFF, 0x5E
+	};
+	uint8_t header[8] = {
+			0x23, 0x4A, 0x34, 0x63, 0xC1, 0x26, 0x4A, 0xC6
+	};
+	uint8_t tag[16];
+
+	bcal_eax_ctx_t ctx;
+	uint8_t r;
+
+
+	cli_putstr_P(PSTR("\r\n** AES128-EAX3-TEST **"));
+
+	cli_putstr_P(PSTR("\r\n  key:     "));
+	cli_hexdump(key, 16);
+	cli_putstr_P(PSTR("\r\n  msg:     "));
+	cli_hexdump(msg, 5);
+	cli_putstr_P(PSTR("\r\n  nonce:   "));
+	cli_hexdump(nonce, 16);
+	cli_putstr_P(PSTR("\r\n  header:  "));
+	cli_hexdump(header, 8);
+	r = bcal_eax_init(&aes128_desc, key, 128, &ctx);
+	cli_putstr_P(PSTR("\r\n  init = 0x"));
+	cli_hexdump(&r, 1);
+	if(r)
+		return;
+	bcal_eax_loadNonce(nonce, 16*8, &ctx);
+	bcal_eax_addLastHeader(header, 8*8, &ctx);
+	bcal_eax_encLastBlock(msg, 5*8, &ctx);
+	bcal_eax_ctx2tag(tag, 128, &ctx);
+	cli_putstr_P(PSTR("\r\n  cipher:  "));
+	cli_hexdump_block(msg, 5, 4, 16);
+	cli_putstr_P(PSTR("\r\n  tag:     "));
+	cli_hexdump_block(tag, 16, 4, 16);
+	bcal_eax_free(&ctx);
+}
 
 /*****************************************************************************/
 
@@ -669,6 +822,9 @@ const char testctr_str[]      PROGMEM = "testctr";
 const char testcmac_str[]     PROGMEM = "testcmac";
 const char testcmac72_str[]   PROGMEM = "testcmac72";
 const char testcmac0_str[]    PROGMEM = "testcmac0";
+const char testeax_str[]      PROGMEM = "testeax";
+const char testeax2_str[]     PROGMEM = "testeax2";
+const char testeax3_str[]     PROGMEM = "testeax3";
 const char cmacvs_list_str[]  PROGMEM = "cmacvs_list";
 const char cmacvs_set_str[]   PROGMEM = "cmacvs_set";
 const char cmacvs_test1_str[] PROGMEM = "cmacvs_test1";
@@ -689,6 +845,9 @@ cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ testcmac_str,        NULL, testrun_aes128_cmac             },
 	{ testcmac72_str,      NULL, testrun_aes128_cmac72           },
 	{ testcmac0_str,       NULL, testrun_aes192_cmac0            },
+	{ testeax_str,         NULL, testrun_aes128_eax              },
+	{ testeax2_str,        NULL, testrun_aes128_eax2             },
+	{ testeax3_str,        NULL, testrun_aes128_eax3             },
 	{ cmacvs_list_str,     NULL, cmacvs_listalgos                },
 	{ cmacvs_set_str,  (void*)1, (void_fpt)cmacvs_setalgo        },
 	{ cmacvs_test1_str,    NULL, cmacvs_test1                    },

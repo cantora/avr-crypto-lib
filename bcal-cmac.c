@@ -59,6 +59,10 @@ uint8_t bcal_cmac_init(const bcdesc_t* desc, const void* key, uint16_t keysize_b
 	if(ctx->k2==NULL){
 		return 0x16;
 	}
+	ctx->lastblock = malloc(ctx->blocksize_B);
+	if(ctx->lastblock==NULL){
+		return 0x17;
+	}
 	r = bcal_cipher_init(desc, key, keysize_b, &(ctx->cctx));
 	if(r){
 		return r;
@@ -79,6 +83,7 @@ uint8_t bcal_cmac_init(const bcdesc_t* desc, const void* key, uint16_t keysize_b
 	if(left_shift_be_block(ctx->k2, ctx->blocksize_B)){
 		ctx->k2[ctx->blocksize_B-1] ^= r;
 	}
+	ctx->last_set=0;
 	return 0;
 }
 
@@ -90,25 +95,38 @@ void bcal_cmac_free(bcal_cmac_ctx_t* ctx){
 }
 
 void bcal_cmac_nextBlock (bcal_cmac_ctx_t* ctx, const void* block){
-	memxor(ctx->accu, block, ctx->blocksize_B);
-	bcal_cipher_enc(ctx->accu, &(ctx->cctx));
+	if(ctx->last_set){
+		memxor(ctx->accu, ctx->lastblock, ctx->blocksize_B);
+		bcal_cipher_enc(ctx->accu, &(ctx->cctx));
+	}
+	memcpy(ctx->lastblock, block, ctx->blocksize_B);
+	ctx->last_set=1;
 }
 
 
 void bcal_cmac_lastBlock(bcal_cmac_ctx_t* ctx, const void* block, uint16_t length_b){
 	uint16_t blocksize_b;
 	blocksize_b = ctx->blocksize_B*8;
-	while(length_b>blocksize_b){
+	while(length_b>=blocksize_b){
 		bcal_cmac_nextBlock(ctx, block);
 		block = (uint8_t*)block + ctx->blocksize_B;
 		length_b -= blocksize_b;
 	}
-	memxor(ctx->accu, block, (length_b+7)/8);
-	if(length_b==blocksize_b){
-		memxor(ctx->accu, ctx->k1, ctx->blocksize_B);
-	}else{
+	if(ctx->last_set==0){
+		memxor(ctx->accu, block, (length_b+7)/8);
 		memxor(ctx->accu, ctx->k2, ctx->blocksize_B);
 		ctx->accu[length_b/8] ^= 0x80>>(length_b&7);
+	}else{
+		if(length_b==0){
+			memxor(ctx->accu, ctx->lastblock, ctx->blocksize_B);
+			memxor(ctx->accu, ctx->k1, ctx->blocksize_B);
+		}else{
+			memxor(ctx->accu, ctx->lastblock, ctx->blocksize_B);
+			bcal_cipher_enc(ctx->accu, &(ctx->cctx));
+			memxor(ctx->accu, block, (length_b+7)/8);
+			memxor(ctx->accu, ctx->k2, ctx->blocksize_B);
+			ctx->accu[length_b/8] ^= 0x80>>(length_b&7);
+		}
 	}
 	bcal_cipher_enc(ctx->accu, &(ctx->cctx));
 }

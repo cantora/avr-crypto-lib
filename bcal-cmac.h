@@ -30,6 +30,8 @@ typedef struct{
 	uint8_t*     accu;
 	uint8_t*     k1;
 	uint8_t*     k2;
+	uint8_t*     lastblock;
+	uint8_t      last_set;
 	uint8_t      blocksize_B;
 } bcal_cmac_ctx_t;
 
@@ -37,7 +39,7 @@ uint8_t bcal_cmac_init(const bcdesc_t* desc, const void* key, uint16_t keysize_b
 void bcal_cmac_free(bcal_cmac_ctx_t* ctx);
 void bcal_cmac_nextBlock(bcal_cmac_ctx_t* ctx, const void* block);
 void bcal_cmac_lastBlock(bcal_cmac_ctx_t* ctx, const void* block, uint16_t length_b);
-void bcal_cmac_ctx2mac(void* dest, uint16_t length_b, const bcal_cmac_ctx_t* state);
+void bcal_cmac_ctx2mac(void* dest, uint16_t length_b, const bcal_cmac_ctx_t* ctx);
 void bcal_cmac(void* dest, uint16_t out_length_b, const void* block, uint32_t length_b, bcal_cmac_ctx_t* ctx);
 
 #endif /* BCALCMAC_H_ */
