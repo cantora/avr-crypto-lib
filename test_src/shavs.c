@@ -303,9 +303,11 @@ void shavs_test1(void){ /* KAT tests */
 		cli_putstr_P(PSTR("\r\n\t (temp)      == "));
 		cli_hexdump_rev(&temp,2);
 		_delay_ms(500);
-#endif
+		temp=length-(shavs_ctx.blocks)*((shavs_ctx.buffersize_B)*8);
+#else
 		uint16_t temp=length-(shavs_ctx.blocks)*((shavs_ctx.buffersize_B)*8);
-/*		cli_putstr_P(PSTR("\r\n\t (temp)      == "));
+#endif
+		/*		cli_putstr_P(PSTR("\r\n\t (temp)      == "));
 		cli_hexdump_rev(&temp,2); */
 		hfal_hash_lastBlock( &(shavs_ctx.ctx), buffer, /* be aware of freaking compilers!!! */
 //							length-(shavs_ctx.blocks)*((shavs_ctx.buffersize_B)*8));
