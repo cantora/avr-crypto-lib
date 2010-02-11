@@ -32,9 +32,9 @@
 
 
 static const char keccak224_str[]   PROGMEM = "Keccak-224";
-static const char keccak256_str[]   PROGMEM = "keccak-256";
+static const char keccak256_str[]   PROGMEM = "Keccak-256";
 static const char keccak384_str[]   PROGMEM = "Keccak-384";
-static const char keccak512_str[]   PROGMEM = "keccak-512";
+static const char keccak512_str[]   PROGMEM = "Keccak-512";
 
 const hfdesc_t keccak224_desc PROGMEM = {
 	HFDESC_TYPE_HASHFUNCTION,
