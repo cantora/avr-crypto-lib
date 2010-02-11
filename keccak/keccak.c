@@ -30,7 +30,6 @@
 
 #define DEBUG 0
 
-
 #if DEBUG
 #include "cli.h"
 
