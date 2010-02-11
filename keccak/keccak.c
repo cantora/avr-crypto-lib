@@ -24,13 +24,11 @@
 #include "memxor.h"
 #include "keccak.h"
 
-#define W 64
-
 #ifdef DEBUG
 #  undef DEBUG
 #endif
 
-#define DEBUG 1
+#define DEBUG 0
 
 
 #if DEBUG
@@ -63,8 +61,6 @@ void keccak_dump_ctx(keccak_ctx_t* ctx){
 
 #endif
 
-#undef DEBUG
-
 static uint64_t rc[] PROGMEM = {
        0x0000000000000001LL, 0x0000000000008082LL,
        0x800000000000808ALL, 0x8000000080008000LL,
@@ -93,18 +89,18 @@ static uint8_t r[5][5] PROGMEM = {
 };
 
 void keccak_round(uint64_t a[5][5], uint8_t rci){
-	uint64_t c[5], d[5], b[5][5];
+	uint64_t b[5][5];
 	uint8_t i,j;
 	/* theta */
 	for(i=0; i<5; ++i){
-		c[i] = a[0][i] ^ a[1][i] ^ a[2][i] ^ a[3][i] ^ a[4][i];
+		b[i][0] = a[0][i] ^ a[1][i] ^ a[2][i] ^ a[3][i] ^ a[4][i];
 	}
 	for(i=0; i<5; ++i){
-		d[i] = c[(4+i)%5] ^ rotl64(c[(i+1)%5], 1);
+		b[i][1] = b[(4+i)%5][0] ^ rotl64(b[(i+1)%5][0], 1);
 	}
 	for(i=0; i<5; ++i){
 		for(j=0; j<5; ++j){
-			a[j][i] ^= d[i];
+			a[j][i] ^= b[i][1];
 		}
 	}
 #if DEBUG
@@ -206,7 +202,6 @@ void keccak_lastBlock(keccak_ctx_t* ctx, const void* block, uint16_t length_b){
 		}
 	}
 	keccak_nextBlock(ctx, tmp);
-	keccak_dump_ctx(ctx);
 }
 
 void keccak_ctx2hash(void* dest, uint16_t length_b, keccak_ctx_t* ctx){
