@@ -177,16 +177,16 @@ void keccak_lastBlock(keccak_ctx_t* ctx, const void* block, uint16_t length_b){
 	pad[0] = ctx->d;
 	pad[1] = ctx->bs;
 	pad[2] = 0x01;
-	if(length_b/8+1+3<ctx->bs){
+	if(length_b/8+1+3<=ctx->bs){
 		memcpy(tmp+length_b/8+1, pad, 3);
 	}else{
-		if(length_b/8+1+2<ctx->bs){
+		if(length_b/8+1+2<=ctx->bs){
 			memcpy(tmp+length_b/8+1, pad, 2);
 			keccak_nextBlock(ctx, tmp);
 			memset(tmp, 0x00, ctx->bs);
 			tmp[0]=0x01;
 		}else{
-			if(length_b/8+1+1<ctx->bs){
+			if(length_b/8+1+1<=ctx->bs){
 				memcpy(tmp+length_b/8+1, pad, 1);
 				keccak_nextBlock(ctx, tmp);
 				memset(tmp, 0x00, ctx->bs);
