@@ -149,6 +149,36 @@ $(foreach algo, $(ALGORITHMS), $(eval $(call Flash_Template, \
 
 #-------------------------------------------------------------------------------
 
+define Speed_Template
+$(1)_SPEED:  $(1)_FLASH
+	@$(RUBY) $(SPEEDTOOL) -c $(SPEEDCMD) -t $(SPEEDLOG_DIR) -a $(call lc, $(1))
+endef
+
+$(foreach algo, $(ALGORITHMS), $(eval $(call Speed_Template, \
+    $(algo), $(algo) \
+)))
+
+.PHONY: hash_speed
+hash_speed: $(foreach algo, $(HASHES), $(algo)_SPEED)
+
+#-------------------------------------------------------------------------------
+
+
+define Size_Template
+$(1)_SIZE:  $(2)
+	@echo "[size] $(1)"
+	$(SIZE) $(2) > $(strip $(SIZE_DIR))$(strip $(call lc, $(1))).size
+endef
+
+$(foreach algo, $(ALGORITHMS), $(eval $(call Size_Template, \
+    $(strip $(algo)), $($(algo)_BINOBJ) \
+)))
+
+.PHONY: hash_size
+hash_size: $(foreach algo, $(HASHES), $(algo)_SIZE)
+
+#-------------------------------------------------------------------------------
+
 .PHONY: tests
 tests: $(foreach a, $(ALGORITHMS), $(a)_TEST_BIN)
 

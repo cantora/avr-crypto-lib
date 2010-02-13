@@ -25,8 +25,8 @@
 #include <avr/interrupt.h>
 
 
-#define START_TIMER TCCR1B=1
-#define STOP_TIMER  TCCR1B=0
+#define START_TIMER  TCCR1B=1
+#define STOP_TIMER   TCCR1B=0
 
 void calibrateTimer(void);
 void startTimer(uint8_t granularity);

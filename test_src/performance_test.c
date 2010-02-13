@@ -67,8 +67,7 @@ void startTimer(uint8_t granularity){
 	TCNT1  = 0;
 	ovfcounter = 0;
 	TCCR1A = 0x00;
-	TIMSK &= 0xC3;
-	TIMSK |= _BV(TOIE1); /* enable TOIE1 */
+	TIMSK  = _BV(TOIE1); /* enable TOIE1 */
 	TCCR1B = granularity & 0x7;	/* start timer */
 }
 

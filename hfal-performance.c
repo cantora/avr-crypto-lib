@@ -36,7 +36,7 @@
 
 
 static
-void printvalue(unsigned int v){
+void printvalue(unsigned long v){
 	char str[20];
 	int i;
 	ultoa(v, str, 10);
@@ -53,6 +53,7 @@ void hfal_performance(const hfdesc_t* hd){
 	uint8_t data[(hf.blocksize_b+7)/8];
 	uint8_t digest[(hf.hashsize_b+7)/8];
 	uint64_t t;
+	uint8_t i;
 
 	if(hf.type!=HFDESC_TYPE_HASHFUNCTION)
 		return;
@@ -71,35 +72,51 @@ void hfal_performance(const hfdesc_t* hd){
 	cli_putstr_P(PSTR("\r\n    blocksize (bits):   "));
 	printvalue(hf.blocksize_b);
 
-	startTimer(0);
-	START_TIMER;
-	hf.init(&ctx);
-	STOP_TIMER;
-	t = stopTimer();
+	t=0;
+	for(i=0; i<32; ++i){
+		startTimer(0);
+		START_TIMER;
+		hf.init(&ctx);
+		STOP_TIMER;
+		t += stopTimer();
+	}
+	t>>=5;
 	cli_putstr_P(PSTR("\r\n    init (cycles):      "));
 	printvalue(t);
 
-	startTimer(0);
-	START_TIMER;
-	hf.nextBlock(&ctx, data);
-	STOP_TIMER;
-	t = stopTimer();
+	t=0;
+	for(i=0; i<32; ++i){
+		startTimer(0);
+		START_TIMER;
+		hf.nextBlock(&ctx, data);
+		STOP_TIMER;
+		t += stopTimer();
+	}
+	t>>=5;
 	cli_putstr_P(PSTR("\r\n    nextBlock (cycles): "));
 	printvalue(t);
 
-	startTimer(0);
-	START_TIMER;
-	hf.lastBlock(&ctx, data, 0);
-	STOP_TIMER;
-	t = stopTimer();
+	t=0;
+	for(i=0; i<32; ++i){
+		startTimer(0);
+		START_TIMER;
+		hf.lastBlock(&ctx, data, 0);
+		STOP_TIMER;
+		t += stopTimer();
+	}
+	t>>=5;
 	cli_putstr_P(PSTR("\r\n    lastBlock (cycles): "));
 	printvalue(t);
 
-	startTimer(0);
-	START_TIMER;
-	hf.ctx2hash(digest, &ctx);
-	STOP_TIMER;
-	t = stopTimer();
+	t=0;
+	for(i=0; i<32; ++i){
+		startTimer(0);
+		START_TIMER;
+		hf.ctx2hash(digest, &ctx);
+		STOP_TIMER;
+		t += stopTimer();
+	}
+	t>>=5;
 	cli_putstr_P(PSTR("\r\n    ctx2hash (cycles):  "));
 	printvalue(t);
 }

@@ -18,16 +18,64 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
+$debug = false
+require 'rubygems'
 require 'serialport'
+require 'getopt/std'
+$conffile_check = Hash.new
+$conffile_check.default = 0
+
+################################################################################
+# readconfigfile                                                               #
+################################################################################
+
+def readconfigfile(fname, conf)
+  return conf if $conffile_check[fname]==1
+  $conffile_check[fname]=1
+  section = "default"
+  if not File.exists?(fname)
+    return conf
+  end
+  file = File.open(fname, "r")
+  until file.eof
+    line = file.gets()
+  next if /[\s]*#/.match(line)
+  if m=/\[[\s]*([^\s]*)[\s]*\]/.match(line)
+    section=m[1]
+    conf[m[1]] = Hash.new
+    next
+  end
+  next if not /=/.match(line)
+  m=/[\s]*([^\s]*)[\s]*=[\s]*([^\s]*)/.match(line)
+  if m[1]=="include"
+    Dir.glob(m[2]){ |fn| conf = readconfigfile(fn, conf) }
+  else
+      conf[section][m[1]] = m[2]
+  end
+  end
+  file.close()
+  return conf
+end
+
+################################################################################
+# read_line                                                                    #
+################################################################################
 
 def read_line(error_msg=true)
-  s = $sp.gets()
+  i=$extended_wait
+  begin
+    s = $sp.gets()
+  end until s or i==0
   if s==nil
     puts("ERROR: read timeout!\n") if error_msg
 	return nil
   end	
   s.gsub(/\006/, '');	
 end
+
+################################################################################
+# readPerformanceVector                                                        #
+################################################################################
 
 def readPerformanceVector(param)
   lb=""
@@ -55,22 +103,58 @@ def readPerformanceVector(param)
   end while true
 end
 
+################################################################################
+# MAIN                                                                         #
+################################################################################
 
-if ARGV.size < 5
+
+opts = Getopt::Std.getopts("f:c:t:a:d")
+
+conf = Hash.new
+conf = readconfigfile("/etc/testport.conf", conf)
+conf = readconfigfile("~/.testport.conf", conf)
+conf = readconfigfile("testport.conf", conf)
+conf = readconfigfile(opts["f"], conf) if opts["f"]
+
+#puts conf.inspect
+
+puts("serial port interface version: " + SerialPort::VERSION);
+$linewidth = 64
+params = { "baud"       => conf["PORT"]["baud"].to_i,
+            "data_bits" => conf["PORT"]["databits"].to_i,
+            "stop_bits" => conf["PORT"]["stopbits"].to_i,
+            "parity"    => SerialPort::NONE }
+params["paraty"] = SerialPort::ODD   if conf["PORT"]["paraty"].downcase == "odd"
+params["paraty"] = SerialPort::EVEN  if conf["PORT"]["paraty"].downcase == "even"
+params["paraty"] = SerialPort::MARK  if conf["PORT"]["paraty"].downcase == "mark"
+params["paraty"] = SerialPort::SPACE if conf["PORT"]["paraty"].downcase == "space"
+
+puts("\nPort: "+conf["PORT"]["port"]+"@"    +
+                params["baud"].to_s      +
+                " "                      +
+                params["data_bits"].to_s +
+                conf["PORT"]["paraty"][0,1].upcase +
+                params["stop_bits"].to_s +
+                "\n")
+
+$sp = SerialPort.new(conf["PORT"]["port"], params)
+
+$sp.read_timeout=1000; # 5 minutes
+$sp.flow_control = SerialPort::SOFT
+=begin
+if ARGV.size < 1
   STDERR.print <<EOF
-  Usage: ruby #{$0} port bps nbits stopb command [target_dir] [additional specifier]
+  Usage: ruby #{$0} -c command [-t target_dir] [-a additional specifier]
 EOF
   exit(1)
 end
+=end
 
-command=ARGV[4]+"\r";
-$dir=(ARGV.size>=6)?ARGV[5]:"";
-param=(ARGV.size>=7)?ARGV[6]:"";
+command=opts['c']+"\r";
+$dir=(opts['t'])?opts['t']:"";
+param=(opts['a'])?opts['a']:"";
 
-puts("\nPort: "+ARGV[0]+ "@"+ARGV[1]+" "+ARGV[2]+"N"+ARGV[3]+"\n");
 $linewidth = 16
-$sp = SerialPort.new(ARGV[0], ARGV[1].to_i, ARGV[2].to_i, ARGV[3].to_i, SerialPort::NONE);
-$sp.read_timeout=1000; # 1 secound
 $extended_wait=100;
 $sp.write(command);
 
