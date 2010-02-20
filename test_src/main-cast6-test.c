@@ -12,6 +12,8 @@
 #include "nessie_bc_test.h"
 #include "cli.h"
 #include "performance_test.h"
+#include "bcal-performance.h"
+#include "bcal_cast6.h"
 
 #include <stdint.h>
 #include <string.h>
@@ -19,6 +21,11 @@
 #include <avr/pgmspace.h>
 
 char* algo_name = "CAST-256";
+
+const bcdesc_t* algolist[] PROGMEM = {
+	(bcdesc_t*)&cast6_desc,
+	NULL
+};
 
 /*****************************************************************************
  *  additional validation-functions											 *
@@ -104,39 +111,9 @@ void testrun_rfc_cast6(void){
 }
 
 void testrun_performance_cast6(void){
-	uint64_t t;
-	char str[16];
-	uint8_t key[16], data[16];
-	cast6_ctx_t ctx;
-	
-	calibrateTimer();
-	print_overhead();
-	
-	memset(key,  0, 16);
-	memset(data, 0, 16);
-	
-	startTimer(1);
-	cast6_init(key, 128, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tctx-gen time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);	
-	
-	startTimer(1);
-	cast6_enc(data, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tencrypt time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	
-	startTimer(1);
-	cast6_dec(data, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tdecrypt time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	cli_putstr_P(PSTR("\r\n"));
+	bcal_performance_multiple(algolist);
 }
+
 /*****************************************************************************
  *  main																	 *
  *****************************************************************************/

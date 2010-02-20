@@ -30,6 +30,8 @@
 #include "nessie_bc_test.h"
 #include "cli.h"
 #include "performance_test.h"
+#include "bcal-performance.h"
+#include "bcal_des.h"
 
 #include <stdint.h>
 #include <string.h>
@@ -37,6 +39,10 @@
 
 char* algo_name = "DES";
 
+const bcdesc_t* algolist[] PROGMEM = {
+	(bcdesc_t*)&des_desc,
+	NULL
+};
 /*****************************************************************************
  *  additional validation-functions											 *
  *****************************************************************************/
@@ -67,31 +73,7 @@ void testrun_nessie_des(void){
 
 
 void testrun_performance_des(void){
-	uint64_t t;
-	char str[16];
-	uint8_t key[8], data[8];
-	
-	
-	calibrateTimer();
-	print_overhead();
-	
-	memset(key,  0, 8);
-	memset(data, 0, 8);
-	
-	startTimer(1);
-	des_enc(data, data, key);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tencrypt time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	
-	startTimer(1);
-	des_dec(data, data, key);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tdecrypt time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	cli_putstr_P(PSTR("\r\n"));
+	bcal_performance_multiple(algolist);
 }
 /*****************************************************************************
  * main						

@@ -30,6 +30,10 @@
 #include "nessie_bc_test.h"
 #include "cli.h"
 #include "performance_test.h"
+#include "bcal-performance.h"
+#include "bcal_threefish256.h"
+#include "bcal_threefish512.h"
+#include "bcal_threefish1024.h"
 
 #include <stdint.h>
 #include <string.h>
@@ -37,6 +41,12 @@
 
 char* algo_name = "Threefish";
 
+const bcdesc_t* algolist[] PROGMEM = {
+	(bcdesc_t*)&threefish256_desc,
+	(bcdesc_t*)&threefish512_desc,
+	(bcdesc_t*)&threefish1024_desc,
+	NULL
+};
 /*****************************************************************************
  *  additional validation-functions											 *
  *****************************************************************************/
@@ -267,129 +277,8 @@ void testrun_stdtest_threefish(void){
 	testrun_stdtest_threefish1024();
 }
 
-void testrun_performance_threefish256(void){
-	uint64_t t;
-	char str[16];
-	uint8_t key[THREEFISH256_BLOCKSIZE_B];
-	uint8_t data[THREEFISH256_BLOCKSIZE_B];
-	uint8_t tweak[16];
-	threefish256_ctx_t ctx;
-	
-	cli_putstr_P(PSTR("\r\nThreefish-256 performance:"));
-	
-	calibrateTimer();
-	print_overhead();	
-	
-//	memset(key,  0, THREEFISH256_BLOCKSIZE_B);
-//	memset(tweak, 0, 16);
-	
-	startTimer(1);
-	threefish256_init(key, tweak, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tctx-gen time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);	
-	
-	startTimer(1);
-	threefish256_enc(data, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tencrypt time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);	
-	
-	startTimer(1);
-	threefish256_dec(data, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tdecrypt time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);	
-	cli_putstr_P(PSTR("\r\n"));	
-}
-
-void testrun_performance_threefish512(void){
-	uint64_t t;
-	char str[16];
-	uint8_t key[THREEFISH512_BLOCKSIZE_B];
-	uint8_t data[THREEFISH512_BLOCKSIZE_B];
-	uint8_t tweak[16];
-	threefish512_ctx_t ctx;
-	
-	cli_putstr_P(PSTR("\r\nThreefish-512 performance:"));
-	
-	calibrateTimer();
-	print_overhead();	
-	
-//	memset(key,  0, THREEFISH512_BLOCKSIZE_B);
-//	memset(tweak, 0, 16);
-	
-	startTimer(1);
-	threefish512_init(key, tweak, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tctx-gen time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);	
-	
-	startTimer(1);
-	threefish512_enc(data, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tencrypt time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);	
-	
-	startTimer(1);
-	threefish512_dec(data, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tdecrypt time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);	
-	
-	cli_putstr_P(PSTR("\r\n"));	
-}
-
-void testrun_performance_threefish1024(void){
-	uint64_t t;
-	char str[16];
-	uint8_t key[THREEFISH1024_BLOCKSIZE_B];
-	uint8_t data[THREEFISH1024_BLOCKSIZE_B];
-	uint8_t tweak[16];
-	threefish1024_ctx_t ctx;
-	
-	cli_putstr_P(PSTR("\r\nThreefish-1024 performance:"));
-	
-	calibrateTimer();
-	print_overhead();	
-	
-//	memset(key,  0, THREEFISH1024_BLOCKSIZE_B);
-//	memset(tweak, 0, 16);
-	
-	startTimer(1);
-	threefish1024_init(key, tweak, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tctx-gen time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);	
-	
-	startTimer(1);
-	threefish1024_enc(data, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tencrypt time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);	
-	
-	startTimer(1);
-	threefish1024_dec(data, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tdecrypt time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);	
-	
-	cli_putstr_P(PSTR("\r\n"));	
-}
-
 void testrun_performance_threefish(void){
-	testrun_performance_threefish256();
-	testrun_performance_threefish512();
-	testrun_performance_threefish1024();
+	bcal_performance_multiple(algolist);
 }
 
 void init_test(void){

@@ -19,6 +19,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
+
+require 'rubygems'
+require 'getopt/std'
+
 =begin
 |             Blake-28 ||   C ||   C 
 | 10916<br> 
@@ -32,7 +36,7 @@ memxor: 24
 =end
 
 
-def fix_file(fin, fout)
+def fix_file(fin, fout, supress)
   loop do
     return if fin.eof()
     comp = Array.new
@@ -45,9 +49,13 @@ def fix_file(fin, fout)
     end until comp[i-1].match(/^\|/)
     sum = 0
     (i-1).times{ |j| sum += comp[j].match(/[^:]*:[\s]*([\d]*)/)[1].to_i}
-    fout.puts(lb1)
-    fout.printf("| %d <br>\n", sum)
-    comp.each{ |s| fout.puts(s)}
+    fout.print(lb1.chomp)
+    if supress
+      fout.printf(" || %d |%s", sum, comp.last)    
+    else
+      fout.printf("\n| %d <br>\n", sum)
+      comp.each{ |s| fout.puts(s)}
+    end
     begin
       lb1 = fin.readline()
       fout.puts(lb1)
@@ -62,11 +70,12 @@ end
 fin = STDIN
 fout = STDOUT
 
+opts = Getopt::Std.getopts("s")
 
 fin  = File.open(ARGV[0], "r") if ARGV.size > 0
 fout = File.open(ARGV[1], "w") if ARGV.size > 1
 
-fix_file(fin, fout)
+fix_file(fin, fout, opts["s"])
 
 fin.close  if ARGV.size > 0
 fout.close if ARGV.size > 1

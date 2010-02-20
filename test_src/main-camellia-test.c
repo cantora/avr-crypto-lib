@@ -30,15 +30,19 @@
 #include "nessie_bc_test.h"
 #include "performance_test.h"
 #include "cli.h"
-
-char* algo_name = "Camellia";
-
-
+#include "bcal_camellia128.h"
+#include "bcal-performance.h"
 #include <stdint.h>
 #include <string.h>
 #include <stdlib.h>
 #include <avr/pgmspace.h>
 
+char* algo_name = "Camellia";
+
+const bcdesc_t* algolist[] PROGMEM = {
+	(bcdesc_t*)&camellia128_desc,
+	NULL
+};
 
 /*****************************************************************************
  *  additional validation-functions											 *
@@ -59,45 +63,77 @@ void testrun_nessie_camellia(void){
 	nessie_bc_run();
 }
 
+/*
+ * P No.001 : 80 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ */
 
-void test_performance_camellia(void){
-	uint64_t t;
-	char str[6];
-	uint8_t key[16], data[16];
-	camellia128_ctx_t ctx;
-	
-	calibrateTimer();
-	print_overhead();
-	
-	memset(key,  0, 16);
-	memset(data, 0, 16);
-	
-	startTimer(1);
-	camellia128_init(key, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tctx-gen time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	
-	
-	startTimer(1);
-	camellia128_enc(data, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tencrypt time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	
-	
-	startTimer(1);
-	camellia128_dec(data, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tdecrypt time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	
-	cli_putstr_P(PSTR("\r\n"));
+uint8_t test_keys[] PROGMEM = {
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+	0x0F, 0x0F, 0x0F, 0x0F, 0x0F, 0x0F, 0x0F, 0x0F, 0x0F, 0x0F, 0x0F, 0x0F, 0x0F, 0x0F, 0x0F, 0x0F,
+	0xF0, 0xF0, 0xF0, 0xF0, 0xF0, 0xF0, 0xF0, 0xF0, 0xF0, 0xF0, 0xF0, 0xF0, 0xF0, 0xF0, 0xF0, 0xF0,
+	0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF,
+	0xFF, 0xEE, 0xDD, 0xCC, 0xBB, 0xAA, 0x99, 0x88, 0x77, 0x66, 0x55, 0x44, 0x33, 0x22, 0x11, 0x00,
+	0x01, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF, 0xFE, 0xDC, 0xBA, 0x98, 0x76, 0x54, 0x32, 0x10,
+	0xFE, 0xDC, 0xBA, 0x98, 0x76, 0x54, 0x32, 0x10, 0x01, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF,
+	0x10, 0x32, 0x54, 0x76, 0x98, 0xBA, 0xDC, 0xFE, 0xEF, 0xCD, 0xAB, 0x89, 0x67, 0x45, 0x23, 0x01,
+	0xEF, 0xCD, 0xAB, 0x89, 0x67, 0x45, 0x23, 0x01, 0x10, 0x32, 0x54, 0x76, 0x98, 0xBA, 0xDC, 0xFE
+};
+
+void hexdump128(void* data){
+	uint8_t i;
+	for(i=0; i<16; ++i){
+		cli_hexdump(data, 1);
+		cli_putc(' ');
+		data = (uint8_t*)data +1;
+	}
 }
 
+void testrun_camellia128(void){
+	uint8_t data[16];
+	uint8_t data2[16];
+	uint8_t key[16];
+	char str[4];
+	uint8_t i,j;
+	str[3]= '\0';
+	for(j=0; j<10; ++j){
+		str[0] = ('0'+(j+1)/100);
+		str[1] = ('0'+((j+1)/10)%10);
+		str[2] = ('0'+(j+1)%10);
+		memcpy_P(key, test_keys+j*16, 16);
+		cli_putstr_P(PSTR("\r\nK No."));
+		cli_putstr(str);
+		cli_putstr_P(PSTR(" : "));
+		hexdump128(key);
+		camellia128_ctx_t ctx;
+		camellia128_init(key, &ctx);
+		for(i=0; i<128; ++i){
+			memset(data, 0x00, 16);
+			data[i/8] = 0x80>>i%8;
+			memcpy(data2, data, 16);
+			str[0] = ('0'+(i+1)/100);
+			str[1] = ('0'+((i+1)/10)%10);
+			str[2] = ('0'+(i+1)%10);
+			cli_putstr_P(PSTR("\r\nP No."));
+			cli_putstr(str);
+			cli_putstr_P(PSTR(" : "));
+			hexdump128(data);
+			camellia128_enc(data, &ctx);
+			cli_putstr_P(PSTR("\r\nC No."));
+			cli_putstr(str);
+			cli_putstr_P(PSTR(" : "));
+			hexdump128(data);
+			camellia128_dec(data, &ctx);
+			if(memcmp(data, data2, 16)){
+				cli_putstr_P(PSTR("\r\n DECRYPTION ERROR !!!"));
+			}
+		}
+	}
+}
+
+void test_performance_camellia(void){
+	bcal_performance_multiple(algolist);
+}
 
 
 /*****************************************************************************
@@ -139,17 +175,19 @@ void testrun_camellia(void){
 
 
 /*****************************************************************************
- * main																	 *
+ * main                                                                      *
  *****************************************************************************/
 
 const char nessie_str[]      PROGMEM = "nessie";
 const char test_str[]        PROGMEM = "test";
+const char test128_str[]     PROGMEM = "test128";
 const char performance_str[] PROGMEM = "performance";
 const char echo_str[]        PROGMEM = "echo";
 
 cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ nessie_str,      NULL, testrun_nessie_camellia },
 	{ test_str,        NULL, testrun_camellia},
+	{ test128_str,     NULL, testrun_camellia128},
 	{ performance_str, NULL, test_performance_camellia},
 	{ echo_str,    (void*)1, (void_fpt)echo_ctrl},
 	{ NULL,            NULL, NULL}

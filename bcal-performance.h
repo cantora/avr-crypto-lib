@@ -1,7 +1,7 @@
-/* hfal-test.c */
+/* bcal-performance.h */
 /*
     This file is part of the AVR-Crypto-Lib.
-    Copyright (C) 2009  Daniel Otte (daniel.otte@rub.de)
+    Copyright (C) 2010 Daniel Otte (daniel.otte@rub.de)
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -16,34 +16,23 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 /*
- * \file    hfal-test.c
+ * \file    bcal-performance.h
  * \author  Daniel Otte
  * \email   daniel.otte@rub.de
- * \date    2009-05-10
+ * \date    2010-02-16
  * \license GPLv3 or later
- * 
+ *
  */
 
-#include "hfal-basic.h"
-#include "hashfunction_descriptor.h"
-#include "cli.h"
-#include <stdint.h>
-#include <avr/pgmspace.h>
+#ifndef BCAL_PERFORMANCE_H_
+#define BCAL_PERFORMANCE_H_
 
-void hfal_test(const hfdesc_t* hd, void* msg, uint32_t length_b){
-	if(pgm_read_byte(&(hd->type))!=HFDESC_TYPE_HASHFUNCTION)
-		return;
-	uint16_t dlen = (pgm_read_word(&(hd->hashsize_b))+7)/8;
-	uint8_t digest[dlen];
-	cli_putstr_P(PSTR("\r\n=== "));
-	cli_putstr_P((void*)pgm_read_word(&(hd->name)));
-	cli_putstr_P(PSTR(" ===\r\n message:"));
-	cli_hexdump_block(msg, (length_b+7)/8, 4, 16);
-	hfal_hash_mem(hd, digest, msg, length_b);
-	cli_putstr_P(PSTR(" \r\n digest:"));
-	cli_hexdump_block(digest, dlen, 4, 16);
-	cli_putstr_P(PSTR("\r\n"));
-}
+#include "blockcipher_descriptor.h"
+
+void bcal_performance(const bcdesc_t* hd);
+void bcal_performance_multiple(const bcdesc_t** hd_list);
 
 
+#endif /* BCAL_PERFORMANCE_H_ */

@@ -55,5 +55,5 @@ typedef struct{ /* keysize is valid if min<=keysize<=max and if keysize mod dist
 }keysize_desc_arg_range_t;
 
 uint8_t is_valid_keysize_P(PGM_VOID_P ks_desc, uint16_t keysize);
-
+uint16_t get_keysize(PGM_VOID_P ks_desc);
 #endif /* KEYSIZE_DESCRIPTOR_H_ */

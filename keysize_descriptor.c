@@ -72,4 +72,15 @@ uint8_t is_valid_keysize_P(PGM_VOID_P ks_desc, uint16_t keysize){
 	return is_valid_keysize_P((uint8_t*)ks_desc+1, keysize); /* search the next record */
 }
 
+uint16_t get_keysize(PGM_VOID_P ks_desc){
+	uint8_t type;
+	uint16_t keysize;
+	type = pgm_read_byte(ks_desc);
+	if(type==KS_TYPE_LIST)
+		ks_desc = (uint8_t*)ks_desc + 1;
+	ks_desc = (uint8_t*)ks_desc + 1;
+	keysize = pgm_read_word(ks_desc);
+	return keysize;
+}
+
 

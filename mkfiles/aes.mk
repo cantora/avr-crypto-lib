@@ -12,7 +12,7 @@ $(ALGO_NAME)_TEST_BIN := main-aes-test.o $(CLI_STD)  \
                          bcal_aes128.o bcal_aes192.o bcal_aes256.o bcal-basic.o bcal-cbc.o \
                          keysize_descriptor.o dump-asm.o dump-decl.o bcal-cfb_byte.o       \
                          bcal-cfb_bit.o bcal-ofb.o bcal-ctr.o bcal-cmac.o cmacvs.o         \
-                         bcal-eax.o
+                         bcal-eax.o bcal-performance.o
 $(ALGO_NAME)_NESSIE_TEST      := test nessie
 $(ALGO_NAME)_PERFORMANCE_TEST := performance
 

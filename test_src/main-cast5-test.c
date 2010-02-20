@@ -29,6 +29,8 @@
 #include <cast5.h>
 #include "nessie_bc_test.h"
 #include "performance_test.h"
+#include "bcal-performance.h"
+#include "bcal_cast5.h"
 #include "cli.h"
 
 #include <stdint.h>
@@ -36,6 +38,11 @@
 #include <stdlib.h>
 
 char* algo_name = "cast-128 (cast5)";
+
+const bcdesc_t* algolist[] PROGMEM = {
+	(bcdesc_t*)&cast5_desc,
+	NULL
+};
 
 /*****************************************************************************
  *  additional validation-functions											 *
@@ -152,41 +159,7 @@ void testrun_cast5(void){
 }
 
 void testrun_performance_cast5(void){
-	uint64_t t;
-	char str[6];
-	uint8_t key[16], data[16];
-	cast5_ctx_t ctx;
-	
-	calibrateTimer();
-	print_overhead();
-	
-	memset(key,  0, 16);
-	memset(data, 0, 16);
-	
-	startTimer(1);
-	cast5_init(key, 128, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tctx-gen time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	
-	
-	startTimer(1);
-	cast5_enc(data, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tencrypt time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	
-	
-	startTimer(1);
-	cast5_dec(data, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tdecrypt time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	
-	cli_putstr_P(PSTR("\r\n"));
+	bcal_performance_multiple(algolist);
 }
 
 /*****************************************************************************

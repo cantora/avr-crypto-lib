@@ -6,8 +6,7 @@ BLOCK_CIPHERS += $(ALGO_NAME)
 
 $(ALGO_NAME)_DIR      := serpent/
 $(ALGO_NAME)_OBJ      := serpent-sboxes-bitslice-asm.o serpent-asm.o memxor.o
-$(ALGO_NAME)_TEST_BIN := main-serpent-test.o $(CLI_STD)  \
-                         nessie_bc_test.o nessie_common.o performance_test.o
+$(ALGO_NAME)_TEST_BIN := main-serpent-test.o bcal_serpent.o $(CLI_STD) $(BCAL_STD) 
 $(ALGO_NAME)_NESSIE_TEST      := "nessie"
 $(ALGO_NAME)_PERFORMANCE_TEST := "performance"
 

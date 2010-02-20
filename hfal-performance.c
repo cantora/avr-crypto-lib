@@ -79,6 +79,9 @@ void hfal_performance(const hfdesc_t* hd){
 		hf.init(&ctx);
 		STOP_TIMER;
 		t += stopTimer();
+		if(i!=31 && hf.free){
+			hf.free(&ctx)
+		}
 	}
 	t>>=5;
 	cli_putstr_P(PSTR("\r\n    init (cycles):      "));
@@ -119,6 +122,10 @@ void hfal_performance(const hfdesc_t* hd){
 	t>>=5;
 	cli_putstr_P(PSTR("\r\n    ctx2hash (cycles):  "));
 	printvalue(t);
+
+	if(hf.free){
+		hf.free(&ctx);
+	}
 }
 
 

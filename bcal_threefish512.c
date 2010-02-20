@@ -1,4 +1,4 @@
-/* bcal_des.c */
+/* bcal_threefish512.c */
 /*
     This file is part of the AVR-Crypto-Lib.
     Copyright (C) 2008  Daniel Otte (daniel.otte@rub.de)
@@ -17,45 +17,40 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * \file     bcal_des.c
+ * \file     bcal_threefish512.c
  * \email    daniel.otte@rub.de
- * \author   Daniel Otte 
- * \date     2009-01-09
+ * \author   Daniel Otte
+ * \date     2010-02-20
  * \license  GPLv3 or later
- * 
+ *
  */
 
 #include <avr/pgmspace.h>
 #include <stdlib.h>
 #include "blockcipher_descriptor.h"
-#include "des.h"
+#include "threefish.h"
 #include "keysize_descriptor.h"
 
-const char des_str[]   PROGMEM = "DES";
+const char threefish512_str[]   PROGMEM = "Threefish-512";
 
-const uint8_t des_keysize_desc[] PROGMEM = { KS_TYPE_LIST, 1, KS_INT(64), 
+const uint8_t threefish512_keysize_desc[] PROGMEM = { KS_TYPE_LIST, 1, KS_INT(512),
                                                 KS_TYPE_TERMINATOR    };
-static
-void des_dummy_enc(void* block, void* key){
-	des_enc(block, block, key);
+
+static void threefish512_dummy_init(void* key, void* ctx){
+	threefish512_init(key, NULL, ctx);
 }
 
-static
-void des_dummy_dec(void* block, void* key){
-	des_dec(block, block, key);
-}
-
-const bcdesc_t des_desc PROGMEM = {
+const bcdesc_t threefish512_desc PROGMEM = {
 	BCDESC_TYPE_BLOCKCIPHER,
 	BC_INIT_TYPE_1,
-	des_str,
-	8,
-	128,
-	{(void_fpt)NULL},
-	{(void_fpt)des_dummy_enc},
-	{(void_fpt)des_dummy_dec},
+	threefish512_str,
+	sizeof(threefish512_ctx_t),
+	512,
+	{(void_fpt)threefish512_dummy_init},
+	{(void_fpt)threefish512_enc},
+	{(void_fpt)threefish512_dec},
 	(bc_free_fpt)NULL,
-	des_keysize_desc
+	threefish512_keysize_desc
 };
 
 

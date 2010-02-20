@@ -30,6 +30,8 @@
 #include "nessie_bc_test.h"
 #include "cli.h"
 #include "performance_test.h"
+#include "bcal-performance.h"
+#include "bcal_rc6.h"
 
 #include <stdint.h>
 #include <string.h>
@@ -38,6 +40,10 @@
 #define RC6_ROUNDS 20
 char* algo_name = "RC6-32/20/16";
 
+const bcdesc_t* algolist[] PROGMEM = {
+	(bcdesc_t*)&rc6_desc,
+	NULL
+};
 /*****************************************************************************
  *  additional validation-functions											 *
  *****************************************************************************/
@@ -68,45 +74,7 @@ void testrun_nessie_rc6(void){
 
 
 void testrun_performance_rc6(void){
-	uint64_t t;
-	char str[16];
-	uint8_t key[16], data[16];
-	rc6_ctx_t ctx;
-	
-	calibrateTimer();
-	print_overhead();
-	
-	memset(key,  0, 16);
-	memset(data, 0, 16);
-	
-	startTimer(1);
-	rc6_init(key, 128, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tctx-gen time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);	
-	
-	startTimer(1);
-	rc6_enc(data, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tencrypt time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	
-	startTimer(1);
-	rc6_dec(data, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tdecrypt time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-
-	startTimer(1);
-	rc6_free(&ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tfree time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	cli_putstr_P(PSTR("\r\n"));
+	bcal_performance_multiple(algolist);
 }
 /*****************************************************************************
  *  main																	 *

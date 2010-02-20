@@ -30,6 +30,8 @@
 #include "nessie_bc_test.h"
 #include "cli.h"
 #include "performance_test.h"
+#include "bcal-performance.h"
+#include "bcal_noekeon.h"
 
 #include <stdint.h>
 #include <string.h>
@@ -37,6 +39,11 @@
 
 char* algo_name = "Noekeon";
 
+const bcdesc_t* algolist[] PROGMEM = {
+	(bcdesc_t*)&noekeon_direct_desc,
+	(bcdesc_t*)&noekeon_indirect_desc,
+	NULL
+};
 /*****************************************************************************
  *  additional validation-functions											 *
  *****************************************************************************/
@@ -173,39 +180,7 @@ void testrun_stdtest_noekeon(void){
 }
 
 void testrun_performance_noekeon(void){
-	uint64_t t;
-	char str[16];
-	uint8_t key[16], data[16];
-	noekeon_ctx_t ctx;
-	
-	calibrateTimer();
-	print_overhead();
-	
-	memset(key,  0, 16);
-	memset(data, 0, 16);
-	
-	startTimer(1);
-	noekeon_init(key, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tctx-gen time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);	
-	
-	startTimer(1);
-	noekeon_enc(data, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tencrypt time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);	
-	
-	startTimer(1);
-	noekeon_dec(data, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tdecrypt time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-	
-	cli_putstr_P(PSTR("\r\n"));
+	bcal_performance_multiple(algolist);
 }
 /*****************************************************************************
  *  main																	 *

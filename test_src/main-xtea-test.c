@@ -29,12 +29,21 @@
 #include "xtea.h"
 #include "nessie_bc_test.h"
 #include "performance_test.h"
+#include "bcal-performance.h"
+#include "bcal_xtea.h"
 #include "cli.h"
 
 #include <stdint.h>
 #include <string.h>
 
 char* algo_name = "XTEA";
+
+const bcdesc_t* algolist[] PROGMEM = {
+	(bcdesc_t*)&xtea_desc,
+	NULL
+};
+
+/******************************************************************************/
 
 void xtea_genctx_dummy(uint8_t* key, uint16_t keysize, void* ctx){
 	memcpy(ctx, key, (keysize+7)/8);
@@ -61,26 +70,7 @@ void testrun_nessie_xtea(void){
 }
 
 void testrun_performance_xtea(void){
-	uint64_t t;
-	uint8_t key[16], data[8];
-	
-	calibrateTimer();
-	print_overhead();
-	
-	memset(key,  0, 16);
-	memset(data, 0,  8);
-	
-	startTimer(1);
-	xtea_enc(data, data, key);
-	t = stopTimer();
-	print_time_P(PSTR("\tencrypt time: "), t);
-	
-	startTimer(1);
-	xtea_dec(data, data, key);
-	t = stopTimer();
-	print_time_P(PSTR("\tdecrypt time: "), t);
-	
-	cli_putstr_P(PSTR("\r\n"));
+	bcal_performance_multiple(algolist);
 }
 
 /*****************************************************************************

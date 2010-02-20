@@ -44,6 +44,7 @@
 #include "bcal-cmac.h"
 #include "bcal-eax.h"
 #include "cmacvs.h"
+#include "bcal-performance.h"
 
 #include <stdint.h>
 #include <string.h>
@@ -670,131 +671,10 @@ void testrun_aes128_eax(void){
 
 /*****************************************************************************/
 
-void testrun_performance_aes128(void){
-	uint64_t t;
-	char str[16];
-	uint8_t key[32], data[16];
-	aes128_ctx_t ctx;
-
-	calibrateTimer();
-	print_overhead();
-
-	memset(key,  0, 32);
-	memset(data, 0, 16);
-
-	startTimer(1);
-	aes128_init(key, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tctx-gen time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-
-
-	startTimer(1);
-	aes128_enc(data, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tencrypt time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-
-
-	startTimer(1);
-	aes128_dec(data, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tdecrypt time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-
-	cli_putstr_P(PSTR("\r\n"));
-}
-
-
-void testrun_performance_aes192(void){
-	uint64_t t;
-	char str[16];
-	uint8_t key[32], data[16];
-	aes192_ctx_t ctx;
-
-	calibrateTimer();
-	print_overhead();
-
-	memset(key,  0, 32);
-	memset(data, 0, 16);
-
-	startTimer(1);
-	aes192_init(key, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tctx-gen time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-
-
-	startTimer(1);
-	aes192_enc(data, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tencrypt time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-
-
-	startTimer(1);
-	aes192_dec(data, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tdecrypt time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-
-	cli_putstr_P(PSTR("\r\n"));
-}
-
-
-void testrun_performance_aes256(void){
-	uint64_t t;
-	char str[16];
-	uint8_t key[32], data[16];
-	aes256_ctx_t ctx;
-
-	calibrateTimer();
-	print_overhead();
-
-	memset(key,  0, 32);
-	memset(data, 0, 16);
-
-	startTimer(1);
-	aes256_init(key, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tctx-gen time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-
-
-	startTimer(1);
-	aes256_enc(data, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tencrypt time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-
-
-	startTimer(1);
-	aes256_dec(data, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tdecrypt time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-
-	cli_putstr_P(PSTR("\r\n"));
-}
-
 void testrun_performance_aes(void){
-	cli_putstr_P(PSTR("\r\n -=AES Performance Test=-\r\n"));
-	cli_putstr_P(PSTR("\r\n       AES-128\r\n"));
-	testrun_performance_aes128();
-	cli_putstr_P(PSTR("\r\n       AES-192\r\n"));
-	testrun_performance_aes192();
-	cli_putstr_P(PSTR("\r\n       AES-256\r\n"));
-	testrun_performance_aes256();
+	bcal_performance_multiple(algolist);
 }
+
 /*****************************************************************************
  *  main																	 *
  *****************************************************************************/

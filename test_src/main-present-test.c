@@ -30,6 +30,8 @@
 #include "nessie_bc_test.h"
 #include "cli.h"
 #include "performance_test.h"
+#include "bcal-performance.h"
+#include "bcal_present.h"
 
 #include <stdlib.h>
 #include <stdint.h>
@@ -37,6 +39,10 @@
 
 char* algo_name = "Present";
 
+const bcdesc_t* algolist[] PROGMEM = {
+	(bcdesc_t*)&present_desc,
+	NULL
+};
 /*****************************************************************************
  *  additional validation-functions											 *
  *****************************************************************************/
@@ -95,32 +101,7 @@ void testrun_self_present(void){
 }
 
 void testrun_performance_present(void){
-	uint64_t t;
-	uint8_t key[10], data[8];
-	present_ctx_t ctx;
-	
-	calibrateTimer();
-	print_overhead();
-	
-	memset(key,  0, 10);
-	memset(data, 0,  8);
-	
-	startTimer(1);
-	present_init(key, 80, &ctx);
-	t = stopTimer();
-	print_time_P(PSTR("\tctx-gen time: "),t);
-	
-	startTimer(1);
-	present_enc(data, &ctx);
-	t = stopTimer();
-	print_time_P(PSTR("\tencrypt time: "), t);
-	
-	startTimer(1);
-	present_dec(data, &ctx);
-	t = stopTimer();
-	print_time_P(PSTR("\tdecrypt time: "), t);
-	
-	cli_putstr_P(PSTR("\r\n"));
+	bcal_performance_multiple(algolist);
 }
 
 /*****************************************************************************
