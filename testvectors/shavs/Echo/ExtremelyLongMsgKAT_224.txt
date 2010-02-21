@@ -1,0 +1,7 @@
+# ExtremelyLongMsgKAT_224.txt
+# Algorithm Name: ECHO
+# Principal Submitter: Henri Gilbert
+
+Repeat = 16777216
+Text = abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmno
+MD = 1B85690B4CA83042132731D064CED7572DA306CA04161FDCFC81FECC
