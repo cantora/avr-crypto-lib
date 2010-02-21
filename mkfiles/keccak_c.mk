@@ -1,7 +1,7 @@
-# Makefile for BlueMidnightWish
+# Makefile for Keccak
 ALGO_NAME := KECCAK_C
 
-# comment out the following line for removement of BlueMidnightWish from the build process
+# comment out the following line for removement of Keccak from the build process
 HASHES += $(ALGO_NAME)
 
 $(ALGO_NAME)_DIR      := keccak/

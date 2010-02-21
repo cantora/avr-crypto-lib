@@ -80,7 +80,7 @@ void hfal_performance(const hfdesc_t* hd){
 		STOP_TIMER;
 		t += stopTimer();
 		if(i!=31 && hf.free){
-			hf.free(&ctx)
+			hf.free(&ctx);
 		}
 	}
 	t>>=5;
