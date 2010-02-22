@@ -91,33 +91,31 @@ static void dump_state(void* s){
 }
 #endif
 
-static void compress512(void* v, void* m, uint64_t* c, void* salt){
-	uint8_t i, j, l;
-	uint8_t s[16*16];
+static void echo_compress(uint8_t* s, uint8_t iterations, uint64_t* c, void* salt){
+	uint8_t i, j;
 	uint8_t k[16];
-
-	memcpy(s, v, 16*4);           /* load v into state */
-	memcpy(s+16*4, m, 16*12);     /* load m into state */
-
+#if DEBUG
+	uint8_t round=0;
+#endif
 	memcpy(k, c, 8);
 	memset(k+8, 0, 8);
-	for(i=0; i<8; ++i){
+	do{
 		/* BIG.SubWords */
 #if DEBUG
 	cli_putstr_P(PSTR("\r\n === ROUND "));
-	cli_putc('1'+i);
+	cli_putc('0'+round);
 	cli_putstr_P(PSTR(" ==="));
-	if(i<DEBUG_DEPTH){
+	if(round<DEBUG_DEPTH){
 		dump_state(s);
 	}
 #endif
-		for(j=0; j<16; ++j){
-			aes_encrypt_round(s+16*j, k);
-			aes_encrypt_round(s+16*j, salt);
+		for(i=0; i<16; ++i){
+			aes_encrypt_round(s+16*i, k);
+			aes_encrypt_round(s+16*i, salt);
 			*((uint64_t*)(k)) += 1;
 		}
 #if DEBUG
-		if(i<DEBUG_DEPTH){
+		if(round<DEBUG_DEPTH){
 			cli_putstr_P(PSTR("\r\nAfter SubWords"));
 			dump_state(s);
 		}
@@ -144,24 +142,37 @@ static void compress512(void* v, void* m, uint64_t* c, void* salt){
 		memcpy(s+INDEX(2, 3), s+INDEX(1, 3), 16);
 		memcpy(s+INDEX(1, 3), t,             16);
 #if DEBUG
-		if(i<DEBUG_DEPTH){
+		if(round<DEBUG_DEPTH){
 			cli_putstr_P(PSTR("\r\nAfter ShiftRows"));
 			dump_state(s);
 		}
 #endif
 		/* BIG.MixColumns */
-		for(j=0; j<4; j+=1){
-			for(l=0; l<16; ++l){
-				mixcol(s+j*64+l);
+		for(i=0; i<4; i+=1){
+			for(j=0; j<16; ++j){
+				mixcol(s+i*64+j);
 			}
 		}
 #if DEBUG
-		if(i<DEBUG_DEPTH){
+		if(round<DEBUG_DEPTH){
 			cli_putstr_P(PSTR("\r\nAfter MixColumns"));
 			dump_state(s);
 		}
+		round++;
 #endif
-	}
+	}while(--iterations);
+
+}
+
+/******************************************************************************/
+
+static void compress512(void* v, void* m, uint64_t* c, void* salt){
+	uint8_t s[16*16];
+	uint8_t i;
+	memcpy(s, v, 16*4);           /* load v into state */
+	memcpy(s+16*4, m, 16*12);     /* load m into state */
+
+	echo_compress(s, 8, c, salt);
 
 	/* BIG.Final */
 	for(i=0; i<3; ++i){
@@ -171,6 +182,21 @@ static void compress512(void* v, void* m, uint64_t* c, void* salt){
 		memxor(v, s+4*16*i, 4*16);
 	}
 }
+
+static void compress1024(void* v, void* m, uint64_t* c, void* salt){
+	uint8_t s[16*16];
+	memcpy(s, v, 16*8);           /* load v into state */
+	memcpy(s+16*8, m, 16*8);      /* load m into state */
+
+	echo_compress(s, 10, c, salt);
+
+	/* BIG.Final */
+	memxor(v, m, 16*8);
+	memxor(v, s, 16*8);
+	memxor(v, s+16*8, 16*8);
+}
+
+/******************************************************************************/
 
 void echo_small_nextBlock(echo_small_ctx_t* ctx, void* block){
 	ctx->counter += ECHO_SMALL_BLOCKSIZE;
@@ -204,7 +230,38 @@ void echo_small_lastBlock(echo_small_ctx_t* ctx, void* block, uint16_t length_b)
 
 /******************************************************************************/
 
-void echo_small_ctx2hash(void* dest, uint16_t length_b, echo_small_ctx_t* ctx){
+void echo_large_nextBlock(echo_large_ctx_t* ctx, void* block){
+	ctx->counter += ECHO_LARGE_BLOCKSIZE;
+	compress1024(ctx->v, block, &(ctx->counter), ctx->salt);
+}
+
+void echo_large_lastBlock(echo_large_ctx_t* ctx, void* block, uint16_t length_b){
+	while(length_b>=ECHO_LARGE_BLOCKSIZE){
+		echo_large_nextBlock(ctx, block);
+		block = (uint8_t*)block + ECHO_LARGE_BLOCKSIZE_B;
+		length_b -= ECHO_LARGE_BLOCKSIZE;
+	}
+	uint8_t buffer[ECHO_LARGE_BLOCKSIZE_B];
+	uint64_t total_len;
+	memset(buffer, 0, ECHO_LARGE_BLOCKSIZE_B);
+	memcpy(buffer, block, (length_b+7)/8);
+	buffer[length_b/8] |= 0x80 >> (length_b&7);
+	total_len = (ctx->counter += length_b);
+	if(length_b>=ECHO_LARGE_BLOCKSIZE-144){
+		compress1024(ctx->v, buffer, &total_len, ctx->salt);
+		memset(buffer, 0, ECHO_LARGE_BLOCKSIZE_B);
+		ctx->counter = 0;
+	}
+	if(length_b==0){
+		ctx->counter = 0;
+	}
+	memcpy(buffer+ECHO_LARGE_BLOCKSIZE_B-18, &(ctx->id), 2);
+	memcpy(buffer+ECHO_LARGE_BLOCKSIZE_B-16, &total_len, 8);
+	compress1024(ctx->v, buffer, &(ctx->counter), ctx->salt);
+}
+/******************************************************************************/
+
+void echo_ctx2hash(void* dest, uint16_t length_b, echo_small_ctx_t* ctx){
 	memcpy(dest, ctx->v, (length_b+7)/8);
 }
 
@@ -214,6 +271,16 @@ void echo224_ctx2hash(void* dest, echo_small_ctx_t* ctx){
 
 void echo256_ctx2hash(void* dest, echo_small_ctx_t* ctx){
 	memcpy(dest, ctx->v, 256/8);
+}
+
+/******************************************************************************/
+
+void echo384_ctx2hash(void* dest, echo_large_ctx_t* ctx){
+	memcpy(dest, ctx->v, 384/8);
+}
+
+void echo512_ctx2hash(void* dest, echo_large_ctx_t* ctx){
+	memcpy(dest, ctx->v, 512/8);
 }
 
 /******************************************************************************/
@@ -242,3 +309,27 @@ void echo256_init(echo_small_ctx_t* ctx){
 
 /******************************************************************************/
 
+void echo384_init(echo_large_ctx_t* ctx){
+	uint8_t i;
+	memset(ctx->v, 0, 8*16);
+	ctx->counter = 0;
+	memset(ctx->salt, 0, 16);
+	ctx->id = 0x0180;
+	for(i=0; i<8; ++i){
+		ctx->v[0+16*i] = 0x80;
+		ctx->v[1+16*i] = 0x01;
+	}
+}
+
+void echo512_init(echo_large_ctx_t* ctx){
+	uint8_t i;
+	memset(ctx->v, 0, 8*16);
+	ctx->counter = 0;
+	memset(ctx->salt, 0, 16);
+	ctx->id = 0x0200;
+	for(i=0; i<8; ++i){
+		ctx->v[1+16*i] = 0x02;
+	}
+}
+
+/******************************************************************************/

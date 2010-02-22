@@ -43,6 +43,12 @@ typedef struct{
 	uint16_t id;
 }echo_small_ctx_t;
 
+typedef struct{
+	uint8_t v[8*16];
+	uint8_t salt[16];
+	uint64_t counter;
+	uint16_t id;
+}echo_large_ctx_t;
 
 void echo_small_nextBlock(echo_small_ctx_t* ctx, void* block);
 void echo_small_lastBlock(echo_small_ctx_t* ctx, void* block, uint16_t length_b);
@@ -51,5 +57,13 @@ void echo224_ctx2hash(void* dest, echo_small_ctx_t* ctx);
 void echo256_ctx2hash(void* dest, echo_small_ctx_t* ctx);
 void echo224_init(echo_small_ctx_t* ctx);
 void echo256_init(echo_small_ctx_t* ctx);
+
+void echo_large_nextBlock(echo_large_ctx_t* ctx, void* block);
+void echo_large_lastBlock(echo_large_ctx_t* ctx, void* block, uint16_t length_b);
+void echo_large_ctx2hash(void* dest, uint16_t length_b, echo_large_ctx_t* ctx);
+void echo384_ctx2hash(void* dest, echo_large_ctx_t* ctx);
+void echo512_ctx2hash(void* dest, echo_large_ctx_t* ctx);
+void echo384_init(echo_large_ctx_t* ctx);
+void echo512_init(echo_large_ctx_t* ctx);
 
 #endif /* ECHO_H_ */

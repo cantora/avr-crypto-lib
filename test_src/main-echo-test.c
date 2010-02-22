@@ -45,6 +45,8 @@ char* algo_name = "CubeHash";
 const hfdesc_t* algolist[] PROGMEM = {
 	(hfdesc_t*)&echo224_desc,
 	(hfdesc_t*)&echo256_desc,
+	(hfdesc_t*)&echo384_desc,
+	(hfdesc_t*)&echo512_desc,
 	NULL
 };
 
@@ -77,6 +79,23 @@ uint8_t intermediate_data[] PROGMEM = {
 	0xFD, 0x29, 0xD1, 0x04, 0xCE
 	};
 
+uint8_t intermediate_data2[] PROGMEM = {
+	0x75, 0x8E, 0xA3, 0xFE, 0xA7, 0x38, 0x97, 0x3D,
+	0xB0, 0xB8, 0xBE, 0x7E, 0x59, 0x9B, 0xBE, 0xF4,
+	0x51, 0x93, 0x73, 0xD6, 0xE6, 0xDC, 0xD7, 0x19,
+	0x5E, 0xA8, 0x85, 0xFC, 0x99, 0x1D, 0x89, 0x67,
+	0x62, 0x99, 0x27, 0x59, 0xC2, 0xA0, 0x90, 0x02,
+	0x91, 0x2F, 0xB0, 0x8E, 0x0C, 0xB5, 0xB7, 0x6F,
+	0x49, 0x16, 0x2A, 0xEB, 0x8C, 0xF8, 0x7B, 0x17,
+	0x2C, 0xF3, 0xAD, 0x19, 0x02, 0x53, 0xDF, 0x61,
+	0x2F, 0x77, 0xB1, 0xF0, 0xC5, 0x32, 0xE3, 0xB5,
+	0xFC, 0x99, 0xC2, 0xD3, 0x1F, 0x8F, 0x65, 0x01,
+	0x16, 0x95, 0xA0, 0x87, 0xA3, 0x5E, 0xE4, 0xEE,
+	0xE5, 0xE3, 0x34, 0xC3, 0x69, 0xD8, 0xEE, 0x5D,
+	0x29, 0xF6, 0x95, 0x81, 0x5D, 0x86, 0x6D, 0xA9,
+	0x9D, 0xF3, 0xF7, 0x94, 0x03
+};
+
 void echo256_interm(void){
 	echo_small_ctx_t ctx;
 	uint8_t data[1384/8];
@@ -89,6 +108,20 @@ void echo256_interm(void){
 	echo256_ctx2hash(hash, &ctx);
 	cli_putstr_P(PSTR("\r\nhash = "));
 	cli_hexdump(hash, 32);
+}
+
+void echo512_interm(void){
+	echo_large_ctx_t ctx;
+	uint8_t data[872/8];
+	uint8_t hash[64];
+	echo512_init(&ctx);
+	memcpy_P(data, intermediate_data2, 872/8);
+	cli_putstr_P(PSTR("\r\ninit done "));
+	echo_large_lastBlock(&ctx, data, 872);
+	cli_putstr_P(PSTR("\r\nlastblock done "));
+	echo512_ctx2hash(hash, &ctx);
+	cli_putstr_P(PSTR("\r\nhash = "));
+	cli_hexdump(hash, 64);
 }
 
 void echo256_test0(void){
@@ -117,6 +150,7 @@ void testrun_nessie_echo(void){
 const char nessie_str[]      PROGMEM = "nessie";
 const char test256_str[]     PROGMEM = "test256";
 const char interm_str[]      PROGMEM = "interm";
+const char interm2_str[]     PROGMEM = "interm2";
 const char performance_str[] PROGMEM = "performance";
 const char echo_str[]        PROGMEM = "echo";
 const char shavs_list_str[]  PROGMEM = "shavs_list";
@@ -127,6 +161,7 @@ const char shavs_test3_str[] PROGMEM = "shavs_test3";
 cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ nessie_str,                NULL, testrun_nessie_echo         },
 	{ interm_str,                NULL, echo256_interm              },
+	{ interm2_str,               NULL, echo512_interm              },
 	{ test256_str,               NULL, echo256_test0               },
 	{ performance_str,           NULL, performance_echo            },
 	{ shavs_list_str,            NULL, shavs_listalgos             },
