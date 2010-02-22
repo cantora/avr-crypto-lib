@@ -37,57 +37,33 @@
 
 void aes_encrypt_round(void* state, void* key);
 
-#define INDEX(c,r) ((r)*16*4+(c)*16)
+#define INDEX(c,r) ((c)*16*4+(r)*16)
 
 #define GF256MUL_1(a) (a)
 #define GF256MUL_2(a) (gf256mul(2, (a), 0x1b))
 #define GF256MUL_3(a) (gf256mul(3, (a), 0x1b))
 
-/*
-static void mixcol_2(uint8_t* s){
+static void mixcol(uint8_t* s){
 	uint8_t t, tmp[4];
-	memcpy(tmp, s, 4);
+	tmp[0] = *(s+16*0);
+	tmp[1] = *(s+16*1);
+	tmp[2] = *(s+16*2);
+	tmp[3] = *(s+16*3);
+
 	t = tmp[0] ^ tmp[1] ^ tmp[2] ^ tmp[3];
-	s[0] =
+	*(s+16*0) =
 		  GF256MUL_2(tmp[0]^tmp[1])
 		^ tmp[0]
 		^ t;
-	s[1] =
+	*(s+16*1) =
 		  GF256MUL_2(tmp[1]^tmp[2])
 		^ tmp[1]
 		^ t;
-	s[2] =
+	*(s+16*2) =
 		  GF256MUL_2(tmp[2]^tmp[3])
 		^ tmp[2]
 		^ t;
-	s[3] =
-		  GF256MUL_2(tmp[3]^tmp[0])
-		^ tmp[3]
-		^ t;
-}
-*/
-
-static void mixcol(uint8_t* a, uint8_t* b, uint8_t* c, uint8_t* d){
-	uint8_t t, tmp[4];
-	tmp[0] = *a;
-	tmp[1] = *b;
-	tmp[2] = *c;
-	tmp[3] = *d;
-
-	t = tmp[0] ^ tmp[1] ^ tmp[2] ^ tmp[3];
-	*a =
-		  GF256MUL_2(tmp[0]^tmp[1])
-		^ tmp[0]
-		^ t;
-	*b =
-		  GF256MUL_2(tmp[1]^tmp[2])
-		^ tmp[1]
-		^ t;
-	*c =
-		  GF256MUL_2(tmp[2]^tmp[3])
-		^ tmp[2]
-		^ t;
-	*d =
+	*(s+16*3) =
 		  GF256MUL_2(tmp[3]^tmp[0])
 		^ tmp[3]
 		^ t;
@@ -103,13 +79,13 @@ static void dump_state(void* s){
 			cli_putstr_P(PSTR(", col "));
 			cli_putc('0'+col);
 			cli_putstr_P(PSTR(": "));
-			cli_hexdump((uint8_t*)s+col*16+row*16*4, 4);
+			cli_hexdump((uint8_t*)s+col*16*4+row*16, 4);
 			cli_putc(' ');
-			cli_hexdump((uint8_t*)s+col*16+row*16*4+ 4, 4);
+			cli_hexdump((uint8_t*)s+col*16*4+row*16+ 4, 4);
 			cli_putc(' ');
-			cli_hexdump((uint8_t*)s+col*16+row*16*4+ 8, 4);
+			cli_hexdump((uint8_t*)s+col*16*4+row*16+ 8, 4);
 			cli_putc(' ');
-			cli_hexdump((uint8_t*)s+col*16+row*16*4+12, 4);
+			cli_hexdump((uint8_t*)s+col*16*4+row*16+12, 4);
 		}
 	}
 }
@@ -119,19 +95,10 @@ static void compress512(void* v, void* m, uint64_t* c, void* salt){
 	uint8_t i, j, l;
 	uint8_t s[16*16];
 	uint8_t k[16];
-/*
-	memcpy(s, v, 16*4);           / * load v into state * /
-	memcpy(s+16*4, m, 16*12);     / * load m into state * /
-*/
-	for(i=0; i<4; ++i){
-		memcpy(s+4*16*i, (uint8_t*)v+16*i, 16);
-	}
-	for(i=1; i<4; ++i){
-		for(j=0; j<4; ++j){
-			memcpy(s+i*16+j*16*4, m, 16);
-			m = (uint8_t*)m + 16;
-		}
-	}
+
+	memcpy(s, v, 16*4);           /* load v into state */
+	memcpy(s+16*4, m, 16*12);     /* load m into state */
+
 	memcpy(k, c, 8);
 	memset(k+8, 0, 8);
 	for(i=0; i<8; ++i){
@@ -144,12 +111,10 @@ static void compress512(void* v, void* m, uint64_t* c, void* salt){
 		dump_state(s);
 	}
 #endif
-		for(j=0; j<4; ++j){
-			for(l=0; l<4; ++l){
-				aes_encrypt_round(s+16*l*4+16*j, k);
-				aes_encrypt_round(s+16*l*4+16*j, salt);
-				*((uint64_t*)(k)) += 1;
-			}
+		for(j=0; j<16; ++j){
+			aes_encrypt_round(s+16*j, k);
+			aes_encrypt_round(s+16*j, salt);
+			*((uint64_t*)(k)) += 1;
 		}
 #if DEBUG
 		if(i<DEBUG_DEPTH){
@@ -185,13 +150,10 @@ static void compress512(void* v, void* m, uint64_t* c, void* salt){
 		}
 #endif
 		/* BIG.MixColumns */
-		/*
-		for(j=0; j<64; ++j){
-			mixcol(s+j*4);
-		}
-		*/
-		for(j=0; j<64; ++j){
-			mixcol(s+j, s+j+64, s+j+64*2, s+j+64*3);
+		for(j=0; j<4; j+=1){
+			for(l=0; l<16; ++l){
+				mixcol(s+j*64+l);
+			}
 		}
 #if DEBUG
 		if(i<DEBUG_DEPTH){
@@ -202,25 +164,12 @@ static void compress512(void* v, void* m, uint64_t* c, void* salt){
 	}
 
 	/* BIG.Final */
-	/*
 	for(i=0; i<3; ++i){
 		memxor(v, (uint8_t*)m+4*16*i, 4*16);
 	}
 	for(i=0; i<4; ++i){
 		memxor(v, s+4*16*i, 4*16);
 	}
-	*/
-	m = (uint8_t*)m - ECHO_SMALL_BLOCKSIZE_B;
-	for(i=0; i<3; ++i){
-		memxor(v, (uint8_t*)m+4*16*i, 4*16);
-	}
-
-	for(i=0; i<4; ++i){
-		for(j=0; j<4; ++j){
-			memxor((uint8_t*)v+16*i, s+4*16*i+16*j, 16);
-		}
-	}
-
 }
 
 void echo_small_nextBlock(echo_small_ctx_t* ctx, void* block){

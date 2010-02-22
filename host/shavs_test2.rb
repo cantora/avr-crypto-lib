@@ -94,10 +94,10 @@ end
 def init_system(algo_select)
   $sp.print("echo off \r")
   print("DBG i: " + "echo off \r"+"\n") if $debug
- sleep 1
+ sleep 0.1
   $sp.print("shavs_set #{algo_select}\r")
   print("DBG i: " + "shavs_set #{$algo_select} \r"+"\n") if $debug
-  sleep 1
+  sleep 0.1
   $sp.print("shavs_test1 \r")
   print("DBG i: " + "shavs_test1 \r"+"\n") if $debug
   begin
