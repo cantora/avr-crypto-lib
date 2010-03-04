@@ -42,7 +42,7 @@ typedef struct{
 /******************************************************************************/
 
 void   bigint_adjust(bigint_t* a);
-void bigint_copy(bigint_t* dest, const bigint_t* src);
+void   bigint_copy(bigint_t* dest, const bigint_t* src);
 void   bigint_add_u(bigint_t* dest, const bigint_t* a, const bigint_t* b);
 void   bigint_add_scale_u(bigint_t* dest, const bigint_t* a, uint16_t scale);
 void   bigint_sub_u(bigint_t* dest, const bigint_t* a, const bigint_t* b);
@@ -57,7 +57,8 @@ void   bigint_set_zero(bigint_t* a);
 void   bigint_mul_u(bigint_t* dest, const bigint_t* a, const bigint_t* b);
 void   bigint_mul_s(bigint_t* dest, const bigint_t* a, const bigint_t* b);
 void   bigint_square(bigint_t* dest, const bigint_t* a);
-
+void   bigint_sub_u_bitscale(bigint_t* a, const bigint_t* b, uint16_t bitscale);
+void   bigint_reduce(bigint_t* a, const bigint_t* r);
 /******************************************************************************/
 
 #endif /*BIGINT_H_*/

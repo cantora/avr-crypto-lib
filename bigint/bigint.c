@@ -344,19 +344,18 @@ void bigint_shiftleft(bigint_t* a, uint16_t shift){
 				t >>= 8;
 			}
 			a->wordv[i] = (uint8_t)t;
+			byteshift++;
 		}else{ /* shift to the right */
-			bitshift = 8 - bitshift;
-			for(i=a->length_B+byteshift-1; i>byteshift; --i){
-				t |= (a->wordv[i])<<(8-bitshift);
+			for(i=a->length_B+byteshift-1; i>byteshift-1; --i){
+				t |= (a->wordv[i])<<(bitshift);
 				a->wordv[i] = (uint8_t)(t>>8);
 				t <<= 8;
 			}
-			t |= (a->wordv[i])<<(8-bitshift);
+			t |= (a->wordv[i])<<(bitshift);
 			a->wordv[i] = (uint8_t)(t>>8);
 		}
-
 	}
-	a->length_B += byteshift+1;
+	a->length_B += byteshift;
 	bigint_adjust(a);
 }
 
@@ -422,7 +421,6 @@ void bigint_set_zero(bigint_t* a){
 void bigint_mul_u(bigint_t* dest, const bigint_t* a, const bigint_t* b){
 	if(a->length_B==0 || b->length_B==0){
 		bigint_set_zero(dest);
-		depth -= 1;
 		return;
 	}
 	if(a->length_B==1 || b->length_B==1){
@@ -488,7 +486,6 @@ void bigint_mul_u(bigint_t* dest, const bigint_t* a, const bigint_t* b){
 	/* now we have split up a and b */
 	uint8_t  tmp_b[2*n+2], m_b[2*(n+1)];
 	bigint_t tmp, tmp2, m;
-	/* calculate h=xh*yh; l=xl*yl; sx=xh+xl; sy=yh+yl */
 	tmp.wordv = tmp_b;
 	tmp2.wordv = tmp_b+n+1;
 	m.wordv = m_b;
@@ -562,12 +559,70 @@ void bigint_square(bigint_t* dest, const bigint_t* a){
 	bigint_mul_u(&tmp, &xl, &xh);
 	bigint_shiftleft(&tmp, 1);
 	bigint_add_scale_u(dest, &tmp, n);
-
 }
 
+/******************************************************************************/
 
+void bigint_sub_u_bitscale(bigint_t* a, const bigint_t* b, uint16_t bitscale){
+	bigint_t tmp;
+	uint8_t tmp_b[b->length_B+1];
+	uint16_t i,j,byteshift=bitscale/8;
+	uint8_t borrow=0;
+	int16_t t;
 
+	if(a->length_B < b->length_B+byteshift){
+		cli_putstr_P(PSTR("\r\nERROR: bigint_sub_u_bitscale result negative"));
+		bigint_set_zero(a);
+		return;
+	}
 
+	tmp.wordv = tmp_b;
+	bigint_copy(&tmp, b);
+	bigint_shiftleft(&tmp, bitscale&7);
+
+	for(j=0,i=byteshift; i<tmp.length_B+byteshift; ++i, ++j){
+		t = a->wordv[i] - tmp.wordv[j] - borrow;
+		a->wordv[i] = (uint8_t)t;
+		if(t<0){
+			borrow = 1;
+		}else{
+			borrow = 0;
+		}
+	}
+	while(borrow){
+		if(i+1 > a->length_B){
+			cli_putstr_P(PSTR("\r\nERROR: bigint_sub_u_bitscale result negative (2) shift="));
+			cli_hexdump_rev(&bitscale, 2);
+			bigint_set_zero(a);
+			return;
+		}
+		a->wordv[i] -= borrow;
+		if(a->wordv[i]!=0xff){
+			borrow=0;
+		}
+		++i;
+	}
+	bigint_adjust(a);
+}
+
+/******************************************************************************/
+
+void bigint_reduce(bigint_t* a, const bigint_t* r){
+	uint8_t rfbs = GET_FBS(r);
+	if(r->length_B==0){
+		return;
+	}
+	while(a->length_B > r->length_B){
+		bigint_sub_u_bitscale(a, r, (a->length_B-r->length_B)*8+GET_FBS(a)-rfbs-1);
+	}
+	while(GET_FBS(a) > rfbs+1){
+		bigint_sub_u_bitscale(a, r, GET_FBS(a)-rfbs-1);
+	}
+	while(bigint_cmp_u(a,r)>=0){
+		bigint_sub_u(a,a,r);
+	}
+	bigint_adjust(a);
+}
 
 
 
