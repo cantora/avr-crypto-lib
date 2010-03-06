@@ -29,9 +29,6 @@
 #include "bigint.h"
 #include <string.h>
 
-#include "bigint_io.h"
-#include "cli.h"
-
 #ifndef MAX
  #define MAX(a,b) (((a)>(b))?(a):(b))
 #endif
@@ -559,7 +556,6 @@ void bigint_sub_u_bitscale(bigint_t* a, const bigint_t* b, uint16_t bitscale){
 	int16_t t;
 
 	if(a->length_B < b->length_B+byteshift){
-		cli_putstr_P(PSTR("\r\nERROR: bigint_sub_u_bitscale result negative"));
 		bigint_set_zero(a);
 		return;
 	}
@@ -579,7 +575,6 @@ void bigint_sub_u_bitscale(bigint_t* a, const bigint_t* b, uint16_t bitscale){
 	}
 	while(borrow){
 		if(i+1 > a->length_B){
-			cli_putstr_P(PSTR("\r\nERROR: bigint_sub_u_bitscale result negative (2) shift="));
 			cli_hexdump_rev(&bitscale, 2);
 			bigint_set_zero(a);
 			return;
@@ -597,13 +592,6 @@ void bigint_sub_u_bitscale(bigint_t* a, const bigint_t* b, uint16_t bitscale){
 
 void bigint_reduce(bigint_t* a, const bigint_t* r){
 	uint8_t rfbs = GET_FBS(r);
-/*
-	cli_putstr_P(PSTR("\r\nreduce "));
-	bigint_print_hex(a);
-	cli_putstr_P(PSTR(" % "));
-	bigint_print_hex(r);
-	cli_putstr_P(PSTR("\r\n"));
-*/
 
 	if(r->length_B==0){
 		return;
@@ -643,11 +631,9 @@ void bigint_expmod_u(bigint_t* dest, const bigint_t* a, const bigint_t* exp, con
 	i=exp->length_B-1;
 	if(exp->wordv[i]!=1){
 		for(j=1<<(GET_FBS(exp)-1); j>0; j>>=1){
-	//		cli_putc('Q');
 			bigint_square(&tmp2, &tmp);
 			bigint_reduce(&tmp2, r);
 			if(exp->wordv[i]&j){
-	//			cli_putc('M');
 				bigint_mul_u(&tmp, &tmp2, &x);
 				bigint_reduce(&tmp, r);
 			}else{
@@ -657,11 +643,9 @@ void bigint_expmod_u(bigint_t* dest, const bigint_t* a, const bigint_t* exp, con
 	}
 	for(--i; i>=0; --i){
 		for(j=0x80; j>0; j>>=1){
-//			cli_putc('q');
 			bigint_square(&tmp2, &tmp);
 			bigint_reduce(&tmp2, r);
 			if(exp->wordv[i]&j){
-//				cli_putc('m');
 				bigint_mul_u(&tmp, &tmp2, &x);
 				bigint_reduce(&tmp, r);
 			}else{
@@ -669,10 +653,9 @@ void bigint_expmod_u(bigint_t* dest, const bigint_t* a, const bigint_t* exp, con
 			}
 		}
 	}
-//	cli_putstr_P(PSTR("\r\n"));
 	bigint_copy(dest, &tmp);
 }
-#define DEBUG 0
+
 /******************************************************************************/
 /* gcd <-- gcd(x,y) a*x+b*y=gcd */
 void bigint_gcdext(bigint_t* gcd, bigint_t* a, bigint_t* b, const bigint_t* x, const bigint_t* y){
@@ -704,31 +687,13 @@ void bigint_gcdext(bigint_t* gcd, bigint_t* a, bigint_t* b, const bigint_t* x, c
 	 for(i=0; (x_.wordv[0]&(1<<i))==0 && (y_.wordv[0]&(1<<i))==0; ++i){
 	 }
 
-#if DEBUG
-	 cli_putstr_P(PSTR("\r\nDBG: initshift = "));
-	 cli_hexdump_rev(&i, 2);
-#endif
 	 bigint_adjust(&x_);
 	 bigint_adjust(&y_);
 
 	 if(i){
 		 bigint_shiftleft(&g, i);
-#if DEBUG
-	 cli_putstr_P(PSTR("\r\nDBG: initshift (2) = "));
-	 cli_hexdump_rev(&i, 2);
-	 cli_putstr_P(PSTR("\r\n x' = "));
-		bigint_print_hex(&x_);
-		cli_putstr_P(PSTR("\r\n y' = "));
-		bigint_print_hex(&y_);
-#endif
-		bigint_shiftright(&x_, i);
-		bigint_shiftright(&y_, i);
-#if DEBUG
-		cli_putstr_P(PSTR("\r\n x' = "));
-		bigint_print_hex(&x_);
-		cli_putstr_P(PSTR("\r\n y' = "));
-		bigint_print_hex(&y_);
-#endif
+		 bigint_shiftright(&x_, i);
+		 bigint_shiftright(&y_, i);
 	 }
 	 u.wordv = u_b;
 	 v.wordv = v_b;
@@ -748,18 +713,6 @@ void bigint_gcdext(bigint_t* gcd, bigint_t* a, bigint_t* b, const bigint_t* x, c
 	 bigint_set_zero(&b_);
 	 bigint_set_zero(&c_);
 	 do{
-#if DEBUG
-		 cli_putstr_P(PSTR("\r\n while u%2==0; u = "));
-		 bigint_print_hex(&u);
-		 cli_putstr_P(PSTR("\r\nDBG: (10) a = "));
-		 bigint_print_hex(&a_);
-		 cli_putstr_P(PSTR("\r\nDBG: (10) b = "));
-		 bigint_print_hex(&b_);
-		 cli_putstr_P(PSTR("\r\nDBG: (10) c = "));
-		 bigint_print_hex(&c_);
-		 cli_putstr_P(PSTR("\r\nDBG: (10) d = "));
-		 bigint_print_hex(&d_);
-#endif
 		 while((u.wordv[0]&1)==0){
 			 bigint_shiftright(&u, 1);
 			 if((a_.wordv[0]&1) || (b_.wordv[0]&1)){
@@ -769,18 +722,6 @@ void bigint_gcdext(bigint_t* gcd, bigint_t* a, bigint_t* b, const bigint_t* x, c
 			 bigint_shiftright(&a_, 1);
 			 bigint_shiftright(&b_, 1);
 		 }
-#if DEBUG
-		 cli_putstr_P(PSTR("\r\n while v%2==0; v = "));
-		 bigint_print_hex(&v);
-		 cli_putstr_P(PSTR("\r\nDBG: (20) a = "));
-		 bigint_print_hex(&a_);
-		 cli_putstr_P(PSTR("\r\nDBG: (20) b = "));
-		 bigint_print_hex(&b_);
-		 cli_putstr_P(PSTR("\r\nDBG: (20) c = "));
-		 bigint_print_hex(&c_);
-		 cli_putstr_P(PSTR("\r\nDBG: (20) d = "));
-		 bigint_print_hex(&d_);
-#endif
 		 while((v.wordv[0]&1)==0){
 			 bigint_shiftright(&v, 1);
 			 if((c_.wordv[0]&1) || (d_.wordv[0]&1)){
@@ -791,17 +732,6 @@ void bigint_gcdext(bigint_t* gcd, bigint_t* a, bigint_t* b, const bigint_t* x, c
 			 bigint_shiftright(&d_, 1);
 
 		 }
-#if DEBUG
-		 cli_putstr_P(PSTR("\r\n if u>=v ..."));
-		 cli_putstr_P(PSTR("\r\nDBG: (30) a = "));
-		 bigint_print_hex(&a_);
-		 cli_putstr_P(PSTR("\r\nDBG: (30) b = "));
-		 bigint_print_hex(&b_);
-		 cli_putstr_P(PSTR("\r\nDBG: (30) c = "));
-		 bigint_print_hex(&c_);
-		 cli_putstr_P(PSTR("\r\nDBG: (30) d = "));
-		 bigint_print_hex(&d_);
-#endif
 		 if(bigint_cmp_u(&u, &v)>=0){
 			bigint_sub_u(&u, &u, &v);
 			bigint_sub_s(&a_, &a_, &c_);
@@ -811,26 +741,6 @@ void bigint_gcdext(bigint_t* gcd, bigint_t* a, bigint_t* b, const bigint_t* x, c
 			bigint_sub_s(&c_, &c_, &a_);
 			bigint_sub_s(&d_, &d_, &b_);
 		 }
-#if DEBUG
-		 if(GET_SIGN(&u)){
-			 cli_putstr_P(PSTR("\r\nDBG: u negative! u = "));
-			 bigint_print_hex(&u);
-		 }
-		 if(GET_SIGN(&v)){
-			 cli_putstr_P(PSTR("\r\nDBG: v negative! v = "));
-			 bigint_print_hex(&v);
-		 }
-#endif
-/*
-		 cli_putstr_P(PSTR("\r\nDBG: (2) a = "));
-		 bigint_print_hex(&a_);
-		 cli_putstr_P(PSTR("\r\nDBG: (2) b = "));
-		 bigint_print_hex(&b_);
-		 cli_putstr_P(PSTR("\r\nDBG: (2) c = "));
-		 bigint_print_hex(&c_);
-		 cli_putstr_P(PSTR("\r\nDBG: (2) d = "));
-		 bigint_print_hex(&d_);
-*/
 	 }while(u.length_B);
 	 if(gcd){
 		 bigint_mul_s(gcd, &v, &g);
