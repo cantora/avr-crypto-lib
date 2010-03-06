@@ -18,19 +18,26 @@
 */
 
 #include "cli.h"
+#include "hexdigit_tab.h"
 #include "bigint.h"
+#include <avr/pgmspace.h>
 #include <stdlib.h>
 #include <string.h>
 
 void bigint_print_hex(const bigint_t* a){
+	if(a->length_B==0){
+		cli_putc('0');
+		return;
+	}
 	if(a->info&BIGINT_NEG_MASK){
 		cli_putc('-');
 	}
 //	cli_putc((a->info&BIGINT_NEG_MASK)?'-':'+'); /* print sign */
-	if(a->length_B!=0){
+	if(a->wordv[a->length_B-1]<0x10){
+		cli_putc(pgm_read_byte(hexdigit_tab_uc_P+a->wordv[a->length_B-1]));
+		cli_hexdump_rev(a->wordv, a->length_B-1);
+	} else {
 		cli_hexdump_rev(a->wordv, a->length_B);
-	}else{
-		cli_putc('0');
 	}
 }
 

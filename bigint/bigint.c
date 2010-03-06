@@ -164,29 +164,8 @@ void bigint_sub_u(bigint_t* dest, const bigint_t* a, const bigint_t* b){
 			return;
 	}
 	if(r<0){
-		for(i=0; i<min; ++i){
-			t = a->wordv[i] - b->wordv[i] - borrow;
-			if(t<1){
-				borrow = 0;
-				dest->wordv[i]=(uint8_t)(-t);
-			}else{
-				borrow = -1;
-				dest->wordv[i]=(uint8_t)(-t);
-			}
-		}
-		for(;i<max; ++i){
-			t = b->wordv[i] + borrow;
-			if(t<1){
-				borrow = 0;
-				dest->wordv[i]=(uint8_t)t;
-			}else{
-				borrow = -1;
-				dest->wordv[i]=(uint8_t)t;
-			}
-		}
+		bigint_sub_u(dest, b, a);
 		SET_NEG(dest);
-		dest->length_B = i;
-		bigint_adjust(dest);
 	}else{
 		for(i=0; i<min; ++i){
 			t = a->wordv[i] - b->wordv[i] - borrow;
@@ -222,12 +201,6 @@ int8_t bigint_cmp_u(const bigint_t* a, const bigint_t* b){
 		return 1;
 	}
 	if(a->length_B < b->length_B){
-		return -1;
-	}
-	if(GET_FBS(a) > GET_FBS(b)){
-		return 1;
-	}
-	if(GET_FBS(a) < GET_FBS(b)){
 		return -1;
 	}
 	if(a->length_B==0){
@@ -304,6 +277,9 @@ void bigint_sub_s(bigint_t* dest, const bigint_t* a, const bigint_t* b){
 
 int8_t bigint_cmp_s(const bigint_t* a, const bigint_t* b){
 	uint8_t s;
+	if(a->length_B==0 && b->length_B==0){
+		return 0;
+	}
 	s  = GET_SIGN(a)?2:0;
 	s |= GET_SIGN(b)?1:0;
 	switch(s){
@@ -369,15 +345,11 @@ void bigint_shiftright(bigint_t* a, uint16_t shift){
 	byteshift = shift/8;
 	bitshift = shift&7;
 	if(byteshift >= a->length_B){ /* we would shift out more than we have */
-		a->length_B=0;
-		a->wordv[0] = 0;
-		SET_FBS(a, 0);
+		bigint_set_zero(a);
 		return;
 	}
 	if(byteshift == a->length_B-1 && bitshift>GET_FBS(a)){
-		a->length_B=0;
-		a->wordv[0] = 0;
-		SET_FBS(a, 0);
+		bigint_set_zero(a);
 		return;
 	}
 	if(byteshift){
@@ -419,6 +391,14 @@ void bigint_set_zero(bigint_t* a){
 /* using the Karatsuba-Algorithm */
 /* x*y = (xh*yh)*b**2n + ((xh+xl)*(yh+yl) - xh*yh - xl*yl)*b**n + yh*yl */
 void bigint_mul_u(bigint_t* dest, const bigint_t* a, const bigint_t* b){
+	if(dest==a || dest==b){
+		bigint_t d;
+		uint8_t d_b[a->length_B+b->length_B];
+		d.wordv = d_b;
+		bigint_mul_u(&d, a, b);
+		bigint_copy(dest, &d);
+		return;
+	}
 	if(a->length_B==0 || b->length_B==0){
 		bigint_set_zero(dest);
 		return;
@@ -493,7 +473,7 @@ void bigint_mul_u(bigint_t* dest, const bigint_t* a, const bigint_t* b){
 	bigint_mul_u(dest, &xl, &yl);  /* dest <= xl*yl     */
 	bigint_add_u(&tmp2, &xh, &xl); /* tmp2 <= xh+xl     */
 	bigint_add_u(&tmp, &yh, &yl);  /* tmp  <= yh+yl     */
-	bigint_mul_u(&m, &tmp2, &tmp); /* m    <= tmp*tmp   */
+	bigint_mul_u(&m, &tmp2, &tmp); /* m    <= tmp2*tmp  */
 	bigint_mul_u(&tmp, &xh, &yh);  /* h    <= xh*yh     */
 	bigint_sub_u(&m, &m, dest);    /* m    <= m-dest    */
     bigint_sub_u(&m, &m, &tmp);    /* m    <= m-h       */
@@ -542,6 +522,14 @@ void bigint_square(bigint_t* dest, const bigint_t* a){
 		SET_POS(dest);
 		dest->length_B=2*a->length_B;
 		bigint_adjust(dest);
+		return;
+	}
+	if(dest==a){
+		bigint_t d;
+		uint8_t d_b[a->length_B*2];
+		d.wordv = d_b;
+		bigint_square(&d, a);
+		bigint_copy(dest, &d);
 		return;
 	}
 	uint16_t n;
@@ -609,20 +597,282 @@ void bigint_sub_u_bitscale(bigint_t* a, const bigint_t* b, uint16_t bitscale){
 
 void bigint_reduce(bigint_t* a, const bigint_t* r){
 	uint8_t rfbs = GET_FBS(r);
+/*
+	cli_putstr_P(PSTR("\r\nreduce "));
+	bigint_print_hex(a);
+	cli_putstr_P(PSTR(" % "));
+	bigint_print_hex(r);
+	cli_putstr_P(PSTR("\r\n"));
+*/
+
 	if(r->length_B==0){
 		return;
 	}
 	while(a->length_B > r->length_B){
 		bigint_sub_u_bitscale(a, r, (a->length_B-r->length_B)*8+GET_FBS(a)-rfbs-1);
 	}
-	while(GET_FBS(a) > rfbs+1){
+
+	while((GET_FBS(a) > rfbs+1) && (a->length_B == r->length_B)){
 		bigint_sub_u_bitscale(a, r, GET_FBS(a)-rfbs-1);
 	}
+
 	while(bigint_cmp_u(a,r)>=0){
 		bigint_sub_u(a,a,r);
 	}
 	bigint_adjust(a);
 }
+
+/******************************************************************************/
+
+/* calculate dest = a**exp % r */
+/* using square&multiply */
+void bigint_expmod_u(bigint_t* dest, const bigint_t* a, const bigint_t* exp, const bigint_t* r){
+	bigint_t tmp, tmp2, x;
+	uint8_t x_b[MAX(r->length_B, a->length_B)], tmp_b[r->length_B*2], tmp2_b[r->length_B*2];
+	int16_t i;
+	uint8_t j;
+	x.wordv = x_b;
+	tmp.wordv = tmp_b;
+	tmp2.wordv = tmp2_b;
+	bigint_copy(&x, a);
+	bigint_reduce(&x, r);
+	bigint_copy(&tmp, &x);
+	if(a->length_B==0 || exp->length_B==0 || r->length_B==0){
+		return;
+	}
+	i=exp->length_B-1;
+	if(exp->wordv[i]!=1){
+		for(j=1<<(GET_FBS(exp)-1); j>0; j>>=1){
+	//		cli_putc('Q');
+			bigint_square(&tmp2, &tmp);
+			bigint_reduce(&tmp2, r);
+			if(exp->wordv[i]&j){
+	//			cli_putc('M');
+				bigint_mul_u(&tmp, &tmp2, &x);
+				bigint_reduce(&tmp, r);
+			}else{
+				bigint_copy(&tmp, &tmp2);
+			}
+		}
+	}
+	for(--i; i>=0; --i){
+		for(j=0x80; j>0; j>>=1){
+//			cli_putc('q');
+			bigint_square(&tmp2, &tmp);
+			bigint_reduce(&tmp2, r);
+			if(exp->wordv[i]&j){
+//				cli_putc('m');
+				bigint_mul_u(&tmp, &tmp2, &x);
+				bigint_reduce(&tmp, r);
+			}else{
+				bigint_copy(&tmp, &tmp2);
+			}
+		}
+	}
+//	cli_putstr_P(PSTR("\r\n"));
+	bigint_copy(dest, &tmp);
+}
+#define DEBUG 0
+/******************************************************************************/
+/* gcd <-- gcd(x,y) a*x+b*y=gcd */
+void bigint_gcdext(bigint_t* gcd, bigint_t* a, bigint_t* b, const bigint_t* x, const bigint_t* y){
+	 bigint_t g, x_, y_, u, v, a_, b_, c_, d_;
+	 volatile uint16_t i=0;
+	 if(x->length_B==0 || y->length_B==0){
+		 return;
+	 }
+	 while(x->wordv[i]==0 && y->wordv[i]==0){
+		 ++i;
+	 }
+	 uint8_t g_b[i+2], x_b[x->length_B-i], y_b[y->length_B-i];
+	 uint8_t u_b[x->length_B-i], v_b[y->length_B-i];
+	 uint8_t a_b[y->length_B+2], c_b[y->length_B+2];
+	 uint8_t b_b[x->length_B+2], d_b[x->length_B+2];
+
+	 g.wordv = g_b;
+	 x_.wordv = x_b;
+	 y_.wordv = y_b;
+	 memset(g_b, 0, i);
+	 g_b[i]=1;
+	 g.length_B = i+1;
+	 g.info=0;
+	 x_.info = y_.info = 0;
+	 x_.length_B = x->length_B-i;
+	 y_.length_B = y->length_B-i;
+	 memcpy(x_.wordv, x->wordv+i, x_.length_B);
+	 memcpy(y_.wordv, y->wordv+i, y_.length_B);
+	 for(i=0; (x_.wordv[0]&(1<<i))==0 && (y_.wordv[0]&(1<<i))==0; ++i){
+	 }
+
+#if DEBUG
+	 cli_putstr_P(PSTR("\r\nDBG: initshift = "));
+	 cli_hexdump_rev(&i, 2);
+#endif
+	 bigint_adjust(&x_);
+	 bigint_adjust(&y_);
+
+	 if(i){
+		 bigint_shiftleft(&g, i);
+#if DEBUG
+	 cli_putstr_P(PSTR("\r\nDBG: initshift (2) = "));
+	 cli_hexdump_rev(&i, 2);
+	 cli_putstr_P(PSTR("\r\n x' = "));
+		bigint_print_hex(&x_);
+		cli_putstr_P(PSTR("\r\n y' = "));
+		bigint_print_hex(&y_);
+#endif
+		bigint_shiftright(&x_, i);
+		bigint_shiftright(&y_, i);
+#if DEBUG
+		cli_putstr_P(PSTR("\r\n x' = "));
+		bigint_print_hex(&x_);
+		cli_putstr_P(PSTR("\r\n y' = "));
+		bigint_print_hex(&y_);
+#endif
+	 }
+	 u.wordv = u_b;
+	 v.wordv = v_b;
+	 a_.wordv = a_b;
+	 b_.wordv = b_b;
+	 c_.wordv = c_b;
+	 d_.wordv = d_b;
+
+	 bigint_copy(&u, &x_);
+	 bigint_copy(&v, &y_);
+	 a_.wordv[0] = 1;
+	 a_.length_B = 1;
+	 a_.info = 0;
+	 d_.wordv[0] = 1;
+	 d_.length_B = 1;
+	 d_.info = 0;
+	 bigint_set_zero(&b_);
+	 bigint_set_zero(&c_);
+	 do{
+#if DEBUG
+		 cli_putstr_P(PSTR("\r\n while u%2==0; u = "));
+		 bigint_print_hex(&u);
+		 cli_putstr_P(PSTR("\r\nDBG: (10) a = "));
+		 bigint_print_hex(&a_);
+		 cli_putstr_P(PSTR("\r\nDBG: (10) b = "));
+		 bigint_print_hex(&b_);
+		 cli_putstr_P(PSTR("\r\nDBG: (10) c = "));
+		 bigint_print_hex(&c_);
+		 cli_putstr_P(PSTR("\r\nDBG: (10) d = "));
+		 bigint_print_hex(&d_);
+#endif
+		 while((u.wordv[0]&1)==0){
+			 bigint_shiftright(&u, 1);
+			 if((a_.wordv[0]&1) || (b_.wordv[0]&1)){
+				 bigint_add_s(&a_, &a_, &y_);
+				 bigint_sub_s(&b_, &b_, &x_);
+			 }
+			 bigint_shiftright(&a_, 1);
+			 bigint_shiftright(&b_, 1);
+		 }
+#if DEBUG
+		 cli_putstr_P(PSTR("\r\n while v%2==0; v = "));
+		 bigint_print_hex(&v);
+		 cli_putstr_P(PSTR("\r\nDBG: (20) a = "));
+		 bigint_print_hex(&a_);
+		 cli_putstr_P(PSTR("\r\nDBG: (20) b = "));
+		 bigint_print_hex(&b_);
+		 cli_putstr_P(PSTR("\r\nDBG: (20) c = "));
+		 bigint_print_hex(&c_);
+		 cli_putstr_P(PSTR("\r\nDBG: (20) d = "));
+		 bigint_print_hex(&d_);
+#endif
+		 while((v.wordv[0]&1)==0){
+			 bigint_shiftright(&v, 1);
+			 if((c_.wordv[0]&1) || (d_.wordv[0]&1)){
+				 bigint_add_s(&c_, &c_, &y_);
+				 bigint_sub_s(&d_, &d_, &x_);
+			 }
+			 bigint_shiftright(&c_, 1);
+			 bigint_shiftright(&d_, 1);
+
+		 }
+#if DEBUG
+		 cli_putstr_P(PSTR("\r\n if u>=v ..."));
+		 cli_putstr_P(PSTR("\r\nDBG: (30) a = "));
+		 bigint_print_hex(&a_);
+		 cli_putstr_P(PSTR("\r\nDBG: (30) b = "));
+		 bigint_print_hex(&b_);
+		 cli_putstr_P(PSTR("\r\nDBG: (30) c = "));
+		 bigint_print_hex(&c_);
+		 cli_putstr_P(PSTR("\r\nDBG: (30) d = "));
+		 bigint_print_hex(&d_);
+#endif
+		 if(bigint_cmp_u(&u, &v)>=0){
+			bigint_sub_u(&u, &u, &v);
+			bigint_sub_s(&a_, &a_, &c_);
+			bigint_sub_s(&b_, &b_, &d_);
+		 }else{
+			bigint_sub_u(&v, &v, &u);
+			bigint_sub_s(&c_, &c_, &a_);
+			bigint_sub_s(&d_, &d_, &b_);
+		 }
+#if DEBUG
+		 if(GET_SIGN(&u)){
+			 cli_putstr_P(PSTR("\r\nDBG: u negative! u = "));
+			 bigint_print_hex(&u);
+		 }
+		 if(GET_SIGN(&v)){
+			 cli_putstr_P(PSTR("\r\nDBG: v negative! v = "));
+			 bigint_print_hex(&v);
+		 }
+#endif
+/*
+		 cli_putstr_P(PSTR("\r\nDBG: (2) a = "));
+		 bigint_print_hex(&a_);
+		 cli_putstr_P(PSTR("\r\nDBG: (2) b = "));
+		 bigint_print_hex(&b_);
+		 cli_putstr_P(PSTR("\r\nDBG: (2) c = "));
+		 bigint_print_hex(&c_);
+		 cli_putstr_P(PSTR("\r\nDBG: (2) d = "));
+		 bigint_print_hex(&d_);
+*/
+	 }while(u.length_B);
+	 if(gcd){
+		 bigint_mul_s(gcd, &v, &g);
+	 }
+	 if(a){
+		bigint_copy(a, &c_);
+	 }
+	 if(b){
+		 bigint_copy(b, &d_);
+	 }
+}
+
+/******************************************************************************/
+
+void bigint_inverse(bigint_t* dest, bigint_t* a, bigint_t* m){
+	bigint_gcdext(NULL, dest, NULL, a, m);
+	while(dest->info&BIGINT_NEG_MASK){
+		bigint_add_s(dest, dest, m);
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

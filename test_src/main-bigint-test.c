@@ -164,7 +164,7 @@ void test_square_bigint(void){
 }
 
 void test_reduce_bigint(void){
-	bigint_t a, b, c;
+	bigint_t a, b;
 	cli_putstr_P(PSTR("\r\nreduce test\r\n"));
 	for(;;){
 		cli_putstr_P(PSTR("\r\nenter a:"));
@@ -188,6 +188,97 @@ void test_reduce_bigint(void){
 		cli_putstr_P(PSTR("\r\n"));
 		free(a.wordv);
 		free(b.wordv);
+	}
+}
+/* d = a**b % c */
+void test_expmod_bigint(void){
+	bigint_t a, b, c, d;
+	uint8_t *d_b;
+	cli_putstr_P(PSTR("\r\nreduce test\r\n"));
+	for(;;){
+		cli_putstr_P(PSTR("\r\nenter a:"));
+		if(bigint_read_hex_echo(&a)){
+			cli_putstr_P(PSTR("\r\n end expmod test"));
+			return;
+		}
+		cli_putstr_P(PSTR("\r\nenter b:"));
+		if(bigint_read_hex_echo(&b)){
+			free(a.wordv);
+			cli_putstr_P(PSTR("\r\n end expmod test"));
+			return;
+		}
+		cli_putstr_P(PSTR("\r\nenter c:"));
+		if(bigint_read_hex_echo(&c)){
+			free(a.wordv);
+			free(b.wordv);
+			cli_putstr_P(PSTR("\r\n end expmod test"));
+			return;
+		}
+		d_b = malloc(c.length_B);
+		if(d_b==NULL){
+			cli_putstr_P(PSTR("\n\rERROR: Out of memory!"));
+			free(a.wordv);
+			free(b.wordv);
+			free(c.wordv);
+			continue;
+		}
+		d.wordv = d_b;
+		cli_putstr_P(PSTR("\r\n "));
+		bigint_print_hex(&a);
+		cli_putstr_P(PSTR("**"));
+		bigint_print_hex(&b);
+		cli_putstr_P(PSTR(" % "));
+		bigint_print_hex(&c);
+		cli_putstr_P(PSTR(" = "));
+		bigint_expmod_u(&d, &a, &b, &c);
+		bigint_print_hex(&d);
+		cli_putstr_P(PSTR("\r\n"));
+		free(a.wordv);
+		free(b.wordv);
+		free(c.wordv);
+		free(d.wordv);
+
+	}
+}
+
+void test_gcdext_bigint(void){
+	bigint_t a, b, c, d, e;
+	cli_putstr_P(PSTR("\r\ngcdext test\r\n"));
+	for(;;){
+		cli_putstr_P(PSTR("\r\nenter a:"));
+		if(bigint_read_hex_echo(&a)){
+			cli_putstr_P(PSTR("\r\n end gcdext test"));
+			return;
+		}
+		cli_putstr_P(PSTR("\r\nenter b:"));
+		if(bigint_read_hex_echo(&b)){
+			free(a.wordv);
+			cli_putstr_P(PSTR("\r\n end gcdext test"));
+			return;
+		}
+		c.wordv = malloc((a.length_B<b.length_B)?a.length_B:b.length_B);
+		d.wordv = malloc(1+(a.length_B>b.length_B)?a.length_B:b.length_B);
+		e.wordv = malloc(1+(a.length_B>b.length_B)?a.length_B:b.length_B);
+
+		cli_putstr_P(PSTR("\r\n gcdext( "));
+		bigint_print_hex(&a);
+		cli_putstr_P(PSTR(", "));
+		bigint_print_hex(&b);
+		cli_putstr_P(PSTR(") => "));
+		bigint_gcdext(&c, &d, &e, &a, &b);
+		cli_putstr_P(PSTR("a = "));
+		bigint_print_hex(&d);
+		cli_putstr_P(PSTR("; b = "));
+		bigint_print_hex(&e);
+		cli_putstr_P(PSTR("; gcd = "));
+		bigint_print_hex(&c);
+
+		cli_putstr_P(PSTR("\r\n"));
+		free(a.wordv);
+		free(b.wordv);
+		free(c.wordv);
+		free(d.wordv);
+		free(e.wordv);
 	}
 }
 
@@ -317,6 +408,39 @@ void test_reduce_simple(void){
 	bigint_print_hex(&c);
 }
 
+/*  gcdext( B5DDAD, 6CBBC2) */
+/*  gcdext( CD319349, 9EFD76CC) */
+/*  gcdext( 1609000771, 6FAC577D72) */
+/*  */
+void test_gcdext_simple(void){
+	bigint_t a, b, c, d, e;
+
+	uint8_t a_b[5] = {0x71, 0x07, 0x00, 0x09, 0x16};
+	uint8_t b_b[5] = {0x72, 0x7D, 0x57, 0xAC, 0X6F};
+	uint8_t c_b[6], d_b[6], e_b[6];
+	a.wordv=a_b;
+	a.length_B = 5;
+	a.info=0x00;
+	bigint_adjust(&a);
+	b.wordv=b_b;
+	b.length_B = 5;
+	b.info=0x00;
+	bigint_adjust(&b);
+	c.wordv = c_b;
+	d.wordv = d_b;
+	e.wordv = e_b;
+	bigint_gcdext(&c, &d, &e, &a, &b);
+	cli_putstr_P(PSTR("\r\n test: gcd( "));
+	bigint_print_hex(&a);
+	cli_putstr_P(PSTR(", "));
+	bigint_print_hex(&b);
+	cli_putstr_P(PSTR(") => a =  "));
+	bigint_print_hex(&d);
+	cli_putstr_P(PSTR("; b =  "));
+	bigint_print_hex(&e);
+	cli_putstr_P(PSTR("; gcd =  "));
+	bigint_print_hex(&c);
+}
 
 void testrun_performance_bigint(void){
 
@@ -330,6 +454,8 @@ const char add_test_str[]         PROGMEM = "add-test";
 const char mul_test_str[]         PROGMEM = "mul-test";
 const char square_test_str[]      PROGMEM = "square-test";
 const char reduce_test_str[]      PROGMEM = "reduce-test";
+const char expmod_test_str[]      PROGMEM = "expmod-test";
+const char gcdext_test_str[]      PROGMEM = "gcdext-test";
 const char quick_test_str[]       PROGMEM = "quick-test";
 const char performance_str[]      PROGMEM = "performance";
 const char echo_str[]             PROGMEM = "echo";
@@ -339,7 +465,9 @@ cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ mul_test_str,         NULL, test_mul_bigint               },
 	{ square_test_str,      NULL, test_square_bigint            },
 	{ reduce_test_str,      NULL, test_reduce_bigint            },
-	{ quick_test_str,       NULL, test_reduce_simple            },
+	{ expmod_test_str,      NULL, test_expmod_bigint            },
+	{ gcdext_test_str,      NULL, test_gcdext_bigint            },
+	{ quick_test_str,       NULL, test_gcdext_simple            },
 	{ echo_test_str,        NULL, test_echo_bigint              },
 	{ performance_str,      NULL, testrun_performance_bigint    },
 	{ echo_str,         (void*)1, (void_fpt)echo_ctrl           },

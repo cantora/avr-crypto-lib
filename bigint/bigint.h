@@ -59,6 +59,10 @@ void   bigint_mul_s(bigint_t* dest, const bigint_t* a, const bigint_t* b);
 void   bigint_square(bigint_t* dest, const bigint_t* a);
 void   bigint_sub_u_bitscale(bigint_t* a, const bigint_t* b, uint16_t bitscale);
 void   bigint_reduce(bigint_t* a, const bigint_t* r);
+void   bigint_expmod_u(bigint_t* dest, const bigint_t* a, const bigint_t* exp, const bigint_t* r);
+void   bigint_gcdext(bigint_t* gcd, bigint_t* a, bigint_t* b, const bigint_t* x, const bigint_t* y);
+void   bigint_inverse(bigint_t* dest, bigint_t* a, bigint_t* m);
+
 /******************************************************************************/
 
 #endif /*BIGINT_H_*/
