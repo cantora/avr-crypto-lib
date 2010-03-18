@@ -56,10 +56,26 @@ def process_hashfunction(fin, name)
   lb = fin.readline()
   m = lb.match(/ctx2hash \(cycles\):[\s]*([\d]*)/)
   convtime = m[1].to_i()
+  begin
+    lb = fin.readline()
+  end until m = lb.match(/init \(bytes\):[\s]*([\d]*)/)
+  initstack = m[1].to_i()
+  lb = fin.readline()
+  m = lb.match(/nextBlock \(bytes\):[\s]*([\d]*)/)
+  nextblockstack = m[1].to_i()
+  lb = fin.readline()
+  m = lb.match(/lastBlock \(bytes\):[\s]*([\d]*)/)
+  lastblockstack = m[1].to_i()
+  lb = fin.readline()
+  m = lb.match(/ctx2hash \(bytes\):[\s]*([\d]*)/)
+  convstack = m[1].to_i()
+  s1 = (initstack>nextblockstack)?initstack:nextblockstack
+  s2 = (lastblockstack>convstack)?lastblockstack:convstack
+  stack = (s1>s2)?s1:s2
   
-  printf("| %20s || %3s || %3s || || %4d || || %4d || %4d ||" +
+  printf("| %20s || %3s || %3s || || %4d || %4d || %4d || %4d ||" +
          " %6d || %6d || %7.2f || %6d || || || \n|-\n" , 
-        name, $lang, $lang ,ctxsize, hashsize, blocksize, 
+        name, $lang, $lang ,ctxsize, stack, hashsize, blocksize, 
 	    inittime, nextblocktime, nextblocktime.to_f/(blocksize/8),
 		lastblocktime+convtime)
 end

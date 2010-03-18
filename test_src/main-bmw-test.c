@@ -157,19 +157,19 @@ const char shavs_test1_str[] PROGMEM = "shavs_test1";
 const char shavs_test3_str[] PROGMEM = "shavs_test3";
 
 cmdlist_entry_t cmdlist[] PROGMEM = {
-	{ nessie_str,          NULL, testrun_nessie_bmw},
-	{ test_str,            NULL, testrun_stdtest_bmw},
-	{ testshort_str,       NULL, testshort},
-	{ testlshort_str,      NULL, testlshort},
-	{ test506_str,         NULL, test506},
-	{ test507_str,         NULL, test507},
-	{ performance_str,     NULL, performance_bmw},
-	{ shavs_list_str,      NULL, shavs_listalgos},
-	{ shavs_set_str,   (void*)1, (void_fpt)shavs_setalgo},
-	{ shavs_test1_str,     NULL, shavs_test1},
-	{ shavs_test3_str,     NULL, shavs_test3},
-	{ echo_str,        (void*)1, (void_fpt)echo_ctrl},
-	{ NULL,                NULL, NULL}
+	{ nessie_str,                  NULL, testrun_nessie_bmw            },
+	{ test_str,                    NULL, testrun_stdtest_bmw           },
+	{ testshort_str,               NULL, testshort                     },
+	{ testlshort_str,              NULL, testlshort                    },
+	{ test506_str,                 NULL, test506                       },
+	{ test507_str,                 NULL, test507                       },
+	{ performance_str,             NULL, performance_bmw               },
+	{ shavs_list_str,              NULL, shavs_listalgos               },
+	{ shavs_set_str,           (void*)1, (void_fpt)shavs_setalgo       },
+	{ shavs_test1_str,             NULL, shavs_test1                   },
+	{ shavs_test3_str,             NULL, shavs_test3                   },
+	{ echo_str,                (void*)1, (void_fpt)echo_ctrl           },
+	{ NULL,                        NULL, NULL                          }
 };
 
 int main (void){

@@ -79,27 +79,26 @@ end
 
 def readPerformanceVector(param)
   lb=""
-  buffer=""
   fname=""
   fout=0
   begin
     lb = read_line()
     if lb.match(/End of performance figures/)
       return false
-	end
-	if m=lb.match(/=== (.*) performance ===/) 
-	  fout.close if fout!=0
-	  fname=$dir+m[1]
-	  fname+="."+param if param != ""
-	  fname+=".txt"
-	  fout = File.open(fname, "w+")
-	  printf("> %s \n", fname)	
-	  fout.write(lb)
-    else
-	  if fout!=0 && lb!=""
-	    fout.write(lb)
-	  end	
-	end
+	  end
+  	if m=lb.match(/=== (.*) performance ===/) 
+  	  fout.close if fout!=0
+  	  fname=$dir+m[1]
+  	  fname+="."+param if param != ""
+  	  fname+=".txt"
+  	  fout = File.open(fname, "w+")
+  	  printf("> %s \n", fname)	
+  	  fout.write(lb)
+      else
+  	  if fout!=0 && lb!=""
+  	    fout.write(lb)
+  	  end	
+  	end
   end while true
 end
 

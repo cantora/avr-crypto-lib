@@ -1,4 +1,4 @@
-/* base64_dec.h */
+/* noekeon_prng.h */
 /*
  *   This file is part of the AVR-Crypto-Lib.
  *   Copyright (C) 2006, 2007, 2008  Daniel Otte (daniel.otte@rub.de)
@@ -16,14 +16,25 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+/**
+ * \author	Daniel Otte
+ * \date	2008-08-24
+ * \license GPLv3 or later
+ * \brief   random number generator based on noekeon running in CFB-mode
+ * 
+ */
 
-
-#ifndef BASE64_DEC_H_
-#define BASE64_DEC_H_
+#ifndef PRNG_H_
+#define PRNG_H_
 
 #include <stdint.h>
 
-int base64_binlength(char* str, uint8_t strict);
-int base64dec(void* dest, const char* b64str, uint8_t strict);
+uint8_t random8(void);
+void random_block(void* dest);
+void srandom32(uint32_t seed);
+void random_seed(const void* buffer);
+void random_add(const void* buffer);
 
-#endif /*BASE64_DEC_H_*/
+#endif /* PRNG_H_*/
+
+

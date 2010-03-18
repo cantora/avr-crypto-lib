@@ -27,6 +27,7 @@
 
 #include "hfal-performance.h"
 #include "hashfunction_descriptor.h"
+#include "stack_measuring.h"
 #include "cli.h"
 #include "performance_test.h"
 #include <stdint.h>
@@ -34,6 +35,8 @@
 #include <string.h>
 #include <avr/pgmspace.h>
 
+#define PATTERN_A 0xAA
+#define PATTERN_B 0x55
 
 static
 void printvalue(unsigned long v){
@@ -128,6 +131,87 @@ void hfal_performance(const hfdesc_t* hd){
 	}
 }
 
+void hfal_stacksize(const hfdesc_t* hd){
+	hfdesc_t hf;
+	stack_measuring_ctx_t smctx;
+	memcpy_P(&hf, hd, sizeof(hfdesc_t));
+	uint8_t ctx[hf.ctxsize_B];
+	uint8_t data[(hf.blocksize_b+7)/8];
+	uint8_t digest[(hf.hashsize_b+7)/8];
+	uint16_t t1, t2;
+	uint8_t i;
+
+	if(hf.type!=HFDESC_TYPE_HASHFUNCTION)
+		return;
+	cli_putstr_P(PSTR("\r\n\r\n === "));
+	cli_putstr_P(hf.name);
+	cli_putstr_P(PSTR(" stack-usage === "
+	                  "\r\n    type:             hashfunction"
+	                  "\r\n    hashsize (bits):    "));
+	printvalue(hf.hashsize_b);
+
+	cli_putstr_P(PSTR("\r\n    ctxsize (bytes):    "));
+	printvalue(hf.ctxsize_B);
+
+	cli_putstr_P(PSTR("\r\n    blocksize (bits):   "));
+	printvalue(hf.blocksize_b);
+
+	cli();
+	stack_measure_init(&smctx, PATTERN_A);
+	hf.init(&ctx);
+	t1 = stack_measure_final(&smctx);
+	stack_measure_init(&smctx, PATTERN_B);
+	hf.init(&ctx);
+	t1 = stack_measure_final(&smctx);
+	sei();
+
+	t1 = (t1>t2)?t1:t2;
+	cli_putstr_P(PSTR("\r\n    init (bytes):       "));
+	printvalue((unsigned long)t1);
+
+	cli();
+	stack_measure_init(&smctx, PATTERN_A);
+	hf.nextBlock(&ctx, data);
+	t1 = stack_measure_final(&smctx);
+	stack_measure_init(&smctx, PATTERN_B);
+	hf.nextBlock(&ctx, data);
+	t1 = stack_measure_final(&smctx);
+	sei();
+
+	t1 = (t1>t2)?t1:t2;
+	cli_putstr_P(PSTR("\r\n    nextBlock (bytes):  "));
+	printvalue((unsigned long)t1);
+
+	cli();
+	stack_measure_init(&smctx, PATTERN_A);
+	hf.lastBlock(&ctx, data, 0);
+	t1 = stack_measure_final(&smctx);
+	stack_measure_init(&smctx, PATTERN_B);
+	hf.lastBlock(&ctx, data, 0);
+	t1 = stack_measure_final(&smctx);
+	sei();
+
+	t1 = (t1>t2)?t1:t2;
+	cli_putstr_P(PSTR("\r\n    lastBlock (bytes):  "));
+	printvalue((unsigned long)t1);
+
+	cli();
+	stack_measure_init(&smctx, PATTERN_A);
+	hf.ctx2hash(digest, &ctx);
+	t1 = stack_measure_final(&smctx);
+	stack_measure_init(&smctx, PATTERN_B);
+	hf.ctx2hash(digest, &ctx);
+	t1 = stack_measure_final(&smctx);
+	sei();
+
+	t1 = (t1>t2)?t1:t2;
+	cli_putstr_P(PSTR("\r\n    ctx2hash (bytes):   "));
+	printvalue((unsigned long)t1);
+
+	if(hf.free){
+		hf.free(&ctx);
+	}
+}
 
 void hfal_performance_multiple(const hfdesc_t** hd_list){
 	const hfdesc_t* hd;
@@ -138,6 +222,7 @@ void hfal_performance_multiple(const hfdesc_t** hd_list){
 			return;
 		}
 		hfal_performance(hd);
+		hfal_stacksize(hd);
 		hd_list = (void*)((uint8_t*)hd_list + 2);
 	}
 }

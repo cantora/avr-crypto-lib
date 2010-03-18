@@ -1,7 +1,7 @@
-/* main-base64-test.c */
+/* main-bigint-test.c */
 /*
     This file is part of the AVR-Crypto-Lib.
-    Copyright (C) 2008, 2009  Daniel Otte (daniel.otte@rub.de)
+    Copyright (C) 2008, 2009, 2010  Daniel Otte (daniel.otte@rub.de)
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 /*
- * base64 test-suit
+ * bigint test-suit
  * 
 */
 

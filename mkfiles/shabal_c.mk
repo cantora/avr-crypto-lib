@@ -1,7 +1,7 @@
-# Makefile for Skein
+# Makefile for Shabal
 ALGO_NAME := SHABAL_C
 
-# comment out the following line for removement of Skein from the build process
+# comment out the following line for removement of Shabal from the build process
 HASHES += $(ALGO_NAME)
 
 $(ALGO_NAME)_DIR      := shabal/

@@ -8,6 +8,8 @@ HASHES         :=
 MACS           :=
 PRNGS          :=
 ENCODINGS      :=
+SIGNATURE      :=
+PK_CIPHERS     :=
 AUX            :=
 
 # we use the gnu make standard library
@@ -20,7 +22,7 @@ include mkfiles/*.mk
 
 #-------------------------------------------------------------------------------
 ALGORITHMS = $(BLOCK_CIPHERS) $(STREAM_CIPHERS) $(HASHES) $(PRNGS) $(MACS) \
-			 $(ENCODINGS) $(AUX)
+			 $(ENCODINGS) $(SIGNATURE) $(PK_CIPHERS) $(AUX)
 ALGORITHMS_OBJ = $(patsubst %,%_OBJ, $(ALGORITHMS))
 ALGORITHMS_TEST_BIN = $(patsubst %,%_TEST_BIN, $(ALGORITHMS))
 
@@ -250,8 +252,14 @@ info:
 	@echo "    $(MACS)"
 	@echo "  PRNG functions:"
 	@echo "    $(PRNGS)"
+	@echo "  signature functions:"
+	@echo "    $(SIGNATURE)"
+	@echo "  public key ciphers:"
+	@echo "    $(PK_CIPHERS)"
 	@echo "  encodings:"
 	@echo "    $(ENCODINGS)"
+	@echo "  auxiliary functions:"
+	@echo "    $(AUX)"
 	@echo " targets:"
 	@echo "  all           - all algorithm cores"
 	@echo "  cores         - all algorithm cores"
@@ -264,6 +272,8 @@ info:
 	@echo "  macs          - all MAC cores"
 	@echo "  prngs         - all PRNG cores"
 	@echo "  all_testrun   - testrun all algorithms"
+	@echo "  hash_size     - measure size of all hash functions"
+	@echo "  hash_speed    - measure performance of all hash functions"
 	@echo "  docu          - build doxygen documentation"
 	@echo "  clean         - remove a lot of builded files"
 	@echo "  depclean      - also remove dependency files"
