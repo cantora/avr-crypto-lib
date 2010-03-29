@@ -146,15 +146,6 @@ void hfal_stacksize(const hfdesc_t* hd){
 	cli_putstr_P(PSTR("\r\n\r\n === "));
 	cli_putstr_P(hf.name);
 	cli_putstr_P(PSTR(" stack-usage === "
-	                  "\r\n    type:             hashfunction"
-	                  "\r\n    hashsize (bits):    "));
-	printvalue(hf.hashsize_b);
-
-	cli_putstr_P(PSTR("\r\n    ctxsize (bytes):    "));
-	printvalue(hf.ctxsize_B);
-
-	cli_putstr_P(PSTR("\r\n    blocksize (bits):   "));
-	printvalue(hf.blocksize_b);
 
 	cli();
 	stack_measure_init(&smctx, PATTERN_A);

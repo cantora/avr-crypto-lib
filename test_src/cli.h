@@ -61,6 +61,7 @@ uint8_t cli_getsn(char* s, uint16_t n);
 uint8_t cli_getsn_cecho(char* s, uint16_t n);
 void cli_putstr(const char* s);
 void cli_putstr_P(PGM_P s);
+void cli_hexdump_byte(uint8_t byte);
 void cli_hexdump(const void* data, uint16_t length);
 void cli_hexdump_rev(const void* data, uint16_t length);
 void cli_hexdump2(const void* data, uint16_t length);
