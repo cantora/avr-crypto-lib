@@ -139,13 +139,12 @@ void hfal_stacksize(const hfdesc_t* hd){
 	uint8_t data[(hf.blocksize_b+7)/8];
 	uint8_t digest[(hf.hashsize_b+7)/8];
 	uint16_t t1, t2;
-	uint8_t i;
 
 	if(hf.type!=HFDESC_TYPE_HASHFUNCTION)
 		return;
 	cli_putstr_P(PSTR("\r\n\r\n === "));
 	cli_putstr_P(hf.name);
-	cli_putstr_P(PSTR(" stack-usage === "
+	cli_putstr_P(PSTR(" stack-usage === "));
 
 	cli();
 	stack_measure_init(&smctx, PATTERN_A);
@@ -153,7 +152,7 @@ void hfal_stacksize(const hfdesc_t* hd){
 	t1 = stack_measure_final(&smctx);
 	stack_measure_init(&smctx, PATTERN_B);
 	hf.init(&ctx);
-	t1 = stack_measure_final(&smctx);
+	t2 = stack_measure_final(&smctx);
 	sei();
 
 	t1 = (t1>t2)?t1:t2;
@@ -166,7 +165,7 @@ void hfal_stacksize(const hfdesc_t* hd){
 	t1 = stack_measure_final(&smctx);
 	stack_measure_init(&smctx, PATTERN_B);
 	hf.nextBlock(&ctx, data);
-	t1 = stack_measure_final(&smctx);
+	t2 = stack_measure_final(&smctx);
 	sei();
 
 	t1 = (t1>t2)?t1:t2;
@@ -179,7 +178,7 @@ void hfal_stacksize(const hfdesc_t* hd){
 	t1 = stack_measure_final(&smctx);
 	stack_measure_init(&smctx, PATTERN_B);
 	hf.lastBlock(&ctx, data, 0);
-	t1 = stack_measure_final(&smctx);
+	t2 = stack_measure_final(&smctx);
 	sei();
 
 	t1 = (t1>t2)?t1:t2;
@@ -192,7 +191,7 @@ void hfal_stacksize(const hfdesc_t* hd){
 	t1 = stack_measure_final(&smctx);
 	stack_measure_init(&smctx, PATTERN_B);
 	hf.ctx2hash(digest, &ctx);
-	t1 = stack_measure_final(&smctx);
+	t2 = stack_measure_final(&smctx);
 	sei();
 
 	t1 = (t1>t2)?t1:t2;
