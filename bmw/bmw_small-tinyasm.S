@@ -873,10 +873,10 @@ bmw256_nextBlock:
 	adc acc1, r1
 	adc acc2, r1
 	adc acc3, r1
-	st -X, acc0
-	st -X, acc1
-	st -X, acc2
 	st -X, acc3
+	st -X, acc2
+	st -X, acc1
+	st -X, acc0
 	/* call f0 */
 	movw r30, r22
 	movw r26, r24
