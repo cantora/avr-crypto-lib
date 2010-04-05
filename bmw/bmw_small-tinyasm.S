@@ -122,41 +122,45 @@ eor_r22_in_r16:
   param s: r20
 */
 sn:
-	push_range 12, 20
+	push_range 2, 5
+	push r17
+	push r19
 	ldi r30, lo8(s_table)
 	ldi r31, hi8(s_table)
 	lsl r20
 	lsl r20
 	add r30, r20
 	adc r31, r1
-	movw r12, r22
-	movw r14, r24
+	movw r2, r22
+	movw r4, r24
 	lpm r20, Z+
 	rcall shiftright32
 	movw r16, r22
 	movw r18, r24
 ;---
-	movw r22, r12
-	movw r24, r14
+	movw r22, r2
+	movw r24, r4
 	lpm r20, Z+
 	rcall shiftleft32
 	rcall eor_r22_in_r16
 ;---
-	movw r22, r12
-	movw r24, r14
+	movw r22, r2
+	movw r24, r4
 	lpm r20, Z+
 	rcall rotateleft32
 	rcall eor_r22_in_r16
 ;---
-	movw r22, r12
-	movw r24, r14
+	movw r22, r2
+	movw r24, r4
 	lpm r20, Z+
 	rcall rotateleft32
 	eor r22, r16
 	eor r23, r17
 	eor r24, r18
 	eor r25, r19
-	pop_range 12, 20
+	pop r19
+	pop r17
+	pop_range 2, 5
 	ret
 
 /******************************************************************************/
@@ -235,6 +239,17 @@ load32_from_Y:
 	ld r23, Y+
 	ld r24, Y+
 	ld r25, Y+
+	ret
+
+add_X_to_32:
+	ld r0, X+
+	add r22, r0
+	ld r0, X+
+	adc r23, r0
+	ld r0, X+
+	adc r24, r0
+	ld r0, X+
+	adc r25, r0
 	ret
 /******************************************************************************/
 /*
@@ -345,14 +360,7 @@ f0:
 	rcall sn
 	movw r30, r2
 
-	ld r0, X+
-	add r22, r0
-	ld r0, X+
-	adc r23, r0
-	ld r0, X+
-	adc r24, r0
-	ld r0, X+
-	adc r25, r0
+	rcall add_X_to_32
 
 	st Y+, r22
 	st Y+, r23
@@ -369,19 +377,15 @@ f0:
 	rcall sn
 	movw r30, r2
 	movw r26, h0
-	ld r0, X+
-	add r22, r0
-	ld r0, X+
-	adc r23, r0
-	ld r0, X+
-	adc r24, r0
-	ld r0, X+
-	adc r25, r0
+	rcall add_X_to_32
 	sbiw r26, 4
-	st Y+, r22
-	st Y+, r23
-	st Y+, r24
-	st Y+, r25
+	std Y+0, r22
+	std Y+1, r23
+	std Y+2, r24
+	std Y+3, r25
+	sbiw r28, 15*4
+	movw r20, h0
+	movw r22, m0
 	ret
 
 /******************************************************************************/
@@ -627,6 +631,9 @@ f1:
 	inc r17
 	sbrs r17, 4
 	rjmp 10b
+	movw r24, r2
+	movw r22, r4
+	movw r20, r6
 	ret
 
 /******************************************************************************/
@@ -860,8 +867,8 @@ bmw256_nextBlock:
 	push_range  2, 17
 	stack_alloc_large 32*4, r28, r29
 	adiw r28, 1
-	push_range 28, 29 /* push Q */
-	push_range 22, 25 /* push M & H */
+;	push_range 28, 29 /* push Q */
+;	push_range 22, 25 /* push M & H */
 	/* increment counter */
 	movw r26, r24
 	movw r2, r26
@@ -882,20 +889,14 @@ bmw256_nextBlock:
 	movw r26, r24
 	rcall f0
 	/* call f1*/
-	pop r21
-	pop r20
-	pop r23
-	pop r22
-	pop r25
-	pop r24
+	movw r24, r28
+
 ;	rcall printQ
-	push_range 20, 25
 	rcall f1
 	/* call f2 */
 ;	pop_range 20, 25
 ;	push_range 20, 25
 ;	rcall printQ
-	pop_range 20, 25
 ;	push r20
 ;	push r21
 	call f2
