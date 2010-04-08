@@ -154,10 +154,9 @@ sn:
 	movw r24, r4
 	lpm r20, Z+
 	rcall rotateleft32
-	eor r22, r16
-	eor r23, r17
-	eor r24, r18
-	eor r25, r19
+	rcall eor_r22_in_r16
+	movw r22, r16
+	movw r24, r18
 	pop r19
 	pop r17
 	pop_range 2, 5
@@ -172,6 +171,7 @@ sn:
 memxor_short:
 ;	tst r20
 ;	breq memxor_exit
+	ldi r20, 64
 10: ld r21, X
 	ld r22, Z+
 	eor r21, r22
@@ -193,23 +193,14 @@ add_hx_to_w:
 	movw r26, h0
 	add r26, r16
 	adc r27, r1
-	ld r22, Y
-	ldd r23, Y+1
-	ldd r24, Y+2
-	ldd r25, Y+3
+	rcall load32_from_Y
+	sbiw r28, 4
 	lsl r20
 	rol r21
 	brcs 30f
 	/* addition */
-	ld r0, X+
-	add r22, r0
-	ld r0, X+
-	adc r23, r0
-	ld r0, X+
-	adc r24, r0
-	ld r0, X+
-	adc r25, r0
-	rjmp 50f
+	rcall add_X_to_32
+	rjmp store32_to_Y;50f
 30: /* substract */
 	ld r0, X+
 	sub r22, r0
@@ -220,11 +211,9 @@ add_hx_to_w:
 	ld r0, X+
 	sbc r25, r0
 50:
-	st Y+, r22
-	st Y+, r23
-	st Y+, r24
-	st Y+, r25
-	ret
+	rjmp store32_to_Y
+;	rcall store32_to_Y
+;	ret
 
 /******************************************************************************/
 load32_from_X:
@@ -239,6 +228,13 @@ load32_from_Y:
 	ld r23, Y+
 	ld r24, Y+
 	ld r25, Y+
+	ret
+
+store32_to_Y:
+	st Y+, r22
+	st Y+, r23
+	st Y+, r24
+	st Y+, r25
 	ret
 
 add_X_to_32:
@@ -292,7 +288,7 @@ f0:
 ;	pop_range  22, 25
 ;--- END DBG
 	/* xor m into h */
-	ldi r20, 64
+;	ldi r20, 64
 	rcall memxor_short
 	movw r30, m0
 	movw r26, h0
@@ -340,7 +336,7 @@ f0:
 ;	pop_range  22, 25
 ;--- END DBG
 	/* xor m into h */
-	ldi r20, 64
+;	ldi r20, 64
 	movw r26, h0
 	movw r30, m0
 	rcall memxor_short
@@ -351,38 +347,30 @@ f0:
 	ldi r21, 15
 	mov r8, r21
 50:
-	ldd r22, Y+0
-	ldd r23, Y+1
-	ldd r24, Y+2
-	ldd r25, Y+3
+	rcall load32_from_Y
+	sbiw r28, 4
 	lpm r20, Z+
 	movw r2, r30
 	rcall sn
 	movw r30, r2
 
 	rcall add_X_to_32
+	rcall store32_to_Y
 
-	st Y+, r22
-	st Y+, r23
-	st Y+, r24
-	st Y+, r25
 	dec r8
 	brne 50b
 ;---
-	ldd r22, Y+0
-	ldd r23, Y+1
-	ldd r24, Y+2
-	ldd r25, Y+3
+	rcall load32_from_Y
 	clr r20
 	rcall sn
 	movw r30, r2
 	movw r26, h0
 	rcall add_X_to_32
 	sbiw r26, 4
-	std Y+0, r22
-	std Y+1, r23
-	std Y+2, r24
-	std Y+3, r25
+	st -Y, r25
+	st -Y, r24
+	st -Y, r23
+	st -Y, r22
 	sbiw r28, 15*4
 	movw r20, h0
 	movw r22, m0
@@ -464,10 +452,7 @@ load_rotate_add_M:
 	movw r26, m0
 	add r26, r0
 	adc r27, r1
-	ld r22, X+
-	ld r23, X+
-	ld r24, X+
-	ld r25, X+
+	rcall load32_from_X
 	inc r20
 	rcall rotateleft32
 	brts 10f
@@ -670,35 +655,23 @@ f2:
 	adiw r26, 63
 	adiw r26,  1
 	movw q16_0, r26
-	clr xl0
-	clr xl1
-	clr xl2
-	clr xl3
-	ldi r17, 8
-10:	ld r0, X+
-	eor xl0, r0
-	ld r0, X+
-	eor xl1, r0
-	ld r0, X+
-	eor xl2, r0
-	ld r0, X+
-	eor xl3, r0
+	movw h0, r20
+	movw r28, r22
+	rcall load32_from_X
+	movw acc0, r22
+	movw acc2, r24
+	ldi r17, 15
+10:	rcall load32_from_X
+	rcall eor32_to_acc
+	cpi r17, 9
+	brne 15f
+	movw xl0, acc0
+	movw xl2, acc2
+15:
 	dec r17
 	brne 10b
-;--- /* calc XH */
-	movw xh0, xl0
-	movw xh2, xl2
-	ldi r17, 8
-10:	ld r0, X+
-	eor xh0, r0
-	ld r0, X+
-	eor xh1, r0
-	ld r0, X+
-	eor xh2, r0
-	ld r0, X+
-	eor xh3, r0
-	dec r17
-	brne 10b
+	movw xh0, acc0
+	movw xh2, acc2
 ;--- DBG
 ;	push_range 22, 25
 ;	movw r22, xl0
@@ -711,8 +684,6 @@ f2:
 ;--- END DBG
 
 ;--- /* calc first half of h0..h15 */
-	movw h0, r20
-	movw r28, r22
 	movw r26, q16_0
 	ldi r17, 16
 10:
@@ -912,11 +883,6 @@ bmw256_nextBlock:
 	ret
 
 /******************************************************************************/
-/*
-  param ctx:  r24:r25
-  param msg:  r22:r23
-  param len:  r20:r21
-*/
 ctx0 =  2
 ctx1 =  3
 blc0 =  4
@@ -925,6 +891,22 @@ len0 = 28
 len1 = 29
 buf0 =  6
 buf1 =  7
+
+load32_from_Z_stub:
+	movw r30, ctx0
+	adiw r30, 60
+	ldd r21, Z+4
+	ldd r22, Z+5
+	ldd r23, Z+6
+	ldd r24, Z+7
+	ret
+
+/******************************************************************************/
+/*
+  param ctx:  r24:r25
+  param msg:  r22:r23
+  param len:  r20:r21
+*/
 
 .global bmw_small_lastBlock
 .global bmw224_lastBlock
@@ -1020,12 +1002,7 @@ bmw256_lastBlock:
 	st X+, r1
 	dec r20
 	brne 350b
-	movw r30, ctx0
-	adiw r30, 60
-	ldd r21, Z+4
-	ldd r22, Z+5
-	ldd r23, Z+6
-	ldd r24, Z+7
+	rcall load32_from_Z_stub
 	subi r21, 1
 	sbc r22, r1
 	sbc r23, r1
@@ -1035,12 +1012,7 @@ bmw256_lastBlock:
 	bmw_small_nextBlock(ctx, pctx.buffer);
 */
 400:
-	movw r30, ctx0
-	adiw r30, 60
-	ldd r21, Z+4
-	ldd r22, Z+5
-	ldd r23, Z+6
-	ldd r24, Z+7
+	rcall load32_from_Z_stub
 410:
 	clr r25
 	lsl r21
@@ -1195,19 +1167,20 @@ ctx0 =   2
 ctx1 =   3
 msg0 =   4
 msg1 =   5
-len0 =   6
-len1 =   7
+len0 =  28
+len1 =  29
 len2 =   8
 len3 =   9
-dst0 =  10
-dst1 =  11
+dst0 =   6
+dst1 =   7
 .global bmw224
 bmw224:
 	push r16
 	clr r16
 
 bmw_small_all:
-	push_range 2, 11
+	push_range 2, 9
+	push_range 28, 29
 	stack_alloc_large 64+4
 	adiw r30, 1
 	movw ctx0, r30
@@ -1228,8 +1201,7 @@ bmw_small_all:
 	movw r24, ctx0
 	movw r22, msg0
 	rcall bmw_small_nextBlock
-	ldi r20, 2
-	sub len1, r20
+	subi len1, 2
 	sbc len2, r1
 	sbc len3, r1
 	ldi r20, 64
@@ -1249,7 +1221,8 @@ bmw_small_all:
 	adc r31, r1
 	icall
 	stack_free_large 64+4
-	pop_range 2, 11
+	pop_range 28, 29
+	pop_range 2, 9
 	pop r16
 	ret
 
