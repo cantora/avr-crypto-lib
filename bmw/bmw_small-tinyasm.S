@@ -189,31 +189,6 @@ h1 = 5
 m0 = 6
 m1 = 7
 
-add_hx_to_w:
-	movw r26, h0
-	add r26, r16
-	adc r27, r1
-	rcall load32_from_Y
-	sbiw r28, 4
-	lsl r20
-	rol r21
-	brcs 30f
-	/* addition */
-	rcall add_X_to_32
-	rjmp store32_to_Y;50f
-30: /* substract */
-	ld r0, X+
-	sub r22, r0
-	ld r0, X+
-	sbc r23, r0
-	ld r0, X+
-	sbc r24, r0
-	ld r0, X+
-	sbc r25, r0
-50:
-	rjmp store32_to_Y
-;	rcall store32_to_Y
-;	ret
 
 /******************************************************************************/
 load32_from_X:
@@ -269,112 +244,6 @@ f0_s_table:
 	.byte 0,1,2,3,4
 ;	.byte 0
 
-f0:
-	movw h0, r26
-	movw q0, r28
-	movw m0, r30
-;--- DBG
-;	push_range 22, 25
-;	movw r24, r26
-;	ldi r22, 'H'
-;	rcall printX
-;	pop_range  22, 25
-;--- END DBG
-;--- DBG
-;	push_range 22, 25
-;	movw r24, r30
-;	ldi r22, 'M'
-;	rcall printX
-;	pop_range  22, 25
-;--- END DBG
-	/* xor m into h */
-;	ldi r20, 64
-	rcall memxor_short
-	movw r30, m0
-	movw r26, h0
-
-	/* set q to zero */
-	ldi r22, 64
-10:	st Y+, r1
-	dec r22
-	brne 10b
-	movw r28, q0
-	/* calculate W and store it in Q */
-	ldi r19, 5
-30:
-	ldi r18, 16
-	/* load initial index */
-	ldi r30, lo8(f0_indextable-1)
-	ldi r31, hi8(f0_indextable-1)
-	add r30, r19
-	adc r31, r1
-	lpm r16, Z
-	/* load values from hacktable */
-	ldi r30, lo8(f0_hacktable-2)
-	ldi r31, hi8(f0_hacktable-2)
-	lsl r19
-	add r30, r19
-	adc r31, r1
-	lsr r19
-	lpm r21, Z+
-	lpm r20, Z
-40:
-	call add_hx_to_w
-	subi r16, -4
-	andi r16, 0x0f<<2
-	dec r18
-	brne 40b
-	movw r28, q0
-	dec r19
-	brne 30b
-	movw r26, h0
-;--- DBG
-;	push_range 22, 25
-;	movw r24, r28
-;	ldi r22, 'W'
-;	rcall printX
-;	pop_range  22, 25
-;--- END DBG
-	/* xor m into h */
-;	ldi r20, 64
-	movw r26, h0
-	movw r30, m0
-	rcall memxor_short
-	sbiw r26, 60
-;---
-	ldi r30, lo8(f0_s_table)
-	ldi r31, hi8(f0_s_table)
-	ldi r21, 15
-	mov r8, r21
-50:
-	rcall load32_from_Y
-	sbiw r28, 4
-	lpm r20, Z+
-	movw r2, r30
-	rcall sn
-	movw r30, r2
-
-	rcall add_X_to_32
-	rcall store32_to_Y
-
-	dec r8
-	brne 50b
-;---
-	rcall load32_from_Y
-	clr r20
-	rcall sn
-	movw r30, r2
-	movw r26, h0
-	rcall add_X_to_32
-	sbiw r26, 4
-	st -Y, r25
-	st -Y, r24
-	st -Y, r23
-	st -Y, r22
-	sbiw r28, 15*4
-	movw r20, h0
-	movw r22, m0
-	ret
 
 /******************************************************************************/
 
@@ -538,13 +407,8 @@ expand1:
 	inc r19
 	cpi r19, 17
 	brne 10b
-expand1_exit:
-;	adiw r26, 63
-	st X+, acc0
-	st X+, acc1
-	st X+, acc2
-	st X+, acc3
-	ret
+	rjmp expand2_exit
+
 
 /******************************************************************************/
 /*
@@ -570,16 +434,20 @@ expand2:
 	rcall add32_to_acc
 	dec r19
 	brne 10b
-	rcall load32_from_X
 	ldi r20, 4
-	rcall sn
-	rcall add32_to_acc
 	rcall load32_from_X
-	ldi r20, 5
 	rcall sn
 	rcall add32_to_acc
-
-	rjmp expand1_exit
+	ldi r20, 5
+	rcall load32_from_X
+	rcall sn
+	rcall add32_to_acc
+expand2_exit:
+	st X+, acc0
+	st X+, acc1
+	st X+, acc2
+	st X+, acc3
+	ret
 
 /******************************************************************************/
 /*
@@ -593,13 +461,193 @@ expand2:
   param h: r20:r21
   param j: r24
 */
+
+/******************************************************************************/
+/*
+  param q: r24:r25
+  param m: r22:r23
+  param h: r20:r21
+*/
+f2_1_shift_table:
+	.byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+	.byte 0x2B, 0x64, 0x66, 0x03, 0x51, 0x55, 0x87, 0x55
+f2_2_shift_table:
+	.byte (2<<1), (7<<1), (4<<1), (3<<1), (4<<1)+1, (6<<1)+1, (6<<1)
+	.byte 0 ; just for alignment
+
+/******************************************************************************/
+/*
+  param ctx:  r24:r25
+  param msg:  r22:r23
+*/
+/* f0
+  param q:  r28:r29 (Y)
+  param h:  r26:r27 (X)
+  param m:  r30:r31 (Z)
+*/
+/* f1
+  param q: r24:r25
+  param m: r22:r23
+  param h: r20:r21
+*/
+/* f2
+  param q: r24:r25
+  param m: r22:r23
+  param h: r20:r21
+*/
+q0 = 2
+q1 = 3
+h0 = 4
+h1 = 5
+m0 = 6
+m1 = 7
+
+
+.global bmw_small_nextBlock
+.global bmw224_nextBlock
+.global bmw256_nextBlock
+bmw_small_nextBlock:
+bmw224_nextBlock:
+bmw256_nextBlock:
+	push_range 28, 29
+	push_range  2, 17
+	stack_alloc_large 32*4, r28, r29
+	adiw r28, 1
+;	push_range 28, 29 /* push Q */
+;	push_range 22, 25 /* push M & H */
+	/* increment counter */
+	movw r26, r24
+	movw r2, r26
+	adiw r26, 63
+	adiw r26,  1
+	rcall load_acc_from_X
+	ldi r19, 1
+	add acc0, r19
+	adc acc1, r1
+	adc acc2, r1
+	adc acc3, r1
+	st -X, acc3
+	st -X, acc2
+	st -X, acc1
+	st -X, acc0
+	/* call f0 */
+	movw r30, r22
+	movw r26, r24
+f0:
+	movw h0, r26
+	movw q0, r28
+	movw m0, r30
+	/* xor m into h */
+;	ldi r20, 64
+	rcall memxor_short
+	movw r30, m0
+	movw r26, h0
+
+	/* set q to zero */
+	ldi r22, 64
+10:	st Y+, r1
+	dec r22
+	brne 10b
+	movw r28, q0
+	/* calculate W and store it in Q */
+	ldi r19, 5
+30:
+	ldi r18, 16
+	/* load initial index */
+	ldi r30, lo8(f0_indextable-1)
+	ldi r31, hi8(f0_indextable-1)
+	add r30, r19
+	adc r31, r1
+	lpm r16, Z
+	/* load values from hacktable */
+	ldi r30, lo8(f0_hacktable-2)
+	ldi r31, hi8(f0_hacktable-2)
+	lsl r19
+	add r30, r19
+	adc r31, r1
+	lsr r19
+	lpm r21, Z+
+	lpm r20, Z
+40:
+	;call add_hx_to_w
+add_hx_to_w:
+	movw r26, h0
+	add r26, r16
+	adc r27, r1
+	rcall load32_from_Y
+	sbiw r28, 4
+	lsl r20
+	rol r21
+	brcs 300f
+	/* addition */
+	rcall add_X_to_32
+	rjmp 500f
+300: /* substract */
+	ld r0, X+
+	sub r22, r0
+	ld r0, X+
+	sbc r23, r0
+	ld r0, X+
+	sbc r24, r0
+	ld r0, X+
+	sbc r25, r0
+500:
+	rcall store32_to_Y
+	subi r16, -4
+	andi r16, 0x0f<<2
+	dec r18
+	brne 40b
+	movw r28, q0
+	dec r19
+	brne 30b
+	movw r26, h0
+	/* xor m into h */
+;	ldi r20, 64
+	movw r26, h0
+	movw r30, m0
+	rcall memxor_short
+	sbiw r26, 60
+;---
+	ldi r30, lo8(f0_s_table)
+	ldi r31, hi8(f0_s_table)
+	ldi r21, 15
+	mov r8, r21
+50:
+	rcall load32_from_Y
+	sbiw r28, 4
+	lpm r20, Z+
+	movw r2, r30
+	rcall sn
+	movw r30, r2
+
+	rcall add_X_to_32
+	rcall store32_to_Y
+
+	dec r8
+	brne 50b
+;---
+	rcall load32_from_Y
+	clr r20
+	rcall sn
+	movw r30, r2
+	movw r26, h0
+	rcall add_X_to_32
+	sbiw r26, 4
+	st -Y, r25
+	st -Y, r24
+	st -Y, r23
+	st -Y, r22
+	sbiw r28, 15*4
+	movw r20, h0
+	movw r22, m0
+
+	/* call f1*/
+	movw r24, r28
 f1:
 	movw r2, r24
 	movw r4, r22
 	movw r6, r20
 	movw r26, r2
-;	movw r22, r4
-;   movw r20, r6
 	clr r24
 	rcall expand1
 	movw r26, r2
@@ -619,20 +667,14 @@ f1:
 	movw r24, r2
 	movw r22, r4
 	movw r20, r6
-	ret
 
-/******************************************************************************/
-/*
-  param q: r24:r25
-  param m: r22:r23
-  param h: r20:r21
-*/
-f2_1_shift_table:
-	.byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-	.byte 0x2B, 0x64, 0x66, 0x03, 0x51, 0x55, 0x87, 0x55
-f2_2_shift_table:
-	.byte (2<<1), (7<<1), (4<<1), (3<<1), (4<<1)+1, (6<<1)+1, (6<<1)
-	.byte 0 ; just for alignment
+
+	/* call f2 */
+;	pop_range 20, 25
+;	push_range 20, 25
+;	rcall printQ
+;	push r20
+;	push r21
 acc2  =  8
 acc3  =  9
 acc0  = 14
@@ -800,77 +842,11 @@ f2:
 	rcall add_acc_to_Z
 	inc r18
 	cpi r17, 5
-	breq 20f
-	dec r17
+	brne 20f
+	sbiw r26, 8*4
+20:	dec r17
 	brne 10b
-	ret
-20: sbiw r26, 8*4
-	dec r17
-	rjmp 10b
 
-/******************************************************************************/
-/*
-  param ctx:  r24:r25
-  param msg:  r22:r23
-*/
-/* f0
-  param q:  r28:r29 (Y)
-  param h:  r26:r27 (X)
-  param m:  r30:r31 (Z)
-*/
-/* f1
-  param q: r24:r25
-  param m: r22:r23
-  param h: r20:r21
-*/
-/* f2
-  param q: r24:r25
-  param m: r22:r23
-  param h: r20:r21
-*/
-.global bmw_small_nextBlock
-.global bmw224_nextBlock
-.global bmw256_nextBlock
-bmw_small_nextBlock:
-bmw224_nextBlock:
-bmw256_nextBlock:
-	push_range 28, 29
-	push_range  2, 17
-	stack_alloc_large 32*4, r28, r29
-	adiw r28, 1
-;	push_range 28, 29 /* push Q */
-;	push_range 22, 25 /* push M & H */
-	/* increment counter */
-	movw r26, r24
-	movw r2, r26
-	adiw r26, 63
-	adiw r26,  1
-	rcall load_acc_from_X
-	ldi r19, 1
-	add acc0, r19
-	adc acc1, r1
-	adc acc2, r1
-	adc acc3, r1
-	st -X, acc3
-	st -X, acc2
-	st -X, acc1
-	st -X, acc0
-	/* call f0 */
-	movw r30, r22
-	movw r26, r24
-	rcall f0
-	/* call f1*/
-	movw r24, r28
-
-;	rcall printQ
-	rcall f1
-	/* call f2 */
-;	pop_range 20, 25
-;	push_range 20, 25
-;	rcall printQ
-;	push r20
-;	push r21
-	call f2
 ;--- DBG
 ;	pop r25
 ;	pop r24
