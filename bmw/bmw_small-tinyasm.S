@@ -419,7 +419,7 @@ expand1:
 */
 
 expand2_rot_table:
-	.byte 0,3,0,7,0,13,0,16,0,19,0,23,0,27
+	.byte 3,7,13,16,19,23,27,0
 
 expand2:
 	rcall expand_intro
@@ -428,10 +428,11 @@ expand2:
 	ldi r31, hi8(expand2_rot_table)
 10:
 	rcall load32_from_X
-	mov r20, r19
+	sbrs r19, 0
+	rjmp 12f
 	lpm r20, Z+
 	rcall rotateleft32
-	rcall add32_to_acc
+12:	rcall add32_to_acc
 	dec r19
 	brne 10b
 	ldi r20, 4

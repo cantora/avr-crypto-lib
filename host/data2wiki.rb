@@ -34,21 +34,38 @@
    6801      32       0    6833    1ab1 bin/bmw_c/bmw_small.o
 =end
 
-def get_size_string(fsize)
+def get_size_string(impl, algo)
+  fmap = File.open('algo_implementation/'+impl+'.algos', 'r')
+  fsize = File.open('size_log/'+impl+'.size', 'r')
+  modules = nil
+  while l=fmap.gets
+    if m=l.match(/^([^:]*):(.*)$/)
+      if m[1] == algo
+        modules = m[2].split(' ')
+      end
+    end
+  end
+  if modules==nil
+    puts("ERROR: no module list found for #{impl}/#{algo} !")
+    return nil
+  end
+  fmap.close()
   str = ''
   sum = 0
-  lb = fsize.readline()
-  loop do
-    return sum.to_s() +  str if fsize.eof()
-    lb = fsize.readline()
+  lb = fsize.gets()
+  while lb = fsize.gets()
     m = lb.match(/[\s]*([\w]*)[\s]*([\w]*)[\s]*([\w]*)[\s]*([\w]*)[\s]*([\w]*)[\s]*([\w_\/-]*)/)
-    name = m[6].match(/\/([^\/]*)$/)[1]
-    str += "<br> \n" + name+': '+m[4]
-    sum += m[4].to_i
+    name = m[6]+'.o'
+    if modules.include?(name)
+      str += "<br> \n" + name+': '+m[4]
+      sum += m[4].to_i
+    end
   end
+  fsize.close()
+  return sum
 end
 
-def process_hashfunction(fin, name, fsize)
+def process_hashfunction(fin, name, impl)
   lb = fin.readline()
   m = lb.match(/hashsize \(bits\):[\s]*([\d]*)/)
   if(!m)
@@ -89,9 +106,9 @@ def process_hashfunction(fin, name, fsize)
   s1 = (initstack>nextblockstack)?initstack:nextblockstack
   s2 = (lastblockstack>convstack)?lastblockstack:convstack
   stack = (s1>s2)?s1:s2  
-  size = get_size_string(fsize)
-  printf("| %20s || %3s || %3s \n| %s \n| %4d || %4d || %4d || %4d ||" +
-         " %6d || %6d || %7.2f || %6d || || || \n|-\n" , 
+  size = get_size_string(impl, name)
+  printf("| %20s || %3s || %3s || %6d || %7d || %7d || %7d || %7d ||" +
+         " %7d || %7d || %9.2f || %7d || || || \n|-\n" , 
         name, $lang, $lang, size, ctxsize, stack, hashsize, blocksize, 
 	    inittime, nextblocktime, nextblocktime.to_f/(blocksize/8),
 		lastblocktime+convtime)
@@ -106,9 +123,7 @@ def process_file(fname)
   fin = File.open(fname, "r")
   $lang = "asm"
   $lang = "C" if fname.match(/_c.txt$/)
-  algo = fname.match(/.([^.]*).txt$/)[1]
-  size_filename = 'size_log/'+algo+'.size'
-  fsize = File.open(size_filename, "r")
+  impl = fname.match(/([^.]*).txt$/)[1]
   begin
     begin
 	  if fin.eof()
@@ -122,7 +137,7 @@ def process_file(fname)
     type = m[1]
     if $handlers[type] != 0
     #  handlers[type](fin, name)
-      process_hashfunction(fin, name, fsize)
+      process_hashfunction(fin, name, impl)
     else
       printf("ERROR: unsupported type: %s !\n", type)
     end	
