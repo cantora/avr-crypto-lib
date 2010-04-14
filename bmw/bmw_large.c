@@ -30,10 +30,10 @@
 #include <avr/pgmspace.h>
 #include "bmw_large.h"
 
-#define SHL64(a,n) ((a)<<(n))
-#define SHR64(a,n) ((a)>>(n))
-#define ROTL64(a,n) (((a)<<(n))|((a)>>(64-(n))))
-#define ROTR64(a,n) (((a)>>(n))|((a)<<(64-(n))))
+#define SHL64(a,n)  shiftl64(a,n)
+#define SHR64(a,n)  shiftr64(a,n)
+#define ROTL64(a,n) rotl64(a,n)
+#define ROTR64(a,n) rotr64(a,n)
 
 #define TWEAK   1
 #define BUG24   0
@@ -74,6 +74,26 @@
  #define ctx_dump(x)
  #define dump_x(a,b,c)
 #endif
+
+static
+uint64_t rotl64(uint64_t a, uint8_t r){
+	return (a<<r)|(a>>(64-r));
+}
+
+static
+uint64_t rotr64(uint64_t a, uint8_t r){
+	return (a>>r)|(a<<(64-r));
+}
+
+static
+uint64_t shiftl64(uint64_t a, uint8_t r){
+	return (a<<r);
+}
+
+static
+uint64_t shiftr64(uint64_t a, uint8_t r){
+	return (a>>r);
+}
 
 static
 uint64_t bmw_large_s0(uint64_t x){

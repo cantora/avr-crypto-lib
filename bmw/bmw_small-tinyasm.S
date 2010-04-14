@@ -109,13 +109,22 @@ s2:  .byte 2, 1,12,25
 s3:  .byte 2, 2,15,29
 s4:  .byte 1, 0, 0, 0
 s5:  .byte 2, 0, 0, 0
-
-eor_r22_in_r16:
-	eor r16, r22
-	eor r17, r23
-	eor r18, r24
-	eor r19, r25
-	ret
+/*
+s0:  .byte 0x34, 19
+s1:  .byte 0x28, 23
+s2:  .byte 0x9C, 25
+s3:  .byte 0xAF, 29
+s4:  .byte 0x00,  0
+s5:  .byte 0x80,  0
+*/
+acc2 =  8
+acc3 =  9
+h0   = 10
+h1   = 11
+m0   = 12
+m1   = 13
+acc0 = 14
+acc1 = 15
 
 /*
   param x: r22:r23:r24:25
@@ -123,8 +132,10 @@ eor_r22_in_r16:
 */
 sn:
 	push_range 2, 5
-	push r17
-	push r19
+	push acc0
+	push acc1
+	push acc2
+	push acc3
 	ldi r30, lo8(s_table)
 	ldi r31, hi8(s_table)
 	lsl r20
@@ -135,30 +146,32 @@ sn:
 	movw r4, r24
 	lpm r20, Z+
 	rcall shiftright32
-	movw r16, r22
-	movw r18, r24
+	movw acc0, r22
+	movw acc2, r24
 ;---
 	movw r22, r2
 	movw r24, r4
 	lpm r20, Z+
 	rcall shiftleft32
-	rcall eor_r22_in_r16
+	rcall eor32_to_acc
 ;---
 	movw r22, r2
 	movw r24, r4
 	lpm r20, Z+
 	rcall rotateleft32
-	rcall eor_r22_in_r16
+	rcall eor32_to_acc
 ;---
 	movw r22, r2
 	movw r24, r4
 	lpm r20, Z+
 	rcall rotateleft32
-	rcall eor_r22_in_r16
-	movw r22, r16
-	movw r24, r18
-	pop r19
-	pop r17
+	rcall eor32_to_acc
+	movw r22, acc0
+	movw r24, acc2
+	pop acc3
+	pop acc2
+	pop acc1
+	pop acc0
 	pop_range 2, 5
 	ret
 
@@ -222,6 +235,21 @@ add_X_to_32:
 	ld r0, X+
 	adc r25, r0
 	ret
+
+store_acc_to_dec_X:
+	st -X, acc3
+	st -X, acc2
+	st -X, acc1
+	st -X, acc0
+	ret
+
+store32_to_X:
+	st X+, r22
+	st X+, r23
+	st X+, r24
+	st X+, r25
+	ret
+
 /******************************************************************************/
 /*
   param q:  r28:r29 (Y)
@@ -230,28 +258,13 @@ add_X_to_32:
 */
 
 f0_hacktable:
-	.byte 0x03, 0x11
-	.byte 0xDD, 0xB3
-	.byte 0x2A, 0x79
-	.byte 0x07, 0xAA
-	.byte 0x51, 0xC2
-f0_indextable:
-	.byte 5*4,7*4,10*4,13*4,14*4
-;	.byte 0 ; just for alignment
-f0_s_table:
-	.byte 0,1,2,3,4
-	.byte 0,1,2,3,4
-	.byte 0,1,2,3,4
-;	.byte 0
+	.byte 0x03, 0x11, 5*4
+	.byte 0xDD, 0xB3, 7*4
+	.byte 0x2A, 0x79, 10*4
+	.byte 0x07, 0xAA, 13*4
+	.byte 0x51, 0xC2, 14*4
+	.byte 0 ; just for alignment
 
-
-/******************************************************************************/
-
-const_lut:
-	.long 0x55555550, 0x5aaaaaa5, 0x5ffffffa, 0x6555554f
-	.long 0x6aaaaaa4, 0x6ffffff9, 0x7555554e, 0x7aaaaaa3
-	.long 0x7ffffff8, 0x8555554d, 0x8aaaaaa2, 0x8ffffff7
-	.long 0x9555554c, 0x9aaaaaa1, 0x9ffffff6, 0xa555554b
 
 /*******************************************************************************
 * uint32_t addelment(uint8_t j, const uint32_t* m, const uint32_t* h){
@@ -337,17 +350,16 @@ addelement:
 	mov j, r24
 	movw h0, r20
 	movw m0, r22
-	lsl r24
-	lsl r24
-	mov r28, r24
-	ldi r30, lo8(const_lut)
-	ldi r31, hi8(const_lut)
-	add r30, r24
-	adc r31, r1
-	lpm acc0, Z+
-	lpm acc1, Z+
-	lpm acc2, Z+
-	lpm acc3, Z+
+	sbiw r26, 4
+	rcall load_acc_from_X
+	ldi r24, 0x55
+	add acc0, r24
+	adc acc1, r24
+	adc acc2, r24
+	ldi r24, 5
+	adc acc3, r24
+	rcall store_acc_to_dec_X
+	adiw r26, 4
 	clt
 	mov r20, j
 	rcall load_rotate_add_M
@@ -365,18 +377,18 @@ addelement:
 	movw r26, h0
 	add r26, j
 	adc r27, r1
-	ld r0, X+
-	eor acc0, r0
-	ld r0, X+
-	eor acc1, r0
-	ld r0, X+
-	eor acc2, r0
-	ld r0, X+
-	eor acc3, r0
+	rcall load32_from_X
+	rcall eor32_to_acc
 ;---
 	ret
 
 /******************************************************************************/
+load_sn_add:
+	rcall load32_from_X
+	rcall sn
+	rcall add32_to_acc
+	ret
+
 /*
   param q: r26:r27
   param m: r22:r23
@@ -399,11 +411,9 @@ expand1:
 	rcall expand_intro
 	ldi r19, 1
 10:
-	rcall load32_from_X
 	mov r20, r19
 	andi r20, 3
-	rcall sn
-	rcall add32_to_acc
+	rcall load_sn_add
 	inc r19
 	cpi r19, 17
 	brne 10b
@@ -418,8 +428,14 @@ expand1:
   param j: r24
 */
 
+f2_1_shift_table:
+	.byte 0x2B, 0x64, 0x66, 0x03, 0x51, 0x55, 0x87, 0x55
+f2_2_shift_table:
+	.byte (2<<1), (7<<1), (4<<1), (3<<1), (4<<1)+1, (6<<1)+1, (6<<1)
+
 expand2_rot_table:
-	.byte 3,7,13,16,19,23,27,0
+	.byte 3,7,13,16,19,23,27
+;	.byte 0 ; just for alignment
 
 expand2:
 	rcall expand_intro
@@ -436,18 +452,12 @@ expand2:
 	dec r19
 	brne 10b
 	ldi r20, 4
-	rcall load32_from_X
-	rcall sn
-	rcall add32_to_acc
+	rcall load_sn_add
 	ldi r20, 5
-	rcall load32_from_X
-	rcall sn
-	rcall add32_to_acc
+	rcall load_sn_add
 expand2_exit:
-	st X+, acc0
-	st X+, acc1
-	st X+, acc2
-	st X+, acc3
+	adiw r26, 4
+	rcall store_acc_to_dec_X
 	ret
 
 /******************************************************************************/
@@ -469,12 +479,6 @@ expand2_exit:
   param m: r22:r23
   param h: r20:r21
 */
-f2_1_shift_table:
-	.byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-	.byte 0x2B, 0x64, 0x66, 0x03, 0x51, 0x55, 0x87, 0x55
-f2_2_shift_table:
-	.byte (2<<1), (7<<1), (4<<1), (3<<1), (4<<1)+1, (6<<1)+1, (6<<1)
-	.byte 0 ; just for alignment
 
 /******************************************************************************/
 /*
@@ -513,6 +517,13 @@ bmw256_nextBlock:
 	push_range 28, 29
 	push_range  2, 17
 	stack_alloc_large 32*4, r28, r29
+	ldi r16, 0x4f
+	push r16
+	ldi r16, 0xff
+	push r16
+	push r16
+	ldi r16, 0xfb
+	push r16
 	adiw r28, 1
 ;	push_range 28, 29 /* push Q */
 ;	push_range 22, 25 /* push M & H */
@@ -527,10 +538,7 @@ bmw256_nextBlock:
 	adc acc1, r1
 	adc acc2, r1
 	adc acc3, r1
-	st -X, acc3
-	st -X, acc2
-	st -X, acc1
-	st -X, acc0
+	rcall store_acc_to_dec_X
 	/* call f0 */
 	movw r30, r22
 	movw r26, r24
@@ -555,20 +563,18 @@ f0:
 30:
 	ldi r18, 16
 	/* load initial index */
-	ldi r30, lo8(f0_indextable-1)
-	ldi r31, hi8(f0_indextable-1)
-	add r30, r19
-	adc r31, r1
-	lpm r16, Z
+
 	/* load values from hacktable */
-	ldi r30, lo8(f0_hacktable-2)
-	ldi r31, hi8(f0_hacktable-2)
-	lsl r19
-	add r30, r19
+	ldi r30, lo8(f0_hacktable-3)
+	ldi r31, hi8(f0_hacktable-3)
+	mov r16, r19
+	lsl r16
+	add r16, r19
+	add r30, r16
 	adc r31, r1
-	lsr r19
 	lpm r21, Z+
-	lpm r20, Z
+	lpm r20, Z+
+	lpm r16, Z+
 40:
 	;call add_hx_to_w
 add_hx_to_w:
@@ -584,14 +590,12 @@ add_hx_to_w:
 	rcall add_X_to_32
 	rjmp 500f
 300: /* substract */
-	ld r0, X+
-	sub r22, r0
-	ld r0, X+
-	sbc r23, r0
-	ld r0, X+
-	sbc r24, r0
-	ld r0, X+
-	sbc r25, r0
+	rcall load_acc_from_X
+	sub r22, acc0
+	sbc r23, acc1
+	sbc r24, acc2
+	sbc r25, acc3
+
 500:
 	rcall store32_to_Y
 	subi r16, -4
@@ -609,18 +613,19 @@ add_hx_to_w:
 	rcall memxor_short
 	sbiw r26, 60
 ;---
-	ldi r30, lo8(f0_s_table)
-	ldi r31, hi8(f0_s_table)
+	clr r17
 	ldi r21, 15
 	mov r8, r21
 50:
 	rcall load32_from_Y
 	sbiw r28, 4
-	lpm r20, Z+
-	movw r2, r30
+	mov r20, r17
 	rcall sn
-	movw r30, r2
-
+	inc r17
+	cpi r17, 5
+	brne 52f
+	clr r17
+52:
 	rcall add_X_to_32
 	rcall store32_to_Y
 
@@ -630,22 +635,19 @@ add_hx_to_w:
 	rcall load32_from_Y
 	clr r20
 	rcall sn
-	movw r30, r2
 	movw r26, h0
 	rcall add_X_to_32
 	sbiw r26, 4
-	st -Y, r25
-	st -Y, r24
-	st -Y, r23
-	st -Y, r22
+	sbiw r28, 4
+	rcall store32_to_Y
+	sbiw r28, 4
 	sbiw r28, 15*4
 	movw r20, h0
 	movw r22, m0
 
 	/* call f1*/
-	movw r24, r28
+	movw r2, r28
 f1:
-	movw r2, r24
 	movw r4, r22
 	movw r6, r20
 	movw r26, r2
@@ -735,10 +737,14 @@ f2:
 	ld acc2, Y+
 	ld acc3, Y+
 ;---
-	ldi r30, lo8(f2_1_shift_table-1)
-	ldi r31, hi8(f2_1_shift_table-1)
 	movw r22, xh0
 	movw r24, xh2
+	cpi r17, 9
+	brge 15f
+	clr r1
+	rjmp 26f
+15:	ldi r30, lo8(f2_1_shift_table-9)
+	ldi r31, hi8(f2_1_shift_table-9)
 	add r30, r17
 	adc r31, r1
 	lpm r20, Z
@@ -854,7 +860,7 @@ f2:
 ;	ldi r22, 'H'
 ;	rcall printX
 ;--- END DBG
-	stack_free_large3 32*4
+	stack_free_large3 32*4+4
 	pop_range  2, 17
 	pop_range 28, 29
 	ret
@@ -1021,16 +1027,15 @@ bmw256_lastBlock:
 		pctx.buffer[i*4] = i+0xa0;
 	}
 */
-	ldi r18, 0xa0
-	ldi r19, 0xaa
+	ldi r22, 0xa0
+	ldi r23, 0xaa
+	ldi r24, 0xaa
+	ldi r25, 0xaa
 	movw r26, buf0
 500:
-	st X+, r18
-	st X+, r19
-	st X+, r19
-	st X+, r19
-	inc r18
-	sbrs r18, 4
+	rcall store32_to_X
+	inc r22
+	sbrs r22, 4
 	rjmp 500b
 /*	bmw_small_nextBlock((bmw_small_ctx_t*)&pctx, ctx->h);
 	memcpy(ctx->h, pctx.buffer, 64);
@@ -1230,10 +1235,7 @@ bmw224_init:
 	ldi r24, 0x01
 	ldi r25, 0x00
 bmw_small_init:
-	st X+, r22
-	st X+, r23
-	st X+, r24
-	st X+, r25
+	rcall store32_to_X
 	ldi r18, 16-1
 	ldi r20, 0x04
 1:
@@ -1241,10 +1243,7 @@ bmw_small_init:
 	adc r23, r20
 	adc r24, r20
 	adc r25, r20
-	st X+, r22
-	st X+, r23
-	st X+, r24
-	st X+, r25
+	rcall store32_to_X
 	dec r18
 	brne 1b
 	st X+, r1
