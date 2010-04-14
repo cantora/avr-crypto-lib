@@ -338,8 +338,8 @@ load_rotate_add_M:
 	inc r20
 	rcall rotateleft32
 	brts 10f
-	rcall add32_to_acc
-	ret
+	rjmp add32_to_acc
+;	ret
 10:	sub acc0, r22
 	sbc acc1, r23
 	sbc acc2, r24
@@ -386,8 +386,8 @@ addelement:
 load_sn_add:
 	rcall load32_from_X
 	rcall sn
-	rcall add32_to_acc
-	ret
+	rjmp add32_to_acc
+;	ret
 
 /*
   param q: r26:r27
@@ -397,11 +397,12 @@ load_sn_add:
 */
 
 expand_intro:
-	push_range 20, 27
-;	push r24
+
+	push_range 26, 27
+	push r24
 	rcall addelement
-;	pop r24
-	pop_range 20, 27
+	pop r24
+	pop_range 26, 27
 	lsl r24
 	lsl r24
 	add r26, r24
@@ -457,8 +458,8 @@ expand2:
 	rcall load_sn_add
 expand2_exit:
 	adiw r26, 4
-	rcall store_acc_to_dec_X
-	ret
+	rjmp store_acc_to_dec_X
+;	ret
 
 /******************************************************************************/
 /*
@@ -932,15 +933,14 @@ bmw256_lastBlock:
 	memcpy(pctx.buffer, block, (length_b+7)/8);
 	pctx.buffer[length_b>>3] |= 0x80 >> (length_b&0x07);
 */	movw r24, len0
+	ldi r23, 63
+	movw r26, blc0
 	lsr r25
 	ror r24
 	lsr r24
 	lsr r24
-	ldi r23, 63
-	sub r23, r24
-	movw r26, blc0
-	tst r24
 	breq 301f
+	sub r23, r24
 	/* copy (#r24) bytes to stack buffer */
 30: ld r20, X+
 	st Z+, r20
