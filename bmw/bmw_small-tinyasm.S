@@ -160,8 +160,7 @@ sn:
 	movw r4, r24
 	lpm r20, Z+
 	rcall shiftright32
-	movw acc0, r22
-	movw acc2, r24
+	rcall mov32_to_acc
 ;---
 	movw r22, r2
 	movw r24, r4
@@ -249,6 +248,16 @@ store32_to_X:
 	st X+, r25
 	ret
 
+mov32_to_acc:
+	movw acc0, r22
+	movw acc2, r24
+	ret
+
+eor_acc_from_Y_add_to_Z:
+	rcall load32_from_Y
+	rcall eor32_to_acc
+	rjmp  add_acc_to_Z
+
 /******************************************************************************/
 /*
   param q:  r28:r29 (Y)
@@ -332,6 +341,30 @@ load_rotate_add_M:
 	sbc acc3, r25
 	ret
 
+
+;---
+
+/******************************************************************************/
+load_sn_add:
+	rcall load32_from_X
+	rcall sn
+add32_to_acc:
+	add acc0, r22
+	adc acc1, r23
+	adc acc2, r24
+	adc acc3, r25
+	ret
+
+/*
+  param q: r26:r27
+  param m: r22:r23
+  param h: r20:r21
+  param j: r24
+*/
+
+expand_intro:
+	push_range 26, 27
+	push r24
 addelement:
 	mov j, r24
 	movw h0, r20
@@ -361,32 +394,8 @@ addelement:
 	add r26, j
 	adc r27, r1
 	rcall load32_from_X
-	rjmp eor32_to_acc
-;---
-
-/******************************************************************************/
-load_sn_add:
-	rcall load32_from_X
-	rcall sn
-add32_to_acc:
-	add acc0, r22
-	adc acc1, r23
-	adc acc2, r24
-	adc acc3, r25
-	ret
-
-/*
-  param q: r26:r27
-  param m: r22:r23
-  param h: r20:r21
-  param j: r24
-*/
-
-expand_intro:
-
-	push_range 26, 27
-	push r24
-	rcall addelement
+	rcall eor32_to_acc
+;--
 	pop r24
 	pop_range 26, 27
 	lsl r24
@@ -498,6 +507,11 @@ h1 = 5
 m0 = 6
 m1 = 7
 
+restore_f1:
+	movw r26, r2
+	movw r22, r4
+    movw r20, r6
+	ret
 
 .global bmw_small_nextBlock
 .global bmw224_nextBlock
@@ -644,23 +658,18 @@ f1:
 	movw r26, r2
 	clr r24
 	rcall expand1
-	movw r26, r2
-	movw r22, r4
-    movw r20, r6
+	rcall restore_f1
 	ldi r24, 1
 	rcall expand1
 	ldi r17, 2
-10:	movw r26, r2
-	movw r22, r4
-	movw r20, r6
+10: rcall restore_f1
 	mov r24, r17
 	rcall expand2
 	inc r17
 	sbrs r17, 4
 	rjmp 10b
+	rcall restore_f1
 	movw r24, r2
-	movw r22, r4
-	movw r20, r6
 
 
 	/* call f2 */
@@ -694,8 +703,7 @@ f2:
 	movw h0, r20
 	movw r28, r22
 	rcall load32_from_X
-	movw acc0, r22
-	movw acc2, r24
+	rcall mov32_to_acc
 	ldi r17, 15
 10:	rcall load32_from_X
 	rcall eor32_to_acc
@@ -723,10 +731,8 @@ f2:
 	movw r26, q16_0
 	ldi r17, 16
 10:
-	ld acc0, Y+
-	ld acc1, Y+
-	ld acc2, Y+
-	ld acc3, Y+
+	rcall load32_from_Y
+	rcall mov32_to_acc
 ;---
 	movw r22, xh0
 	movw r24, xh2
@@ -785,9 +791,7 @@ f2:
 	movw acc2, xl2
 	rcall load32_from_X
 	rcall eor32_to_acc
-	rcall load32_from_Y
-	rcall eor32_to_acc
-	rcall add_acc_to_Z
+	rcall eor_acc_from_Y_add_to_Z
 	dec r17
 	brne 10b
 	sbiw r26, 9*4 /* X points to q[23] */
@@ -795,9 +799,7 @@ f2:
 	eor acc1, xl0
 	eor acc2, xl1
 	eor acc3, xl2
-	rcall load32_from_Y
-	rcall eor32_to_acc
-	rcall add_acc_to_Z
+	rcall eor_acc_from_Y_add_to_Z
 ;---
 	sbiw r26, 8*4 /* X points to q[16] */
 	mov h0, r30
@@ -817,11 +819,9 @@ f2:
 	rjmp 21f
 20:	rcall shiftright32
 21:
-	rcall eor32_to_acc
-	rcall load32_from_Y
-	rcall eor32_to_acc
 	movw r30, h0
-	rcall add_acc_to_Z
+	rcall eor32_to_acc
+	rcall eor_acc_from_Y_add_to_Z
 	movw h0, r30
 	dec r17
 	brne 10b
@@ -835,8 +835,7 @@ f2:
 	rcall load32_from_X
 	mov r20, r18
 	rcall rotateleft32
-	movw acc0, r22
-	movw acc2, r24
+	rcall mov32_to_acc
 	rcall add_acc_to_Z
 	inc r18
 	cpi r17, 5
@@ -997,16 +996,13 @@ bmw256_lastBlock:
 	adc r23, r1
 	adc r24, r1
 	adc r25, r1
-	movw r30, buf0
-	adiw r30, 64-8
-	st Z+, r20
-	st Z+, r21
-	st Z+, r22
-	st Z+, r23
-	st Z+, r24
-	st Z+, r25
-	st Z+, r1
-	st Z+, r1
+	movw r26, buf0
+	adiw r26, 64-8
+	st X+, r20
+	st X+, r21
+	rcall store32_to_X
+	st X+, r1
+	st X+, r1
 	movw r24, ctx0
 	movw r22, buf0
 	rcall bmw_small_nextBlock
