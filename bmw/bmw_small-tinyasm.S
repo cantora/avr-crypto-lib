@@ -28,6 +28,11 @@
 
 #include "avr-asm-macros.S"
 
+acc2 =  8
+acc3 =  9
+acc0 = 14
+acc1 = 15
+
 /******************************************************************************/
 /*
   param a: r22:r23:r24:r25
@@ -91,6 +96,7 @@ bitrotateleft_1:
 	breq 20f
 10:
 	lsl r0
+rol32:
 	rol r22
 	rol r23
 	rol r24
@@ -101,6 +107,18 @@ bitrotateleft_1:
 
 
 /******************************************************************************/
+
+sn_stub:
+	movw r22, r2
+	movw r24, r4
+	lpm r20, Z+
+	rcall rotateleft32
+eor32_to_acc:
+	eor acc0, r22
+	eor acc1, r23
+	eor acc2, r24
+	eor acc3, r25
+	ret
 
 s_table:
 s0:  .byte 1, 3, 4,19
@@ -117,14 +135,10 @@ s3:  .byte 0xAF, 29
 s4:  .byte 0x00,  0
 s5:  .byte 0x80,  0
 */
-acc2 =  8
-acc3 =  9
 h0   = 10
 h1   = 11
 m0   = 12
 m1   = 13
-acc0 = 14
-acc1 = 15
 
 /*
   param x: r22:r23:r24:25
@@ -155,17 +169,9 @@ sn:
 	rcall shiftleft32
 	rcall eor32_to_acc
 ;---
-	movw r22, r2
-	movw r24, r4
-	lpm r20, Z+
-	rcall rotateleft32
-	rcall eor32_to_acc
-;---
-	movw r22, r2
-	movw r24, r4
-	lpm r20, Z+
-	rcall rotateleft32
-	rcall eor32_to_acc
+	rcall sn_stub
+	rcall sn_stub
+
 	movw r22, acc0
 	movw r24, acc2
 	pop acc3
@@ -236,13 +242,6 @@ add_X_to_32:
 	adc r25, r0
 	ret
 
-store_acc_to_dec_X:
-	st -X, acc3
-	st -X, acc2
-	st -X, acc1
-	st -X, acc0
-	ret
-
 store32_to_X:
 	st X+, r22
 	st X+, r23
@@ -290,20 +289,6 @@ m1   = 13
 acc0 = 14
 acc1 = 15
 
-add32_to_acc:
-	add acc0, r22
-	adc acc1, r23
-	adc acc2, r24
-	adc acc3, r25
-	ret
-
-eor32_to_acc:
-	eor acc0, r22
-	eor acc1, r23
-	eor acc2, r24
-	eor acc3, r25
-	ret
-
 load_acc_from_X:
 	ld acc0, X+
 	ld acc1, X+
@@ -327,6 +312,7 @@ add_acc_to_Z:
 	ret
 
 load_rotate_add_M:
+	mov r20, j
 	andi r20, 0x0f
 	mov r0, r20
 	lsl r0
@@ -361,33 +347,33 @@ addelement:
 	rcall store_acc_to_dec_X
 	adiw r26, 4
 	clt
-	mov r20, j
 	rcall load_rotate_add_M
-	mov r20, j
-	subi r20, -3
+	subi j, -3
 	rcall load_rotate_add_M
-	mov r20, j
 	set
-	subi r20, -10
+	subi j, -7
 	rcall load_rotate_add_M
 	lsl j
 	lsl j
-	subi j, -7*4
+	subi j, -7*4+10*4
 	andi j, 0x3f
 	movw r26, h0
 	add r26, j
 	adc r27, r1
 	rcall load32_from_X
-	rcall eor32_to_acc
+	rjmp eor32_to_acc
 ;---
-	ret
 
 /******************************************************************************/
 load_sn_add:
 	rcall load32_from_X
 	rcall sn
-	rjmp add32_to_acc
-;	ret
+add32_to_acc:
+	add acc0, r22
+	adc acc1, r23
+	adc acc2, r24
+	adc acc3, r25
+	ret
 
 /*
   param q: r26:r27
@@ -458,8 +444,12 @@ expand2:
 	rcall load_sn_add
 expand2_exit:
 	adiw r26, 4
-	rjmp store_acc_to_dec_X
-;	ret
+store_acc_to_dec_X:
+	st -X, acc3
+	st -X, acc2
+	st -X, acc1
+	st -X, acc0
+	ret
 
 /******************************************************************************/
 /*
@@ -998,11 +988,9 @@ bmw256_lastBlock:
 	rcall load32_from_Z_stub
 410:
 	clr r25
+	ldi r20, 1
 	lsl r21
-	rol r22
-	rol r23
-	rol r24
-	rol r25
+	rcall rol32
 	mov r20, len0
 	add r21, len1
 	adc r22, r1
@@ -1068,10 +1056,9 @@ bmw256_lastBlock:
 */
 .global bmw224_ctx2hash
 bmw224_ctx2hash:
-	movw r26, r24
 	movw r30, r22
 	adiw r30, 9*4
-	ldi r22, 28
+	ldi r18, 28
 	rjmp 1f
 
 /*******************************************************************************
@@ -1084,14 +1071,13 @@ bmw224_ctx2hash:
 */
 .global bmw256_ctx2hash
 bmw256_ctx2hash:
-	movw r26, r24
 	movw r30, r22
 	adiw r30, 8*4
-	ldi r22, 32
-1:
-	ld r23, Z+
+	ldi r18, 32
+1:	movw r26, r24
+1:  ld r23, Z+
 	st X+, r23
-	dec r22
+	dec r18
 	brne 1b
 	ret
 
@@ -1229,36 +1215,30 @@ c2h_lut:
 */
 .global bmw224_init
 bmw224_init:
-	movw r26, r24
-	ldi r22, 0x03
-	ldi r23, 0x02
-	ldi r24, 0x01
-	ldi r25, 0x00
+	ldi r22, 0x00
+	ldi r23, 0x40
 bmw_small_init:
-	rcall store32_to_X
-	ldi r18, 16-1
-	ldi r20, 0x04
-1:
-	add r22, r20
-	adc r23, r20
-	adc r24, r20
-	adc r25, r20
-	rcall store32_to_X
-	dec r18
-	brne 1b
-	st X+, r1
-	st X+, r1
-	st X+, r1
-	st X+, r1
+	movw r26, r24
+	adiw r26, 4
+10:
+	st -X, r22
+	inc r22
+	mov r20, r22
+	andi r20, 0x3
+	brne 10b
+	adiw r26, 8
+20: cp r22, r23
+	brne 10b
+	st -X, r1
+	st -X, r1
+	st -X, r1
+	st -X, r1
 	ret
 
 .global bmw256_init
 bmw256_init:
-	movw r26, r24
-	ldi r22, 0x43
-	ldi r23, 0x42
-	ldi r24, 0x41
-	ldi r25, 0x40
+	ldi r22, 0x40
+	ldi r23, 0x80
 	rjmp bmw_small_init
 
 
