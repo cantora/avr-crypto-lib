@@ -127,14 +127,7 @@ s2:  .byte 2, 1,12,25
 s3:  .byte 2, 2,15,29
 s4:  .byte 1, 0, 0, 0
 s5:  .byte 2, 0, 0, 0
-/*
-s0:  .byte 0x34, 19
-s1:  .byte 0x28, 23
-s2:  .byte 0x9C, 25
-s3:  .byte 0xAF, 29
-s4:  .byte 0x00,  0
-s5:  .byte 0x80,  0
-*/
+
 h0   = 10
 h1   = 11
 m0   = 12
@@ -177,8 +170,7 @@ sn:
 	pop acc2
 	pop acc1
 	pop acc0
-	pop_range 2, 5
-	ret
+	rjmp pop5
 
 /******************************************************************************/
 /*
@@ -506,21 +498,28 @@ h0 = 4
 h1 = 5
 m0 = 6
 m1 = 7
+ctx0 =   2
+ctx1 =   3
+msg0 =   4
+msg1 =   5
 
 restore_f1:
 	movw r26, r2
 	movw r22, r4
     movw r20, r6
 	ret
-
+bmw_small_nextBlock_early:
+	movw r24, ctx0
+	movw r22, msg0
 .global bmw_small_nextBlock
 .global bmw224_nextBlock
 .global bmw256_nextBlock
 bmw_small_nextBlock:
 bmw224_nextBlock:
 bmw256_nextBlock:
+	push_range  2, 7
 	push_range 28, 29
-	push_range  2, 17
+	push_range  8, 17
 	stack_alloc_large 32*4, r28, r29
 	ldi r16, 0x4f
 	push r16
@@ -851,8 +850,15 @@ f2:
 ;	rcall printX
 ;--- END DBG
 	stack_free_large3 32*4+4
-	pop_range  2, 17
+	pop_range 10, 17
+pop9:
+	pop_range 8, 9
+pop28:
 	pop_range 28, 29
+pop7:
+	pop_range 6, 7
+pop5:
+	pop_range 2, 5
 	ret
 
 /******************************************************************************/
@@ -901,9 +907,7 @@ bmw256_lastBlock:
 1:
 	cpi len1, hi8(512)
 	brlo 2f
-	movw r24, ctx0
-	movw r22, blc0
-	rcall bmw_small_nextBlock
+	rcall bmw_small_nextBlock_early
 	ldi r24, 64
 	add blc0, r24
 	adc blc1, r1
@@ -965,9 +969,8 @@ bmw256_lastBlock:
 	breq 400f
 	cpi len0, 192
 	brlo 400f
-	movw r24, ctx0
-	movw r22, buf0
-	rcall bmw_small_nextBlock
+	movw blc0, buf0
+	rcall bmw_small_nextBlock_early
 	movw r26, buf0
 	ldi r20, 64-8
 350:
@@ -1003,9 +1006,8 @@ bmw256_lastBlock:
 	rcall store32_to_X
 	st X+, r1
 	st X+, r1
-	movw r24, ctx0
-	movw r22, buf0
-	rcall bmw_small_nextBlock
+	movw blc0, buf0
+	rcall bmw_small_nextBlock_early
 /*	memset(pctx.buffer, 0xaa, 64);
 	for(i=0; i<16;++i){
 		pctx.buffer[i*4] = i+0xa0;
@@ -1024,9 +1026,9 @@ bmw256_lastBlock:
 /*	bmw_small_nextBlock((bmw_small_ctx_t*)&pctx, ctx->h);
 	memcpy(ctx->h, pctx.buffer, 64);
 */
-	movw r24, buf0
-	movw r22, ctx0
-	rcall bmw_small_nextBlock
+    movw r24, buf0
+    movw r22, ctx0
+    rcall bmw_small_nextBlock
 	ldi r18, 64
 	movw r26, ctx0
 	movw r30, buf0
@@ -1037,9 +1039,7 @@ bmw256_lastBlock:
 	brne 600b
 
 	stack_free_large 68
-	pop_range 28, 29
-	pop_range 2, 7
-	ret
+	rjmp pop28
 
 
 /*******************************************************************************
@@ -1106,9 +1106,9 @@ dst0 =  10
 dst1 =  11
 .global bmw256
 bmw256:
-	push r16
-	ldi r16, 1
+	set
 	rjmp bmw_small_all
+
 
 /*******************************************************************************
 * void bmw224(void* dest, const void* msg, uint32_t length_b){
@@ -1139,15 +1139,21 @@ dst0 =   6
 dst1 =   7
 .global bmw224
 bmw224:
-	push r16
-	clr r16
+	clt
+	rjmp bmw_small_all
+
 
 bmw_small_all:
-	push_range 2, 9
+	push_range 2, 7
 	push_range 28, 29
+	push_range 8, 9
+	push r16
 	stack_alloc_large 64+4
 	adiw r30, 1
-	movw ctx0, r30
+	clr r16
+	brtc 10f
+	inc r16
+10:	movw ctx0, r30
 	movw dst0, r24
 	movw msg0, r22
 	movw len0, r18
@@ -1162,9 +1168,7 @@ bmw_small_all:
 	mov r18, len2
 	or  r18, len3
 	breq 50f
-	movw r24, ctx0
-	movw r22, msg0
-	rcall bmw_small_nextBlock
+	rcall bmw_small_nextBlock_early
 	subi len1, 2
 	sbc len2, r1
 	sbc len3, r1
@@ -1185,10 +1189,8 @@ bmw_small_all:
 	adc r31, r1
 	icall
 	stack_free_large 64+4
-	pop_range 28, 29
-	pop_range 2, 9
 	pop r16
-	ret
+	rjmp pop9
 
 init_lut:
 	rjmp bmw224_init
