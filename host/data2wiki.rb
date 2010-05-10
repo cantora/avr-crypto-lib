@@ -1,5 +1,5 @@
 #!/usr/bin/ruby
-# performnce to wiki
+# performance to wiki
 
 =begin
     This file is part of the AVR-Crypto-Lib.

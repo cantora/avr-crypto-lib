@@ -33,6 +33,8 @@ acc3 =  9
 acc0 = 14
 acc1 = 15
 
+#define DEBUG 0
+
 /******************************************************************************/
 /*
   param a: r22:r23:r24:r25
@@ -178,10 +180,11 @@ sn:
   param src:  r30:r31 (Z)
   param len:  r20
 */
-memxor_short:
+memxor_64:
 ;	tst r20
 ;	breq memxor_exit
 	ldi r20, 64
+memxor:
 10: ld r21, X
 	ld r22, Z+
 	eor r21, r22
@@ -245,11 +248,6 @@ mov32_to_acc:
 	movw acc2, r24
 	ret
 
-eor_acc_from_Y_add_to_Z:
-	rcall load32_from_Y
-	rcall eor32_to_acc
-	rjmp  add_acc_to_Z
-
 /******************************************************************************/
 /*
   param q:  r28:r29 (Y)
@@ -297,19 +295,19 @@ load_acc_from_X:
 	ld acc3, X+
 	ret
 
-add_acc_to_Z:
-	ld r0, Z
+add_acc_to_X:
+	ld r0, X
 	add r0, acc0
-	st Z+, r0
-	ld r0, Z
+	st X+, r0
+	ld r0, X
 	adc r0, acc1
-	st Z+, r0
-	ld r0, Z
+	st X+, r0
+	ld r0, X
 	adc r0, acc2
-	st Z+, r0
-	ld r0, Z
+	st X+, r0
+	ld r0, X
 	adc r0, acc3
-	st Z+, r0
+	st X+, r0
 	ret
 
 load_rotate_add_M:
@@ -417,13 +415,14 @@ expand1:
 */
 
 f2_1_shift_table:
-	.byte 0x2B, 0x64, 0x66, 0x03, 0x51, 0x55, 0x87, 0x55
+;	.byte 0x2B, 0x64, 0x66, 0x03, 0x51, 0x55, 0x87, 0x55
+	.byte 0x55, 0x87, 0x55, 0x51, 0x03, 0x66, 0x64, 0x2B
 f2_2_shift_table:
-	.byte (2<<1), (7<<1), (4<<1), (3<<1), (4<<1)+1, (6<<1)+1, (6<<1)
-
+;	.byte (2<<1), (7<<1), (4<<1), (3<<1), (4<<1)+1, (6<<1)+1, (6<<1)
+	.byte (8<<1)+1, (6<<1), (6<<1)+1, (4<<1)+1, (3<<1), (4<<1), (7<<1), (2<<1)
 expand2_rot_table:
 	.byte 3,7,13,16,19,23,27
-;	.byte 0 ; just for alignment
+	.byte 0 ; just for alignment
 
 expand2:
 	rcall expand_intro
@@ -552,7 +551,7 @@ f0:
 	movw m0, r30
 	/* xor m into h */
 ;	ldi r20, 64
-	rcall memxor_short
+	rcall memxor_64
 	movw r30, m0
 	movw r26, h0
 
@@ -614,7 +613,7 @@ add_hx_to_w:
 ;	ldi r20, 64
 	movw r26, h0
 	movw r30, m0
-	rcall memxor_short
+	rcall memxor_64
 	sbiw r26, 60
 ;---
 	clr r17
@@ -695,14 +694,17 @@ h0   =  18
 h1   =  19
 f2:
 	movw r26, r24
-	/* calc XL */
+	/* calc XL & XH */
 	adiw r26, 63
 	adiw r26,  1
 	movw q16_0, r26
 	movw h0, r20
+;---
+;	push h0
+;	push h1
+;---
 	movw r28, r22
-	rcall load32_from_X
-	rcall mov32_to_acc
+	rcall load_acc_from_X
 	ldi r17, 15
 10:	rcall load32_from_X
 	rcall eor32_to_acc
@@ -725,13 +727,21 @@ f2:
 ;	rcall print32
 ;	pop_range 22, 25
 ;--- END DBG
-
+	 /* copy m(Y) into h */
+	movw r26, h0
+	ldi r22, 64
+10:
+	ld r23, Y+
+	st X+, r23
+	dec r22
+	brne 10b
 ;--- /* calc first half of h0..h15 */
-	movw r26, q16_0
+	movw r28, q16_0
+	movw r26, h0
+	ldi r30, lo8(f2_1_shift_table)
+	ldi r31, hi8(f2_1_shift_table)
 	ldi r17, 16
 10:
-	rcall load32_from_Y
-	rcall mov32_to_acc
 ;---
 	movw r22, xh0
 	movw r24, xh2
@@ -739,11 +749,7 @@ f2:
 	brge 15f
 	clr r1
 	rjmp 26f
-15:	ldi r30, lo8(f2_1_shift_table-9)
-	ldi r31, hi8(f2_1_shift_table-9)
-	add r30, r17
-	adc r31, r1
-	lpm r20, Z
+15:	lpm r20, Z+
 	mov r1, r20
 	andi r20, 0x0f
 	clt
@@ -756,9 +762,9 @@ f2:
 	rcall shiftright32
 	rjmp 26f
 25:	rcall shiftleft32
-26: rcall eor32_to_acc
+26: rcall mov32_to_acc
 ;---
-	rcall load32_from_X
+	rcall load32_from_Y
 	mov r20, r1
 	clr r1
 	swap r20
@@ -769,80 +775,81 @@ f2:
 27:	rcall shiftright32
 28:	rcall eor32_to_acc
 ;---
-	movw r30, h0
-	st Z+, acc0
-	st Z+, acc1
-	st Z+, acc2
-	st Z+, acc3
-	movw h0, r30
+	ld r0, X
+	eor r0, acc0
+	st X+, r0
+	ld r0, X
+	eor r0, acc1
+	st X+, r0
+	ld r0, X
+	eor r0, acc2
+	st X+, r0
+	ld r0, X
+	eor r0, acc3
+	st X+, r0
 ;---
 	dec r17
 	brne 10b
 ;-----
-	sbiw r26, 4*8 /* X points to q[24] */
-	movw r28, r26
+	sbiw r28, 4*8 /* Y points to q[24] */
+	movw r30, r28
 	sbiw r28, 63
 	sbiw r28, 33 /* Y points to q[0] */
-	sbiw r30, 63
-	sbiw r30,  1 /* Z points to h0 */
-	ldi r17, 8
-10:	movw acc0, xl0
-	movw acc2, xl2
-	rcall load32_from_X
-	rcall eor32_to_acc
-	rcall eor_acc_from_Y_add_to_Z
-	dec r17
-	brne 10b
-	sbiw r26, 9*4 /* X points to q[23] */
-	rcall load_acc_from_X
-	eor acc1, xl0
-	eor acc2, xl1
-	eor acc3, xl2
-	rcall eor_acc_from_Y_add_to_Z
-;---
-	sbiw r26, 8*4 /* X points to q[16] */
-	mov h0, r30
-	ldi r17, 7
-10:
-	ldi r30, lo8(f2_2_shift_table-1)
-	ldi r31, hi8(f2_2_shift_table-1)
-	add r30, r17
-	adc r31, r1
-	lpm r20, Z
-	rcall load_acc_from_X
-	movw r22, xl0
+	movw r26, r28
+	ldi r20, 8*4
+	/* xor q[24..31] into q[0..7] */
+	rcall memxor
+	/* xor q[23] into q[8] */
+	sbiw r30, 9*4
+	ldi r20, 4
+	rcall memxor
+	/* xor q[16..22] into q[9..15] */
+	sbiw r30, 8*4
+	ldi r20, 7*4
+	rcall memxor
+
+	movw r26, h0
+	ldi r17, 15
+	ldi r30, lo8(f2_2_shift_table)
+	ldi r31, hi8(f2_2_shift_table)
+10:	movw r22, xl0
 	movw r24, xl2
+	sbrc r17, 3
+	rjmp 20f
+	lpm r20, Z+
 	lsr r20
-	brcc 20f
+	brcs 15f
+	rcall shiftright32
+	rjmp 20f
+15:
 	rcall shiftleft32
-	rjmp 21f
-20:	rcall shiftright32
-21:
-	movw r30, h0
+20:
+	rcall mov32_to_acc
+	rcall load32_from_Y
 	rcall eor32_to_acc
-	rcall eor_acc_from_Y_add_to_Z
-	movw h0, r30
+	rcall add_acc_to_X
 	dec r17
-	brne 10b
+	brpl 10b
 ;-----
-	sbiw r30, 8*4 /* Z points to h8 */
-	movw r26, r30
-	sbiw r26, 4*4 /* X points to h4 */
+	sbiw r26, 8*4 /* X points to h8 */
+	movw r28, r26
+	sbiw r28, 4*4 /* Y points to h4 */
 	ldi r17, 8
 	ldi r18, 9
 10:
-	rcall load32_from_X
+	rcall load32_from_Y
 	mov r20, r18
 	rcall rotateleft32
 	rcall mov32_to_acc
-	rcall add_acc_to_Z
+	rcall add_acc_to_X
 	inc r18
 	cpi r17, 5
 	brne 20f
-	sbiw r26, 8*4
+	sbiw r28, 8*4
 20:	dec r17
 	brne 10b
 
+exit:
 ;--- DBG
 ;	pop r25
 ;	pop r24
