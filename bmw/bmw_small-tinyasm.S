@@ -255,13 +255,21 @@ mov32_to_acc:
   param m:  r30:r31 (Z)
 */
 
+f2_1_shift_table:
+;	.byte 0x2B, 0x64, 0x66, 0x03, 0x51, 0x55, 0x87, 0x55
+	.byte 0x55, 0x87, 0x55, 0x51, 0x03, 0x66, 0x64, 0x2B
+f2_2_shift_table:
+;	.byte (2<<1), (7<<1), (4<<1), (3<<1), (4<<1)+1, (6<<1)+1, (6<<1)
+	.byte (8<<1)+1, (6<<1), (6<<1)+1, (4<<1)+1, (3<<1), (4<<1), (7<<1), (2<<1)
+expand2_rot_table:
+	.byte 3,7,13,16,19,23,27
+
 f0_hacktable:
 	.byte 0x03, 0x11, 5*4
 	.byte 0xDD, 0xB3, 7*4
 	.byte 0x2A, 0x79, 10*4
 	.byte 0x07, 0xAA, 13*4
 	.byte 0x51, 0xC2, 14*4
-	.byte 0 ; just for alignment
 
 
 /*******************************************************************************
@@ -414,15 +422,6 @@ expand1:
   param j: r24
 */
 
-f2_1_shift_table:
-;	.byte 0x2B, 0x64, 0x66, 0x03, 0x51, 0x55, 0x87, 0x55
-	.byte 0x55, 0x87, 0x55, 0x51, 0x03, 0x66, 0x64, 0x2B
-f2_2_shift_table:
-;	.byte (2<<1), (7<<1), (4<<1), (3<<1), (4<<1)+1, (6<<1)+1, (6<<1)
-	.byte (8<<1)+1, (6<<1), (6<<1)+1, (4<<1)+1, (3<<1), (4<<1), (7<<1), (2<<1)
-expand2_rot_table:
-	.byte 3,7,13,16,19,23,27
-	.byte 0 ; just for alignment
 
 expand2:
 	rcall expand_intro
