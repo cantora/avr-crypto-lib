@@ -509,9 +509,7 @@ restore_f1:
 bmw_small_nextBlock_early:
 	movw r24, ctx0
 	movw r22, msg0
-.global bmw_small_nextBlock
 .global bmw224_nextBlock
-.global bmw256_nextBlock
 bmw_small_nextBlock:
 bmw224_nextBlock:
 bmw256_nextBlock:
@@ -885,9 +883,7 @@ load32_from_Z_stub:
   param len:  r20:r21
 */
 
-.global bmw_small_lastBlock
 .global bmw224_lastBlock
-.global bmw256_lastBlock
 bmw_small_lastBlock:
 bmw224_lastBlock:
 bmw256_lastBlock:
@@ -1053,59 +1049,12 @@ bmw224_ctx2hash:
 	movw r30, r22
 	adiw r30, 9*4
 	ldi r18, 28
-	rjmp 1f
-
-/*******************************************************************************
-* void bmw256_ctx2hash(void* dest, const bmw256_ctx_t* ctx){
-*	memcpy(dest, &(ctx->h[8]), 256/8);
-* }
-*
-* param dest:  r24:r25
-* param ctx:   r22:r23
-*/
-.global bmw256_ctx2hash
-bmw256_ctx2hash:
-	movw r30, r22
-	adiw r30, 8*4
-	ldi r18, 32
 1:	movw r26, r24
 1:  ld r23, Z+
 	st X+, r23
 	dec r18
 	brne 1b
 	ret
-
-/*******************************************************************************
-* void bmw256(void* dest, const void* msg, uint32_t length_b){
-*	bmw_small_ctx_t ctx;
-*	bmw256_init(&ctx);
-*	while(length_b>=BMW_SMALL_BLOCKSIZE){
-*		bmw_small_nextBlock(&ctx, msg);
-*		length_b -= BMW_SMALL_BLOCKSIZE;
-*		msg = (uint8_t*)msg + BMW_SMALL_BLOCKSIZE_B;
-*	}
-*	bmw_small_lastBlock(&ctx, msg, length_b);
-*	bmw256_ctx2hash(dest, &ctx);
-* }
-*
-* param dest:     r24:r25
-* param msg:      r22:r23
-* param length_b: r18:r21
-*/
-ctx0 =   2
-ctx1 =   3
-msg0 =   4
-msg1 =   5
-len0 =   6
-len1 =   7
-len2 =   8
-len3 =   9
-dst0 =  10
-dst1 =  11
-.global bmw256
-bmw256:
-	set
-	rjmp bmw_small_all
 
 
 /*******************************************************************************
@@ -1137,30 +1086,17 @@ dst0 =   6
 dst1 =   7
 .global bmw224
 bmw224:
-	clt
-
-
-bmw_small_all:
 	push_range 2, 7
 	push_range 28, 29
 	push_range 8, 9
-	push r16
 	stack_alloc_large 64+4
-	adiw r30, 1
-	clr r16
-	brtc 10f
-	inc r16
 10:	movw ctx0, r30
 	movw dst0, r24
 	movw msg0, r22
 	movw len0, r18
 	movw len2, r20
 	movw r24, ctx0
-	ldi r30, pm_lo8(init_lut)
-	ldi r31, pm_hi8(init_lut)
-	add r30, r16
-	adc r31, r1
-	icall
+	rcall bmw224_init
 20:
 	mov r18, len2
 	or  r18, len3
@@ -1180,21 +1116,9 @@ bmw_small_all:
 	rcall bmw_small_lastBlock
 	movw r24, dst0
 	movw r22, ctx0
-	ldi r30, pm_lo8(c2h_lut)
-	ldi r31, pm_hi8(c2h_lut)
-	add r30, r16
-	adc r31, r1
-	icall
+	rcall bmw224_ctx2hash
 	stack_free_large 64+4
-	pop r16
 	rjmp pop9
-
-init_lut:
-	rjmp bmw224_init
-	rjmp bmw256_init
-c2h_lut:
-	rjmp bmw224_ctx2hash
-	rjmp bmw256_ctx2hash
 
 /*******************************************************************************
 * void bmw224_init(bmw224_ctx_t* ctx){
@@ -1212,7 +1136,6 @@ c2h_lut:
 bmw224_init:
 	ldi r22, 0x00
 	ldi r23, 0x40
-bmw_small_init:
 	movw r26, r24
 	adiw r26, 4
 10:
@@ -1229,12 +1152,6 @@ bmw_small_init:
 	st -X, r1
 	st -X, r1
 	ret
-
-.global bmw256_init
-bmw256_init:
-	ldi r22, 0x40
-	ldi r23, 0x80
-	rjmp bmw_small_init
 
 
 /******************************************************************************/

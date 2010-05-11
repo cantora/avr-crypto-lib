@@ -510,7 +510,6 @@ bmw_small_nextBlock_early:
 	movw r24, ctx0
 	movw r22, msg0
 .global bmw_small_nextBlock
-.global bmw224_nextBlock
 .global bmw256_nextBlock
 bmw_small_nextBlock:
 bmw224_nextBlock:
@@ -886,7 +885,6 @@ load32_from_Z_stub:
 */
 
 .global bmw_small_lastBlock
-.global bmw224_lastBlock
 .global bmw256_lastBlock
 bmw_small_lastBlock:
 bmw224_lastBlock:
@@ -1041,21 +1039,6 @@ bmw256_lastBlock:
 
 
 /*******************************************************************************
-* void bmw224_ctx2hash(void* dest, const bmw224_ctx_t* ctx){
-*	memcpy(dest, &(ctx->h[9]), 224/8);
-* }
-*
-* param dest:  r24:r25
-* param ctx:   r22:r23
-*/
-.global bmw224_ctx2hash
-bmw224_ctx2hash:
-	movw r30, r22
-	adiw r30, 9*4
-	ldi r18, 28
-	rjmp 1f
-
-/*******************************************************************************
 * void bmw256_ctx2hash(void* dest, const bmw256_ctx_t* ctx){
 *	memcpy(dest, &(ctx->h[8]), 256/8);
 * }
@@ -1102,10 +1085,6 @@ len2 =   8
 len3 =   9
 dst0 =  10
 dst1 =  11
-.global bmw256
-bmw256:
-	set
-	rjmp bmw_small_all
 
 
 /*******************************************************************************
@@ -1135,32 +1114,21 @@ len2 =   8
 len3 =   9
 dst0 =   6
 dst1 =   7
-.global bmw224
-bmw224:
-	clt
 
 
-bmw_small_all:
+.global bmw256
+bmw256:
 	push_range 2, 7
 	push_range 28, 29
 	push_range 8, 9
-	push r16
 	stack_alloc_large 64+4
-	adiw r30, 1
-	clr r16
-	brtc 10f
-	inc r16
 10:	movw ctx0, r30
 	movw dst0, r24
 	movw msg0, r22
 	movw len0, r18
 	movw len2, r20
 	movw r24, ctx0
-	ldi r30, pm_lo8(init_lut)
-	ldi r31, pm_hi8(init_lut)
-	add r30, r16
-	adc r31, r1
-	icall
+	rcall bmw256_init
 20:
 	mov r18, len2
 	or  r18, len3
@@ -1180,39 +1148,15 @@ bmw_small_all:
 	rcall bmw_small_lastBlock
 	movw r24, dst0
 	movw r22, ctx0
-	ldi r30, pm_lo8(c2h_lut)
-	ldi r31, pm_hi8(c2h_lut)
-	add r30, r16
-	adc r31, r1
-	icall
+	rcall bmw256_ctx2hash
 	stack_free_large 64+4
-	pop r16
 	rjmp pop9
 
-init_lut:
-	rjmp bmw224_init
-	rjmp bmw256_init
-c2h_lut:
-	rjmp bmw224_ctx2hash
-	rjmp bmw256_ctx2hash
-
-/*******************************************************************************
-* void bmw224_init(bmw224_ctx_t* ctx){
-*	uint8_t i;
-*	ctx->h[0] = 0x00010203;
-*	for(i=1; i<16; ++i){
-*		ctx->h[i] = ctx->h[i-1]+ 0x04040404;
-*	}
-*	ctx->counter=0;
-* }
-*
-* param ctx:  r24:r25
-*/
-.global bmw224_init
-bmw224_init:
-	ldi r22, 0x00
-	ldi r23, 0x40
-bmw_small_init:
+/******************************************************************************/
+.global bmw256_init
+bmw256_init:
+	ldi r22, 0x40
+	ldi r23, 0x80
 	movw r26, r24
 	adiw r26, 4
 10:
@@ -1229,12 +1173,6 @@ bmw_small_init:
 	st -X, r1
 	st -X, r1
 	ret
-
-.global bmw256_init
-bmw256_init:
-	ldi r22, 0x40
-	ldi r23, 0x80
-	rjmp bmw_small_init
 
 
 /******************************************************************************/
