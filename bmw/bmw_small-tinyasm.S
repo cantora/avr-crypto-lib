@@ -774,18 +774,10 @@ f2:
 27:	rcall shiftright32
 28:	rcall eor32_to_acc
 ;---
-	ld r0, X
-	eor r0, acc0
-	st X+, r0
-	ld r0, X
-	eor r0, acc1
-	st X+, r0
-	ld r0, X
-	eor r0, acc2
-	st X+, r0
-	ld r0, X
-	eor r0, acc3
-	st X+, r0
+	rcall load32_from_X
+	rcall eor32_to_acc
+	rcall store_acc_to_dec_X
+	adiw r26, 4
 ;---
 	dec r17
 	brne 10b
