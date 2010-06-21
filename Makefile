@@ -179,6 +179,8 @@ $(foreach algo, $(ALGORITHMS), $(eval $(call Speed_Template, \
 .PHONY: hash_speed
 hash_speed: $(foreach algo, $(HASHES), $(algo)_SPEED)
 
+.PHONY: blockcipher_speed
+blockcipher_speed: $(foreach algo, $(BLOCK_CIPHERS), $(algo)_SPEED)
 #-------------------------------------------------------------------------------
 
 
@@ -194,6 +196,9 @@ $(foreach algo, $(ALGORITHMS), $(eval $(call Size_Template, \
 
 .PHONY: hash_size
 hash_size: $(foreach algo, $(HASHES), $(algo)_SIZE)
+
+.PHONY: blockcipher_size
+blockcipher_size: $(foreach algo, $(BLOCK_CIPHERS), $(algo)_SIZE)
 
 #-------------------------------------------------------------------------------
 
@@ -277,27 +282,29 @@ info:
 	@echo "  auxiliary functions:"
 	@echo "    $(AUX)"
 	@echo " targets:"
-	@echo "  all           - all algorithm cores"
-	@echo "  cores         - all algorithm cores"
-	@echo "  listings      - all algorithm core listings"
-	@echo "  tests         - all algorithm test programs"
-	@echo "  stats         - all algorithm size statistics"
-	@echo "  blockciphers  - all blockcipher cores"
-	@echo "  streamciphers - all streamcipher cores"
-	@echo "  hashes        - all hash cores"
-	@echo "  macs          - all MAC cores"
-	@echo "  prngs         - all PRNG cores"
-	@echo "  all_testrun   - testrun all algorithms"
-	@echo "  hash_size     - measure size of all hash functions"
-	@echo "  hash_speed    - measure performance of all hash functions"
-	@echo "  docu          - build doxygen documentation"
-	@echo "  clean         - remove a lot of builded files"
-	@echo "  depclean      - also remove dependency files"
-	@echo "  *_TEST_BIN    - build test program"
-	@echo "  *_TESTRUN     - run nessie test"
-	@echo "  *_OBJ         - build algorithm core"
-	@echo "  *_FLASH       - flash test program"
-	@echo "  *_LIST        - build assembler listing"
+	@echo "  all                - all algorithm cores"
+	@echo "  cores              - all algorithm cores"
+	@echo "  listings           - all algorithm core listings"
+	@echo "  tests              - all algorithm test programs"
+	@echo "  stats              - all algorithm size statistics"
+	@echo "  blockciphers       - all blockcipher cores"
+	@echo "  streamciphers      - all streamcipher cores"
+	@echo "  hashes             - all hash cores"
+	@echo "  macs               - all MAC cores"
+	@echo "  prngs              - all PRNG cores"
+	@echo "  all_testrun        - testrun all algorithms"
+	@echo "  hash_size          - measure size of all hash functions"
+	@echo "  hash_speed         - measure performance of all hash functions"
+	@echo "  blockcipher_size   - measure size of all blockciphers"
+	@echo "  blockcipher_speed  - measure performance of all blockciphers"
+	@echo "  docu               - build doxygen documentation"
+	@echo "  clean              - remove a lot of builded files"
+	@echo "  depclean           - also remove dependency files"
+	@echo "  *_TEST_BIN         - build test program"
+	@echo "  *_TESTRUN          - run nessie test"
+	@echo "  *_OBJ              - build algorithm core"
+	@echo "  *_FLASH            - flash test program"
+	@echo "  *_LIST             - build assembler listing"
 
 
 #-------------------------------------------------------------------------------

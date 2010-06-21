@@ -30,13 +30,15 @@
 #include "keysize_descriptor.h"
 #include "blockcipher_descriptor.h"
 #include "performance_test.h"
+#include "stack_measuring.h"
 #include "cli.h"
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <avr/pgmspace.h>
 
-
+#define PATTERN_A 0xAA
+#define PATTERN_B 0x55
 
 
 static
@@ -137,6 +139,76 @@ void bcal_performance(const bcdesc_t* bcd){
 	}
 }
 
+void bcal_stacksize(const bcdesc_t* bcd){
+	bcdesc_t bc;
+	stack_measuring_ctx_t smctx;
+	memcpy_P(&bc, bcd, sizeof(bcdesc_t));
+	uint8_t ctx[bc.ctxsize_B];
+	uint8_t data[(bc.blocksize_b+7)/8];
+	uint16_t keysize = get_keysize(bc.valid_keysize_desc);
+	uint8_t key[(keysize+7)/8];
+	uint16_t t1, t2;
+
+	if(bc.type!=BCDESC_TYPE_BLOCKCIPHER)
+		return;
+	cli_putstr_P(PSTR("\r\n\r\n === "));
+	cli_putstr_P(bc.name);
+	cli_putstr_P(PSTR(" stack-usage === "));
+
+	if(bc.init.init1){
+		if((bc.flags&BC_INIT_TYPE)==BC_INIT_TYPE_1){
+			cli();
+			stack_measure_init(&smctx, PATTERN_A);
+			bc.init.init1(&ctx, key);
+			t1 = stack_measure_final(&smctx);
+			stack_measure_init(&smctx, PATTERN_B);
+			bc.init.init1(&ctx, key);
+			t2 = stack_measure_final(&smctx);
+			sei();
+		} else {
+			cli();
+			stack_measure_init(&smctx, PATTERN_A);
+			bc.init.init2(&ctx, keysize, key);
+			t1 = stack_measure_final(&smctx);
+			stack_measure_init(&smctx, PATTERN_B);
+			bc.init.init2(&ctx, keysize, key);
+			t2 = stack_measure_final(&smctx);
+			sei();
+		}
+		t1 = (t1>t2)?t1:t2;
+		cli_putstr_P(PSTR("\r\n    init (bytes):       "));
+		printvalue((unsigned long)t1);
+	}
+	cli();
+	stack_measure_init(&smctx, PATTERN_A);
+	bc.enc.enc1(data, &ctx);
+	t1 = stack_measure_final(&smctx);
+	stack_measure_init(&smctx, PATTERN_B);
+	bc.enc.enc1(data, &ctx);
+	t2 = stack_measure_final(&smctx);
+	sei();
+
+	t1 = (t1>t2)?t1:t2;
+	cli_putstr_P(PSTR("\r\n    encBlock (bytes):   "));
+	printvalue((unsigned long)t1);
+
+	cli();
+	stack_measure_init(&smctx, PATTERN_A);
+	bc.dec.dec1(data, &ctx);
+	t1 = stack_measure_final(&smctx);
+	stack_measure_init(&smctx, PATTERN_B);
+	bc.dec.dec1(data, &ctx);
+	t2 = stack_measure_final(&smctx);
+	sei();
+
+	t1 = (t1>t2)?t1:t2;
+	cli_putstr_P(PSTR("\r\n    decBlock (bytes):   "));
+	printvalue((unsigned long)t1);
+
+	if(bc.free){
+		bc.free(&ctx);
+	}
+}
 
 void bcal_performance_multiple(const bcdesc_t** bcd_list){
 	const bcdesc_t* bcd;
@@ -147,6 +219,7 @@ void bcal_performance_multiple(const bcdesc_t** bcd_list){
 			return;
 		}
 		bcal_performance(bcd);
+		bcal_stacksize(bcd);
 		bcd_list = (void*)((uint8_t*)bcd_list + 2);
 	}
 }

@@ -27,16 +27,23 @@
 #include "debug.h"
 
 #include "aes/aes.h"
-
 #include "nessie_bc_test.h"
 #include "cli.h"
 #include "performance_test.h"
-
+#include "blockcipher_descriptor.h"
+#include "bcal-performance.h"
+#include "bcal_aes192.h"
 #include <stdint.h>
 #include <string.h>
 #include <stdlib.h>
+#include <avr/pgmspace.h>
 
 char* algo_name = "AES-192";
+
+const bcdesc_t* algolist[] PROGMEM = {
+	(bcdesc_t*)&aes192_desc,
+	NULL
+};
 
 /*****************************************************************************
  *  additional validation-functions											 *
@@ -80,49 +87,11 @@ void testrun_testkey_aes(void){
 }
 /*****************************************************************************/
 
-void testrun_performance_aes192(void){
-	uint64_t t;
-	char str[16];
-	uint8_t key[32], data[16];
-	aes192_ctx_t ctx;
-
-	calibrateTimer();
-	print_overhead();
-
-	memset(key,  0, 32);
-	memset(data, 0, 16);
-
-	startTimer(1);
-	aes192_init(key, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tctx-gen time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-
-
-	startTimer(1);
-	aes192_enc(data, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tencrypt time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-
-
-	startTimer(1);
-	aes192_dec(data, &ctx);
-	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tdecrypt time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);
-
-	cli_putstr_P(PSTR("\r\n"));
-}
 
 void testrun_performance_aes(void){
-	cli_putstr_P(PSTR("\r\n -=AES Performance Test=-\r\n"));
-	cli_putstr_P(PSTR("\r\n       AES-192\r\n"));
-	testrun_performance_aes192();
+	bcal_performance_multiple(algolist);
 }
+
 
 /*****************************************************************************
  *  main																	 *

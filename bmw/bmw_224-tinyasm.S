@@ -41,6 +41,11 @@ acc1 = 15
   param s: r20
 */
 shiftleft32:
+	tst r20
+	brpl 10f
+	neg r20
+	rjmp shiftright32
+10:
 	clr r0
 	cpi r20, 8
 	brlo bitrotateleft_1
@@ -49,7 +54,7 @@ shiftleft32:
 	mov r23, r22
 	clr r22
 	subi r20, 8
-	rjmp shiftleft32
+	rjmp 10b
 
 /******************************************************************************/
 /*
@@ -257,10 +262,11 @@ mov32_to_acc:
 
 f2_1_shift_table:
 ;	.byte 0x2B, 0x64, 0x66, 0x03, 0x51, 0x55, 0x87, 0x55
-	.byte 0x55, 0x87, 0x55, 0x51, 0x03, 0x66, 0x64, 0x2B
+;	.byte 0x55, 0x87, 0x55, 0x51, 0x03, 0x66, 0x64, 0x2B
+	.byte 5, -5, -7, 8, -5, 5, -1, 5, -3, 0, 6, -6, -4, 6, -11, 2
 f2_2_shift_table:
 ;	.byte (2<<1), (7<<1), (4<<1), (3<<1), (4<<1)+1, (6<<1)+1, (6<<1)
-	.byte (8<<1)+1, (6<<1), (6<<1)+1, (4<<1)+1, (3<<1), (4<<1), (7<<1), (2<<1)
+	.byte 8, -6, 6, 4, -3, -4, -7, -2
 expand2_rot_table:
 	.byte 3,7,13,16,19,23,27
 
@@ -737,40 +743,21 @@ f2:
 	movw r26, h0
 	ldi r30, lo8(f2_1_shift_table)
 	ldi r31, hi8(f2_1_shift_table)
-	ldi r17, 16
+	ldi r17, 15
 10:
 ;---
 	movw r22, xh0
 	movw r24, xh2
-	cpi r17, 9
-	brge 15f
-	clr r1
-	rjmp 26f
-15:	lpm r20, Z+
-	mov r1, r20
-	andi r20, 0x0f
-	clt
-	cpi r17, 16
-	breq 20f
-	cpi r17, 11
-	brne 21f
-20:	set
-21:	brts 25f
-	rcall shiftright32
-	rjmp 26f
-25:	rcall shiftleft32
-26: rcall mov32_to_acc
+  	lpm r20, Z+
+	sbrc r17, 3
+ 	rcall shiftleft32
+    rcall mov32_to_acc
 ;---
 	rcall load32_from_Y
-	mov r20, r1
-	clr r1
-	swap r20
-	andi r20, 0x0f
-	brts 27f
+	lpm r20, Z+
+	sbrc r17, 3
 	rcall shiftleft32
-	rjmp 28f
-27:	rcall shiftright32
-28:	rcall eor32_to_acc
+	rcall eor32_to_acc
 ;---
 	rcall load32_from_X
 	rcall eor32_to_acc
@@ -778,7 +765,7 @@ f2:
 	adiw r26, 4
 ;---
 	dec r17
-	brne 10b
+	brpl 10b
 ;-----
 	sbiw r28, 4*8 /* Y points to q[24] */
 	movw r30, r28
@@ -799,20 +786,13 @@ f2:
 
 	movw r26, h0
 	ldi r17, 15
-	ldi r30, lo8(f2_2_shift_table)
-	ldi r31, hi8(f2_2_shift_table)
+	ldi r30, lo8(f2_2_shift_table-8)
+	ldi r31, hi8(f2_2_shift_table-8)
 10:	movw r22, xl0
 	movw r24, xl2
-	sbrc r17, 3
-	rjmp 20f
 	lpm r20, Z+
-	lsr r20
-	brcs 15f
-	rcall shiftright32
-	rjmp 20f
-15:
+	sbrs r17, 3
 	rcall shiftleft32
-20:
 	rcall mov32_to_acc
 	rcall load32_from_Y
 	rcall eor32_to_acc
@@ -1090,6 +1070,7 @@ bmw224:
 	push_range 28, 29
 	push_range 8, 9
 	stack_alloc_large 64+4
+	adiw r30, 1
 10:	movw ctx0, r30
 	movw dst0, r24
 	movw msg0, r22

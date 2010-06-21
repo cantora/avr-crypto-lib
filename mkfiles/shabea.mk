@@ -2,7 +2,7 @@
 ALGO_NAME := SHABEA
 
 # comment out the following line for removement of SHABEA from the build process
-BLOCK_CIPHERS += $(ALGO_NAME)
+BLOCK_CIPHERS_DONTUSE += $(ALGO_NAME)
 
 $(ALGO_NAME)_DIR      := shabea/
 $(ALGO_NAME)_OBJ      := shabea.o sha256-asm.o memxor.o

@@ -38,7 +38,7 @@ const uint8_t present_keysize_desc[] PROGMEM = { KS_TYPE_LIST, 1, KS_INT(80),
 
 const bcdesc_t present_desc PROGMEM = {
 	BCDESC_TYPE_BLOCKCIPHER,
-	BC_INIT_TYPE_1,
+	BC_INIT_TYPE_2,
 	present_str,
 	sizeof(present_ctx_t),
 	64,
