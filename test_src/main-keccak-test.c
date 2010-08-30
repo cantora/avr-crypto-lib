@@ -60,7 +60,8 @@ void test_256(void){
 	memset(null, 0, KECCAK256_BLOCKSIZE_B);
 	keccak_ctx_t ctx;
 	keccak256_init(&ctx);
-	keccak_lastBlock(&ctx, data, 29);
+	keccak_nextBlock(&ctx, null);
+	//	keccak_lastBlock(&ctx, data, 29);
 	keccak256_ctx2hash(hash, &ctx);
 	cli_putstr_P(PSTR("\r\n testhash: "));
 	cli_hexdump(hash, 32);

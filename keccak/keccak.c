@@ -22,6 +22,7 @@
 #include <string.h>
 #include <avr/pgmspace.h>
 #include "memxor.h"
+#include "rotate64.h"
 #include "keccak.h"
 
 #ifdef DEBUG
@@ -60,6 +61,7 @@ void keccak_dump_ctx(keccak_ctx_t* ctx){
 
 #endif
 
+/*
 static uint64_t rc[] PROGMEM = {
        0x0000000000000001LL, 0x0000000000008082LL,
        0x800000000000808ALL, 0x8000000080008000LL,
@@ -74,32 +76,45 @@ static uint64_t rc[] PROGMEM = {
        0x8000000080008081LL, 0x8000000000008080LL,
        0x0000000080000001LL, 0x8000000080008008LL
 };
+*/
+
+static uint8_t rc_comp[] PROGMEM = {
+		0x01, 0x92, 0xda, 0x70,
+		0x9b, 0x21, 0xf1, 0x59,
+		0x8a, 0x88, 0x39, 0x2a,
+		0xbb, 0xcb, 0xd9, 0x53,
+		0x52, 0xc0, 0x1a, 0x6a,
+		0xf1, 0xd0, 0x21, 0x78,
+};
 
 uint64_t rotl64(uint64_t a, uint8_t r){
 	 return (a<<r)|(a>>(64-r));
 }
 
 static uint8_t r[5][5] PROGMEM = {
-		{  0, 36,  3, 41, 18 },
-		{  1, 44, 10, 45,  2 },
-		{ 62,  6, 43, 15, 61 },
-		{ 28, 55, 25, 21, 56 },
-		{ 27, 20, 39,  8, 14 }
+		{ ROT_CODE( 0), ROT_CODE(36), ROT_CODE( 3), ROT_CODE(41), ROT_CODE(18) },
+		{ ROT_CODE( 1), ROT_CODE(44), ROT_CODE(10), ROT_CODE(45), ROT_CODE( 2) },
+		{ ROT_CODE(62), ROT_CODE( 6), ROT_CODE(43), ROT_CODE(15), ROT_CODE(61) },
+		{ ROT_CODE(28), ROT_CODE(55), ROT_CODE(25), ROT_CODE(21), ROT_CODE(56) },
+		{ ROT_CODE(27), ROT_CODE(20), ROT_CODE(39), ROT_CODE( 8), ROT_CODE(14) }
 };
 
+static inline
 void keccak_round(uint64_t a[5][5], uint8_t rci){
 	uint64_t b[5][5];
 	uint8_t i,j;
+	union {
+			uint64_t v64;
+			uint8_t v8[8];
+		} t;
 	/* theta */
 	for(i=0; i<5; ++i){
 		b[i][0] = a[0][i] ^ a[1][i] ^ a[2][i] ^ a[3][i] ^ a[4][i];
 	}
 	for(i=0; i<5; ++i){
-		b[i][1] = b[(4+i)%5][0] ^ rotl64(b[(i+1)%5][0], 1);
-	}
-	for(i=0; i<5; ++i){
+		t.v64 = b[(4+i)%5][0] ^ rotate64_1bit_left(b[(i+1)%5][0]);
 		for(j=0; j<5; ++j){
-			a[j][i] ^= b[i][1];
+			a[j][i] ^= t.v64;
 		}
 	}
 #if DEBUG
@@ -109,7 +124,8 @@ void keccak_round(uint64_t a[5][5], uint8_t rci){
 	/* rho & pi */
 	for(i=0; i<5; ++i){
 		for(j=0; j<5; ++j){
-			b[(2*i+3*j)%5][j] = rotl64(a[j][i], pgm_read_byte(&(r[i][j])));
+//			b[(2*i+3*j)%5][j] = rotl64(a[j][i], pgm_read_byte(&(r[i][j])));
+			b[(2*i+3*j)%5][j] = rotate64left_code(a[j][i], pgm_read_byte(&(r[i][j])));
 		}
 	}
 #if DEBUG
@@ -127,9 +143,22 @@ void keccak_round(uint64_t a[5][5], uint8_t rci){
 	keccak_dump_state(a);
 #endif
 	/* iota */
-	uint64_t t;
-	memcpy_P(&t, &(rc[rci]), 8);
-	a[0][0] ^= t;
+
+//	memcpy_P(&t, &(rc_comp[rci]), 8);
+	t.v64 = 0;
+	t.v8[0] = pgm_read_byte(&(rc_comp[rci]));
+	if(t.v8[0]&0x40){
+		t.v8[7] = 0x80;
+	}
+	if(t.v8[0]&0x20){
+		t.v8[3] = 0x80;
+	}
+	if(t.v8[0]&0x10){
+		t.v8[1] = 0x80;
+	}
+	t.v8[0] &= 0x8F;
+
+	a[0][0] ^= t.v64;
 #if DEBUG
 	cli_putstr_P(PSTR("\r\nAfter iota:"));
 	keccak_dump_state(a);
