@@ -57,20 +57,21 @@ static void cubehash_round(cubehash_ctx_t* ctx){
 		ctx->a[i] = ctx->a[i+8];
 		ctx->a[i+8] = t;
 	}
-	for(i=0; i<16; ++i){
-		ctx->a[i] ^= ctx->a[i+16];
-	}
 	for(i=16; i<4*4+16; i+=4){
 		t = ctx->a[i];
-		ctx->a[i] = ctx->a[i+2];
-		ctx->a[i+2] = t;
+		ctx->a[i-16] ^= t;
+		ctx->a[i] = ctx->a[i+2] + ctx->a[i-16];
+		ctx->a[i-16] = rotate11left(ctx->a[i-16]);
+		ctx->a[i-14] ^= ctx->a[i+2];
+		ctx->a[i+2] = t + ctx->a[i-14];
+		ctx->a[i-14] = rotate11left(ctx->a[i-14]);
 		t = ctx->a[i+1];
-		ctx->a[i+1] = ctx->a[i+3];
-		ctx->a[i+3] = t;
-	}
-	for(i=0; i<16; ++i){
-		ctx->a[i+16] += ctx->a[i];
-		ctx->a[i] = rotate11left(ctx->a[i]);
+		ctx->a[i-15] ^= t;
+		ctx->a[i+1] = ctx->a[i+3] + ctx->a[i-15];
+		ctx->a[i-15] = rotate11left(ctx->a[i-15]);
+		ctx->a[i-13] ^= ctx->a[i+3];
+		ctx->a[i+3] = t + ctx->a[i-13];
+		ctx->a[i-13] = rotate11left(ctx->a[i-13]);
 	}
 	for(i=0; i<4; ++i){
 		t = ctx->a[i];
@@ -82,12 +83,9 @@ static void cubehash_round(cubehash_ctx_t* ctx){
 		ctx->a[i] = ctx->a[i+4];
 		ctx->a[i+4] = t;
 	}
-	for(i=0; i<16; ++i){
-		ctx->a[i] ^= ctx->a[i+16];
-	}
 	for(i=16; i<16+16; i+=2){
-		t = ctx->a[i];
-		ctx->a[i] = ctx->a[i+1];
+		ctx->a[i-16] ^= t = ctx->a[i];
+		ctx->a[i-15] ^= ctx->a[i] = ctx->a[i+1];
 		ctx->a[i+1] = t;
 	}
 }
