@@ -1,6 +1,6 @@
-/* cubehash_rotates.S */
+/* xchg.S */
 /*
-    This file is part of the ARM-Crypto-Lib.
+    This file is part of the AVR-Crypto-Lib.
     Copyright (C) 2006-2010 Daniel Otte (daniel.otte@rub.de)
 
     This program is free software: you can redistribute it and/or modify
@@ -17,42 +17,28 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-.global rotate7left
-rotate7left:
-	mov r0, r25
-	mov r25, r24
-	mov r24, r23
-	mov r23, r22
-	mov r22, r0
-	ror r0
-	ror r25
-	ror r24
-	ror r23
-	ror r22
-	ret
-
-.global rotate11left
-rotate11left:
-	mov r0, r25
-	mov r25, r24
-	mov r24, r23
-	mov r23, r22
-	mov r22, r0
-	rol r0
-	rol r23
-	rol r24
-	rol r25
-	rol r22
-	rol r0
-	rol r23
-	rol r24
-	rol r25
-	rol r22
-	rol r0
-	rol r23
-	rol r24
-	rol r25
-	rol r22
-	ret
-
+.global xchg32_array
+xchg32_array:
+   movw r26, r24
+   movw r30, r22
+1:
+   ld r24, X
+   ld r25, Z
+   st X+, r25
+   st Z+, r24
+   ld r24, X
+   ld r25, Z
+   st X+, r25
+   st Z+, r24
+   ld r24, X
+   ld r25, Z
+   st X+, r25
+   st Z+, r24
+   ld r24, X
+   ld r25, Z
+   st X+, r25
+   st Z+, r24
+   dec r20
+   brne 1b
+   ret
 

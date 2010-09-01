@@ -29,16 +29,17 @@
 #include "memxor.h"
 #include "cubehash.h"
 #include "cubehash_rotates.h"
+#include "xchg.h"
 #include <string.h>
 #include <stdint.h>
 
 /*
-• Add    x_0jklm into    x_1jklm modulo 232 , for each (j, k, l, m).
+• Add    x_0jklm into    x_1jklm modulo 2**32 , for each (j, k, l, m).
 • Rotate x_0jklm upwards by 7 bits, for each (j, k, l, m).
 • Swap   x_00klm with    x_01klm , for each (k, l, m).
 • Xor    x_1jklm into    x_0jklm , for each (j, k, l, m).
 • Swap   x_1jk0m with    x_1jk1m , for each (j, k, m).
-• Add    x_0jklm into    x_1jklm modulo 232 , for each (j, k, l, m).
+• Add    x_0jklm into    x_1jklm modulo 2**32 , for each (j, k, l, m).
 • Rotate x_0jklm upwards by 11 bits, for each (j, k, l, m).
 • Swap   x_0j0lm with    x_0j1lm , for each (j, l, m).
 • Xor    x_1jklm into    x_0jklm , for each (j, k, l, m).
@@ -47,46 +48,34 @@
 
 static void cubehash_round(cubehash_ctx_t* ctx){
 	uint8_t i;
-	uint32_t t;
+	uint32_t t, t2;
 	for(i=0; i<16; ++i){
-		ctx->a[i+16] += ctx->a[i];
-		ctx->a[i] = rotate7left(ctx->a[i]);
+		ctx->a[i+16] += t = ctx->a[i];
+		ctx->a[i] = rotate7left(t);
 	}
-	for(i=0; i<8; ++i){
-		t = ctx->a[i];
-		ctx->a[i] = ctx->a[i+8];
-		ctx->a[i+8] = t;
+	xchg32_array(&(ctx->a[0]), &(ctx->a[8]), 8);
+	for(i=0; i<16; i+=4){
+		t = ctx->a[i+16];
+		t2 = ctx->a[i] ^= t;
+		ctx->a[i+16] = ctx->a[i+18] + t2;
+		ctx->a[i] = rotate11left(t2);
+		t2 = ctx->a[i+2] ^= ctx->a[i+18];
+		ctx->a[i+18] = t + t2;
+		ctx->a[i+2] = rotate11left(t2);
+		t = ctx->a[i+17];
+		t2 = ctx->a[i+1] ^= t;
+		ctx->a[i+17] = ctx->a[i+19] + t2;
+		ctx->a[i+1] = rotate11left(t2);
+		t2 = ctx->a[i+3] ^= ctx->a[i+19];
+		ctx->a[i+19] = t + t2;
+		ctx->a[i+3] = rotate11left(t2);
 	}
-	for(i=16; i<4*4+16; i+=4){
-		t = ctx->a[i];
-		ctx->a[i-16] ^= t;
-		ctx->a[i] = ctx->a[i+2] + ctx->a[i-16];
-		ctx->a[i-16] = rotate11left(ctx->a[i-16]);
-		ctx->a[i-14] ^= ctx->a[i+2];
-		ctx->a[i+2] = t + ctx->a[i-14];
-		ctx->a[i-14] = rotate11left(ctx->a[i-14]);
-		t = ctx->a[i+1];
-		ctx->a[i-15] ^= t;
-		ctx->a[i+1] = ctx->a[i+3] + ctx->a[i-15];
-		ctx->a[i-15] = rotate11left(ctx->a[i-15]);
-		ctx->a[i-13] ^= ctx->a[i+3];
-		ctx->a[i+3] = t + ctx->a[i-13];
-		ctx->a[i-13] = rotate11left(ctx->a[i-13]);
-	}
-	for(i=0; i<4; ++i){
-		t = ctx->a[i];
-		ctx->a[i] = ctx->a[i+4];
-		ctx->a[i+4] = t;
-	}
-	for(i=8; i<4+8; ++i){
-		t = ctx->a[i];
-		ctx->a[i] = ctx->a[i+4];
-		ctx->a[i+4] = t;
-	}
-	for(i=16; i<16+16; i+=2){
-		ctx->a[i-16] ^= t = ctx->a[i];
-		ctx->a[i-15] ^= ctx->a[i] = ctx->a[i+1];
-		ctx->a[i+1] = t;
+	xchg32_array(&(ctx->a[0]), &(ctx->a[4]), 4);
+	xchg32_array(&(ctx->a[8]), &(ctx->a[12]), 4);
+	for(i=0; i<16; i+=2){
+		ctx->a[i] ^= t = ctx->a[i+16];
+		ctx->a[i+1] ^= ctx->a[i+16] = ctx->a[i+17];
+		ctx->a[i+17] = t;
 	}
 }
 
