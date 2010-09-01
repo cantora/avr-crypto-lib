@@ -28,12 +28,10 @@
 
 #include "memxor.h"
 #include "cubehash.h"
+#include "cubehash_rotates.h"
 #include <string.h>
 #include <stdint.h>
 
-static uint32_t rol32(uint32_t a, uint8_t r){
-	return (a<<r)|(a>>(32-r));
-}
 /*
 • Add    x_0jklm into    x_1jklm modulo 232 , for each (j, k, l, m).
 • Rotate x_0jklm upwards by 7 bits, for each (j, k, l, m).
@@ -52,9 +50,7 @@ static void cubehash_round(cubehash_ctx_t* ctx){
 	uint32_t t;
 	for(i=0; i<16; ++i){
 		ctx->a[i+16] += ctx->a[i];
-	}
-	for(i=0; i<16; ++i){
-		ctx->a[i] = rol32(ctx->a[i], 7);
+		ctx->a[i] = rotate7left(ctx->a[i]);
 	}
 	for(i=0; i<8; ++i){
 		t = ctx->a[i];
@@ -74,9 +70,7 @@ static void cubehash_round(cubehash_ctx_t* ctx){
 	}
 	for(i=0; i<16; ++i){
 		ctx->a[i+16] += ctx->a[i];
-	}
-	for(i=0; i<16; ++i){
-		ctx->a[i] = rol32(ctx->a[i], 11);
+		ctx->a[i] = rotate11left(ctx->a[i]);
 	}
 	for(i=0; i<4; ++i){
 		t = ctx->a[i];

@@ -87,10 +87,6 @@ static uint8_t rc_comp[] PROGMEM = {
 		0xf1, 0xd0, 0x21, 0x78,
 };
 
-uint64_t rotl64(uint64_t a, uint8_t r){
-	 return (a<<r)|(a>>(64-r));
-}
-
 static uint8_t r[5][5] PROGMEM = {
 		{ ROT_CODE( 0), ROT_CODE(36), ROT_CODE( 3), ROT_CODE(41), ROT_CODE(18) },
 		{ ROT_CODE( 1), ROT_CODE(44), ROT_CODE(10), ROT_CODE(45), ROT_CODE( 2) },
