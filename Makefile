@@ -28,9 +28,13 @@ SIGNATURE      :=
 PK_CIPHERS     :=
 AUX            :=
 
+
 # we use the gnu make standard library
 include gmsl
 include avr-makefile.inc
+
+
+GLOBAL_INCDIR := ./ $(TESTSRC_DIR)
 
 #-------------------------------------------------------------------------------
 # inclusion of make stubs
@@ -59,29 +63,8 @@ $(foreach a, $(ALGORITHMS), $(eval $(call Assert_Template, \
 )))
 
 
-#$(foreach a, $(ALGORITHMS), \
-#    $(if $(def $(a)_DIR), \
-#    $(eval $(call Assert_Template, \
-#        $(a)_DIR, \
-#        . \
-#    ) \
-#    )) \
-#)
-#
-#$(foreach a, $(ALGORITHMS), \
-#    $(if $(call seq($(strip($($(a)_DIR))),)), \
-#    $(eval $(call Assert_Template, \
-#        $(a)_DIR, \
-#        . \
-#    ) \
-#    )) \
-#)
 
 #-------------------------------------------------------------------------------
-#
-###	ifeq 'blafoo' ''
-###	    $(error no source ($(2)) for $(1) in TargetSource_Template)
-###	endif
 
 define TargetSource_Template
 $(1): $(2)
@@ -90,11 +73,26 @@ $(1): $(2)
 	@$(CC) $(CFLAGS_A) -I./$(strip $(3)) -c -o $(1) $(2)
 endef
 
+# ----------------------------------------------------------------------------
+# Function:  find_source_file
+# Arguments: 1: name of the binary file (.o extension) to search
+#            2: list of directorys to search for file
+# Returns:   Returns paths to source file (mathing the pattern in 
+#            $(SOURCE_PATTERN)
+# ----------------------------------------------------------------------------
+SOURCE_PATTERN := %.S %.c 
+find_source_file = $(firstword $(foreach d, $(2), \
+                     $(filter $(SOURCE_PATTERN),  \
+                       $(wildcard $(d)$(notdir $(patsubst %.o,%,$1)).*) \
+                     ) \
+                   ) )
+              
+              
 $(foreach a, $(ALGORITHMS), \
   $(foreach b, $($(a)_OBJ), \
     $(eval $(call TargetSource_Template, \
       $(BIN_DIR)$(call lc, $(a))/$(b), \
-      $(filter %.S %.c, $(wildcard $($(a)_DIR)$(notdir $(patsubst %.o,%,$(b))).*)), \
+       $(call find_source_file, $(b), $($(a)_DIR) $($(a)_INCDIR) $(GLOBAL_INCDIR) ),\
       $($(a)_DIR) \
     )) \
   ) \
@@ -103,15 +101,13 @@ $(foreach a, $(ALGORITHMS), \
 $(foreach a, $(ALGORITHMS), \
   $(foreach b, $($(a)_TEST_BIN), \
     $(eval $(call TargetSource_Template, \
-	  $(BIN_DIR)$(call lc, $(a))/$(TEST_DIR)$(b), \
-      $(if $(call sne,$(strip $(filter %.S %.c, $(wildcard $(TESTSRC_DIR)$(notdir $(patsubst %.o,%,$(b))).*))),), \
-          $(filter %.S %.c, $(wildcard $(TESTSRC_DIR)$(notdir $(patsubst %.o,%,$(b))).*)), \
-          $(filter %.S %.c, $(wildcard ./$(notdir $(patsubst %.o,%,$(b))).*))\
-	  ), \
+      $(BIN_DIR)$(call lc, $(a))/$(TEST_DIR)$(b), \
+       $(call find_source_file, $(b), $($(a)_DIR) $($(a)_INCDIR) $(GLOBAL_INCDIR) ),\
       $($(a)_DIR) \
     )) \
   ) \
 )
+
 #-------------------------------------------------------------------------------
 
 define MainTestElf_Template
