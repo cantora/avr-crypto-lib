@@ -8,7 +8,6 @@ FLASHCMD       = avrdude -p $(MCU_TARGET) -P /dev/ttyUSB0 -c $(PROGRAMMER) -U fl
 DEP_DIR        = deps/
 TEST_DIR       = test/
 BIN_DIR        = bin/
-TESTBIN_DIR    = test_bin/
 TESTSRC_DIR    = test_src/
 #uisp -dprog=bsd -dlpt=/dev/parport1 --upload if=$(PRG).hex
 ERASECMD       =

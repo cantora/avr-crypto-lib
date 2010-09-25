@@ -27,7 +27,7 @@
 #include <stdint.h>
 #include <string.h>
 #include "threefish.h"
-#include "memxor.h"
+#include "memxor/memxor.h"
 #include "ubi.h"
 
 void ubi1024_init(ubi1024_ctx_t* ctx, const void* g, uint8_t type){

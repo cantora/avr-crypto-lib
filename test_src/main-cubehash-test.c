@@ -27,13 +27,13 @@
 
 #include "cubehash.h"
 #include "cli.h"
-#include "hfal_cubehash.h"
+#include "hfal/hfal_cubehash.h"
 #include "shavs.h"
 #include "nessie_hash_test.h"
 #include "performance_test.h"
-#include "hfal-nessie.h"
-#include "hfal-performance.h"
-#include "hfal-test.h"
+#include "hfal/hfal-nessie.h"
+#include "hfal/hfal-performance.h"
+#include "hfal/hfal-test.h"
 
 #include <stdint.h>
 #include <string.h>

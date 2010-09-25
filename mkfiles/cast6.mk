@@ -5,6 +5,7 @@ ALGO_NAME := CAST6
 BLOCK_CIPHERS += $(ALGO_NAME)
 
 $(ALGO_NAME)_DIR      := cast6/
+$(ALGO_NAME)_INCDIR   := bcal/
 $(ALGO_NAME)_OBJ      := cast6.o
 $(ALGO_NAME)_TEST_BIN := main-cast6-test.o bcal_cast6.o $(CLI_STD) $(BCAL_STD)
 $(ALGO_NAME)_NESSIE_TEST      := test nessie

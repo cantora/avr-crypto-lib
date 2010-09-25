@@ -19,7 +19,7 @@
 
 #include <stdint.h>
 #include <string.h>
-#include "gf256mul.h"
+#include "gf256mul/gf256mul.h"
 #include "aes.h"
 #include "aes_invsbox.h"
 #include "aes_dec.h"

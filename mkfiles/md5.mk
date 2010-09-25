@@ -5,6 +5,7 @@ ALGO_NAME := MD5
 HASHES += $(ALGO_NAME)
 
 $(ALGO_NAME)_DIR      := md5/
+$(ALGO_NAME)_INCDIR   := hfal/
 $(ALGO_NAME)_OBJ      := md5-asm.o
 $(ALGO_NAME)_TEST_BIN := main-md5-test.o hfal_md5.o $(CLI_STD) $(HFAL_STD)
 $(ALGO_NAME)_NESSIE_TEST      := "nessie"

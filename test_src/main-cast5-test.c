@@ -29,8 +29,8 @@
 #include <cast5.h>
 #include "nessie_bc_test.h"
 #include "performance_test.h"
-#include "bcal-performance.h"
-#include "bcal_cast5.h"
+#include "bcal/bcal-performance.h"
+#include "bcal/bcal_cast5.h"
 #include "cli.h"
 
 #include <stdint.h>

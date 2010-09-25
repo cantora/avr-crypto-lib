@@ -5,6 +5,7 @@ ALGO_NAME := RC5
 BLOCK_CIPHERS += $(ALGO_NAME)
 
 $(ALGO_NAME)_DIR      := rc5/
+$(ALGO_NAME)_INCDIR   := bcal/
 $(ALGO_NAME)_OBJ      := rc5.o
 $(ALGO_NAME)_TEST_BIN := main-rc5-test.o bcal_rc5.o $(CLI_STD) $(BCAL_STD) 
 $(ALGO_NAME)_NESSIE_TEST      := test nessie

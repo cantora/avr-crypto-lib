@@ -31,7 +31,7 @@
 #include <stdint.h>
 #include <string.h>
 #include "config.h"
-#include "md5.h"
+#include "md5/md5.h"
 #include "hmac-md5.h"
 
 #define IPAD 0x36

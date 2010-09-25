@@ -29,8 +29,8 @@
 #include "xtea.h"
 #include "nessie_bc_test.h"
 #include "performance_test.h"
-#include "bcal-performance.h"
-#include "bcal_xtea.h"
+#include "bcal/bcal-performance.h"
+#include "bcal/bcal_xtea.h"
 #include "cli.h"
 
 #include <stdint.h>

@@ -5,6 +5,7 @@ ALGO_NAME := MUGI_C
 STREAM_CIPHERS += $(ALGO_NAME)
 
 $(ALGO_NAME)_DIR      := mugi/
+$(ALGO_NAME)_INCDIR   := aes/ gf256mul/
 $(ALGO_NAME)_OBJ      := mugi.o gf256mul.o aes_sbox.o
 $(ALGO_NAME)_TEST_BIN := main-mugi-test.o $(CLI_STD)  \
                          nessie_stream_test.o nessie_common.o  \

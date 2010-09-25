@@ -29,9 +29,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <avr/pgmspace.h>
-#include "aes_sbox.h"
+#include "aes/aes_sbox.h"
 #include "mugi.h"
-#include "gf256mul.h"
+#include "gf256mul/gf256mul.h"
 
 /*
 #include "test_src/cli.h" / * only for debugging * /

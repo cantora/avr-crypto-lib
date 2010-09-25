@@ -31,7 +31,7 @@
 #include <string.h>
 #include <stdint.h>
 #include <avr/pgmspace.h>
-#include "memxor.h"
+#include "memxor/memxor.h"
 #include "mqq160-sign.h"
 
 static uint8_t mod20_table[32] PROGMEM = {

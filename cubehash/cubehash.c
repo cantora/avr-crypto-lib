@@ -26,7 +26,7 @@
  */
 
 
-#include "memxor.h"
+#include "memxor/memxor.h"
 #include "cubehash.h"
 #include "cubehash_rotates.h"
 #include "xchg.h"

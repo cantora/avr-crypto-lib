@@ -5,6 +5,7 @@ ALGO_NAME := THREEFISH_SMALL
 BLOCK_CIPHERS += $(ALGO_NAME)
 
 $(ALGO_NAME)_DIR      := skein/
+$(ALGO_NAME)_INCDIR   := bcal/
 $(ALGO_NAME)_OBJ      := threefish256_enc_small.o threefish512_enc.o threefish1024_enc.o\
                          threefish_mix.o threefish_mix_4c.o threefish_invmix_c.o \
 			 threefish256_dec.o threefish512_dec.o threefish1024_dec.o

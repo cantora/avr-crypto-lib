@@ -33,10 +33,10 @@
  */
 #include <stdlib.h>
 #include <string.h>
-#include "sha256.h"
+#include "sha256/sha256.h"
 
 #include "config.h"
-#include "memxor.h"
+#include "memxor/memxor.h"
 
 
 /*

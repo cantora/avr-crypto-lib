@@ -23,10 +23,10 @@
 #include <avr/pgmspace.h>
 #include "twister.h"
 #include "twister_tables.h"
-#include "memxor.h"
+#include "memxor/memxor.h"
 
 //#ifndef TWISTER_MUL_TABLE
-# include "gf256mul.h"
+# include "gf256mul/gf256mul.h"
 //#endif
 
 #define MDS(a,b)  pgm_read_byte(&(twister_mds[(a)][(b)]))

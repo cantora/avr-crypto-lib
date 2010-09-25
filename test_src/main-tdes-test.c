@@ -30,9 +30,9 @@
 #include "nessie_bc_test.h"
 #include "cli.h"
 #include "performance_test.h"
-#include "bcal-performance.h"
-#include "bcal_tdes.h"
-#include "bcal_tdes2.h"
+#include "bcal/bcal-performance.h"
+#include "bcal/bcal_tdes.h"
+#include "bcal/bcal_tdes2.h"
 
 #include <stdint.h>
 #include <string.h>

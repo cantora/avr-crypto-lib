@@ -20,7 +20,7 @@
 #define SHACAL2_ENC_H_
 
 #include <stdint.h>
-#include "sha256.h"
+#include "sha256/sha256.h"
 
 #define SHACAL2_BLOCKSIZE  SHA256_HASH_BITS
 #define SHACAL2_BLOCKSIZE_B ((SHACAL2_BLOCKSIZE+7)/8)

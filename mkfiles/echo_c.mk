@@ -5,6 +5,7 @@ ALGO_NAME := ECHO_C
 HASHES += $(ALGO_NAME)
 
 $(ALGO_NAME)_DIR      := echo/
+$(ALGO_NAME)_INCDIR   := aes/ memxor/ gf256mul/ hfal/
 $(ALGO_NAME)_OBJ      := echo.o memxor.o aes_enc_round-asm.o aes_sbox-asm.o gf256mul.o
 $(ALGO_NAME)_TEST_BIN := main-echo-test.o hfal_echo.o  $(CLI_STD) $(HFAL_STD)
 $(ALGO_NAME)_NESSIE_TEST      := test nessie

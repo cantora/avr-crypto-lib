@@ -5,6 +5,7 @@ ALGO_NAME := SHA1
 HASHES += $(ALGO_NAME)
 
 $(ALGO_NAME)_DIR      := sha1/
+$(ALGO_NAME)_INCDIR   := hfal/
 $(ALGO_NAME)_OBJ      := sha1-asm.o
 $(ALGO_NAME)_TEST_BIN := main-sha1-test.o hfal_sha1.o $(CLI_STD) $(HFAL_STD) dump-decl.o dump-asm.o 
 $(ALGO_NAME)_NESSIE_TEST      := "nessie"

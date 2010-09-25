@@ -30,10 +30,10 @@
 #include "nessie_bc_test.h"
 #include "cli.h"
 #include "performance_test.h"
-#include "bcal-performance.h"
-#include "bcal_threefish256.h"
-#include "bcal_threefish512.h"
-#include "bcal_threefish1024.h"
+#include "bcal/bcal-performance.h"
+#include "bcal/bcal_threefish256.h"
+#include "bcal/bcal_threefish512.h"
+#include "bcal/bcal_threefish1024.h"
 
 #include <stdint.h>
 #include <string.h>

@@ -5,6 +5,7 @@ ALGO_NAME := SHABAL
 HASHES += $(ALGO_NAME)
 
 $(ALGO_NAME)_DIR      := shabal/
+$(ALGO_NAME)_INCDIR   := hfal/
 $(ALGO_NAME)_OBJ      := shabal-asm.o shabal192-asm.o shabal224-asm.o \
                          shabal256-asm.o shabal384-asm.o shabal512-asm.o
 $(ALGO_NAME)_TEST_BIN := main-shabal-test.o hfal_shabal.o $(CLI_STD) $(HFAL_STD)

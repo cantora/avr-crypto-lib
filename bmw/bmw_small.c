@@ -28,7 +28,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <avr/pgmspace.h>
-#include "memxor.h"
+#include "memxor/memxor.h"
 #include "bmw_small.h"
 
 

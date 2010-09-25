@@ -30,8 +30,8 @@
 #include <string.h>
 #include <ctype.h>
 #include "blockcipher_descriptor.h"
-#include "bcal-basic.h"
-#include "bcal-cmac.h"
+#include "bcal/bcal-basic.h"
+#include "bcal/bcal-cmac.h"
 #include "cmacvs.h"
 #include "string-extras.h"
 #include "cli.h"

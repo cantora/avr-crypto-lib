@@ -26,7 +26,7 @@
 #include "uart_i.h"
 #include "debug.h"
 
-#include "sha256.h"
+#include "sha256/sha256.h"
 #include "hmac-sha256.h"
 
 #include "cli.h"

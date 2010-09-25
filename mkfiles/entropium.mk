@@ -5,6 +5,7 @@ ALGO_NAME := ENTROPIUM
 PRNGS += $(ALGO_NAME)
 
 $(ALGO_NAME)_DIR      := entropium/
+$(ALGO_NAME)_INCDIR   := sha256/
 $(ALGO_NAME)_OBJ      := entropium.o sha256-asm.o
 $(ALGO_NAME)_TEST_BIN := main-entropium-test.o $(CLI_STD) performance_test.o
                          

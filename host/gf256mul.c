@@ -25,7 +25,7 @@
  * 
  */
 #include <stdint.h>
-#include "gf256mul.h"
+#include "gf256mul/gf256mul.h"
 
 uint8_t gf256mul(uint8_t a, uint8_t b, uint8_t reducer){
 	uint8_t i;

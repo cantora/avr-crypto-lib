@@ -31,8 +31,8 @@
 #include "cli.h"
 #include "performance_test.h"
 #include "blockcipher_descriptor.h"
-#include "bcal-performance.h"
-#include "bcal_aes192.h"
+#include "bcal/bcal-performance.h"
+#include "bcal/bcal_aes192.h"
 #include <stdint.h>
 #include <string.h>
 #include <stdlib.h>

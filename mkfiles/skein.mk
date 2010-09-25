@@ -5,6 +5,7 @@ ALGO_NAME := SKEIN
 HASHES += $(ALGO_NAME)
 
 $(ALGO_NAME)_DIR      := skein/
+$(ALGO_NAME)_INCDIR   := hfal/
 $(ALGO_NAME)_OBJ      := threefish_mix.o \
                          threefish256_enc_asm.o  ubi256_asm.o  skein256_asm.o \
                          threefish512_enc_asm.o  ubi512_asm.o  skein512_asm.o \

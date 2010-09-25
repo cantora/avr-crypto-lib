@@ -19,7 +19,7 @@
 #ifndef HMACSHA256_H_
 #define HMACSHA256_H_
 
-#include "sha256.h"
+#include "sha256/sha256.h"
 
 #define HMAC_SHA256_BITS        SHA256_HASH_BITS
 #define HMAC_SHA256_BYTES       SHA256_HASH_BYTES

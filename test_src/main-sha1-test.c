@@ -28,15 +28,15 @@
 
 #include "sha1.h"
 #include "nessie_hash_test.h"
-#include "hfal_sha1.h"
-#include "hfal-performance.h"
+#include "hfal/hfal_sha1.h"
+#include "hfal/hfal-performance.h"
 
 #include <stdint.h>
 #include <string.h>
 #include <stdlib.h>
 #include "cli.h"
 #include "shavs.h"
-#include "hfal_sha1.h"
+#include "hfal/hfal_sha1.h"
 #include "dump.h"
 
 char* algo_name = "SHA-1";

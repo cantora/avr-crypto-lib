@@ -19,7 +19,7 @@
 #ifndef HMACSHA1_H_
 #define HMACSHA1_H_
 
-#include "sha1.h"
+#include "sha1/sha1.h"
 
 #define HMAC_SHA1_BITS        SHA1_HASH_BITS
 #define HMAC_SHA1_BYTES       SHA1_HASH_BYTES

@@ -22,7 +22,7 @@
 #include <avr/pgmspace.h>
 #include "cli.h"
 #include "dsa.h"
-#include "bigint.h"
+#include "bigint/bigint.h"
 
 
 #define DSA_KEY_BLOB_SIZE 1024

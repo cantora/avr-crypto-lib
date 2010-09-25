@@ -31,7 +31,7 @@
 #include <stdint.h>
 #include <string.h>
 #include "config.h"
-#include "sha1.h"
+#include "sha1/sha1.h"
 #include "hmac-sha1.h"
 
 #define IPAD 0x36
