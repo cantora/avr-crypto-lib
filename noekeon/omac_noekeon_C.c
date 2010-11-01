@@ -1,6 +1,6 @@
-#include "noekeon/noekeon.h"
+#include "noekeon.h"
 #include "omac_noekeon.h"
-#include "memxor/memxor.h"
+#include "memxor.h"
 #include <string.h>
 #include <stdint.h>
 

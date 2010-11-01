@@ -28,7 +28,7 @@
 #include <avr/pgmspace.h>
 #include <stdlib.h>
 #include "hashfunction_descriptor.h"
-#include "sha1/sha1.h"
+#include "sha1.h"
 
 static const char sha1_str[]   PROGMEM = "SHA-1";
 

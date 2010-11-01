@@ -26,7 +26,7 @@
 #include <stdint.h>
 #include <string.h> /* memset() */
 #include <avr/pgmspace.h>
-#include "memxor/memxor.h"
+#include "memxor.h"
 #include "serpent.h"
 #include "serpent-sboxes.h"
 

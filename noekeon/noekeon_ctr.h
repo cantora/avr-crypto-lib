@@ -30,7 +30,7 @@
 #define NOEKEON_CTR_H_
 
 #include <stdint.h>
-#include "noekeon/noekeon.h"
+#include "noekeon.h"
 
 typedef struct{
 	uint8_t counter[16];

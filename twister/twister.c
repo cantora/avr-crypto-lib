@@ -23,7 +23,7 @@
 #include <avr/pgmspace.h>
 #include "twister.h"
 #include "twister_tables.h"
-#include "memxor/memxor.h"
+#include "memxor.h"
 
 //#ifndef TWISTER_MUL_TABLE
 # include "gf256mul/gf256mul.h"

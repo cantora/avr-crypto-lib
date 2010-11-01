@@ -2,7 +2,7 @@
 
 #include <stdint.h>
 #include <string.h>
-#include "memxor/memxor.h"
+#include "memxor.h"
 #include "twister-small.h"
 
 /*********************************************************************/

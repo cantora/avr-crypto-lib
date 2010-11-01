@@ -26,7 +26,7 @@
 #include "uart_i.h"
 #include "debug.h"
 
-#include "md5/md5.h"
+#include "md5.h"
 #include "hmac-md5.h"
 /*
 #include "base64_enc.h"

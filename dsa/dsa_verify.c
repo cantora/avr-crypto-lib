@@ -18,9 +18,9 @@
 */
 
 #include <stdint.h>
-#include "bigint/bigint.h"
+#include "bigint.h"
 #include "dsa.h"
-#include "hfal/hfal-basic.h"
+#include "hfal-basic.h"
 
 uint8_t dsa_verify_bigint(const dsa_signature_t* s, const bigint_t* m,
 		                  const dsa_ctx_t* ctx){

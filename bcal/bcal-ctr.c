@@ -22,7 +22,7 @@
 #include <string.h>
 #include "bcal-basic.h"
 #include "bcal-ctr.h"
-#include "memxor/memxor.h"
+#include "memxor.h"
 
 static void increment_be(void* block, uint8_t size_B){
 	uint16_t c=1;

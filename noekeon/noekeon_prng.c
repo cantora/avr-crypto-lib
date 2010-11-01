@@ -24,8 +24,8 @@
  * 
  */
 
-#include "noekeon/noekeon.h"
-#include "memxor/memxor.h"
+#include "noekeon.h"
+#include "memxor.h"
 #include <stdint.h>
 #include <string.h>
 

@@ -26,7 +26,7 @@
 #include "uart_i.h"
 #include "debug.h"
 
-#include "sha1/sha1.h"
+#include "sha1.h"
 #include "hmac-sha1.h"
 
 #include "nessie_mac_test.h"

@@ -22,7 +22,7 @@
 #include <string.h>
 #include "bcal-cfb_byte.h"
 #include "bcal-basic.h"
-#include "memxor/memxor.h"
+#include "memxor.h"
 
 
 uint8_t bcal_cfb_B_init(const bcdesc_t* desc, const void* key, uint16_t keysize_b, uint16_t size_b, bcal_cfb_B_ctx_t* ctx){

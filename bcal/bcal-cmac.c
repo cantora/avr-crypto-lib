@@ -22,7 +22,7 @@
 #include <string.h>
 #include "bcal-basic.h"
 #include "bcal-cmac.h"
-#include "memxor/memxor.h"
+#include "memxor.h"
 
 
 static uint8_t left_shift_be_block(void* block, uint8_t blocksize_B){

@@ -70,7 +70,7 @@ define TargetSource_Template
 $(1): $(2)
 	@echo "[cc]: $(1) <-- $(2)"
 	@mkdir -p $(dir $(1))
-	@$(CC) $(CFLAGS_A) -I./$(strip $(3)) -c -o $(1) $(2)
+	@$(CC) $(CFLAGS_A) $(addprefix -I./,$(3)) $(addprefix -D, $(4)) -c -o $(1) $(2)
 endef
 
 # ----------------------------------------------------------------------------
@@ -92,8 +92,9 @@ $(foreach a, $(ALGORITHMS), \
   $(foreach b, $($(a)_OBJ), \
     $(eval $(call TargetSource_Template, \
       $(BIN_DIR)$(call lc, $(a))/$(b), \
-       $(call find_source_file, $(b), $($(a)_DIR) $($(a)_INCDIR) $(GLOBAL_INCDIR) ),\
-      $($(a)_DIR) \
+      $(call find_source_file, $(b), $($(a)_DIR) $($(a)_INCDIR) $(GLOBAL_INCDIR) ),\
+      $($(a)_DIR) $($(a)_INCDIR) $(GLOBAL_INCDIR), \
+      $($(a)_DEFINES), \
     )) \
   ) \
 )
@@ -102,8 +103,9 @@ $(foreach a, $(ALGORITHMS), \
   $(foreach b, $($(a)_TEST_BIN), \
     $(eval $(call TargetSource_Template, \
       $(BIN_DIR)$(call lc, $(a))/$(TEST_DIR)$(b), \
-       $(call find_source_file, $(b), $($(a)_DIR) $($(a)_INCDIR) $(GLOBAL_INCDIR) ),\
-      $($(a)_DIR) \
+      $(call find_source_file, $(b), $($(a)_DIR) $($(a)_INCDIR) $(GLOBAL_INCDIR) ),\
+      $($(a)_DIR) $($(a)_INCDIR) $(GLOBAL_INCDIR), \
+      $($(a)_DEFINES) \
     )) \
   ) \
 )
@@ -225,6 +227,9 @@ $(foreach algo, $(ALGORITHMS), \
         $($(algo)_BINOBJ)\
 	))\
 )
+
+.PHONY: all
+all: cores
 
 .PHONY: cores
 cores: $(foreach algo, $(ALGORITHMS), $(algo)_OBJ)

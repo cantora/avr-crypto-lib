@@ -21,7 +21,7 @@
 #include <string.h>
 #include "bcal-ofb.h"
 #include "bcal-basic.h"
-#include "memxor/memxor.h"
+#include "memxor.h"
 
 
 uint8_t bcal_ofb_init(const bcdesc_t* desc, const void* key, uint16_t keysize_b, bcal_ofb_ctx_t* ctx){

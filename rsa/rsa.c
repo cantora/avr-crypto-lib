@@ -19,7 +19,7 @@
 
 #include <stdint.h>
 #include "cli.h"
-#include "bigint/bigint.h"
+#include "bigint.h"
 #include "rsa.h"
 
 uint8_t rsa_enc_bigint(bigint_t* c, const bigint_t* m,

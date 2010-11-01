@@ -19,10 +19,10 @@
 
 #include <stdint.h>
 #include "cli.h"
-#include "bigint/bigint.h"
+#include "bigint.h"
 #include "dsa.h"
 #include "hashfunction_descriptor.h"
-#include "hfal/hfal-basic.h"
+#include "hfal-basic.h"
 
 uint8_t dsa_sign_bigint(dsa_signature_t* s, const bigint_t* m,
 		                const dsa_ctx_t* ctx, const bigint_t* k){

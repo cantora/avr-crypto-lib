@@ -26,25 +26,25 @@
 #include "uart_i.h"
 #include "debug.h"
 
-#include "aes/aes.h"
+#include "aes.h"
 
 #include "nessie_bc_test.h"
 #include "cli.h"
 #include "performance_test.h"
 #include "dump.h"
 
-#include "bcal/bcal_aes128.h"
-#include "bcal/bcal_aes192.h"
-#include "bcal/bcal_aes256.h"
-#include "bcal/bcal-cbc.h"
-#include "bcal/bcal-cfb_byte.h"
-#include "bcal/bcal-cfb_bit.h"
-#include "bcal/bcal-ofb.h"
-#include "bcal/bcal-ctr.h"
-#include "bcal/bcal-cmac.h"
-#include "bcal/bcal-eax.h"
+#include "bcal_aes128.h"
+#include "bcal_aes192.h"
+#include "bcal_aes256.h"
+#include "bcal-cbc.h"
+#include "bcal-cfb_byte.h"
+#include "bcal-cfb_bit.h"
+#include "bcal-ofb.h"
+#include "bcal-ctr.h"
+#include "bcal-cmac.h"
+#include "bcal-eax.h"
 #include "cmacvs.h"
-#include "bcal/bcal-performance.h"
+#include "bcal-performance.h"
 
 #include <stdint.h>
 #include <string.h>

@@ -26,7 +26,7 @@
 #include "uart_i.h"
 #include "debug.h"
 
-#include "noekeon/noekeon.h"
+#include "noekeon.h"
 #include "omac_noekeon.h"
 
 #include "cli.h"

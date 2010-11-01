@@ -28,7 +28,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <getopt.h>
-#include "gf256mul/gf256mul.h"
+#include "gf256mul.h"
 
 int print_header =  1,
     print_braces =  1,

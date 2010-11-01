@@ -29,15 +29,15 @@
 #include "sha256.h"
 #include "nessie_hash_test.h"
 #include "performance_test.h"
-#include "hfal/hfal-performance.h"
-#include "hfal/hfal-nessie.h"
+#include "hfal-performance.h"
+#include "hfal-nessie.h"
 
 #include <stdint.h>
 #include <string.h>
 #include <stdlib.h>
 #include "cli.h"
 #include "shavs.h"
-#include "hfal/hfal_sha256.h"
+#include "hfal_sha256.h"
 #include "dump.h"
 
 char* algo_name = "SHA-256";

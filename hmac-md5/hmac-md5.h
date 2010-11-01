@@ -19,7 +19,7 @@
 #ifndef HMACMD5_H_
 #define HMACMD5_H_
 
-#include "md5/md5.h"
+#include "md5.h"
 
 #define HMAC_MD5_BITS        MD5_HASH_BITS
 #define HMAC_MD5_BYTES       MD5_HASH_BYTES

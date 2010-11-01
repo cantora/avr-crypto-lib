@@ -24,7 +24,7 @@
 #include "bcal-cmac.h"
 #include "bcal-ctr.h"
 #include "bcal-eax.h"
-#include "memxor/memxor.h"
+#include "memxor.h"
 
 uint8_t bcal_eax_init(const bcdesc_t* desc, const void* key, uint16_t keysize_b, bcal_eax_ctx_t* ctx){
 	uint8_t r;

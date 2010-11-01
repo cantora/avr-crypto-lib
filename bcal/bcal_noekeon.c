@@ -3,7 +3,7 @@
 #include <avr/pgmspace.h>
 #include <stdlib.h>
 #include "blockcipher_descriptor.h"
-#include "noekeon/noekeon.h"
+#include "noekeon.h"
 #include "keysize_descriptor.h"
 
 const char noekeon_direct_str[]   PROGMEM = "Noekeon-Direct";

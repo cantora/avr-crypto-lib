@@ -29,7 +29,7 @@
 #include <stdint.h>
 #include "base64_dec.h"
 
-#include "test_src/cli.h"
+#include "cli.h"
 
 /*
  #define USE_GCC_EXTENSION

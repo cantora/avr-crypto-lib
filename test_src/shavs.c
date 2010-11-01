@@ -30,7 +30,7 @@
 #include <string.h>
 #include <ctype.h>
 #include "hashfunction_descriptor.h"
-#include "hfal/hfal-basic.h"
+#include "hfal-basic.h"
 #include "shavs.h"
 #include "string-extras.h"
 #include "cli.h"

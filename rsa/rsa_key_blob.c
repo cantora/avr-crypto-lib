@@ -22,7 +22,7 @@
 #include <avr/pgmspace.h>
 #include "cli.h"
 #include "rsa.h"
-#include "bigint/bigint.h"
+#include "bigint.h"
 
 #define RSA_KEYSIZE 1024
 

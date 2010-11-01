@@ -29,8 +29,8 @@
 #include "md5.h"
 #include "nessie_hash_test.h"
 #include "performance_test.h"
-#include "hfal/hfal_md5.h"
-#include "hfal/hfal-performance.h"
+#include "hfal_md5.h"
+#include "hfal-performance.h"
 
 #include <stdint.h>
 #include <string.h>

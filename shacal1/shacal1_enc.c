@@ -28,7 +28,7 @@
 
 #include <stdint.h>
 #include <string.h>
-#include "sha1/sha1.h"
+#include "sha1.h"
 #include "shacal1_enc.h"
 
 void shacal1_enc(void* buffer, void* key, uint16_t keysize_b){

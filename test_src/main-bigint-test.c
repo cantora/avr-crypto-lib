@@ -26,8 +26,8 @@
 #include "uart_i.h"
 #include "debug.h"
 
-#include "noekeon/noekeon.h"
-#include "noekeon/noekeon_prng.h"
+#include "noekeon.h"
+#include "noekeon_prng.h"
 #include "bigint.h"
 #include "bigint_io.h"
 

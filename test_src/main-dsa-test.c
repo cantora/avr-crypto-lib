@@ -26,18 +26,18 @@
 #include "uart_i.h"
 #include "debug.h"
 
-#include "noekeon/noekeon.h"
-#include "noekeon/noekeon_prng.h"
-#include "bigint/bigint.h"
-#include "bigint/bigint_io.h"
+#include "noekeon.h"
+#include "noekeon_prng.h"
+#include "bigint.h"
+#include "bigint_io.h"
 #include "dsa.h"
 #include "dsa_key_blob.h"
 
 #include "cli.h"
 #include "performance_test.h"
-#include "hfal/hfal_sha1.h"
-#include "base64/base64_enc.h"
-#include "base64/base64_dec.h"
+#include "hfal_sha1.h"
+#include "base64_enc.h"
+#include "base64_dec.h"
 #include <stdint.h>
 #include <string.h>
 #include <stdlib.h>

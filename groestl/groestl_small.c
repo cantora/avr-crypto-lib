@@ -26,9 +26,9 @@
  */
 
 #include "groestl_small.h"
-#include "aes/aes_sbox.h"
-#include "gf256mul/gf256mul.h"
-#include "memxor/memxor.h"
+#include "aes_sbox.h"
+#include "gf256mul.h"
+#include "memxor.h"
 #include <stdint.h>
 #include <avr/pgmspace.h>
 #include <string.h>

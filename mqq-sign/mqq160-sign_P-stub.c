@@ -31,7 +31,7 @@
 #include <string.h>
 #include <stdint.h>
 #include <avr/pgmspace.h>
-#include "memxor/memxor.h"
+#include "memxor.h"
 #include "mqq160-sign.h"
 
 /*

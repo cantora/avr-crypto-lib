@@ -27,7 +27,7 @@
 #ifndef NOEKEON_OMAC_H_
 #define NOEKEON_OMAC_H_
 
-#include "noekeon/noekeon.h"
+#include "noekeon.h"
 #include <stdint.h>
 
 typedef uint8_t omac_noekeon_ctx_t[16];

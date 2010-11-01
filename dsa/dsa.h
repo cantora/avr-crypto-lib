@@ -21,8 +21,8 @@
 #define DSA_H_
 
 #include <stdint.h>
-#include "hfal/hfal-basic.h"
-#include "bigint/bigint.h"
+#include "hfal-basic.h"
+#include "bigint.h"
 
 typedef struct{
 	bigint_t p;

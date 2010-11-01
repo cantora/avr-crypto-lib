@@ -19,8 +19,8 @@
 
 
 #include "echo.h"
-#include "gf256mul/gf256mul.h"
-#include "memxor/memxor.h"
+#include "gf256mul.h"
+#include "memxor.h"
 #include <stdint.h>
 #include <string.h>
 

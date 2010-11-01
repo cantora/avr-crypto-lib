@@ -21,7 +21,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <avr/pgmspace.h>
-#include "memxor/memxor.h"
+#include "memxor.h"
 #include "rotate64.h"
 #include "keccak.h"
 

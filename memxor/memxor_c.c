@@ -1,6 +1,6 @@
 #include <stdint.h>
 
-#include "memxor/memxor.h"
+#include "memxor.h"
 
 void memxor(void* dest, const void* src, uint16_t n){
   while(n--){
