@@ -62,11 +62,20 @@ threefish256_init:
 	movw r30, r20
 	movw r26, r24
 	ldi r24, 4
-	ldi A7, 0x55
-	mov A6, A7
-	movw A4, A6
-	movw A2, A6
+;	ldi A7, 0x55
+;	mov A6, A7
+;	movw A4, A6
+;	movw A2, A6
+;	movw A0, A6
+	ldi A6, 0x22 ; 0x1BD1.1BDA.A9FC.1A22
+	ldi A7, 0x1A
 	movw A0, A6
+	ldi A2, 0xFC
+	ldi A3, 0xA9
+	ldi A4, 0xDA
+	ldi A5, 0x1B
+	ldi A6, 0xD1
+	ldi A7, 0x1B
 1:
 	ld r0, X+
 	st Z+, r0

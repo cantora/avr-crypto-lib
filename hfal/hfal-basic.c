@@ -100,3 +100,9 @@ uint16_t hfal_hash_getHashsize(const hfdesc_t* hash_descriptor){
 	ret = pgm_read_word(&(hash_descriptor->hashsize_b));
 	return ret;
 }
+
+uint16_t hfal_hash_getCtxsize_B(const hfdesc_t* hash_descriptor){
+	uint16_t ret;
+	ret = pgm_read_word(&(hash_descriptor->ctxsize_B));
+	return ret;
+}

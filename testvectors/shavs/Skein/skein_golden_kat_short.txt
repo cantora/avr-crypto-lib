@@ -4,8 +4,8 @@
 Message data:
      FF
 Result:
-     42 C8 82 37  B6 3F C9 9C  55 09 88 38  A1 71 D5 0B
-     FB FF CA F3  40 70 5C 92  3B BB 37 45  D1 47 15 E8
+     0B 98 DC D1  98 EA 0E 50  A7 A2 44 C4  44 E2 5C 23
+     DA 30 C1 0F  C9 A1 F2 70  A6 63 7F 1F  34 E6 7E D2
 --------------------------------
 
 :Skein-256:   256-bit hash, msgLen =   256 bits
@@ -14,8 +14,8 @@ Message data:
      FF FE FD FC  FB FA F9 F8  F7 F6 F5 F4  F3 F2 F1 F0
      EF EE ED EC  EB EA E9 E8  E7 E6 E5 E4  E3 E2 E1 E0
 Result:
-     E3 3F 48 3B  13 89 BA 9F  AE FF 25 25  7E 87 CF 76
-     00 8C 35 28  5E 3B D5 62  BD C1 F3 EA  2A 96 06 35
+     8D 0F A4 EF  77 7F D7 59  DF D4 04 4E  6F 6A 5A C3
+     C7 74 AE C9  43 DC FC 07  92 7B 72 3B  5D BF 40 8B
 --------------------------------
 
 :Skein-256:   256-bit hash, msgLen =   512 bits
@@ -26,8 +26,8 @@ Message data:
      DF DE DD DC  DB DA D9 D8  D7 D6 D5 D4  D3 D2 D1 D0
      CF CE CD CC  CB CA C9 C8  C7 C6 C5 C4  C3 C2 C1 C0
 Result:
-     90 E5 0C 4D  CF C7 49 0A  09 F3 A1 A7  9B F3 B3 DF
-     21 EA 85 44  7B 0F F0 29  C8 47 D6 59  85 6E C7 A5
+     DF 28 E9 16  63 0D 0B 44  C4 A8 49 DC  9A 02 F0 7A
+     07 CB 30 F7  32 31 82 56  B1 5D 86 5A  C4 AE 16 2F
 --------------------------------
 
 :Skein-512:   512-bit hash, msgLen =     8 bits
@@ -35,10 +35,10 @@ Result:
 Message data:
      FF
 Result:
-     42 AA 6B D9  CA 92 E9 0E  A2 8D F6 F6  F2 D0 D9 B8
-     5A 2D 19 07  EE 4D C1 B1  71 AC E7 EB  11 59 BE 3B
-     D1 BC 56 58  6D 92 49 2B  6E FF 9B E0  33 06 99 4C
-     65 A3 32 C4  C2 41 60 F4  66 55 04 0E  55 8E 83 29
+     71 B7 BC E6  FE 64 52 22  7B 9C ED 60  14 24 9E 5B
+     F9 A9 75 4C  3A D6 18 CC  C4 E0 AA E1  6B 31 6C C8
+     CA 69 8D 86  43 07 ED 3E  80 B6 EF 15  70 81 2A C5
+     27 2D C4 09  B5 A0 12 DF  2A 57 91 02  F3 40 61 7A
 --------------------------------
 
 :Skein-512:   512-bit hash, msgLen =   512 bits
@@ -49,10 +49,10 @@ Message data:
      DF DE DD DC  DB DA D9 D8  D7 D6 D5 D4  D3 D2 D1 D0
      CF CE CD CC  CB CA C9 C8  C7 C6 C5 C4  C3 C2 C1 C0
 Result:
-     04 F9 6C 6F  61 B3 E2 37  A4 FA 77 55  EE 4A CF 34
-     49 42 22 96  89 54 F4 95  AD 14 7A 1A  71 5F 7A 73
-     EB EC FA 1E  F2 75 BE D8  7D C6 0B D1  A0 BC 60 21
-     06 FA 98 F8  E7 23 7B D1  AC 09 58 E7  6D 30 66 78
+     45 86 3B A3  BE 0C 4D FC  27 E7 5D 35  84 96 F4 AC
+     9A 73 6A 50  5D 93 13 B4  2B 2F 5E AD  A7 9F C1 7F
+     63 86 1E 94  7A FB 1D 05  6A A1 99 57  5A D3 F8 C9
+     A3 CC 17 80  B5 E5 FA 4C  AE 05 0E 98  98 76 62 5B
 --------------------------------
 
 :Skein-512:   256-bit hash, msgLen =  1024 bits
@@ -67,8 +67,8 @@ Message data:
      9F 9E 9D 9C  9B 9A 99 98  97 96 95 94  93 92 91 90
      8F 8E 8D 8C  8B 8A 89 88  87 86 85 84  83 82 81 80
 Result:
-     E4 7A 51 E6  51 37 FD A2  2C A8 A6 71  AC 8A C2 55
-     E8 C8 17 30  E7 98 BC BF  6B 8F 27 7E  20 D2 3D 3F
+     1A 6A 5B A0  8E 74 A8 64  B5 CB 05 2C  FB 9B 2F A1
+     28 20 32 30  A4 D9 92 3A  32 9F 54 27  C4 77 A4 DB
 --------------------------------
 
 :Skein-512:   384-bit hash, msgLen =  1024 bits
@@ -83,9 +83,9 @@ Message data:
      9F 9E 9D 9C  9B 9A 99 98  97 96 95 94  93 92 91 90
      8F 8E 8D 8C  8B 8A 89 88  87 86 85 84  83 82 81 80
 Result:
-     60 3C FE E0  49 BB D5 DB  33 F8 71 B4  57 9D 78 16
-     2B FF E6 29  1E 01 C7 83  35 2E 68 13  B6 FB 1E 71
-     F7 20 D2 3C  4E 70 43 17  23 C2 C5 E3  18 97 17 ED
+     EE AF 4D C9  B6 68 C2 A2  70 B9 0C BD  2E 98 6C 85
+     7E 46 4B 08  90 3E 5B 6D  DA 1F 15 73  6F 50 D1 BF
+     2B 6C 40 A3  98 B7 9C 67  53 35 92 EF  D9 6B D8 DC
 --------------------------------
 
 :Skein-512:   512-bit hash, msgLen =  1024 bits
@@ -100,10 +100,10 @@ Message data:
      9F 9E 9D 9C  9B 9A 99 98  97 96 95 94  93 92 91 90
      8F 8E 8D 8C  8B 8A 89 88  87 86 85 84  83 82 81 80
 Result:
-     B4 84 AE 9F  B7 3E 66 20  B1 0D 52 E4  92 60 AD 26
-     62 0D B2 88  3E BA FA 21  0D 70 19 22  AC A8 53 68
-     08 81 44 BD  F4 EF 3D 98  98 D4 7C 34  F1 30 03 1B
-     0A 09 92 F0  9F 62 DD 78  B3 29 52 5A  77 7D AF 7D
+     91 CC A5 10  C2 63 C4 DD  D0 10 53 0A  33 07 33 09
+     62 86 31 F3  08 74 7E 1B  CB AA 90 E4  51 CA B9 2E
+     51 88 08 7A  F4 18 87 73  A3 32 30 3E  66 67 A7 A2
+     10 85 6F 74  21 39 00 00  71 F4 8E 8B  A2 A5 AD B7
 --------------------------------
 
 :Skein-1024: 1024-bit hash, msgLen =     8 bits
@@ -111,14 +111,14 @@ Result:
 Message data:
      FF
 Result:
-     A2 04 C3 94  92 34 16 B8  20 68 6E 1B  44 9C A4 27
-     7A 47 7C A9  DB 08 4D D9  31 71 5B 10  2A 43 F0 45
-     BC 34 83 AE  E0 28 86 08  91 67 10 F8  75 DF 8D 79
-     42 49 97 46  53 28 B5 17  BA C3 09 96  FB FA 64 2B
-     CC 44 6E 15  7A 45 D0 2F  08 78 DA A3  55 61 39 A7
-     6C 2C FE C2  83 07 21 96  B3 3A 12 83  54 CB DB 6D
-     B9 DB A8 79  C7 1C B1 0C  77 E9 29 78  6D 2F BA FD
-     E6 A0 55 29  E2 6B 20 FF  3B BB 7B 47  5C AA 71 15
+     E6 2C 05 80  2E A0 15 24  07 CD D8 78  7F DA 9E 35
+     70 3D E8 62  A4 FB C1 19  CF F8 59 0A  FE 79 25 0B
+     CC C8 B3 FA  F1 BD 24 22  AB 5C 0D 26  3F B2 F8 AF
+     B3 F7 96 F0  48 00 03 81  53 1B 6F 00  D8 51 61 BC
+     0F FF 4B EF  24 86 B1 EB  CD 37 73 FA  BF 50 AD 4A
+     D5 63 9A F9  04 0E 3F 29  C6 C9 31 30  1B F7 98 32
+     E9 DA 09 85  7E 83 1E 82  EF 8B 46 91  C2 35 65 65
+     15 D4 37 D2  BD A3 3B CE  C0 01 C6 7F  FD E1 5B A8
 --------------------------------
 
 :Skein-1024:  384-bit hash, msgLen =  1024 bits
@@ -133,9 +133,9 @@ Message data:
      9F 9E 9D 9C  9B 9A 99 98  97 96 95 94  93 92 91 90
      8F 8E 8D 8C  8B 8A 89 88  87 86 85 84  83 82 81 80
 Result:
-     11 F4 DF 6E  FB 38 6E 1D  69 B4 1A 65  8D 43 95 6F
-     9A BB BC 57  89 1C AB D6  DC C6 E9 A7  D9 55 E4 1F
-     EC 08 4B B2  9D 48 8D 5C  C9 EE C4 6C  28 20 BB 48
+     A5 50 F3 07  1A 88 26 04  4F F5 F1 4E  88 AA 86 93
+     80 87 A1 0C  15 51 02 C0  9D 3B 3E 3B  BF 5C 96 B0
+     FE 9C 1C 70  5E 5D 0B AC  CD C9 8F ED  10 25 42 E5
 --------------------------------
 
 :Skein-1024:  512-bit hash, msgLen =  1024 bits
@@ -150,10 +150,10 @@ Message data:
      9F 9E 9D 9C  9B 9A 99 98  97 96 95 94  93 92 91 90
      8F 8E 8D 8C  8B 8A 89 88  87 86 85 84  83 82 81 80
 Result:
-     EE 8D AD 7D  F1 61 EA C3  37 AE 4B DA  B6 56 ED D6
-     6E 9C BC 93  26 E8 F2 BD  40 08 7B 26  3E 7A A5 43
-     F3 AC 30 F3  D3 B7 F3 B3  8A 05 AE 6F  88 DB AA 9C
-     BC 5E CE 22  59 66 64 54  7F 0F A3 A3  B4 7A 42 F4
+     57 E3 DE 8C  A3 8A 69 C9  40 5A BF 2A  40 63 B4 85
+     5C 77 5B 6D  6C 46 47 25  D3 25 FA F2  7E B6 F1 5F
+     08 6B 11 DA  99 E2 52 AC  FC F3 BB E6  2E 08 BC 10
+     25 28 50 C4  0B B4 76 6C  32 C1 0D 99  8D B2 7B 10
 --------------------------------
 
 :Skein-1024: 1024-bit hash, msgLen =  1024 bits
@@ -168,14 +168,14 @@ Message data:
      9F 9E 9D 9C  9B 9A 99 98  97 96 95 94  93 92 91 90
      8F 8E 8D 8C  8B 8A 89 88  87 86 85 84  83 82 81 80
 Result:
-     C2 E6 B6 FC  04 2F 86 F2  E3 17 38 64  1D B6 02 95
-     F7 42 04 AB  52 58 95 A5  DE C5 C8 06  AC 47 86 EC
-     1C 98 29 20  09 5B 71 29  FE 3D 8B D4  51 F6 7E A3
-     13 20 C7 8B  11 57 5E A6  DD E3 94 E7  5D C5 F5 C9
-     6A 51 04 38  6D D5 50 16  D4 94 DF FA  C5 AD 11 9B
-     22 C9 60 DC  46 B6 58 CF  2C EB 7D 73  AF 0F D0 E1
-     9C 7E 21 34  4A AD 06 AF  39 FC BE F6  C6 C5 D0 0D
-     E8 96 B8 88  D9 54 56 DE  DB A6 E5 37  7B 0C C5 72
+     1F 3E 02 C4  6F B8 0A 3F  CD 2D FB BC  7C 17 38 00
+     B4 0C 60 C2  35 4A F5 51  18 9E BF 43  3C 3D 85 F9
+     FF 18 03 E6  D9 20 49 31  79 ED 7A E7  FC E6 9C 35
+     81 A5 A2 F8  2D 3E 0C 7A  29 55 74 D0  CD 7D 21 7C
+     48 4D 2F 63  13 D5 9A 77  18 EA D0 7D  07 29 C2 48
+     51 D7 E7 D2  49 1B 90 2D  48 91 94 E6  B7 D3 69 DB
+     0A B7 AA 10  6F 0E E0 A3  9A 42 EF C5  4F 18 D9 37
+     76 08 09 85  F9 07 57 4F  99 5E C6 A3  71 53 A5 78
 --------------------------------
 
 :Skein-1024: 1024-bit hash, msgLen =  2048 bits
@@ -198,14 +198,14 @@ Message data:
      1F 1E 1D 1C  1B 1A 19 18  17 16 15 14  13 12 11 10
      0F 0E 0D 0C  0B 0A 09 08  07 06 05 04  03 02 01 00
 Result:
-     64 66 1F 7D  C4 AB BB 50  00 3E AE A6  92 42 01 8D
-     27 AE B4 15  CA 7B 89 1F  BD DB C1 C6  90 40 D4 C4
-     A9 82 21 33  E6 0E 22 2A  F7 EE 09 34  9C 3F 1C 4C
-     C8 F3 81 11  A5 05 E8 63  93 E7 28 41  80 60 2D B6
-     30 AE 76 3D  9A 62 0A E4  93 2A 82 34  15 B5 95 15
-     AE EC 55 64  18 ED 2E F0  82 71 89 D5  4E 65 76 D4
-     1D 96 1E DD  CB BD 87 1E  6F 1B 6B A6  25 DC 68 4C
-     BB C2 04 88  8B 18 68 7E  D6 27 50 60  70 00 6B 82
+     84 2A 53 C9  9C 12 B0 CF  80 CF 69 49  1B E5 E2 F7
+     51 5D E8 73  3B 6E A9 42  2D FD 67 66  65 B5 FA 42
+     FF B3 A9 C4  8C 21 77 77  95 08 48 CE  CD B4 8F 64
+     0F 81 FB 92  BE F6 F8 8F  7A 85 C1 F7  CD 14 46 C9
+     16 1C 0A FE  8F 25 AE 44  4F 40 D3 68  00 81 C3 5A
+     A4 3F 64 0F  D5 FA 3C 3C  03 0B CC 06  AB AC 01 D0
+     98 BC C9 84  EB D8 32 27  12 92 1E 00  B1 BA 07 D6
+     D0 1F 26 90  70 50 25 5E  F2 C8 E2 4F  71 6C 52 A5
 --------------------------------
 
 :Skein-256:   256-bit hash, msgLen =  1016 bits. Tree: leaf=02, node=02, maxLevels=02
@@ -220,8 +220,8 @@ Message data:
      60 01 62 01  64 01 66 01  68 01 6A 01  6C 01 6E 01
      70 01 72 01  74 01 76 01  78 01 7A 01  7C 01 7E
 Result:
-     1A 92 F8 B7  84 31 27 5C  AB 01 A8 1C  4E 93 ED 99
-     5B 7C 0D BA  03 2F 9E F3  A1 47 89 4C  39 7A 99 B2
+     52 1D B8 13  38 EA 4E BF  1B DF 78 2C  F5 F8 0A F1
+     57 9E 62 4E  48 30 AC 9B  C3 91 21 5F  B9 13 85 DE
 --------------------------------
 
 :Skein-256:   256-bit hash, msgLen =  4080 bits. Tree: leaf=02, node=02, maxLevels=02
@@ -260,8 +260,8 @@ Message data:
      E0 00 E2 00  E4 00 E6 00  E8 00 EA 00  EC 00 EE 00
      F0 00 F2 00  F4 00 F6 00  F8 00 FA 00  FC 00
 Result:
-     D2 3E 7D 67  A8 F4 51 67  44 F8 37 7B  0B 5A 7C CC
-     B0 B4 1B 0C  9A F9 B0 D6  B4 15 7B A1  99 00 C8 0C
+     4F 7C FA 97  87 D1 62 CB  B7 64 84 A9  EA D5 6F 82
+     3B 45 A0 C7  67 62 E2 1E  BD 0D E6 BA  70 09 04 07
 --------------------------------
 
 :Skein-512:   512-bit hash, msgLen =  2040 bits. Tree: leaf=02, node=02, maxLevels=02
@@ -284,10 +284,10 @@ Message data:
      E0 02 E2 02  E4 02 E6 02  E8 02 EA 02  EC 02 EE 02
      F0 02 F2 02  F4 02 F6 02  F8 02 FA 02  FC 02 FE
 Result:
-     7B 64 0F CA  B5 90 EA E3  3D D4 CB 5A  56 4C 43 FA
-     BE A3 40 94  EA C8 2E 82  71 38 AE 33  6B 20 E0 CE
-     05 D6 A1 67  B7 38 F4 A4  D4 EE 35 9A  04 CD BF 1A
-     75 8D D8 16  F5 30 CF 8A  2B 5C 11 00  8D 78 9A C0
+     DF F6 34 2C  DA D9 AC 46  C4 0E F6 A6  A5 FE E3 57
+     51 50 4F 72  B0 89 90 56  51 75 E7 0D  64 41 E0 81
+     88 AE F4 3C  2A 00 00 E2  49 BC 9B C9  60 70 A6 45
+     EA 17 CF 97  3C 0F 5B 82  26 FE EF 33  6C D2 F7 0B
 --------------------------------
 
 :Skein-512:   512-bit hash, msgLen =  8176 bits. Tree: leaf=02, node=02, maxLevels=02
@@ -358,10 +358,10 @@ Message data:
      E0 01 E2 01  E4 01 E6 01  E8 01 EA 01  EC 01 EE 01
      F0 01 F2 01  F4 01 F6 01  F8 01 FA 01  FC 01
 Result:
-     96 11 33 D7  E9 55 3E 4C  03 D4 86 16  53 CB E2 ED
-     B8 81 2E 9F  52 5A 17 67  CE 89 C9 AA  8D 8C AE 96
-     2A BA CE E5  CA 21 BE 4F  C9 33 1A 29  0D DA 28 8C
-     22 B6 39 F5  34 5D 2F 40  02 C5 44 A1  89 45 9F 97
+     7F 33 5D 45  4E F0 C4 BF  0B 78 F2 28  82 36 0F 08
+     6D 1F C7 64  52 E9 DE 78  F1 A2 3F C9  21 B8 81 69
+     F4 9B 9E F0  83 8C 1D F7  2F 90 2A 39  1C A8 53 AF
+     2D DC 17 F5  29 3B 6A DA  4E DF FE 00  04 25 E1 DE
 --------------------------------
 
 :Skein-1024: 1024-bit hash, msgLen =  4088 bits. Tree: leaf=02, node=02, maxLevels=02
@@ -400,14 +400,14 @@ Message data:
      E0 05 E2 05  E4 05 E6 05  E8 05 EA 05  EC 05 EE 05
      F0 05 F2 05  F4 05 F6 05  F8 05 FA 05  FC 05 FE
 Result:
-     23 9E 51 EC  C1 94 24 BD  27 A1 50 C9  5E 75 33 62
-     C8 8E F4 EE  8C C0 B2 7D  34 32 12 59  5B 5B B3 E5
-     DD 7E D1 9D  97 37 1C BC  0B 86 4A 47  65 5F D2 E9
-     60 72 4F 41  A3 91 65 A2  CF 0B B8 58  72 92 BF 79
-     BE D4 FC C2  D6 EB 35 1E  D4 41 29 A3  28 FE BE DB
-     56 B2 98 C6  6B D3 CF 36  A8 67 13 8F  B4 BD 23 5B
-     50 5C C0 9A  61 88 A6 C5  A7 A0 27 75  50 D9 2F EE
-     1F 73 E1 F0  90 0E 54 17  CA 30 32 09  52 86 3A 5A
+     F8 C2 50 69  E6 D4 35 4E  6F 97 DF 4B  71 7E BF 5D
+     1A A3 0C 21  1A 23 07 84  F9 CD 15 23  17 C0 E0 D5
+     DD 13 2C DF  49 C0 57 E2  31 F1 35 5B  5C 3C 05 86
+     63 1C D5 1A  1E A6 82 9B  30 AC B1 66  F0 6A 15 5B
+     30 02 55 55  11 D4 9B 2C  2A B1 64 FD  8D A0 50 51
+     40 DC 33 54  6D 8E 39 7A  2B C3 C4 1A  87 AE A9 07
+     00 26 C0 13  B8 2D C9 5E  A1 26 DC B2  7E 43 83 50
+     9B 28 0D 76  F0 56 A7 57  B6 52 3A E1  68 89 AC B7
 --------------------------------
 
 :Skein-1024: 1024-bit hash, msgLen = 16368 bits. Tree: leaf=02, node=02, maxLevels=02
@@ -542,12 +542,12 @@ Message data:
      E0 03 E2 03  E4 03 E6 03  E8 03 EA 03  EC 03 EE 03
      F0 03 F2 03  F4 03 F6 03  F8 03 FA 03  FC 03
 Result:
-     DA 7D 45 52  47 E4 E2 20  93 F3 27 EB  7E 35 FF A9
-     6F 00 61 4C  EB DD EC 2C  22 85 90 BC  C6 06 02 15
-     BB 91 0F 95  90 C8 E2 46  47 71 CC A2  35 CA EC DA
-     ED 77 A3 87  76 BA 33 27  00 D8 C3 2D  5B 9D 12 F4
-     F3 92 94 EA  91 C9 38 1A  55 EA 3C A7  37 2B 51 85
-     97 07 3D 4C  52 E4 B5 55  2A F9 80 10  20 98 D4 70
-     DC F5 7F EB  D0 FA EE EB  E8 75 8D 5E  DF DF 64 76
-     49 E0 BF CC  C4 DA 63 F8  7D A4 B8 5B  CA FD 29 89
+     EB 19 F0 8D  77 49 9C 3F  17 1B 5C 72  E6 A1 63 F0
+     9F 37 16 97  E8 86 09 11  4A 5B 28 6E  1D 76 93 53
+     01 5E D4 71  DD 1D 0C 0D  0F BF 54 AF  E7 35 F1 37
+     D0 6F A2 56  40 DC 96 40  49 55 0A D0  09 E3 E3 B5
+     C1 1B 22 8F  5D 12 21 F6  61 EC E5 06  C4 23 DA 81
+     A7 4B A1 80  E5 CD 7E 4D  AD C2 F6 8F  2A F2 7E 32
+     C7 5E B6 60  99 F9 70 54  18 DB 24 95  43 95 37 A9
+     12 DE 74 39  8A 24 9F 48  4B FB EE 69  1A 10 2A 7A
 --------------------------------

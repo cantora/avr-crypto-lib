@@ -61,7 +61,8 @@ void permute_inv8(void* data){
 }
 */
 
-#define THREEFISH_KEY_CONST 0x5555555555555555LL /* 2**64/3 */
+//#define THREEFISH_KEY_CONST 0x5555555555555555LL /* 2**64/3 */
+#define THREEFISH_KEY_CONST 0x1BD11BDAA9FC1A22LL
 
 #define K(s) (((uint64_t*)key)[(s)])
 #define T(s) (((uint64_t*)tweak)[(s)])
