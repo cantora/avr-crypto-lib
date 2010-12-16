@@ -1,0 +1,7 @@
+# ExtremelyLongMsgKAT_224.txt
+# Algorithm Name: JH
+# Principal Submitter: Hongjun Wu
+
+Repeat = 16777216
+Text = abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmno
+MD = 36C79D025F4FE1E4BF7DF1C2E6A34A097B4ED6FE5B9825AE4E2152B9
