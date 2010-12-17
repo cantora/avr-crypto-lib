@@ -103,24 +103,21 @@ void jh_next_round_const(uint8_t* a){
 	}
 }
 
+static const uint8_t idx[]={112,80,48,16,96,64,32,0};
 
 
 static inline
 void group(uint8_t *a){
 	uint8_t b[128];
-	uint8_t i,x,y;
+	uint8_t i,j,k,x;
 	for(i=0; i<128; ++i){
-		x =   (((a[i/8+  0])>>4)&0x8)
-			| (((a[i/8+ 32])>>5)&0x4)
-			| (((a[i/8+ 64])>>6)&0x2)
-			| (((a[i/8+ 96])>>7)&0x1);
-		a[i/8] <<= 1; a[i/8+32]<<=1; a[i/8+64]<<=1; a[i/8+96]<<=1;
-		y =   (((a[i/8+ 16])>>4)&0x8)
-		    | (((a[i/8+ 48])>>5)&0x4)
-		    | (((a[i/8+ 80])>>6)&0x2)
-		    | (((a[i/8+112])>>7)&0x1);
-		a[i/8+16] <<= 1; a[i/8+48]<<=1; a[i/8+80]<<=1; a[i/8+112]<<=1;
-		b[i]= (x<<4)|y;
+		j=i/8;
+		for(k=0;k<8;++k){
+			x>>=1;
+			x |= a[j+idx[k]]&0x80;
+			a[j+idx[k]] <<= 1;
+		}
+		b[i]= x;
 	}
 	memcpy(a,b,128);
 }
@@ -128,13 +125,14 @@ void group(uint8_t *a){
 static inline
 void degroup(uint8_t *a){
 	uint8_t b[128];
-	static uint8_t idx[]={112,80,48,16,96,64,32,0};
 	uint8_t i,j,k,t;
 	for(i=0;i<128;++i){
 		j=i/8;
 		t = a[i];
 		for(k=0; k<8; ++k){
-			b[j+idx[k]]<<=1; b[j+idx[k]] |= t&1; t>>=1;
+			b[j+idx[k]]<<=1;
+			b[j+idx[k]] |= t&1;
+			t>>=1;
 		}
 	}
 	memcpy(a,b,128);
