@@ -73,18 +73,6 @@ void test256Null(void){
 	cli_hexdump_block(hash, 32, 4, 8);
 }
 
-
-void singleround_jh(void){
-	uint8_t data[] = {
-		0x1,0,0,0,0,0,0,0x0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-	    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-	    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
-	jh_encrypt(data);
-	cli_putstr_P(PSTR("\r\nresult:\r\n"));
-	cli_hexdump_block(data, 128, 4, 16);
-}
-
 /*****************************************************************************
  *  main																	 *
  *****************************************************************************/
@@ -104,7 +92,7 @@ cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ nessie_str,          NULL, testrun_nessie_jh},
 	{ performance_str,     NULL, performance_jh},
 	{ test256_str,         NULL, test256Null},
-	{ singleround_str,     NULL, singleround_jh},
+//	{ singleround_str,     NULL, singleround_jh},
 	{ shavs_list_str,      NULL, shavs_listalgos},
 	{ shavs_set_str,   (void*)1, (void_fpt)shavs_setalgo},
 	{ shavs_test1_str,     NULL, shavs_test1},

@@ -36,10 +36,6 @@ typedef struct {
 	uint32_t block_hashed;
 } jh_ctx_t;
 
-void jh_round(uint8_t* a, uint8_t roundno);
-void jh_encrypt(uint8_t* a);
-
-
 
 void jh_init(uint16_t hashlen_b, jh_ctx_t* ctx);
 void jh_nextBlock(jh_ctx_t* ctx, void* block);
