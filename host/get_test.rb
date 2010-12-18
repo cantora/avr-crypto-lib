@@ -18,6 +18,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
+require 'rubygems'
 require 'serialport'
 
 def read_line(error_msg=true)

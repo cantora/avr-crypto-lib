@@ -50,7 +50,7 @@ uint8_t jh_l(uint8_t v, uint8_t w){
 }
 
 static
-void jh_round(uint8_t* a, uint8_t* rc){
+void jh_round(uint8_t* a, const uint8_t* rc){
 	uint8_t b[128];
 	uint8_t i,r,x,y;
 	for(i=0; i<128; ++i){

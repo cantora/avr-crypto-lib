@@ -30,6 +30,7 @@
 #include "cli.h"
 #endif
 
+void jh_encrypt(uint8_t *a);
 
 void jh_init(uint16_t hashlen_b, jh_ctx_t* ctx){
 	memset(ctx->a, 0, 128);

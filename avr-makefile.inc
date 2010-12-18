@@ -14,7 +14,7 @@ TESTSRC_DIR    = test_src/
 #uisp -dprog=bsd -dlpt=/dev/parport1 --upload if=$(PRG).hex
 ERASECMD       =
 TESTPORT       = /dev/ttyUSB1
-TESTPORTBAUDR  = 38400
+TESTPORTBAUDR  = 115200
 TESTLOG_DIR    = testlog/#
 TESTPREFIX     = nessie-
 SPEEDTOOL      = host/get_performance.rb

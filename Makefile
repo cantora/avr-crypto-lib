@@ -94,7 +94,7 @@ $(foreach a, $(ALGORITHMS), \
       $(BIN_DIR)$(call lc, $(a))/$(b), \
       $(call find_source_file, $(b), $($(a)_DIR) $($(a)_INCDIR) $(GLOBAL_INCDIR) ),\
       $($(a)_DIR) $($(a)_INCDIR) $(GLOBAL_INCDIR), \
-      $($(a)_DEFINES), \
+      $($(a)_DEF), \
     )) \
   ) \
 )
@@ -105,7 +105,7 @@ $(foreach a, $(ALGORITHMS), \
       $(BIN_DIR)$(call lc, $(a))/$(TEST_DIR)$(b), \
       $(call find_source_file, $(b), $($(a)_DIR) $($(a)_INCDIR) $(GLOBAL_INCDIR) ),\
       $($(a)_DIR) $($(a)_INCDIR) $(GLOBAL_INCDIR), \
-      $($(a)_DEFINES) \
+      $($(a)_DEF) \
     )) \
   ) \
 )
