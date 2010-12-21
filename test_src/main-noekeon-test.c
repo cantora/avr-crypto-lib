@@ -26,12 +26,13 @@
 #include "uart_i.h"
 #include "debug.h"
 
-#include <noekeon/noekeon.h>
+#include "noekeon.h"
 #include "nessie_bc_test.h"
-#include "cli.h"
+#include "bcal-nessie.h"
 #include "performance_test.h"
 #include "bcal-performance.h"
 #include "bcal_noekeon.h"
+#include "cli.h"
 
 #include <stdint.h>
 #include <string.h>
@@ -47,49 +48,9 @@ const bcdesc_t* algolist[] PROGMEM = {
 /*****************************************************************************
  *  additional validation-functions											 *
  *****************************************************************************/
-void noekeon_genctx_dummy(uint8_t* key, uint16_t keysize, void* ctx){
-	noekeon_init(key, ctx);
-}
-
-void testrun_nessie_noekeon_indirect(void){
-	char str[strlen(algo_name)+10];
-	strcpy(str, algo_name);
-	strcat(str, "-indirect");
-	
-	nessie_bc_ctx.blocksize_B =  16;
-	nessie_bc_ctx.keysize_b   = 128;
-	nessie_bc_ctx.name        = str;
-	nessie_bc_ctx.ctx_size_B  = sizeof(noekeon_ctx_t);
-	nessie_bc_ctx.cipher_enc  = (nessie_bc_enc_fpt)noekeon_enc;
-	nessie_bc_ctx.cipher_dec  = (nessie_bc_dec_fpt)noekeon_dec;
-	nessie_bc_ctx.cipher_genctx  = (nessie_bc_gen_fpt)noekeon_genctx_dummy;
-	
-	nessie_bc_run();
-}
-
-void noekeon_genctx_dummy_direct(uint8_t* key, uint16_t keysize, void* ctx){
-	memcpy(ctx, key, 16);
-}
-
-void testrun_nessie_noekeon_direct(void){
-	char str[strlen(algo_name)+10];
-	strcpy(str, algo_name);
-	strcat(str, "-Direct");
-	
-	nessie_bc_ctx.blocksize_B =  16;
-	nessie_bc_ctx.keysize_b   = 128;
-	nessie_bc_ctx.name        = str;
-	nessie_bc_ctx.ctx_size_B  = sizeof(noekeon_ctx_t);
-	nessie_bc_ctx.cipher_enc  = (nessie_bc_enc_fpt)noekeon_enc;
-	nessie_bc_ctx.cipher_dec  = (nessie_bc_dec_fpt)noekeon_dec;
-	nessie_bc_ctx.cipher_genctx  = (nessie_bc_gen_fpt)noekeon_genctx_dummy_direct;
-	
-	nessie_bc_run();
-}
 
 void testrun_nessie_noekeon(void){
-	testrun_nessie_noekeon_direct();
-	testrun_nessie_noekeon_indirect();
+	bcal_nessie_multiple(&algolist);
 }
 
 
@@ -97,7 +58,7 @@ void testrun_stdtest_rundirect(void* data, void* key){
 	cli_putstr_P(PSTR("\r\n                     "));
 	cli_putstr_P(PSTR("k = "));
 	cli_hexdump(key,16);
-	
+
 	cli_putstr_P(PSTR("\r\n                     "));
 	cli_putstr_P(PSTR("a = "));
 	cli_hexdump(data,16);
@@ -196,8 +157,8 @@ const char echo_str[]        PROGMEM = "echo";
 cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ nessie_str,      NULL, testrun_nessie_noekeon},
 	{ test_str,        NULL, testrun_stdtest_noekeon},
-	{ direct_str,      NULL, testrun_nessie_noekeon_direct},
-	{ indirect_str,    NULL, testrun_nessie_noekeon_indirect},
+//	{ direct_str,      NULL, testrun_nessie_noekeon_direct},
+//	{ indirect_str,    NULL, testrun_nessie_noekeon_indirect},
 	{ performance_str, NULL, testrun_performance_noekeon},
 	{ echo_str,    (void*)1, (void_fpt)echo_ctrl},
 	{ NULL,            NULL, NULL}

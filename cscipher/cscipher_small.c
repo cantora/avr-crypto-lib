@@ -146,7 +146,7 @@ void cscipher_dec(void* buffer, const cscipher_ctx_t* ctx){
 	}while(i--);
 }
 
-void cscipher_init(void* key, cscipher_ctx_t* ctx){
+void cscipher_init(const void* key, cscipher_ctx_t* ctx){
 	uint8_t tmp_key[16], tmp[8];
 	uint8_t i,j,k,t;
 	memcpy(tmp_key, key, 16);

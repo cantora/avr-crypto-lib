@@ -1,4 +1,4 @@
-/* cscipher.h */
+/* bcal-nessie.h */
 /*
     This file is part of the AVR-Crypto-Lib.
     Copyright (C) 2010 Daniel Otte (daniel.otte@rub.de)
@@ -16,17 +16,22 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+/*
+ * \file    bcal-nessie.h
+ * \author  Daniel Otte
+ * \email   daniel.otte@rub.de
+ * \date    2010-12-19
+ * \license GPLv3 or later
+ *
+ */
 
-#ifndef CSCIPHER_H_
-#define CSCIPHER_H_
+#ifndef BCALNESSIE_H_
+#define BCALNESSIE_H_
 
-typedef struct {
-	uint8_t keys[9][8];
-} cscipher_ctx_t;
+#include "blockcipher_descriptor.h"
 
-void cscipher_enc(void* buffer, const cscipher_ctx_t* ctx);
-void cscipher_dec(void* buffer, const cscipher_ctx_t* ctx);
-void cscipher_init(const void* key, cscipher_ctx_t* ctx);
+void bcal_nessie(const bcdesc_t* bcd);
+void bcal_nessie_multiple(const bcdesc_t** bcd_list);
 
 
-#endif /* CSCIPHER_H_ */
+#endif /* BCALNESSIE_H_ */

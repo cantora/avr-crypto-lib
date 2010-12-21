@@ -31,7 +31,10 @@
 #include "cli.h"
 #include "performance_test.h"
 #include "bcal-performance.h"
+#include "bcal-nessie.h"
 #include "bcal_des.h"
+#include "bcal_tdes.h"
+#include "bcal_tdes2.h"
 
 #include <stdint.h>
 #include <string.h>
@@ -41,36 +44,17 @@ char* algo_name = "DES";
 
 const bcdesc_t* algolist[] PROGMEM = {
 	(bcdesc_t*)&des_desc,
+	(bcdesc_t*)&tdes2_desc,
+	(bcdesc_t*)&tdes_desc,
 	NULL
 };
 /*****************************************************************************
  *  additional validation-functions											 *
  *****************************************************************************/
-void des_init_dummy(const void* key, uint16_t keysize_b, void* ctx){
-	memcpy(ctx, key, 8);
-}
-
-void des_enc_dummy(void* buffer, void* ctx){
-	des_enc(buffer, buffer, ctx);
-} 
-
-void des_dec_dummy(void* buffer, void* ctx){
-	des_dec(buffer, buffer, ctx);
-} 
 
 void testrun_nessie_des(void){
-	nessie_bc_init();
-	nessie_bc_ctx.blocksize_B =   8;
-	nessie_bc_ctx.keysize_b   =  64;
-	nessie_bc_ctx.name        = algo_name;
-	nessie_bc_ctx.ctx_size_B  = 8;
-	nessie_bc_ctx.cipher_enc  = (nessie_bc_enc_fpt)des_enc_dummy;
-	nessie_bc_ctx.cipher_dec  = (nessie_bc_dec_fpt)des_dec_dummy;
-	nessie_bc_ctx.cipher_genctx  = (nessie_bc_gen_fpt)des_init_dummy;
-	
-	nessie_bc_run();
+	bcal_nessie_multiple(algolist);
 }
-
 
 void testrun_performance_des(void){
 	bcal_performance_multiple(algolist);

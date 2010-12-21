@@ -27,7 +27,7 @@
 #include "debug.h"
 
 #include "cscipher.h"
-#include "nessie_bc_test.h"
+#include "bcal-nessie.h"
 #include "cli.h"
 #include "performance_test.h"
 #include "bcal-performance.h"
@@ -53,17 +53,7 @@ void cscipher_init_dummy(const uint8_t* key, uint16_t keysize_b, void* ctx){
 }
 
 void testrun_nessie_cscipher(void){
-	nessie_bc_init();
-	nessie_bc_ctx.blocksize_B =   8;
-	nessie_bc_ctx.keysize_b   = 128;
-	nessie_bc_ctx.name        = algo_name;
-	nessie_bc_ctx.ctx_size_B  = sizeof(cscipher_ctx_t);
-	nessie_bc_ctx.cipher_enc  = (nessie_bc_enc_fpt)cscipher_enc;
-	nessie_bc_ctx.cipher_dec  = (nessie_bc_dec_fpt)cscipher_dec;
-	nessie_bc_ctx.cipher_free = (nessie_bc_free_fpt)NULL;
-	nessie_bc_ctx.cipher_genctx  = (nessie_bc_gen_fpt)cscipher_init_dummy;
-	
-	nessie_bc_run();
+	bcal_nessie(&cscipher_desc);
 }
 
 void testrun_cscipher(void){
