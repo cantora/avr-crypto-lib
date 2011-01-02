@@ -63,8 +63,8 @@ typedef union{
 } bc_dec_fpt;
 
 #define BC_INIT_TYPE   0x01
-#define BC_INIT_TYPE_1 0x00
-#define BC_INIT_TYPE_2 0x01
+#define BC_INIT_TYPE_1 0x00 /* for fix keylength */
+#define BC_INIT_TYPE_2 0x01 /* keylength is passed as second parameter */
 
 #define BC_ENC_TYPE    0x02
 #define BC_ENC_TYPE_1  0x00

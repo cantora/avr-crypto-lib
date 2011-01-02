@@ -97,6 +97,60 @@ void test_add_bigint(void){
 	}
 }
 
+void test_add_scale_bigint(void){
+	bigint_t a, b, c;
+	uint16_t scale;
+	cli_putstr_P(PSTR("\r\nadd-scale test\r\n"));
+	for(;;){
+		cli_putstr_P(PSTR("\r\nenter a:"));
+		if(bigint_read_hex_echo(&a)){
+			cli_putstr_P(PSTR("\r\n end add test"));
+			return;
+		}
+		cli_putstr_P(PSTR("\r\nenter b:"));
+		if(bigint_read_hex_echo(&b)){
+			cli_putstr_P(PSTR("\r\n end add test"));
+			return;
+		}
+		cli_putstr_P(PSTR("\r\nenter scale:"));
+		{
+			char str[8];
+			cli_getsn_cecho(str, 7);
+			scale = atoi(str);
+		}
+	/*
+		if(bigint_read_hex_echo(&scale)){
+			free(scale.wordv);
+			cli_putstr_P(PSTR("\r\n end add test"));
+			return;
+		}
+	*/
+		cli_putstr_P(PSTR("\r\n "));
+		bigint_print_hex(&a);
+		cli_putstr_P(PSTR(" + "));
+		bigint_print_hex(&b);
+		cli_putstr_P(PSTR("<<8*"));
+		bigint_print_hex(&scale);
+		cli_putstr_P(PSTR(" = "));
+		uint8_t *c_b;
+		c_b = malloc(((a.length_B>(b.length_B+scale))?a.length_B:(b.length_B+scale))+2);
+		if(c_b==NULL){
+			cli_putstr_P(PSTR("\n\rERROR: Out of memory!"));
+			free(a.wordv);
+			free(b.wordv);
+			continue;
+		}
+		bigint_copy(&c, &a);
+		c.wordv = c_b;
+		bigint_add_scale_u(&c, &b, scale);
+		bigint_print_hex(&c);
+		cli_putstr_P(PSTR("\r\n"));
+		free(a.wordv);
+		free(b.wordv);
+		free(c_b);
+	}
+}
+
 void test_mul_bigint(void){
 	bigint_t a, b, c;
 	cli_putstr_P(PSTR("\r\nmul test\r\n"));
@@ -451,6 +505,7 @@ void testrun_performance_bigint(void){
 
 const char echo_test_str[]        PROGMEM = "echo-test";
 const char add_test_str[]         PROGMEM = "add-test";
+const char add_scale_test_str[]   PROGMEM = "add-scale-test";
 const char mul_test_str[]         PROGMEM = "mul-test";
 const char square_test_str[]      PROGMEM = "square-test";
 const char reduce_test_str[]      PROGMEM = "reduce-test";
@@ -462,6 +517,7 @@ const char echo_str[]             PROGMEM = "echo";
 
 cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ add_test_str,         NULL, test_add_bigint               },
+	{ add_scale_test_str,   NULL, test_add_scale_bigint         },
 	{ mul_test_str,         NULL, test_mul_bigint               },
 	{ square_test_str,      NULL, test_square_bigint            },
 	{ reduce_test_str,      NULL, test_reduce_bigint            },

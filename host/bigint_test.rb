@@ -247,6 +247,66 @@ def mul_test(a,b)
 end
 
 ################################################################################
+# add_scale_test                                                               #
+################################################################################
+
+def add_scale_test(a, b, scale)
+  begin
+    line = $sp.gets()
+    line = "" if line==nil
+    puts("DBG got: "+line) if $debug
+    if /^Error:.*/.match(line)
+      puts line
+      return false
+    end
+  end while not /[\s]*enter a:[\s]*/.match(line)
+  $sp.print(a.to_s(16)+" ")
+  begin
+    line = $sp.gets()
+    line = "" if line==nil
+    puts("DBG got: "+line) if $debug
+    if /^Error:.*/.match(line)
+      puts line
+      return false
+    end
+  end while not /[\s]*enter b:[\s]*/.match(line)
+  $sp.print(b.to_s(16)+" ")
+  begin
+    line = $sp.gets()
+    line = "" if line==nil
+    puts("DBG got: "+line) if $debug
+    if /^Error:.*/.match(line)
+      puts line
+      return false
+    end
+  end while not /[\s]*enter scale:[\s]*/.match(line)
+  $sp.print(scale.to_s(16)+"\n")
+  begin
+    line = $sp.gets()
+    line = "" if line==nil
+    puts("DBG got: "+line) if $debug
+    if /^Error:.*/.match(line)
+      puts line
+      return false
+    end
+  end while not m=/[\s]*([-]?[0-9a-fA-F]*)[\s]+\+[\s]+([+-]?[0-9a-fA-F]*)[\s]*<<8\*[\s]*([+-]?[0-9a-fA-F]*)[\s]*=[\s]*([+-]?[0-9a-fA-F]*)/.match(line)
+  a_ = m[1].to_i(16)
+  b_ = m[2].to_i(16)
+  s_ = m[3].to_i(16)
+  c_ = m[4].to_i(16)
+  line.chomp!
+  if(a_== a && b_ == b && c_ == (a+b))
+    $logfile.printf("[pass]: %s\n", line)
+    return true
+  else
+    $logfile.printf("[fail (%s%s%s)]: %s", (a==a_)?"":"a", (b==b_)?"":"b", (c_==a+b)?"":"c",line)
+    $logfile.printf(" ; should %s + %s = %s\n", a.to_s(16), b.to_s(16), (a+b).to_s(16))
+    return false
+  end
+  return false
+end
+
+################################################################################
 # square_test                                                                  #
 ################################################################################
 

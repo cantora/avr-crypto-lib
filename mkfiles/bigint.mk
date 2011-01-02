@@ -6,7 +6,7 @@ AUX += $(ALGO_NAME)
 
 $(ALGO_NAME)_DIR      := bigint/
 $(ALGO_NAME)_INCDIR   := memxor/ noekeon/
-$(ALGO_NAME)_OBJ      := bigint.o bigint_io.o bigint_add_u.o 
+$(ALGO_NAME)_OBJ      := bigint-stub.o bigint_io.o bigint_asm.o 
 $(ALGO_NAME)_TEST_BIN := main-bigint-test.o $(CLI_STD)  \
                          performance_test.o noekeon_asm.o noekeon_prng.o memxor.o
 			 

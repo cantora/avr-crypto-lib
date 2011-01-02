@@ -85,7 +85,6 @@ void bigint_copy(bigint_t* dest, const bigint_t* src){
 /******************************************************************************/
 
 /* this should be implemented in assembly */
-/*
 void bigint_add_u(bigint_t* dest, const bigint_t* a, const bigint_t* b){
 	uint16_t t=0, i;
 	if(a->length_B < b->length_B){
@@ -105,7 +104,7 @@ void bigint_add_u(bigint_t* dest, const bigint_t* a, const bigint_t* b){
 	dest->length_B = i;
 	bigint_adjust(dest);
 }
-*/
+
 /******************************************************************************/
 
 /* this should be implemented in assembly */
