@@ -109,7 +109,7 @@ static const uint8_t idx[]={112,80,48,16,96,64,32,0};
 static inline
 void group(uint8_t *a){
 	uint8_t b[128];
-	uint8_t i,j,k,x;
+	uint8_t i,j,k,x=0;
 	for(i=0; i<128; ++i){
 		j=i/8;
 		for(k=0;k<8;++k){
@@ -154,7 +154,7 @@ void jh_encrypt(uint8_t* a){
 		jh_round(a, rc);
 		jh_next_round_const(rc);
 	}
-	uint8_t r,x,y;
+	uint8_t r=0,x,y;
 
 	for(i=0; i<128; ++i){
 		if(i%4==0){

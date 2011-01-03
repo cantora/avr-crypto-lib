@@ -27,10 +27,10 @@
 #include "debug.h"
 
 #include "threefish.h"
-#include "nessie_bc_test.h"
 #include "cli.h"
 #include "performance_test.h"
 #include "bcal-performance.h"
+#include "bcal-nessie.h"
 #include "bcal_threefish256.h"
 #include "bcal_threefish512.h"
 #include "bcal_threefish1024.h"
@@ -65,61 +65,8 @@ void threefish256_dump(threefish256_ctx_t* ctx){
 	}
 }
 
-void threefish256_dummy_init(const uint8_t* key, uint16_t keysize_b, void* ctx){
-	threefish256_init(key, NULL, ctx);
-}
-
-void testrun_nessie_threefish256(void){
-	nessie_bc_ctx.keysize_b = 256;
-	nessie_bc_ctx.blocksize_B = 32;
-	nessie_bc_ctx.ctx_size_B = sizeof(threefish256_ctx_t);
-	nessie_bc_ctx.name = "Threefish256";
-	nessie_bc_ctx.cipher_genctx = threefish256_dummy_init;
-	nessie_bc_ctx.cipher_enc = (nessie_bc_enc_fpt)threefish256_enc;
-	nessie_bc_ctx.cipher_dec = (nessie_bc_dec_fpt)threefish256_dec;
-	nessie_bc_ctx.cipher_free = NULL;
-	
-	nessie_bc_run();
-}
-
-void threefish512_dummy_init(const uint8_t* key, uint16_t keysize_b, void* ctx){
-	threefish512_init(key, NULL, ctx);
-}
-
-void testrun_nessie_threefish512(void){
-	nessie_bc_ctx.keysize_b = 512;
-	nessie_bc_ctx.blocksize_B = 64;
-	nessie_bc_ctx.ctx_size_B = sizeof(threefish512_ctx_t);
-	nessie_bc_ctx.name = "Threefish512";
-	nessie_bc_ctx.cipher_genctx = threefish512_dummy_init;
-	nessie_bc_ctx.cipher_enc = (nessie_bc_enc_fpt)threefish512_enc;
-	nessie_bc_ctx.cipher_dec = (nessie_bc_dec_fpt)threefish512_dec;
-	nessie_bc_ctx.cipher_free = NULL;
-	
-	nessie_bc_run();
-}
-
-void threefish1024_dummy_init(const uint8_t* key, uint16_t keysize_b, void* ctx){
-	threefish1024_init(key, NULL, ctx);
-}
-
-void testrun_nessie_threefish1024(void){
-	nessie_bc_ctx.keysize_b = 1024;
-	nessie_bc_ctx.blocksize_B = 128;
-	nessie_bc_ctx.ctx_size_B = sizeof(threefish1024_ctx_t);
-	nessie_bc_ctx.name = "Threefish1024";
-	nessie_bc_ctx.cipher_genctx = threefish1024_dummy_init;
-	nessie_bc_ctx.cipher_enc = (nessie_bc_enc_fpt)threefish1024_enc;
-	nessie_bc_ctx.cipher_dec = (nessie_bc_dec_fpt)threefish1024_dec;
-	nessie_bc_ctx.cipher_free = NULL;
-	
-	nessie_bc_run();
-}
-
 void testrun_nessie_threefish(void){
-	testrun_nessie_threefish256();
-	testrun_nessie_threefish512();
-	testrun_nessie_threefish1024();
+	bcal_nessie_multiple(algolist);
 }
 
 void testrun_stdtest_threefish256(void){

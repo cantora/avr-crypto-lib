@@ -27,7 +27,6 @@
 #include "debug.h"
 
 #include "noekeon.h"
-#include "nessie_bc_test.h"
 #include "bcal-nessie.h"
 #include "performance_test.h"
 #include "bcal-performance.h"
@@ -50,7 +49,7 @@ const bcdesc_t* algolist[] PROGMEM = {
  *****************************************************************************/
 
 void testrun_nessie_noekeon(void){
-	bcal_nessie_multiple(&algolist);
+	bcal_nessie_multiple(algolist);
 }
 
 

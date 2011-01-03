@@ -54,7 +54,6 @@ const hfdesc_t* algolist[] PROGMEM = {
  *  additional validation-functions											 *
  *****************************************************************************/
 void test_256(void){
-	uint8_t data[] = {0x53, 0x58, 0x7B,  0xC8 };
 	uint8_t hash[32];
 	uint8_t null[KECCAK256_BLOCKSIZE_B];
 	memset(null, 0, KECCAK256_BLOCKSIZE_B);

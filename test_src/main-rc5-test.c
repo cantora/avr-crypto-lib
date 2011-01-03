@@ -27,10 +27,10 @@
 #include "debug.h"
 
 #include "rc5.h"
-#include "nessie_bc_test.h"
 #include "cli.h"
 #include "performance_test.h"
 #include "bcal-performance.h"
+#include "bcal-nessie.h"
 #include "bcal_rc5.h"
 
 #include <stdint.h>
@@ -53,17 +53,7 @@ void rc5_genctx_dummy(uint8_t* key, uint16_t keysize_b, void* ctx){
 }
 
 void testrun_nessie_rc5(void){
-	nessie_bc_init();
-	nessie_bc_ctx.blocksize_B =   8;
-	nessie_bc_ctx.keysize_b   = 128;
-	nessie_bc_ctx.name        = algo_name;
-	nessie_bc_ctx.ctx_size_B  = sizeof(rc5_ctx_t);
-	nessie_bc_ctx.cipher_enc  = (nessie_bc_enc_fpt)rc5_enc;
-	nessie_bc_ctx.cipher_dec  = (nessie_bc_dec_fpt)rc5_dec;
-	nessie_bc_ctx.cipher_free = (nessie_bc_free_fpt)rc5_free;
-	nessie_bc_ctx.cipher_genctx  = (nessie_bc_gen_fpt)rc5_genctx_dummy;
-	
-	nessie_bc_run();
+	bcal_nessie_multiple(algolist);
 }
 
 

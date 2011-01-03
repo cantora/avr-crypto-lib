@@ -27,10 +27,10 @@
 #include "debug.h"
 
 #include "serpent.h"
-#include "nessie_bc_test.h"
 #include "cli.h"
 #include "performance_test.h"
 #include "bcal-performance.h"
+#include "bcal-nessie.h"
 #include "bcal_serpent.h"
 
 #include <stdint.h>
@@ -52,21 +52,7 @@ void serpent_genctx_dummy(uint8_t* key, uint16_t keysize, void* ctx){
 }
 
 void testrun_nessie_serpent(void){
-	nessie_bc_ctx.blocksize_B =  16;
-	nessie_bc_ctx.keysize_b   = 128;
-	nessie_bc_ctx.name        = algo_name;
-	nessie_bc_ctx.ctx_size_B  = sizeof(serpent_ctx_t);
-	nessie_bc_ctx.cipher_enc  = (nessie_bc_enc_fpt)serpent_enc;
-	nessie_bc_ctx.cipher_dec  = (nessie_bc_dec_fpt)serpent_dec;
-	nessie_bc_ctx.cipher_genctx  = (nessie_bc_gen_fpt)serpent_genctx_dummy;
-	
-	nessie_bc_run();
-	
-	nessie_bc_ctx.keysize_b   = 192;
-	nessie_bc_run();
-	
-	nessie_bc_ctx.keysize_b   = 256;
-	nessie_bc_run();
+	bcal_nessie_multiple(algolist);
 }
 
 void testrun_test_serpent(void){

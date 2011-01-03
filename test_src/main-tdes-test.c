@@ -27,10 +27,10 @@
 #include "debug.h"
 
 #include "des.h"
-#include "nessie_bc_test.h"
 #include "cli.h"
 #include "performance_test.h"
 #include "bcal-performance.h"
+#include "bcal-nessie.h"
 #include "bcal_tdes.h"
 #include "bcal_tdes2.h"
 
@@ -49,29 +49,8 @@ const bcdesc_t* algolist[] PROGMEM = {
 /*****************************************************************************
  *  additional validation-functions											 *
  *****************************************************************************/
-void tdes_init_dummy(const void* key, uint16_t keysize_b, void* ctx){
-	memcpy(ctx, key, 8*3);
-}
-
-void tdes_enc_dummy(void* buffer, void* ctx){
-	tdes_enc(buffer, buffer, ctx);
-} 
-
-void tdes_dec_dummy(void* buffer, void* ctx){
-	tdes_dec(buffer, buffer, ctx);
-} 
-
 void testrun_nessie_tdes(void){
-	nessie_bc_init();
-	nessie_bc_ctx.blocksize_B =   8;
-	nessie_bc_ctx.keysize_b   = 192;
-	nessie_bc_ctx.name        = algo_name;
-	nessie_bc_ctx.ctx_size_B  = sizeof(8*3);
-	nessie_bc_ctx.cipher_enc  = (nessie_bc_enc_fpt)tdes_enc_dummy;
-	nessie_bc_ctx.cipher_dec  = (nessie_bc_dec_fpt)tdes_dec_dummy;
-	nessie_bc_ctx.cipher_genctx  = (nessie_bc_gen_fpt)tdes_init_dummy;
-
-	nessie_bc_run();
+	bcal_nessie_multiple(algolist);
 }
 
 

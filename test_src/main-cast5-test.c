@@ -27,9 +27,9 @@
 #include "debug.h"
 
 #include <cast5.h>
-#include "nessie_bc_test.h"
 #include "performance_test.h"
 #include "bcal-performance.h"
+#include "bcal-nessie.h"
 #include "bcal_cast5.h"
 #include "cli.h"
 
@@ -49,15 +49,7 @@ const bcdesc_t* algolist[] PROGMEM = {
  *****************************************************************************/
 
 void testrun_nessie_cast5(void){
-	nessie_bc_ctx.blocksize_B =   8;
-	nessie_bc_ctx.keysize_b   = 128;
-	nessie_bc_ctx.name        = algo_name;
-	nessie_bc_ctx.ctx_size_B  = sizeof(cast5_ctx_t);
-	nessie_bc_ctx.cipher_enc  = (nessie_bc_enc_fpt)cast5_enc;
-	nessie_bc_ctx.cipher_dec  = (nessie_bc_dec_fpt)cast5_dec;
-	nessie_bc_ctx.cipher_genctx  = (nessie_bc_gen_fpt)cast5_init;
-	
-	nessie_bc_run();
+	bcal_nessie_multiple(algolist);
 }
 
 /*****************************************************************************

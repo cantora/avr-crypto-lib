@@ -27,11 +27,11 @@
 #include "debug.h"
 
 #include "camellia.h"
-#include "nessie_bc_test.h"
 #include "performance_test.h"
 #include "cli.h"
 #include "bcal_camellia128.h"
 #include "bcal-performance.h"
+#include "bcal-nessie.h"
 #include <stdint.h>
 #include <string.h>
 #include <stdlib.h>
@@ -47,20 +47,9 @@ const bcdesc_t* algolist[] PROGMEM = {
 /*****************************************************************************
  *  additional validation-functions											 *
  *****************************************************************************/
-void camellia128_init_dummy(void* key, uint16_t keysize_b, void* ctx){
-	camellia128_init(key, ctx);
-}
 
 void testrun_nessie_camellia(void){
-	nessie_bc_ctx.blocksize_B =  16;
-	nessie_bc_ctx.keysize_b   = 128;
-	nessie_bc_ctx.name        = algo_name;
-	nessie_bc_ctx.ctx_size_B  = sizeof(camellia128_ctx_t);
-	nessie_bc_ctx.cipher_enc  = (nessie_bc_enc_fpt)camellia128_enc;
-	nessie_bc_ctx.cipher_dec  = (nessie_bc_dec_fpt)camellia128_dec;
-	nessie_bc_ctx.cipher_genctx  = (nessie_bc_gen_fpt)camellia128_init_dummy;
-	
-	nessie_bc_run();
+	bcal_nessie_multiple(algolist);
 }
 
 /*

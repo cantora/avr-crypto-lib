@@ -58,7 +58,7 @@ void bcal_nessie(const bcdesc_t* bcd){
 
 	uint16_t *keysize_list=NULL;
 	uint16_t items,i;
-	items = get_keysizes(pgm_read_word(&(bcd->valid_keysize_desc)), &keysize_list);
+	items = get_keysizes((PGM_VOID_P)pgm_read_word(&(bcd->valid_keysize_desc)), &keysize_list);
 	if(items){
 		for(i=0; i<items; ++i){
 			nessie_bc_ctx.keysize_b   = keysize_list[i];

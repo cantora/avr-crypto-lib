@@ -2,7 +2,7 @@
 ALGO_NAME := BIGINT
 
 # comment out the following line for removement of BigInt from the build process
-AUX += $(ALGO_NAME)
+#AUX += $(ALGO_NAME)
 
 $(ALGO_NAME)_DIR      := bigint/
 $(ALGO_NAME)_INCDIR   := memxor/ noekeon/

@@ -103,7 +103,6 @@ void quick_test(void){
 
 	bigint_t m,c,m_;
 	uint8_t mw[rsa_ctx.modulus.length_B], cw[rsa_ctx.modulus.length_B], m_w[rsa_ctx.modulus.length_B];
-	uint8_t i;
 
 	print_rsa_ctx(&rsa_ctx);
 	m.wordv = mw;

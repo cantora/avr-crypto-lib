@@ -27,11 +27,11 @@
 #include "debug.h"
 
 #include "aes.h"
-#include "nessie_bc_test.h"
 #include "cli.h"
 #include "performance_test.h"
 #include "blockcipher_descriptor.h"
 #include "bcal-performance.h"
+#include "bcal-nessie.h"
 #include "bcal_aes192.h"
 #include <stdint.h>
 #include <string.h>
@@ -50,14 +50,7 @@ const bcdesc_t* algolist[] PROGMEM = {
  *****************************************************************************/
 
 void testrun_nessie_aes(void){
-	nessie_bc_ctx.blocksize_B =  16;
-	nessie_bc_ctx.keysize_b   = 192;
-	nessie_bc_ctx.name        = algo_name;
-	nessie_bc_ctx.ctx_size_B  = sizeof(aes192_ctx_t);
-	nessie_bc_ctx.cipher_enc  = (nessie_bc_enc_fpt)aes192_enc;
-	nessie_bc_ctx.cipher_dec  = (nessie_bc_dec_fpt)aes192_dec;
-	nessie_bc_ctx.cipher_genctx  = (nessie_bc_gen_fpt)aes_init;
-	nessie_bc_run();
+	bcal_nessie_multiple(algolist);
 }
 
 void testrun_testkey_aes192(void){

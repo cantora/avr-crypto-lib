@@ -28,7 +28,6 @@
 
 #include "aes.h"
 
-#include "nessie_bc_test.h"
 #include "cli.h"
 #include "performance_test.h"
 #include "dump.h"
@@ -45,6 +44,7 @@
 #include "bcal-eax.h"
 #include "cmacvs.h"
 #include "bcal-performance.h"
+#include "bcal-nessie.h"
 
 #include <stdint.h>
 #include <string.h>
@@ -65,26 +65,7 @@ const bcdesc_t* algolist[] PROGMEM = {
  *****************************************************************************/
 
 void testrun_nessie_aes(void){
-	nessie_bc_ctx.blocksize_B =  16;
-	nessie_bc_ctx.keysize_b   = 128;
-	nessie_bc_ctx.name        = algo_name;
-	nessie_bc_ctx.ctx_size_B  = sizeof(aes128_ctx_t);
-	nessie_bc_ctx.cipher_enc  = (nessie_bc_enc_fpt)aes128_enc;
-	nessie_bc_ctx.cipher_dec  = (nessie_bc_dec_fpt)aes128_dec;
-	nessie_bc_ctx.cipher_genctx  = (nessie_bc_gen_fpt)aes_init;
-	nessie_bc_run();
-
-	nessie_bc_ctx.keysize_b   = 192;
-	nessie_bc_ctx.ctx_size_B  = sizeof(aes192_ctx_t);
-	nessie_bc_ctx.cipher_enc  = (nessie_bc_enc_fpt)aes192_enc;
-	nessie_bc_ctx.cipher_dec  = (nessie_bc_dec_fpt)aes192_dec;
-	nessie_bc_run();
-
-	nessie_bc_ctx.keysize_b   = 256;
-	nessie_bc_ctx.ctx_size_B  = sizeof(aes256_ctx_t);
-	nessie_bc_ctx.cipher_enc  = (nessie_bc_enc_fpt)aes256_enc;
-	nessie_bc_ctx.cipher_dec  = (nessie_bc_dec_fpt)aes256_dec;
-	nessie_bc_run();
+	bcal_nessie_multiple(algolist);
 }
 
 void testrun_test_aes(void){

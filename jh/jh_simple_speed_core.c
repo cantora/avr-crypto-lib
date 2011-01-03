@@ -122,7 +122,7 @@ void jh_encrypt(uint8_t* a){
 	for(i=0;i<35;++i){
 		jh_round(a, i);
 	}
-	uint8_t r;
+	uint8_t r=0;
 	uint8_t *pr;
 
 	pr = jh_round_const + 32*35;

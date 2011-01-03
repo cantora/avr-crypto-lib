@@ -49,7 +49,7 @@ uint8_t dsa_sign_bigint(dsa_signature_t* s, const bigint_t* m,
 
 uint8_t dsa_sign_message(dsa_signature_t* s, const void* m, uint16_t m_len_b,
 		                const hfdesc_t* hash_desc, const dsa_ctx_t* ctx,
-		                const uint8_t(*rand_in)(void)){
+		                const rand_func_ptr_t rand_in){
 	bigint_t z, k;
 	uint8_t i, n_B = ctx->domain.q.length_B;
 	uint8_t hash_value[(n_B>(hfal_hash_getHashsize(hash_desc)+7)/8)?n_B:(hfal_hash_getHashsize(hash_desc)+7)/8];

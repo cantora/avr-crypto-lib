@@ -130,7 +130,7 @@ void test_add_scale_bigint(void){
 		cli_putstr_P(PSTR(" + "));
 		bigint_print_hex(&b);
 		cli_putstr_P(PSTR("<<8*"));
-		bigint_print_hex(&scale);
+		cli_hexdump_rev(&scale, 2);
 		cli_putstr_P(PSTR(" = "));
 		uint8_t *c_b;
 		c_b = malloc(((a.length_B>(b.length_B+scale))?a.length_B:(b.length_B+scale))+2);

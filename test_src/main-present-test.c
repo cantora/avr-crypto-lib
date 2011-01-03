@@ -27,10 +27,10 @@
 #include "debug.h"
 
 #include <present.h>
-#include "nessie_bc_test.h"
 #include "cli.h"
 #include "performance_test.h"
 #include "bcal-performance.h"
+#include "bcal-nessie.h"
 #include "bcal_present.h"
 
 #include <stdlib.h>
@@ -51,15 +51,7 @@ void present_genctx_dummy(uint8_t* key, uint16_t keysize_b, present_ctx_t* ctx){
 }
 
 void testrun_nessie_present(void){
-	nessie_bc_ctx.blocksize_B =   8;
-	nessie_bc_ctx.keysize_b   =  80;
-	nessie_bc_ctx.name        = algo_name;
-	nessie_bc_ctx.ctx_size_B  = sizeof(present_ctx_t);
-	nessie_bc_ctx.cipher_enc  = (nessie_bc_enc_fpt)present_enc;
-	nessie_bc_ctx.cipher_dec  = (nessie_bc_dec_fpt)present_dec;
-	nessie_bc_ctx.cipher_genctx  = (nessie_bc_gen_fpt)present_genctx_dummy;
-	
-	nessie_bc_run();	
+	bcal_nessie_multiple(algolist);
 }
 
 void testrun_selfenc(uint8_t* key, uint8_t* buffer){

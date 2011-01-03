@@ -31,6 +31,7 @@
 #include "cli.h"
 #include "performance_test.h"
 #include "bcal-performance.h"
+#include "bcal-nessie.h"
 #include "bcal_skipjack.h"
 
 #include <stdint.h>
@@ -52,15 +53,7 @@ void skipjack_genctx_dummy(uint8_t* key, uint16_t keysize, void* ctx){
 }
 
 void testrun_nessie_skipjack(void){
-	nessie_bc_ctx.blocksize_B =   8;
-	nessie_bc_ctx.keysize_b   =  80;
-	nessie_bc_ctx.name        = algo_name;
-	nessie_bc_ctx.ctx_size_B  = 10;
-	nessie_bc_ctx.cipher_enc  = (nessie_bc_enc_fpt)skipjack_enc;
-	nessie_bc_ctx.cipher_dec  = (nessie_bc_dec_fpt)skipjack_dec;
-	nessie_bc_ctx.cipher_genctx  = (nessie_bc_gen_fpt)skipjack_genctx_dummy;
-	
-	nessie_bc_run();
+	bcal_nessie_multiple(algolist);
 }
 
 

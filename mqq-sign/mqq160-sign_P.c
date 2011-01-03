@@ -41,14 +41,6 @@ static uint8_t mod20_table[32] PROGMEM = {
 		 8,  9, 10, 11, 12, 13, 14, 15,
 };
 
-static void memxor_P(void* dest, const void* src, uint16_t length){
-	while(length--){
-		*((uint8_t*)dest) ^= pgm_read_byte(src);
-		dest = (uint8_t*)dest +1;
-		src  = (uint8_t*)src  +1;
-	}
-}
-
 static void memxor_idx_P(uint8_t* dest, const uint8_t* src, uint16_t length, uint8_t dist){
 	while(length--){
 		 *((uint8_t*)dest) ^= pgm_read_byte((uint8_t*)src);
