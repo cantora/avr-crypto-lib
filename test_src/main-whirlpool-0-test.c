@@ -1,4 +1,4 @@
-/* main-whirlpool-test.c */
+/* main-whirlpool-0-test.c */
 /*
     This file is part of the AVR-Crypto-Lib.
     Copyright (C) 2011  Daniel Otte (daniel.otte@rub.de)
@@ -17,7 +17,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 /*
- * Whirlpool test-suit
+ * Whirlpool-0 test-suit
  *
 */
 
@@ -37,13 +37,13 @@
 #include <stdlib.h>
 #include "cli.h"
 #include "shavs.h"
-#include "hfal_whirlpool.h"
+#include "hfal_whirlpool_0.h"
 #include "dump.h"
 
-char* algo_name = "Whirlpool";
+char* algo_name = "Whirlpool-0";
 
 const hfdesc_t* algolist[] PROGMEM = {
-	(hfdesc_t*)&whirlpool_desc,
+	(hfdesc_t*)&whirlpool_0_desc,
 	NULL
 };
 
@@ -161,7 +161,7 @@ int main (void){
 	cli_rx = (cli_rx_fpt)uart0_getc;
 	cli_tx = (cli_tx_fpt)uart0_putc;
 	shavs_algolist=(hfdesc_t**)algolist;
-	shavs_algo=(hfdesc_t*)&whirlpool_desc;
+	shavs_algo=(hfdesc_t*)&whirlpool_0_desc;
 	for(;;){
 		cli_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
 		cli_putstr(algo_name);

@@ -118,7 +118,7 @@ $sp.write(command);
 
 if(readTestVector(param)==false)
   puts("ERROR: test seems not to be implemented");
-  exit(3);
+  exit(0); # 3 
 end
 
 while(readTestVector(param))

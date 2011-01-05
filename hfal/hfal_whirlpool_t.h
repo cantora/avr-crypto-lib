@@ -1,7 +1,7 @@
-/* wirlpool.h */
+/* hfal_whirlpool_t.h */
 /*
     This file is part of the AVR-Crypto-Lib.
-    Copyright (C) 2011 Daniel Otte (daniel.otte@rub.de)
+    Copyright (C) 2011  Daniel Otte (daniel.otte@rub.de)
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -16,21 +16,21 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+/**
+ * \file     hfal_whirlpool_t.h
+ * \email    daniel.otte@rub.de
+ * \author   Daniel Otte 
+ * \date     2011-02-04
+ * \license  GPLv3 or later
+ * 
+ */
 
-#ifndef WIRLPOOL_H_
-#define WIRLPOOL_H_
+#ifndef HFAL_WHIRLPOOL_T_H_
+#define HFAL_WHIRLPOOL_T_H_
 
-#include <stdint.h>
+#include <avr/pgmspace.h>
+#include "hashfunction_descriptor.h"
 
-typedef struct {
-	uint8_t s[8][8];
-	uint32_t blocks;
-} whirlpool_ctx_t;
+extern const hfdesc_t whirlpool_t_desc;
 
-
-void whirlpool_init(whirlpool_ctx_t* ctx);
-void whirlpool_nextBlock(whirlpool_ctx_t* ctx,const void* block);
-void whirlpool_lastBlock(whirlpool_ctx_t* ctx, const void* block, uint16_t length_b);
-void whirlpool_ctx2hash(void* dest, const whirlpool_ctx_t* ctx);
-
-#endif /* WIRLPOOL_H_ */
+#endif /* HFAL_WHIRLPOOL_T_H_ */

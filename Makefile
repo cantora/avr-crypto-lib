@@ -136,7 +136,7 @@ all: $(foreach algo, $(ALGORITHMS), $($(algo)_BINOBJ))
 #-------------------------------------------------------------------------------
 
 define TestBin_TEMPLATE
-$(1)_TEST_BIN: $(2)
+$(1)_TESTBIN: $(2)
 endef
 
 $(foreach algo, $(ALGORITHMS), $(eval $(call TestBin_TEMPLATE, \
@@ -301,7 +301,7 @@ info:
 	@echo "  docu               - build doxygen documentation"
 	@echo "  clean              - remove a lot of builded files"
 	@echo "  depclean           - also remove dependency files"
-	@echo "  *_TEST_BIN         - build test program"
+	@echo "  *_TESTBIN          - build test program"
 	@echo "  *_TESTRUN          - run nessie test"
 	@echo "  *_OBJ              - build algorithm core"
 	@echo "  *_FLASH            - flash test program"
