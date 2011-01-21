@@ -25,6 +25,7 @@
  */
 
 #include <stdint.h>
+#include <stdlib.h>
 #include <avr/pgmspace.h>
 #include "keysize_descriptor.h"
 
@@ -76,11 +77,85 @@ uint16_t get_keysize(PGM_VOID_P ks_desc){
 	uint8_t type;
 	uint16_t keysize;
 	type = pgm_read_byte(ks_desc);
-	if(type==KS_TYPE_LIST)
+	if(type==KS_TYPE_LIST){
 		ks_desc = (uint8_t*)ks_desc + 1;
+	}
 	ks_desc = (uint8_t*)ks_desc + 1;
 	keysize = pgm_read_word(ks_desc);
 	return keysize;
 }
 
-
+uint16_t get_keysizes(PGM_VOID_P ks_desc, uint16_t** list){
+	uint8_t type;
+	uint16_t items;
+	uint8_t i;
+	type = pgm_read_byte(ks_desc);
+	ks_desc = (uint8_t*)ks_desc + 1;
+	if(type==KS_TYPE_LIST){
+		items = pgm_read_byte(ks_desc);
+		ks_desc = (uint8_t*)ks_desc + 1;
+		if(!*list){
+			*list = malloc(items*2);
+			if(!*list){
+				return 0;
+			}
+		}
+		for(i=0; i<items; ++i){
+			((uint16_t*)(*list))[i] = pgm_read_word(ks_desc);
+			ks_desc = (uint8_t*)ks_desc + 2;
+		}
+		return items;
+	}
+	if(type==KS_TYPE_ARG_RANGE){
+		uint16_t min, max, distance, offset;
+		min = pgm_read_word(ks_desc);
+		ks_desc = (uint8_t*)ks_desc + 2;
+		max = pgm_read_word(ks_desc);
+		ks_desc = (uint8_t*)ks_desc + 2;
+		distance = pgm_read_word(ks_desc);
+		ks_desc = (uint8_t*)ks_desc + 2;
+		offset = pgm_read_word(ks_desc);
+		ks_desc = (uint8_t*)ks_desc + 2;
+		items = (max-min)/distance+1;
+		if(min%distance!=offset){
+			--items;
+			min += (distance-(min%distance-offset))%distance;
+		}
+		if(!*list){
+			*list = malloc(items*2);
+			if(!*list){
+				return 0;
+			}
+		}
+		i=0;
+		while(min<max){
+			((uint16_t*)*list)[i++] = min;
+			min += distance;
+		}
+		return i;
+	}
+	if(type==KS_TYPE_RANGE){
+		uint16_t min, max, distance=8, offset=0;
+		min = pgm_read_word(ks_desc);
+		ks_desc = (uint8_t*)ks_desc + 2;
+		max = pgm_read_word(ks_desc);
+		items = (max-min)/distance+1;
+		if(min%distance!=offset){
+			--items;
+			min += (distance-(min%distance-offset))%distance;
+		}
+		if(!*list){
+			*list = malloc(items*2);
+			if(!*list){
+				return 0;
+			}
+		}
+		i=0;
+		while(min<max){
+			((uint16_t*)*list)[i++] = min;
+			min += distance;
+		}
+		return i;
+	}
+	return 0;
+}

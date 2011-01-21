@@ -33,8 +33,9 @@
  * length is length of key in bytes!
  */
 
-void arcfour_init(const void *key, uint8_t length_B, arcfour_ctx_t *ctx){
+void arcfour_init(const void *key, uint16_t length_b, arcfour_ctx_t *ctx){
 	uint8_t t;
+	uint8_t length_B = length_b/8;
 	uint16_t x,y=0;
 	for(x=0; x<= 255; ++x)
 		ctx->s[x]=x;

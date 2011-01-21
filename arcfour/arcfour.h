@@ -71,10 +71,10 @@ typedef struct arcfour_ctx_st {
  * the supplied key of the given length.
  * \param ctx pointer to the context
  * \param key pointer to the key
- * \param length_B length of the key in bytes (between 1 and 255)
+ * \param length_b length of the key in bits (between 8 and 2048)
  */
 
-void arcfour_init(const void *key, uint8_t length_B, arcfour_ctx_t *ctx);
+void arcfour_init(const void *key, uint16_t length_b, arcfour_ctx_t *ctx);
 
 /** \fn uint8_t arcfour_gen(arcfour_ctx_t *ctx)
  * \brief generates a byte of keystream

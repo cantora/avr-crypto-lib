@@ -29,20 +29,12 @@
 #include <string.h>
 #include "nessie_stream_test.h"
 #include "nessie_common.h"
+#include "memxor.h"
 
 nessie_stream_ctx_t nessie_stream_ctx;
 
 
 #define BLOCKSIZE_B 64
-
-static
-void memxor(void* dest, void* src, uint8_t length){
-	while(length--){
-		*((uint8_t*)dest) ^= *((uint8_t*)src);
-		dest = (uint8_t*)dest +1;
-		src  = (uint8_t*)src +1;
-	}
-}
 
 
 static 

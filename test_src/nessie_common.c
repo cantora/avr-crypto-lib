@@ -170,8 +170,7 @@ void nessie_print_header(char* name,
 	if(ivsize_b){
 		if(ivsize_b==(uint16_t)-1){
 			NESSIE_PUTSTR_P(PSTR("\r\nNo initial value (IV) mode"));
-		}
-		{
+		}else{
 			NESSIE_PUTSTR_P(PSTR("\r\nIV size: "));
 			utoa(ivsize_b, str, 10);
 			NESSIE_PUTSTR(str);

@@ -40,8 +40,8 @@
  *  this function initialises the context
  * param1: 16-bit pointer to the key
  *	given in r24:r25
- * param2: 8-bit integer indicating keylength in byte
- *	given in r22
+ * param2: 8-bit integer indicating keylength in bits
+ *	given in r22:r23
  * param3: 16-bit pointer to a ctx struct
  *	given in r20:r21
  */
@@ -52,7 +52,12 @@ arcfour_init:
 	st X+, r1
 	st X+, r1       /* X points to S */
 	movw r20, r26   /* store pointer to S in r21:r20 */
-	
+	lsr r23
+	ror r22
+	lsr r23
+	ror r22
+	lsr r23
+	ror r22
 1:		
 	st X+, r1 
 	inc r1
