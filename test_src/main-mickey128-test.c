@@ -10,7 +10,9 @@
 #include "cli.h"
 
 #include "mickey128.h"
-#include "nessie_stream_test.h"
+#include "scal_mickey128.h"
+#include "scal-basic.h"
+#include "scal-nessie.h"
 
 #include <stdint.h>
 #include <string.h>
@@ -20,20 +22,9 @@ char* algo_name = "Mickey128";
 /*****************************************************************************
  *  additional validation-functions											 *
  *****************************************************************************/
-void mickey128_genctx_dummy(uint8_t* key, uint16_t keysize_b, void* ctx){
-	mickey128_init(key, keysize_b, NULL, 0, ctx);
-}
 
 void testrun_nessie_mickey128(void){
-	nessie_stream_ctx.outsize_b =   8; /* actually unused */
-	nessie_stream_ctx.keysize_b = 128; /* this is the one we have refrence vectors for */
-	nessie_stream_ctx.ivsize_b  =   0;
-	nessie_stream_ctx.name = algo_name;
-	nessie_stream_ctx.ctx_size_B = sizeof(mickey128_ctx_t);
-	nessie_stream_ctx.cipher_genctx = (nessie_stream_genctx_fpt)mickey128_genctx_dummy;
-	nessie_stream_ctx.cipher_enc = (nessie_stream_genenc_fpt)mickey128_getbyte;
-	
-	nessie_stream_run();	
+	scal_nessie_run(&mickey128_desc);
 }
 
 void testrun_ref_mickey128(void){

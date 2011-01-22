@@ -29,6 +29,7 @@
 
 #include "trivium.h"
 #include "scal_trivium.h"
+#include "scal-basic.h"
 #include "scal-nessie.h"
 #include "performance_test.h"
 
@@ -61,10 +62,9 @@ void testrun_trivium(void){
 	cli_putstr_P(PSTR("\r\n  IV      = "));
 	cli_hexdump(iv, 4);
 	cli_putstr_P(PSTR("\r\n  Cipher  = "));
-	cli_hexdump_block(buffer, 64, 4, 8);
+	cli_hexdump_block(buffer, 64, 4, 16);
 	scal_cipher_free(&ctx);
-	key[0] = 0x00;
-	key[9] = 0x80;
+	key[0] = 0x40;
 	scal_cipher_init(&trivium_desc, key, 80, iv, 32, &ctx);
 	scal_cipher_gen_fillblock(buffer, 64, &ctx);
 	cli_putstr_P(PSTR("\r\nTest:\r\n  Key     = "));
@@ -72,7 +72,27 @@ void testrun_trivium(void){
 	cli_putstr_P(PSTR("\r\n  IV      = "));
 	cli_hexdump(iv, 4);
 	cli_putstr_P(PSTR("\r\n  Cipher  = "));
-	cli_hexdump_block(buffer, 64, 4, 8);
+	cli_hexdump_block(buffer, 64, 4, 16);
+	scal_cipher_free(&ctx);
+	key[0] = 0x20;
+	scal_cipher_init(&trivium_desc, key, 80, iv, 32, &ctx);
+	scal_cipher_gen_fillblock(buffer, 64, &ctx);
+	cli_putstr_P(PSTR("\r\nTest:\r\n  Key     = "));
+	cli_hexdump(key, 10);
+	cli_putstr_P(PSTR("\r\n  IV      = "));
+	cli_hexdump(iv, 4);
+	cli_putstr_P(PSTR("\r\n  Cipher  = "));
+	cli_hexdump_block(buffer, 64, 4, 16);
+	scal_cipher_free(&ctx);
+	key[0] = 0x10;
+	scal_cipher_init(&trivium_desc, key, 80, iv, 32, &ctx);
+	scal_cipher_gen_fillblock(buffer, 64, &ctx);
+	cli_putstr_P(PSTR("\r\nTest:\r\n  Key     = "));
+	cli_hexdump(key, 10);
+	cli_putstr_P(PSTR("\r\n  IV      = "));
+	cli_hexdump(iv, 4);
+	cli_putstr_P(PSTR("\r\n  Cipher  = "));
+	cli_hexdump_block(buffer, 64, 4, 16);
 	scal_cipher_free(&ctx);
 }
 

@@ -17,11 +17,11 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SCAL_ARCFOUR_H_
-#define SCAL_ARCFOUR_H_
+#ifndef SCAL_TRIVIUM_H_
+#define SCAL_TRIVIUM_H_
 
 #include "streamcipher_descriptor.h"
 
 extern const scdesc_t trivium_desc;
 
-#endif /* SCAL_ARCFOUR_H_ */
+#endif /* SCAL_TRIVIUM_H_ */

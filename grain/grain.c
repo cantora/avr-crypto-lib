@@ -134,7 +134,17 @@ uint8_t grain_enc(grain_ctx_t* ctx){
 	h = (pgm_read_byte(h_lut+(i/8)))>>(i%8);
 	
 	h ^= B(0) ^ B(1) ^ B(3) ^ B(9) ^ B(30) ^ B(42) ^ B(55);
-	return h&1;
+	return (h&1);
+}
+
+uint8_t grain_getbyte(grain_ctx_t* ctx){
+	uint8_t i=0;
+	uint8_t r=0;
+	do{
+		r >>= 1;
+		r |= grain_enc(ctx)?0x80:0x00;
+	}while(++i<8);
+	return r;
 }
 
 #ifdef GRAIN_REVERSEKEY

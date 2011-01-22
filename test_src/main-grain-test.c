@@ -28,7 +28,9 @@
 #include "cli.h"
 
 #include "grain.h"
-#include "nessie_stream_test.h"
+#include "scal_grain.h"
+#include "scal-basic.h"
+#include "scal-nessie.h"
 #include "performance_test.h"
 
 #include <stdlib.h>
@@ -64,15 +66,7 @@ uint8_t grain_getbyte_dummy_rev(grain_ctx_t* ctx){
 }
 
 void testrun_nessie_grain(void){
-	nessie_stream_ctx.outsize_b =   8; /* actually unused */
-	nessie_stream_ctx.keysize_b =  80; /* this is the one we have refrence vectors for */
-	nessie_stream_ctx.ivsize_b  =  64;
-	nessie_stream_ctx.name = algo_name;
-	nessie_stream_ctx.ctx_size_B = sizeof(grain_ctx_t);
-	nessie_stream_ctx.cipher_genctx = (nessie_stream_genctx_fpt)grain_genctx_dummy;
-	nessie_stream_ctx.cipher_enc = (nessie_stream_genenc_fpt)grain_getbyte_dummy_rev;
-	
-	nessie_stream_run();	
+	scal_nessie_run(&grain_desc);
 }
 
 

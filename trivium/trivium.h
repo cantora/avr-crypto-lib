@@ -22,6 +22,7 @@
 typedef uint8_t trivium_ctx_t[36]; /* 288bit */
 
 uint8_t trivium_enc(trivium_ctx_t* ctx);
+uint8_t trivium_getbyte(trivium_ctx_t* ctx);
 void trivium_init(const void* key, uint16_t keysize_b,
                   const void* iv,  uint16_t ivsize_b,
                   trivium_ctx_t* ctx);

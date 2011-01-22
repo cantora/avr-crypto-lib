@@ -28,9 +28,10 @@
 #include <stdint.h>
 #include <string.h>
 #include "trivium.h"
+#include <avr/pgmspace.h>
 
 #define G(i) ((((*ctx)[(i)/8])>>(((i)%8)))&1)
-#define S(i,v) ((*ctx)[(i)/8] = ((*ctx)[(i)/8] & ~(1<<((i)%8))) | ((v)<<((i)%8)))
+#define S(i,v) ((*ctx)[(i)/8] = (((*ctx)[(i)/8]) & (uint8_t)~(1<<((i)%8))) | ((v)<<((i)%8)))
 uint8_t trivium_enc(trivium_ctx_t* ctx){
 	uint8_t t1,t2,t3,z;
 	
@@ -57,25 +58,55 @@ uint8_t trivium_enc(trivium_ctx_t* ctx){
 	return z?0x080:0x00;
 }
 
+uint8_t trivium_getbyte(trivium_ctx_t *ctx){
+	uint8_t r=0, i=0;
+	do{
+		r>>=1;
+		r |= trivium_enc(ctx);
+	}while(++i<8);
+	return r;
+}
+
 #define KEYSIZE_B ((keysize_b+7)/8)
 #define IVSIZE_B  ((ivsize_b +7)/8)
+
+static const uint8_t rev_table[16] PROGMEM = {
+	0x00, 0x08, 0x04, 0x0C,   /* 0000 1000 0100 1100 */
+	0x02, 0x0A, 0x06, 0x0E,   /* 0010 1010 0110 1110 */
+	0x01, 0x09, 0x05, 0x0D,   /* 0001 1001 0101 1101 */
+	0x03, 0x0B, 0x07, 0x0F    /* 0011 1011 0111 1111 */
+};
 
 void trivium_init(const void* key, uint16_t keysize_b,
                   const void* iv,  uint16_t ivsize_b,
                   trivium_ctx_t* ctx){
 	uint16_t i;
-	uint8_t c1=0,c2;
-
+	uint8_t c1,c2;
+	uint8_t t1,t2;
 	memset((*ctx)+KEYSIZE_B, 0, 35-KEYSIZE_B);
-	memcpy((*ctx), key, KEYSIZE_B);
-	memcpy((*ctx)+12, iv, IVSIZE_B); /* iv0 is at s96, must shift to s93 */
+	c2=0;
+	c1=KEYSIZE_B;
+	do{
+		t1 = ((uint8_t*)key)[--c1];
+		t2 = (pgm_read_byte(&(rev_table[t1&0x0f]))<<4)|(pgm_read_byte(&(rev_table[t1>>4])));
+		(*ctx)[c2++] = t2;
+	}while(c1!=0);
+
+	c2=12;
+	c1=IVSIZE_B;
+	do{
+		t1 = ((uint8_t*)iv)[--c1];
+		t2 = (pgm_read_byte(&(rev_table[t1&0x0f]))<<4)|(pgm_read_byte(&(rev_table[t1>>4])));
+		(*ctx)[c2++] = t2;
+	}while(c1!=0);
 
 	for(i=12+IVSIZE_B; i>10; --i){
 		c2=(((*ctx)[i])<<5);
 		(*ctx)[i] = (((*ctx)[i])>>3)|c1;
 		c1=c2;
 	}
-	(*ctx)[35] |= 0xE0;
+
+	(*ctx)[35] = 0xE0;
 	
 	for(i=0; i<4*288; ++i){
 		trivium_enc(ctx);

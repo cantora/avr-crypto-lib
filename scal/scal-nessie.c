@@ -118,6 +118,9 @@ void long_block(scgen_ctx_t *ctx){
 			hook_str_ptr =  (uint8_t*)hook_str_ptr + 2;
 			nessie_print_item(str, block, 64);
 		}
+		if(i%64==0){
+			NESSIE_SEND_ALIVE;
+		}
 	}
 	strcpy_P(str, (PGM_VOID_P)pgm_read_word(hook_str_ptr));
 	nessie_print_item(str, xor_block, 64);

@@ -1,7 +1,7 @@
-/* grain.h */
+/* scal_grain.h */
 /*
     This file is part of the AVR-Crypto-Lib.
-    Copyright (C) 2008  Daniel Otte (daniel.otte@rub.de)
+    Copyright (C) 2011 Daniel Otte (daniel.otte@rub.de)
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,26 +17,11 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/** \file grain.h
- * \author  Daniel Otte
- * \email   daniel.otte@rub.de
- * \license GPLv3 or later
- * \brief implementation of the Grain streamcipher
- */
+#ifndef SCAL_GRAIN_H_
+#define SCAL_GRAIN_H_
 
-#ifndef GRAIN_H_
-#define GRAIN_H_
+#include "streamcipher_descriptor.h"
 
+extern const scdesc_t grain_desc;
 
-#include <stdint.h>
-
-typedef struct gain_ctx_st{
-	uint8_t lfsr[10];
-	uint8_t nfsr[10];
-} grain_ctx_t;
-
-uint8_t grain_getbyte(grain_ctx_t* ctx);
-uint8_t grain_enc(grain_ctx_t* ctx);
-void grain_init(const void* key, const void* iv, grain_ctx_t* ctx);
-
-#endif /*GRAIN_H_*/
+#endif /* SCAL_GRAIN_H_ */

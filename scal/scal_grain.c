@@ -1,4 +1,4 @@
-/* scal_trivium.c */
+/* scal_grain.c */
 /*
     This file is part of the AVR-Crypto-Lib.
     Copyright (C) 2011  Daniel Otte (daniel.otte@rub.de)
@@ -23,30 +23,30 @@
 #include "streamcipher_descriptor.h"
 #include "keysize_descriptor.h"
 
-#include "trivium.h"
+#include "grain.h"
 
-const char trivium_str[]   PROGMEM = "Trivium";
+const char grain_str[]   PROGMEM = "Grain";
 
-const uint8_t trivium_keysize_desc[] PROGMEM = {
+const uint8_t grain_keysize_desc[] PROGMEM = {
 		KS_TYPE_LIST, 1, KS_INT(80),
 	    KS_TYPE_TERMINATOR   };
 
-const uint8_t trivium_ivsize_desc[] PROGMEM = {
-		KS_TYPE_LIST, 3, KS_INT(32), KS_INT(64), KS_INT(80),
+const uint8_t grain_ivsize_desc[] PROGMEM = {
+		KS_TYPE_LIST, 1, KS_INT(64),
         KS_TYPE_TERMINATOR   };
 
-const scdesc_t trivium_desc PROGMEM = {
+const scdesc_t grain_desc PROGMEM = {
 		SCDESC_TYPE_STREAMCIPHER,     /* abstraction layer type designator */
-		SC_INIT_TYPE_5|SC_GEN_TYPE_1, /* flags*/
-		trivium_str,                  /* name string pointer */
-		sizeof(trivium_ctx_t),        /* size of context */
+		SC_INIT_TYPE_2|SC_GEN_TYPE_1, /* flags*/
+		grain_str,                    /* name string pointer */
+		sizeof(grain_ctx_t),          /* size of context */
 		8,                            /* blocksize */
-		{(void_fpt)trivium_init},     /* init function pointer */
-		{(void_fpt)trivium_getbyte},  /* key stream generator function pointer */
+		{(void_fpt)grain_init},       /* init function pointer */
+		{(void_fpt)grain_getbyte},    /* key stream generator function pointer */
 		{(void_fpt)NULL},             /* key stream generator for random access function pointer */
 		(sc_free_fpt)NULL,	          /* free function pointer */
-		trivium_keysize_desc,         /* key size descriptor pointer */
-		trivium_ivsize_desc           /* iv size descriptor pointer */
+		grain_keysize_desc,           /* key size descriptor pointer */
+		grain_ivsize_desc             /* iv size descriptor pointer */
 };
 
 
