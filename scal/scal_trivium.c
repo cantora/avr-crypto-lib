@@ -1,4 +1,4 @@
-/* scal_arcfour.c */
+/* scal_trivium.c */
 /*
     This file is part of the AVR-Crypto-Lib.
     Copyright (C) 2011  Daniel Otte (daniel.otte@rub.de)
@@ -23,30 +23,30 @@
 #include "streamcipher_descriptor.h"
 #include "keysize_descriptor.h"
 
-#include "arcfour.h"
+#include "trivium.h"
 
-const char arcfour_str[]   PROGMEM = "ARCFOUR";
+const char trivium_str[]   PROGMEM = "Trivium";
 
-const uint8_t arcfour_keysize_desc[] PROGMEM = {
-		KS_TYPE_ARG_RANGE, KS_INT(8), KS_INT(2040), KS_INT(8),  KS_INT(0),
+const uint8_t trivium_keysize_desc[] PROGMEM = {
+		KS_TYPE_LIST, 1, KS_INT(80),
+	    KS_TYPE_TERMINATOR   };
+
+const uint8_t trivium_ivsize_desc[] PROGMEM = {
+		KS_TYPE_LIST, 2, KS_INT(32), KS_INT(80),
         KS_TYPE_TERMINATOR   };
 
-const uint8_t arcfour_ivsize_desc[] PROGMEM = {
-		KS_TYPE_LIST, 1, KS_INT(0),
-        KS_TYPE_TERMINATOR   };
-
-const scdesc_t arcfour_desc PROGMEM = {
+const scdesc_t trivium_desc PROGMEM = {
 		SCDESC_TYPE_STREAMCIPHER,     /* abstraction layer type designator */
-		SC_INIT_TYPE_3|SC_GEN_TYPE_1, /* flags*/
-		arcfour_str,                  /* name string pointer */
-		sizeof(arcfour_ctx_t),        /* size of context */
-		8,                            /* blocksize */
-		{(void_fpt)arcfour_init},     /* init function pointer */
-		{(void_fpt)arcfour_gen},      /* key stream generator function pointer */
+		SC_INIT_TYPE_5|SC_GEN_TYPE_1, /* flags*/
+		trivium_str,                  /* name string pointer */
+		sizeof(trivium_ctx_t),        /* size of context */
+		1,                            /* blocksize */
+		{(void_fpt)trivium_init},     /* init function pointer */
+		{(void_fpt)trivium_enc},      /* key stream generator function pointer */
 		{(void_fpt)NULL},             /* key stream generator for random access function pointer */
 		(sc_free_fpt)NULL,	          /* free function pointer */
-		arcfour_keysize_desc,         /* key size descriptor pointer */
-		arcfour_ivsize_desc           /* iv size descriptor pointer */
+		trivium_keysize_desc,         /* key size descriptor pointer */
+		trivium_ivsize_desc           /* iv size descriptor pointer */
 };
 
 

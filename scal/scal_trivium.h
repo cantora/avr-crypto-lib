@@ -1,7 +1,7 @@
-/* trivium.h */
+/* scal_trivium.h */
 /*
     This file is part of the AVR-Crypto-Lib.
-    Copyright (C) 2008  Daniel Otte (daniel.otte@rub.de)
+    Copyright (C) 2011 Daniel Otte (daniel.otte@rub.de)
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -16,14 +16,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef TRIVIUM_H_
-#define TRIVIUM_H_
 
-typedef uint8_t trivium_ctx_t[36]; /* 288bit */
+#ifndef SCAL_ARCFOUR_H_
+#define SCAL_ARCFOUR_H_
 
-uint8_t trivium_enc(trivium_ctx_t* ctx);
-void trivium_init(const void* key, uint16_t keysize_b,
-                  const void* iv,  uint16_t ivsize_b,
-                  trivium_ctx_t* ctx);
+#include "streamcipher_descriptor.h"
 
-#endif /*TRIVIUM_H_*/
+extern const scdesc_t trivium_desc;
+
+#endif /* SCAL_ARCFOUR_H_ */

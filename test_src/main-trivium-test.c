@@ -28,7 +28,8 @@
 #include "cli.h"
 
 #include "trivium.h"
-#include "nessie_stream_test.h"
+#include "scal_trivium.h"
+#include "scal-nessie.h"
 #include "performance_test.h"
 
 #include <stdlib.h>
@@ -40,30 +41,39 @@ char* algo_name = "Trivium";
 /*****************************************************************************
  *  additional validation-functions											 *
  *****************************************************************************/
-void trivium_genctx_dummy(uint8_t* key, uint16_t keysize_b, void* ctx){
-	uint32_t iv=0;
-	trivium_init(key, 80, &iv, 32, ctx);
-}
-
-uint8_t trivium_getbyte_dummy(trivium_ctx_t* ctx){
-	uint8_t i,ret=0;
-	for(i=0; i<8; ++i){
-		ret<<=1;
-		ret |= trivium_enc(ctx);
-	}
-	return ret;
-}
 
 void testrun_nessie_trivium(void){
-	nessie_stream_ctx.outsize_b =   8; /* actually unused */
-	nessie_stream_ctx.keysize_b =  80; /* this is the one we have refrence vectors for */
-	nessie_stream_ctx.ivsize_b  =  32;
-	nessie_stream_ctx.name = algo_name;
-	nessie_stream_ctx.ctx_size_B = sizeof(trivium_ctx_t);
-	nessie_stream_ctx.cipher_genctx = (nessie_stream_genctx_fpt)trivium_genctx_dummy;
-	nessie_stream_ctx.cipher_enc = (nessie_stream_genenc_fpt)trivium_getbyte_dummy;
-	
-	nessie_stream_run();	
+	scal_nessie_run(&trivium_desc);
+}
+
+void testrun_trivium(void){
+	uint8_t key[10];
+	uint8_t iv[4];
+	uint8_t buffer[64];
+	scgen_ctx_t ctx;
+	memset(key, 0, 10);
+	memset(iv, 0, 4);
+	key[0] = 0x80;
+	scal_cipher_init(&trivium_desc, key, 80, iv, 32, &ctx);
+	scal_cipher_gen_fillblock(buffer, 64, &ctx);
+	cli_putstr_P(PSTR("\r\nTest:\r\n  Key     = "));
+	cli_hexdump(key, 10);
+	cli_putstr_P(PSTR("\r\n  IV      = "));
+	cli_hexdump(iv, 4);
+	cli_putstr_P(PSTR("\r\n  Cipher  = "));
+	cli_hexdump_block(buffer, 64, 4, 8);
+	scal_cipher_free(&ctx);
+	key[0] = 0x00;
+	key[9] = 0x80;
+	scal_cipher_init(&trivium_desc, key, 80, iv, 32, &ctx);
+	scal_cipher_gen_fillblock(buffer, 64, &ctx);
+	cli_putstr_P(PSTR("\r\nTest:\r\n  Key     = "));
+	cli_hexdump(key, 10);
+	cli_putstr_P(PSTR("\r\n  IV      = "));
+	cli_hexdump(iv, 4);
+	cli_putstr_P(PSTR("\r\n  Cipher  = "));
+	cli_hexdump_block(buffer, 64, 4, 8);
+	scal_cipher_free(&ctx);
 }
 
 void testrun_performance_trivium(void){
@@ -106,7 +116,7 @@ const char echo_str[]        PROGMEM = "echo";
 
 cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ nessie_str,      NULL, testrun_nessie_trivium},
-	{ test_str,        NULL, testrun_nessie_trivium},
+	{ test_str,        NULL, testrun_trivium},
 	{ performance_str, NULL, testrun_performance_trivium},
 	{ echo_str,    (void*)1, (void_fpt)echo_ctrl},
 	{ NULL,            NULL, NULL}

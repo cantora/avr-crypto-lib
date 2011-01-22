@@ -24,6 +24,8 @@
 #include "streamcipher_descriptor.h"
 #include "keysize_descriptor.h"
 
+#include "cli.h"
+
 uint8_t scal_cipher_init(const scdesc_t* cipher_descriptor,
                          const void* key, uint16_t keysize_b,
                          const void* iv,  uint16_t ivsize_b, scgen_ctx_t* ctx){
@@ -112,6 +114,8 @@ uint8_t scal_cipher_gen_byte(scgen_ctx_t* ctx){
 			r |= ((((sc_gen1_fpt)gen_fpt)(ctx->ctx))&(0xff<<(8-blocksize_b)))>>fill;
 			fill += blocksize_b;
 		}while(fill<8);
+//		cli_putstr_P(PSTR("\r\nDBG: "));
+//		cli_hexdump_byte(r);
 		return r;
 	}else{
 		uint8_t r;
