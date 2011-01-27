@@ -1,0 +1,2668 @@
+########################################
+
+Groestl
+  Message Digest Length = 512
+
+########################################
+
+
+2-Block Message Sample
+
+  Input Message = "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopqopqrpqrsqrstrstustuvtuvwuvwxvwxywxyzxyzayzabzabcabcdbcdecdefdefg"
+
+========================================
+
+Initial state:
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 02 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+
+========================================
+
+Block Contents:
+61 63 65 67 69 6b 6d 6f 71 73 75 77 79 61 63 80 
+62 64 66 68 6a 6c 6e 70 72 74 76 78 7a 62 64 00 
+63 65 67 69 6b 6d 6f 71 73 75 77 79 61 63 65 00 
+64 66 68 6a 6c 6e 70 72 74 76 78 7a 62 64 66 00 
+62 64 66 68 6a 6c 6e 70 72 74 76 78 7a 62 64 00 
+63 65 67 69 6b 6d 6f 71 73 75 77 79 61 63 65 00 
+64 66 68 6a 6c 6e 70 72 74 76 78 7a 62 64 66 00 
+65 67 69 6b 6d 6f 71 73 75 77 79 61 63 65 67 00 
+
+:: BEGIN P
+Input:
+61 63 65 67 69 6b 6d 6f 71 73 75 77 79 61 63 80 
+62 64 66 68 6a 6c 6e 70 72 74 76 78 7a 62 64 00 
+63 65 67 69 6b 6d 6f 71 73 75 77 79 61 63 65 00 
+64 66 68 6a 6c 6e 70 72 74 76 78 7a 62 64 66 00 
+62 64 66 68 6a 6c 6e 70 72 74 76 78 7a 62 64 00 
+63 65 67 69 6b 6d 6f 71 73 75 77 79 61 63 65 00 
+64 66 68 6a 6c 6e 70 72 74 76 78 7a 62 64 66 02 
+65 67 69 6b 6d 6f 71 73 75 77 79 61 63 65 67 00 
+t=0 (AddRoundConstant):
+61 73 45 57 29 3b 0d 1f f1 e3 d5 c7 b9 b1 83 70 
+62 64 66 68 6a 6c 6e 70 72 74 76 78 7a 62 64 00 
+63 65 67 69 6b 6d 6f 71 73 75 77 79 61 63 65 00 
+64 66 68 6a 6c 6e 70 72 74 76 78 7a 62 64 66 00 
+62 64 66 68 6a 6c 6e 70 72 74 76 78 7a 62 64 00 
+63 65 67 69 6b 6d 6f 71 73 75 77 79 61 63 65 00 
+64 66 68 6a 6c 6e 70 72 74 76 78 7a 62 64 66 02 
+65 67 69 6b 6d 6f 71 73 75 77 79 61 63 65 67 00 
+t=0 (SubBytes):
+ef 8f 6e 5b a5 e2 d7 c0 a1 11 03 c6 56 c8 ec 51 
+aa 43 33 45 02 50 9f 51 40 92 38 bc da aa 43 63 
+fb 4d 85 f9 7f 3c a8 a3 8f 9d f5 b6 ef fb 4d 63 
+43 33 45 02 50 9f 51 40 92 38 bc da aa 43 33 63 
+aa 43 33 45 02 50 9f 51 40 92 38 bc da aa 43 63 
+fb 4d 85 f9 7f 3c a8 a3 8f 9d f5 b6 ef fb 4d 63 
+43 33 45 02 50 9f 51 40 92 38 bc da aa 43 33 77 
+4d 85 f9 7f 3c a8 a3 8f 9d f5 b6 ef fb 4d 85 63 
+t=0 (ShiftBytes):
+ef 8f 6e 5b a5 e2 d7 c0 a1 11 03 c6 56 c8 ec 51 
+43 33 45 02 50 9f 51 40 92 38 bc da aa 43 63 aa 
+85 f9 7f 3c a8 a3 8f 9d f5 b6 ef fb 4d 63 fb 4d 
+02 50 9f 51 40 92 38 bc da aa 43 33 63 43 33 45 
+02 50 9f 51 40 92 38 bc da aa 43 63 aa 43 33 45 
+3c a8 a3 8f 9d f5 b6 ef fb 4d 63 fb 4d 85 f9 7f 
+51 40 92 38 bc da aa 43 33 77 43 33 45 02 50 9f 
+ef fb 4d 85 63 4d 85 f9 7f 3c a8 a3 8f 9d f5 b6 
+t=0 (MixBytes):
+24 4c a2 43 a6 f5 e6 bc 37 ea 88 bb 8a 8b c6 04 
+63 60 43 20 92 28 06 45 43 3c 72 92 7f a2 cc c3 
+6b 7e ed 4d 3a c9 79 7e 54 fb b0 2d 38 06 5b 59 
+ad 6e 7c 9e 04 8f 14 f3 ab 18 48 7a e2 66 4b ac 
+0c a1 90 87 fb a3 b8 41 72 82 6f e1 b0 f5 f1 69 
+a5 98 f8 7a 2d 38 29 fa ff 22 79 04 b5 d3 54 2c 
+45 95 ab 35 51 e7 59 ee 2f 34 d3 63 e0 a2 a0 be 
+8b 6a cb 81 ac 38 ee f9 ba 11 b4 87 d0 c0 67 f2 
+t=1 (AddRoundConstant):
+25 5d 83 72 e7 a4 87 cd b6 7b 29 0a 4b 5a 27 f5 
+63 60 43 20 92 28 06 45 43 3c 72 92 7f a2 cc c3 
+6b 7e ed 4d 3a c9 79 7e 54 fb b0 2d 38 06 5b 59 
+ad 6e 7c 9e 04 8f 14 f3 ab 18 48 7a e2 66 4b ac 
+0c a1 90 87 fb a3 b8 41 72 82 6f e1 b0 f5 f1 69 
+a5 98 f8 7a 2d 38 29 fa ff 22 79 04 b5 d3 54 2c 
+45 95 ab 35 51 e7 59 ee 2f 34 d3 63 e0 a2 a0 be 
+8b 6a cb 81 ac 38 ee f9 ba 11 b4 87 d0 c0 67 f2 
+t=1 (SubBytes):
+3f 4c ec 40 94 49 17 bd 4e 21 a5 67 b3 be cc e6 
+fb d0 1a b7 4f 34 6f 6e 1a eb 40 4f d2 3a 4b 2e 
+7f f3 55 e3 80 dd b6 f3 20 0f e7 d8 07 6f 39 cb 
+95 9f 10 0b f2 73 fa 0d 62 ad 52 da 98 33 b3 91 
+fe 32 60 17 0f 0a 6c 83 40 13 a8 f8 e7 e6 a1 f9 
+06 46 41 da d8 07 a5 2d 16 93 b6 f2 d5 66 20 71 
+6e 2a 62 96 d1 94 cb 28 15 18 66 fb e1 3a e0 ae 
+3d 02 1f 0c 91 07 28 99 f4 82 8d 17 70 ba 85 89 
+t=1 (ShiftBytes):
+3f 4c ec 40 94 49 17 bd 4e 21 a5 67 b3 be cc e6 
+d0 1a b7 4f 34 6f 6e 1a eb 40 4f d2 3a 4b 2e fb 
+55 e3 80 dd b6 f3 20 0f e7 d8 07 6f 39 cb 7f f3 
+0b f2 73 fa 0d 62 ad 52 da 98 33 b3 91 95 9f 10 
+0f 0a 6c 83 40 13 a8 f8 e7 e6 a1 f9 fe 32 60 17 
+07 a5 2d 16 93 b6 f2 d5 66 20 71 06 46 41 da d8 
+cb 28 15 18 66 fb e1 3a e0 ae 6e 2a 62 96 d1 94 
+17 70 ba 85 89 3d 02 1f 0c 91 07 28 99 f4 82 8d 
+t=1 (MixBytes):
+83 62 00 ea 2c c6 65 c9 b3 2e 52 5a c2 ee 81 30 
+9b e7 20 0a 0a aa a6 8e cf 60 26 a0 67 96 9a 45 
+87 a7 30 c9 cc ff 13 1a 58 c7 7a b9 ff 90 00 53 
+07 2d a6 82 40 d7 b0 23 7a f7 9d b6 ff 13 fa 70 
+89 05 24 e5 d0 53 b3 af 3f 19 41 4a 9f 1b f2 07 
+0e d7 45 1c d0 ac 8b 9a 64 49 41 31 b4 2f 6f a0 
+ae 37 a7 8c 72 2f dd 13 cc 93 10 ec 5c 62 b8 95 
+1e 21 ba be b1 f3 52 55 cd ce 2a c5 74 78 e2 1c 
+t=2 (AddRoundConstant):
+81 70 22 d8 6e 94 07 bb 31 bc f0 e8 00 3c 63 c2 
+9b e7 20 0a 0a aa a6 8e cf 60 26 a0 67 96 9a 45 
+87 a7 30 c9 cc ff 13 1a 58 c7 7a b9 ff 90 00 53 
+07 2d a6 82 40 d7 b0 23 7a f7 9d b6 ff 13 fa 70 
+89 05 24 e5 d0 53 b3 af 3f 19 41 4a 9f 1b f2 07 
+0e d7 45 1c d0 ac 8b 9a 64 49 41 31 b4 2f 6f a0 
+ae 37 a7 8c 72 2f dd 13 cc 93 10 ec 5c 62 b8 95 
+1e 21 ba be b1 f3 52 55 cd ce 2a c5 74 78 e2 1c 
+t=2 (SubBytes):
+0c 51 93 61 9f 22 c5 ea c7 65 8c 9b 63 eb fb 25 
+14 94 b7 67 67 ac 24 19 8a d0 f7 e0 85 90 b8 6e 
+17 5c 04 dd 4b 16 7d a2 6a c6 da 56 16 60 63 ed 
+c5 d8 24 13 09 0e e7 26 da 68 5e 4e 16 7d 2d 51 
+a7 6b 36 d9 70 ed 6d 79 75 d4 83 d6 db af 89 c5 
+ab 0e 6e 9c 70 91 3d b8 43 3b 83 c7 8d 15 a8 e0 
+e4 9a 5c 64 40 15 c1 7d 4b dc ca ce 4a aa 6c 2a 
+72 fd f4 ae c8 0d 00 fc bd 8b e5 a6 92 bc 98 9c 
+t=2 (ShiftBytes):
+0c 51 93 61 9f 22 c5 ea c7 65 8c 9b 63 eb fb 25 
+94 b7 67 67 ac 24 19 8a d0 f7 e0 85 90 b8 6e 14 
+04 dd 4b 16 7d a2 6a c6 da 56 16 60 63 ed 17 5c 
+13 09 0e e7 26 da 68 5e 4e 16 7d 2d 51 c5 d8 24 
+70 ed 6d 79 75 d4 83 d6 db af 89 c5 a7 6b 36 d9 
+91 3d b8 43 3b 83 c7 8d 15 a8 e0 ab 0e 6e 9c 70 
+c1 7d 4b dc ca ce 4a aa 6c 2a e4 9a 5c 64 40 15 
+a6 92 bc 98 9c 72 fd f4 ae c8 0d 00 fc bd 8b e5 
+t=2 (MixBytes):
+df fd 62 a0 b8 1d f1 13 7d 97 d7 f6 ed 2c d3 da 
+42 58 f8 f6 a4 a0 05 cc 31 4c a8 f7 65 f0 05 86 
+28 72 8f 87 09 b6 7d 8f cf 24 a9 e7 af 12 6f f3 
+b5 1c fc 50 cc a7 ac c5 5a f7 ec 59 de fc 4c dd 
+d9 35 bc c7 c5 de 82 36 4e e2 46 04 77 c4 68 89 
+8b cb 4b f1 4f 48 90 20 b8 01 6e cb 39 fd 07 47 
+ec 84 75 84 73 f1 fe bb 1c fe 2f b7 a8 b4 17 44 
+a5 a6 c5 b3 b0 6f be 24 b9 4c af 35 5c 4d c0 c8 
+t=3 (AddRoundConstant):
+dc ee 41 93 fb 4e 92 60 fe 04 74 45 2e ff 30 29 
+42 58 f8 f6 a4 a0 05 cc 31 4c a8 f7 65 f0 05 86 
+28 72 8f 87 09 b6 7d 8f cf 24 a9 e7 af 12 6f f3 
+b5 1c fc 50 cc a7 ac c5 5a f7 ec 59 de fc 4c dd 
+d9 35 bc c7 c5 de 82 36 4e e2 46 04 77 c4 68 89 
+8b cb 4b f1 4f 48 90 20 b8 01 6e cb 39 fd 07 47 
+ec 84 75 84 73 f1 fe bb 1c fe 2f b7 a8 b4 17 44 
+a5 a6 c5 b3 b0 6f be 24 b9 4c af 35 5c 4d c0 c8 
+t=3 (SubBytes):
+86 28 83 dc 0f 2f 4f d0 bb f2 92 6e 31 16 04 a5 
+2c 6a 41 42 49 e0 6b 4b c7 29 c2 68 4d 8c 6b 44 
+34 40 73 17 01 4e ff 73 8a 36 d3 94 79 c9 a8 0d 
+d5 9c b0 53 4b 5c 91 a6 be 68 ce cb 1d b0 29 c1 
+35 96 65 c6 a6 1d 13 05 2f 98 5a f2 f5 1c 45 a7 
+3d 1f b3 a1 84 52 60 b7 6c 7c 9f 1f 12 54 c5 a0 
+ce 5f 9d 5f 8f a1 bb ea 9c bb 15 a9 c2 8d f0 1b 
+06 24 a6 6d e7 a8 ae 36 56 29 79 96 4a e3 ba e8 
+t=3 (ShiftBytes):
+86 28 83 dc 0f 2f 4f d0 bb f2 92 6e 31 16 04 a5 
+6a 41 42 49 e0 6b 4b c7 29 c2 68 4d 8c 6b 44 2c 
+73 17 01 4e ff 73 8a 36 d3 94 79 c9 a8 0d 34 40 
+53 4b 5c 91 a6 be 68 ce cb 1d b0 29 c1 d5 9c b0 
+a6 1d 13 05 2f 98 5a f2 f5 1c 45 a7 35 96 65 c6 
+52 60 b7 6c 7c 9f 1f 12 54 c5 a0 3d 1f b3 a1 84 
+bb ea 9c bb 15 a9 c2 8d f0 1b ce 5f 9d 5f 8f a1 
+96 4a e3 ba e8 06 24 a6 6d e7 a8 ae 36 56 29 79 
+t=3 (MixBytes):
+51 97 29 5e 89 8e 25 90 a5 7f 8d b7 36 23 d2 3c 
+f9 7a 2a e5 93 59 2e 8d 8a 94 54 db 62 19 d8 ac 
+87 e1 ed d0 ef d0 44 0e 6b 3e 27 39 08 76 7b d7 
+2f b3 90 c1 2b 95 e2 5b fb 47 2b 9e d2 ff 59 fc 
+5b 06 b8 37 6d 6b 65 a4 12 de e1 45 05 3f 78 96 
+51 39 4e 61 5f 06 5d 26 ea 0d 9f 79 8b c9 de 1d 
+84 f8 e5 89 7e c0 69 c2 1c 1f 90 61 c2 0e ab 3d 
+b1 5b a4 13 ba 5c 33 64 9a e1 f0 75 3d cb a0 33 
+t=4 (AddRoundConstant):
+55 83 0d 6a cd da 41 e4 21 eb 29 03 f2 f7 36 c8 
+f9 7a 2a e5 93 59 2e 8d 8a 94 54 db 62 19 d8 ac 
+87 e1 ed d0 ef d0 44 0e 6b 3e 27 39 08 76 7b d7 
+2f b3 90 c1 2b 95 e2 5b fb 47 2b 9e d2 ff 59 fc 
+5b 06 b8 37 6d 6b 65 a4 12 de e1 45 05 3f 78 96 
+51 39 4e 61 5f 06 5d 26 ea 0d 9f 79 8b c9 de 1d 
+84 f8 e5 89 7e c0 69 c2 1c 1f 90 61 c2 0e ab 3d 
+b1 5b a4 13 ba 5c 33 64 9a e1 f0 75 3d cb a0 33 
+t=4 (SubBytes):
+fc ec d7 02 bd 57 83 69 fd e9 a5 7b 89 68 05 e8 
+99 da e5 d9 dc cb 31 5d 7e 22 20 b9 aa d4 61 91 
+17 f8 55 70 df 70 1b ab 7f b2 cc 12 30 38 21 0e 
+15 6d 60 78 f1 2a 98 39 0f a0 f1 0b b5 16 cb b0 
+39 6f 6c 9a 3c 7f 4d 49 c9 1d f8 6e 6b 75 bc 90 
+d1 12 2f ef cf 6f 4c f7 87 d7 db b6 3d dd 1d a4 
+5f 41 d9 a7 f3 ba f9 25 9c c0 60 ef 25 ab 62 27 
+c8 39 49 7d f4 4a c3 43 b8 f8 8c 9d 27 1f e0 c3 
+t=4 (ShiftBytes):
+fc ec d7 02 bd 57 83 69 fd e9 a5 7b 89 68 05 e8 
+da e5 d9 dc cb 31 5d 7e 22 20 b9 aa d4 61 91 99 
+55 70 df 70 1b ab 7f b2 cc 12 30 38 21 0e 17 f8 
+78 f1 2a 98 39 0f a0 f1 0b b5 16 cb b0 15 6d 60 
+3c 7f 4d 49 c9 1d f8 6e 6b 75 bc 90 39 6f 6c 9a 
+6f 4c f7 87 d7 db b6 3d dd 1d a4 d1 12 2f ef cf 
+f9 25 9c c0 60 ef 25 ab 62 27 5f 41 d9 a7 f3 ba 
+9d 27 1f e0 c3 c8 39 49 7d f4 4a c3 43 b8 f8 8c 
+t=4 (MixBytes):
+fb 63 29 fe 03 39 7a 55 ff 81 68 5f 86 e5 84 09 
+b8 df 94 7a 03 81 3c 75 18 cf 39 ec 32 4a 55 13 
+24 97 b3 c4 e8 8f 93 9d cd 82 d6 c8 ee 0a 1b e3 
+1f c4 30 87 b7 76 f2 9b 59 d7 a9 32 ec 2d 75 c7 
+c9 9a 22 4a 5c ef 9c 86 9c 38 a7 96 55 89 34 a2 
+01 94 16 86 9a 1f 37 0a f3 6b fd f9 79 d8 38 20 
+da 56 57 cd 6f 0d b0 bd 9f 6a ed 75 1f 15 eb 17 
+2e 67 00 b5 d6 d9 c9 23 4b 46 c0 6b 02 1b f2 2e 
+t=5 (AddRoundConstant):
+fe 76 0c cb 46 6c 1f 20 7a 14 cd ea 43 30 61 fc 
+b8 df 94 7a 03 81 3c 75 18 cf 39 ec 32 4a 55 13 
+24 97 b3 c4 e8 8f 93 9d cd 82 d6 c8 ee 0a 1b e3 
+1f c4 30 87 b7 76 f2 9b 59 d7 a9 32 ec 2d 75 c7 
+c9 9a 22 4a 5c ef 9c 86 9c 38 a7 96 55 89 34 a2 
+01 94 16 86 9a 1f 37 0a f3 6b fd f9 79 d8 38 20 
+da 56 57 cd 6f 0d b0 bd 9f 6a ed 75 1f 15 eb 17 
+2e 67 00 b5 d6 d9 c9 23 4b 46 c0 6b 02 1b f2 2e 
+t=5 (SubBytes):
+bb 38 fe 1f 5a 50 c0 b7 da fa bd 87 1a 04 ef b0 
+6c 9e 22 da 7b 0c eb 9d ad 8a 12 ce 23 d6 fc 7d 
+36 88 6d 1c 9b 73 dc 5e bd 13 f6 e8 28 67 af 11 
+c0 1c 04 17 a9 38 89 14 cb 0e d3 23 ce d8 9d c6 
+dd b8 93 d6 4a df de 44 de 07 5c 90 fc a7 18 3a 
+7c 22 47 44 b8 c0 9a 67 0d 7f 54 99 b6 61 07 b7 
+57 b1 5b bd a8 d7 e7 7a db 02 55 9d c0 59 e9 f0 
+31 85 63 d5 f6 35 dd 26 b3 5a ba 7f 77 af 89 31 
+t=5 (ShiftBytes):
+bb 38 fe 1f 5a 50 c0 b7 da fa bd 87 1a 04 ef b0 
+9e 22 da 7b 0c eb 9d ad 8a 12 ce 23 d6 fc 7d 6c 
+6d 1c 9b 73 dc 5e bd 13 f6 e8 28 67 af 11 36 88 
+17 a9 38 89 14 cb 0e d3 23 ce d8 9d c6 c0 1c 04 
+4a df de 44 de 07 5c 90 fc a7 18 3a dd b8 93 d6 
+c0 9a 67 0d 7f 54 99 b6 61 07 b7 7c 22 47 44 b8 
+e7 7a db 02 55 9d c0 59 e9 f0 57 b1 5b bd a8 d7 
+7f 77 af 89 31 31 85 63 d5 f6 35 dd 26 b3 5a ba 
+t=5 (MixBytes):
+b3 6e c6 8f 04 21 82 53 d2 10 f2 88 60 19 93 ed 
+bc 9f e0 62 dd d6 78 10 02 cf 9f bf 45 85 f6 ff 
+46 73 c8 84 51 53 a1 6e 31 ff 55 31 06 0a 37 9e 
+d6 ac 70 ea 44 d3 04 58 36 d4 20 b4 74 e8 4c e0 
+a5 63 a2 5e b2 89 ec d1 88 95 e8 cb c2 eb 66 10 
+d4 3c 81 a7 5f d6 b1 ff d2 cb 38 a8 6f cb cc b9 
+47 33 98 93 46 e5 2b cc 68 65 a6 27 bf 63 de 8e 
+7e 70 fb 0d 8a a5 9b c6 89 77 bc 6a 2c 4e d6 be 
+t=6 (AddRoundConstant):
+b5 78 e0 b9 42 77 e4 25 54 86 54 3e a6 cf 75 1b 
+bc 9f e0 62 dd d6 78 10 02 cf 9f bf 45 85 f6 ff 
+46 73 c8 84 51 53 a1 6e 31 ff 55 31 06 0a 37 9e 
+d6 ac 70 ea 44 d3 04 58 36 d4 20 b4 74 e8 4c e0 
+a5 63 a2 5e b2 89 ec d1 88 95 e8 cb c2 eb 66 10 
+d4 3c 81 a7 5f d6 b1 ff d2 cb 38 a8 6f cb cc b9 
+47 33 98 93 46 e5 2b cc 68 65 a6 27 bf 63 de 8e 
+7e 70 fb 0d 8a a5 9b c6 89 77 bc 6a 2c 4e d6 be 
+t=6 (SubBytes):
+d5 bc e1 56 2c f5 69 3f 20 44 20 b2 24 8a 9d af 
+65 db e1 aa c1 f6 bc ca 77 8a db 08 6e 97 42 16 
+5a 8f e8 5f d1 ed 32 9f c7 16 fc c7 6f 67 9a 0b 
+f6 91 51 87 1b 66 f2 6a 05 48 b7 8d 92 9b 29 e1 
+06 fb 3a 58 37 a7 ce 3e c4 2a 9b 1f 25 e9 33 ca 
+48 eb 0c 5c cf f6 c8 16 b5 1f 07 c2 a8 1f 4b 56 
+a0 c3 46 dc 5a d9 f1 4b 45 4d 24 cc 08 fb 1d 19 
+f3 51 0f d7 7e 06 14 b4 a7 f5 65 02 71 2f f6 ae 
+t=6 (ShiftBytes):
+d5 bc e1 56 2c f5 69 3f 20 44 20 b2 24 8a 9d af 
+db e1 aa c1 f6 bc ca 77 8a db 08 6e 97 42 16 65 
+e8 5f d1 ed 32 9f c7 16 fc c7 6f 67 9a 0b 5a 8f 
+87 1b 66 f2 6a 05 48 b7 8d 92 9b 29 e1 f6 91 51 
+37 a7 ce 3e c4 2a 9b 1f 25 e9 33 ca 06 fb 3a 58 
+f6 c8 16 b5 1f 07 c2 a8 1f 4b 56 48 eb 0c 5c cf 
+f1 4b 45 4d 24 cc 08 fb 1d 19 a0 c3 46 dc 5a d9 
+02 71 2f f6 ae f3 51 0f d7 7e 06 14 b4 a7 f5 65 
+t=6 (MixBytes):
+e9 49 1b 68 41 89 2c d7 b8 a8 ba 37 3d 94 73 83 
+34 4f ca 97 fb 5a 6d da f6 11 a4 36 34 87 f3 63 
+f7 73 6c 99 ae 87 db 58 c1 3a 61 61 83 f5 38 64 
+c9 a8 e0 cc 3f d6 d9 c9 8e e7 47 4e d8 bb b9 7b 
+9e e7 e4 fe 25 e9 73 63 a8 8b b5 d0 ae a1 cd 69 
+e0 ce 9b c0 c9 7d c1 c1 19 a0 bc 66 04 cf af f4 
+30 54 d9 27 6e f1 9b ef b0 92 2f 6c bc 58 7d 08 
+58 74 29 60 c7 bf 1e 34 7d cc 3f a6 26 bb 9e 2b 
+t=7 (AddRoundConstant):
+ee 5e 3c 5f 06 de 4b a0 3f 3f 1d 80 fa 43 94 74 
+34 4f ca 97 fb 5a 6d da f6 11 a4 36 34 87 f3 63 
+f7 73 6c 99 ae 87 db 58 c1 3a 61 61 83 f5 38 64 
+c9 a8 e0 cc 3f d6 d9 c9 8e e7 47 4e d8 bb b9 7b 
+9e e7 e4 fe 25 e9 73 63 a8 8b b5 d0 ae a1 cd 69 
+e0 ce 9b c0 c9 7d c1 c1 19 a0 bc 66 04 cf af f4 
+30 54 d9 27 6e f1 9b ef b0 92 2f 6c bc 58 7d 08 
+58 74 29 60 c7 bf 1e 34 7d cc 3f a6 26 bb 9e 2b 
+t=7 (SubBytes):
+28 58 eb cf 6f 1d b3 e0 75 75 a4 cd 2d 1a 22 92 
+18 84 74 88 0f be 3c 57 42 82 49 05 18 17 0d fb 
+68 8f 50 ee e4 17 b9 6a 78 80 ef ef ec e6 07 43 
+dd c2 e1 4b 75 f6 35 dd 19 94 a0 2f 61 ea 56 21 
+0b 94 69 bb 3f 1e 8f fb c2 3d d5 70 e4 32 bd f9 
+e1 8b 14 ba dd ff 78 78 d4 e0 65 33 f2 8a 79 bf 
+04 20 35 cc 9f a1 14 df e7 4f 15 50 65 6a ff 30 
+6a 92 a5 d0 c6 08 72 18 ff 4b 75 24 f7 ea 0b f1 
+t=7 (ShiftBytes):
+28 58 eb cf 6f 1d b3 e0 75 75 a4 cd 2d 1a 22 92 
+84 74 88 0f be 3c 57 42 82 49 05 18 17 0d fb 18 
+50 ee e4 17 b9 6a 78 80 ef ef ec e6 07 43 68 8f 
+4b 75 f6 35 dd 19 94 a0 2f 61 ea 56 21 dd c2 e1 
+3f 1e 8f fb c2 3d d5 70 e4 32 bd f9 0b 94 69 bb 
+ff 78 78 d4 e0 65 33 f2 8a 79 bf e1 8b 14 ba dd 
+14 df e7 4f 15 50 65 6a ff 30 04 20 35 cc 9f a1 
+24 f7 ea 0b f1 6a 92 a5 d0 c6 08 72 18 ff 4b 75 
+t=7 (MixBytes):
+e5 2d ff 72 4c f8 fd 5b 97 28 7a 2e f1 66 08 72 
+ec a4 aa aa 2b e3 08 87 75 49 2e 08 1a e5 93 c2 
+b7 0c d9 a9 ae 46 db 80 ee 51 0f 68 7e 4a 5f 7b 
+67 e2 96 fc 8a 83 19 c5 fc 4c 18 ec 57 58 f1 95 
+c9 d3 06 ac cd 48 f4 73 3f d0 f4 95 78 91 27 2b 
+92 5a ab 1d 02 1c 8c e5 c1 30 9c 93 2d 60 7e af 
+e0 82 84 ca ca b8 6d a3 32 04 c0 80 b2 ca 47 87 
+ab 7c b5 76 d3 62 09 e6 a6 89 0b 55 ed e4 b7 a7 
+t=8 (AddRoundConstant):
+ed 35 d7 4a 04 a0 95 23 1f b0 d2 96 39 be e0 8a 
+ec a4 aa aa 2b e3 08 87 75 49 2e 08 1a e5 93 c2 
+b7 0c d9 a9 ae 46 db 80 ee 51 0f 68 7e 4a 5f 7b 
+67 e2 96 fc 8a 83 19 c5 fc 4c 18 ec 57 58 f1 95 
+c9 d3 06 ac cd 48 f4 73 3f d0 f4 95 78 91 27 2b 
+92 5a ab 1d 02 1c 8c e5 c1 30 9c 93 2d 60 7e af 
+e0 82 84 ca ca b8 6d a3 32 04 c0 80 b2 ca 47 87 
+ab 7c b5 76 d3 62 09 e6 a6 89 0b 55 ed e4 b7 a7 
+t=8 (SubBytes):
+55 96 0e d6 f2 e0 2a 26 c0 e7 b5 90 12 ae e1 7e 
+ce 49 ac ac f1 11 30 17 9d 3b 31 30 a2 d9 dc 25 
+a9 fe 35 d3 e4 5a b9 cd 28 d1 76 45 f3 d6 cf 21 
+85 98 90 b0 7e ec d4 a6 b0 29 ad ce 5b 6a a1 2a 
+dd 66 6f 91 bd 52 bf 8f 75 70 bf 2a bc 81 cc f1 
+4f be 62 a4 77 9c 64 d9 78 04 de dc d8 d0 f3 79 
+e1 13 5f 74 74 6c 3c 0a 23 f2 ba cd 37 74 a0 17 
+62 10 d5 38 66 aa 01 8e 24 a7 2b fc 55 69 a9 5c 
+t=8 (ShiftBytes):
+55 96 0e d6 f2 e0 2a 26 c0 e7 b5 90 12 ae e1 7e 
+49 ac ac f1 11 30 17 9d 3b 31 30 a2 d9 dc 25 ce 
+35 d3 e4 5a b9 cd 28 d1 76 45 f3 d6 cf 21 a9 fe 
+b0 7e ec d4 a6 b0 29 ad ce 5b 6a a1 2a 85 98 90 
+bd 52 bf 8f 75 70 bf 2a bc 81 cc f1 dd 66 6f 91 
+9c 64 d9 78 04 de dc d8 d0 f3 79 4f be 62 a4 77 
+3c 0a 23 f2 ba cd 37 74 a0 17 e1 13 5f 74 74 6c 
+fc 55 69 a9 5c 62 10 d5 38 66 aa 01 8e 24 a7 2b 
+t=8 (MixBytes):
+5f c6 5b b5 fe 32 37 d4 cd d0 c5 26 8d a5 fd 78 
+fe 0b 7c 81 6b 51 91 8b fd 7a 92 7c 64 48 15 5b 
+a6 70 c8 c3 51 90 b9 50 cb 65 f3 38 b1 bb 8b c8 
+76 42 3e 04 02 94 29 b5 34 1f 9a 9b 36 8b 3f 22 
+c6 f9 24 f2 4c 6c 33 ce 8a 8b cf a4 0b 48 42 ed 
+7a 31 10 45 bb 9c fb f1 0a 74 59 42 65 a2 69 56 
+f7 8f 3a 86 a2 26 c8 99 1c ef 9b 84 f5 f5 00 24 
+b2 a1 4e cd 2e 5e be bb 91 86 0e bb 4a 5f 5b d7 
+t=9 (AddRoundConstant):
+56 df 72 8c b7 6b 5e ad 44 49 6c 9f 44 7c 14 81 
+fe 0b 7c 81 6b 51 91 8b fd 7a 92 7c 64 48 15 5b 
+a6 70 c8 c3 51 90 b9 50 cb 65 f3 38 b1 bb 8b c8 
+76 42 3e 04 02 94 29 b5 34 1f 9a 9b 36 8b 3f 22 
+c6 f9 24 f2 4c 6c 33 ce 8a 8b cf a4 0b 48 42 ed 
+7a 31 10 45 bb 9c fb f1 0a 74 59 42 65 a2 69 56 
+f7 8f 3a 86 a2 26 c8 99 1c ef 9b 84 f5 f5 00 24 
+b2 a1 4e cd 2e 5e be bb 91 86 0e bb 4a 5f 5b d7 
+t=9 (SubBytes):
+b1 9e 40 64 a9 7f 58 95 1b 3b 50 db 1b 10 fa 0c 
+bb 2b 10 0c 7f d1 81 3d 54 da 4f 10 43 52 59 39 
+24 51 e8 2e d1 60 56 53 1f 4d 0d 07 c8 ea 3d e8 
+38 2c b2 f2 77 22 a5 d5 18 c0 b8 14 05 3d 75 93 
+b4 99 36 89 29 50 c3 8b 7e 3d 8a 49 2b 52 2c 55 
+da c7 ca 6e ea de 0f a1 67 92 cb 2c 4d 3a f9 b1 
+68 73 80 44 3a f7 e8 ee 9c df 14 5f e6 e6 63 36 
+37 32 2f bd 31 58 ae ea 81 44 ab ea d6 cf 39 0e 
+t=9 (ShiftBytes):
+b1 9e 40 64 a9 7f 58 95 1b 3b 50 db 1b 10 fa 0c 
+2b 10 0c 7f d1 81 3d 54 da 4f 10 43 52 59 39 bb 
+e8 2e d1 60 56 53 1f 4d 0d 07 c8 ea 3d e8 24 51 
+f2 77 22 a5 d5 18 c0 b8 14 05 3d 75 93 38 2c b2 
+29 50 c3 8b 7e 3d 8a 49 2b 52 2c 55 b4 99 36 89 
+de 0f a1 67 92 cb 2c 4d 3a f9 b1 da c7 ca 6e ea 
+e8 ee 9c df 14 5f e6 e6 63 36 68 73 80 44 3a f7 
+ea d6 cf 39 0e 37 32 2f bd 31 58 ae ea 81 44 ab 
+t=9 (MixBytes):
+d8 c7 e3 2d 2d 40 eb a7 fd 9d 23 6d b9 3a 08 bc 
+c9 f0 4f b0 06 c5 c5 d8 6c f2 2f 84 d5 a3 8a 68 
+c8 c4 fe dc 8d 83 05 67 c8 a7 37 9a f0 1d 67 08 
+d7 4a 44 76 67 10 d3 4b 49 a3 9c 40 da 1c 15 4a 
+e0 ca 73 9e 9c 86 df e9 12 d5 af 7e 64 2e f1 89 
+d7 cf aa 08 18 00 3c 1c 1f ef 04 9a 49 e0 0e a0 
+a9 a0 20 2c 82 c1 c7 59 eb a8 f4 1a fc 78 32 8e 
+0f d7 66 ea d0 2c 9f ef cf 8c d0 32 8e 3f 11 8c 
+t=10 (AddRoundConstant):
+d2 dd c9 17 67 1a 81 dd 77 07 89 d7 73 e0 e2 46 
+c9 f0 4f b0 06 c5 c5 d8 6c f2 2f 84 d5 a3 8a 68 
+c8 c4 fe dc 8d 83 05 67 c8 a7 37 9a f0 1d 67 08 
+d7 4a 44 76 67 10 d3 4b 49 a3 9c 40 da 1c 15 4a 
+e0 ca 73 9e 9c 86 df e9 12 d5 af 7e 64 2e f1 89 
+d7 cf aa 08 18 00 3c 1c 1f ef 04 9a 49 e0 0e a0 
+a9 a0 20 2c 82 c1 c7 59 eb a8 f4 1a fc 78 32 8e 
+0f d7 66 ea d0 2c 9f ef cf 8c d0 32 8e 3f 11 8c 
+t=10 (SubBytes):
+b5 c1 dd f0 85 a2 0c c1 f5 c5 a7 0e 8f e1 98 5a 
+dd 8c 84 e7 6f a6 a6 61 50 89 15 5f 03 0a 7e 45 
+e8 1c bb 86 5d ec 6b 85 e8 5c 9a b8 8c a4 85 30 
+0e d6 1b 38 85 ca 66 b3 3b 0a de 09 57 9c 59 d6 
+e1 74 8f 0b de 44 9e 1e c9 03 79 f3 43 31 a1 a7 
+0e 8a ac 30 ad 63 eb 9c c0 df f2 b8 3b e1 ab e0 
+d3 e0 b7 71 13 78 c6 cb e9 c2 bf a2 b0 bc 23 19 
+76 0e 33 87 70 71 db df 8a 64 70 23 19 75 82 64 
+t=10 (ShiftBytes):
+b5 c1 dd f0 85 a2 0c c1 f5 c5 a7 0e 8f e1 98 5a 
+8c 84 e7 6f a6 a6 61 50 89 15 5f 03 0a 7e 45 dd 
+bb 86 5d ec 6b 85 e8 5c 9a b8 8c a4 85 30 e8 1c 
+38 85 ca 66 b3 3b 0a de 09 57 9c 59 d6 0e d6 1b 
+de 44 9e 1e c9 03 79 f3 43 31 a1 a7 e1 74 8f 0b 
+63 eb 9c c0 df f2 b8 3b e1 ab e0 0e 8a ac 30 ad 
+c6 cb e9 c2 bf a2 b0 bc 23 19 d3 e0 b7 71 13 78 
+23 19 75 82 64 76 0e 33 87 70 71 db df 8a 64 70 
+t=10 (MixBytes):
+70 d5 c9 f0 e9 37 e8 34 12 0a f4 f7 4b 28 5a 5e 
+5f bb 01 25 4b 1b 5f 06 57 a0 65 a9 95 f9 e5 09 
+bb f3 32 71 9b 42 d6 91 f2 76 df 2f 14 64 cb 8e 
+aa 86 86 43 3d 35 b1 f2 f9 f5 cd 8e 91 65 16 a2 
+ad 06 2f 30 c3 2c a6 9b 67 cc ac 96 6d 36 ab 7c 
+7e 11 a5 2c fb c6 b9 e2 25 c3 78 0f 8e 21 f6 b4 
+83 15 b0 e7 6e ed 14 fb 5f cc 7a a6 67 02 43 af 
+53 54 13 9a 08 e6 d0 2f 73 a5 30 66 bb 58 01 6e 
+t=11 (AddRoundConstant):
+7b ce e2 cb a2 6c 83 4f 99 91 5f 4c 80 f3 b1 a5 
+5f bb 01 25 4b 1b 5f 06 57 a0 65 a9 95 f9 e5 09 
+bb f3 32 71 9b 42 d6 91 f2 76 df 2f 14 64 cb 8e 
+aa 86 86 43 3d 35 b1 f2 f9 f5 cd 8e 91 65 16 a2 
+ad 06 2f 30 c3 2c a6 9b 67 cc ac 96 6d 36 ab 7c 
+7e 11 a5 2c fb c6 b9 e2 25 c3 78 0f 8e 21 f6 b4 
+83 15 b0 e7 6e ed 14 fb 5f cc 7a a6 67 02 43 af 
+53 54 13 9a 08 e6 d0 2f 73 a5 30 66 bb 58 01 6e 
+t=11 (SubBytes):
+21 8b 98 1f 3a 50 ec 84 ee 81 cf 29 cd 0d c8 06 
+cf ea 7c 3f b3 af cf 6f 5b e0 4d d3 2a 99 d9 01 
+ea 0d 23 a3 14 2c f6 81 89 38 9e 15 fa 43 1f 19 
+ac 44 44 1a 27 96 c8 89 99 e6 bd 19 81 4d 47 3a 
+95 6f 15 04 2e 71 24 14 85 4b 91 90 3c 05 62 10 
+f3 82 06 71 0f b4 56 98 3f 2e bc 76 19 fd 42 8d 
+ec 59 e7 94 9f 55 fa 0f cf 4b da 24 85 77 1a 79 
+ed 20 7d b8 30 8e 70 15 8f 06 04 33 ea 6a 7c 9f 
+t=11 (ShiftBytes):
+21 8b 98 1f 3a 50 ec 84 ee 81 cf 29 cd 0d c8 06 
+ea 7c 3f b3 af cf 6f 5b e0 4d d3 2a 99 d9 01 cf 
+23 a3 14 2c f6 81 89 38 9e 15 fa 43 1f 19 ea 0d 
+1a 27 96 c8 89 99 e6 bd 19 81 4d 47 3a ac 44 44 
+2e 71 24 14 85 4b 91 90 3c 05 62 10 95 6f 15 04 
+b4 56 98 3f 2e bc 76 19 fd 42 8d f3 82 06 71 0f 
+fa 0f cf 4b da 24 85 77 1a 79 ec 59 e7 94 9f 55 
+33 ea 6a 7c 9f ed 20 7d b8 30 8e 70 15 8f 06 04 
+t=11 (MixBytes):
+77 50 d3 2c 98 4d 16 3a 66 4f 89 f7 36 ae b2 96 
+40 e4 df e2 80 d2 a7 ab ff bc 6d d6 a1 cc 11 89 
+89 2b 36 bc 45 e3 15 d1 c4 b2 f8 34 8f a0 ba f1 
+70 50 18 ee 65 00 83 37 c3 4b e7 5f f2 bc 83 3d 
+9f 23 9e 1f db 10 1e f6 be 4a 93 84 e9 22 04 53 
+ff 13 bd 84 a8 3b c1 bb ae e1 aa 0c 12 06 c4 3a 
+59 db aa 93 a0 0e c9 59 29 38 78 a3 98 20 c0 75 
+0f ec ef 68 e7 89 d8 13 82 63 d0 2d 2e 4f 2f ba 
+t=12 (AddRoundConstant):
+7b 4c ff 10 d4 11 7a 46 ea d3 25 4b fa 72 5e 6a 
+40 e4 df e2 80 d2 a7 ab ff bc 6d d6 a1 cc 11 89 
+89 2b 36 bc 45 e3 15 d1 c4 b2 f8 34 8f a0 ba f1 
+70 50 18 ee 65 00 83 37 c3 4b e7 5f f2 bc 83 3d 
+9f 23 9e 1f db 10 1e f6 be 4a 93 84 e9 22 04 53 
+ff 13 bd 84 a8 3b c1 bb ae e1 aa 0c 12 06 c4 3a 
+59 db aa 93 a0 0e c9 59 29 38 78 a3 98 20 c0 75 
+0f ec ef 68 e7 89 d8 13 82 63 d0 2d 2e 4f 2f ba 
+t=12 (SubBytes):
+21 29 16 ca 48 82 da 5a 87 66 3f b3 2d 40 58 02 
+09 69 9e 98 cd b5 5c 62 16 65 3c f6 32 4b 82 a7 
+a7 f1 05 65 6e 11 59 3e 1c 37 41 18 73 e0 f4 a1 
+51 53 ad 28 4d 63 ec 9a 2e b3 94 cf 89 65 ec 27 
+db 26 0b c0 b9 ca 72 42 ae d6 dc 5f 1e 93 f2 ed 
+16 7d 7a 5f c2 e2 78 ea e4 f8 ac fe c9 6f 1c 80 
+cb b9 ac dc e0 ab dd cb a5 07 bc 0a 46 b7 ba 9d 
+76 ce df 45 94 a7 61 7d 13 fb 70 d8 31 84 15 f4 
+t=12 (ShiftBytes):
+21 29 16 ca 48 82 da 5a 87 66 3f b3 2d 40 58 02 
+69 9e 98 cd b5 5c 62 16 65 3c f6 32 4b 82 a7 09 
+05 65 6e 11 59 3e 1c 37 41 18 73 e0 f4 a1 a7 f1 
+28 4d 63 ec 9a 2e b3 94 cf 89 65 ec 27 51 53 ad 
+b9 ca 72 42 ae d6 dc 5f 1e 93 f2 ed db 26 0b c0 
+e2 78 ea e4 f8 ac fe c9 6f 1c 80 16 7d 7a 5f c2 
+dd cb a5 07 bc 0a 46 b7 ba 9d cb b9 ac dc e0 ab 
+d8 31 84 15 f4 76 ce df 45 94 a7 61 7d 13 fb 70 
+t=12 (MixBytes):
+d3 ef 10 b6 e7 6a 34 a9 7e 5d 8d a6 08 f0 1c 56 
+3b d0 da ce f8 e1 65 93 95 b9 1b 5d 61 5f 73 8e 
+79 0d 32 24 91 4c 49 d9 a4 ce 18 73 fa 2e a9 52 
+66 e2 e2 cb af 89 cf 8c 38 8e a2 b6 81 54 7b 7c 
+50 db fb 6e f4 7d fa 9d 3f 94 4e 42 ef f2 2c 5e 
+da d7 9c a4 ab 04 d9 96 f9 96 0c 19 7d c1 c2 36 
+4c 5b 47 d9 c7 70 02 5b 9c 0d dd d9 6b 58 2d ee 
+7c e5 74 56 d9 04 2a 0c 10 7c eb 55 b6 46 b2 f9 
+t=13 (AddRoundConstant):
+de f2 3d 8b aa 37 59 d4 f3 c0 20 1b c5 2d f1 ab 
+3b d0 da ce f8 e1 65 93 95 b9 1b 5d 61 5f 73 8e 
+79 0d 32 24 91 4c 49 d9 a4 ce 18 73 fa 2e a9 52 
+66 e2 e2 cb af 89 cf 8c 38 8e a2 b6 81 54 7b 7c 
+50 db fb 6e f4 7d fa 9d 3f 94 4e 42 ef f2 2c 5e 
+da d7 9c a4 ab 04 d9 96 f9 96 0c 19 7d c1 c2 36 
+4c 5b 47 d9 c7 70 02 5b 9c 0d dd d9 6b 58 2d ee 
+7c e5 74 56 d9 04 2a 0c 10 7c eb 55 b6 46 b2 f9 
+t=13 (SubBytes):
+1d 89 27 3d ac 9a cb 48 0d ba b7 af a6 d8 a1 62 
+e2 70 57 8b 41 f8 4d dc 2a 56 af 4c ef cf 8f 19 
+b6 d7 23 36 81 29 3b 35 49 8b ad 8f 2d 31 d3 00 
+33 98 98 1f 79 a7 8a 64 07 19 3a 4e 0c 20 21 10 
+53 b9 0f 9f bf ff 2d 5e 75 22 2f 2c df 89 71 58 
+57 0e de 49 62 f2 35 90 99 90 fe d4 ff 78 25 05 
+29 39 a0 35 c6 51 77 39 de d7 c1 35 7f 6a d8 28 
+10 d9 92 b1 35 f2 e5 fe ca 10 e9 fc 4e 5a 37 99 
+t=13 (ShiftBytes):
+1d 89 27 3d ac 9a cb 48 0d ba b7 af a6 d8 a1 62 
+70 57 8b 41 f8 4d dc 2a 56 af 4c ef cf 8f 19 e2 
+23 36 81 29 3b 35 49 8b ad 8f 2d 31 d3 00 b6 d7 
+1f 79 a7 8a 64 07 19 3a 4e 0c 20 21 10 33 98 98 
+bf ff 2d 5e 75 22 2f 2c df 89 71 58 53 b9 0f 9f 
+f2 35 90 99 90 fe d4 ff 78 25 05 57 0e de 49 62 
+77 39 de d7 c1 35 7f 6a d8 28 29 39 a0 35 c6 51 
+fc 4e 5a 37 99 10 d9 92 b1 35 f2 e5 fe ca 10 e9 
+t=13 (MixBytes):
+c9 5f 55 33 75 d4 c4 26 d0 67 de dd 30 d1 97 fb 
+b1 cd 11 c7 e2 be 59 38 fe 65 28 d8 e6 a7 f7 c4 
+ca 7a 0f 07 fb 3a ac 0d 81 da bf f8 0c 52 ed f0 
+d5 d3 8a 5f 10 8b 5f af d3 4f 78 b0 29 9b 21 65 
+d5 1f bd 37 12 5b a9 47 c9 c0 86 f1 14 12 18 14 
+c7 df 29 01 53 2b d6 b5 18 9a 43 79 b2 bd d8 ce 
+e2 e9 65 54 8e 5e 98 13 86 94 08 d3 f0 8e 17 9d 
+35 66 fe dd 72 d1 a7 4e b1 30 17 88 45 81 71 68 
+:: END P
+
+:: BEGIN Q
+Input:
+61 63 65 67 69 6b 6d 6f 71 73 75 77 79 61 63 80 
+62 64 66 68 6a 6c 6e 70 72 74 76 78 7a 62 64 00 
+63 65 67 69 6b 6d 6f 71 73 75 77 79 61 63 65 00 
+64 66 68 6a 6c 6e 70 72 74 76 78 7a 62 64 66 00 
+62 64 66 68 6a 6c 6e 70 72 74 76 78 7a 62 64 00 
+63 65 67 69 6b 6d 6f 71 73 75 77 79 61 63 65 00 
+64 66 68 6a 6c 6e 70 72 74 76 78 7a 62 64 66 00 
+65 67 69 6b 6d 6f 71 73 75 77 79 61 63 65 67 00 
+t=0 (AddRoundConstant):
+9e 9c 9a 98 96 94 92 90 8e 8c 8a 88 86 9e 9c 7f 
+9d 9b 99 97 95 93 91 8f 8d 8b 89 87 85 9d 9b ff 
+9c 9a 98 96 94 92 90 8e 8c 8a 88 86 9e 9c 9a ff 
+9b 99 97 95 93 91 8f 8d 8b 89 87 85 9d 9b 99 ff 
+9d 9b 99 97 95 93 91 8f 8d 8b 89 87 85 9d 9b ff 
+9c 9a 98 96 94 92 90 8e 8c 8a 88 86 9e 9c 9a ff 
+9b 99 97 95 93 91 8f 8d 8b 89 87 85 9d 9b 99 ff 
+9a 88 b6 a4 d2 c0 ee fc 0a 18 26 2e 5c 4a 78 0f 
+t=0 (SubBytes):
+0b de b8 46 90 22 4f 60 19 64 7e c4 44 0b de d2 
+5e 14 ee 88 2a dc 81 73 5d 3d a7 17 97 5e 14 16 
+de b8 46 90 22 4f 60 19 64 7e c4 44 0b de b8 16 
+14 ee 88 2a dc 81 73 5d 3d a7 17 97 5e 14 ee 16 
+5e 14 ee 88 2a dc 81 73 5d 3d a7 17 97 5e 14 16 
+de b8 46 90 22 4f 60 19 64 7e c4 44 0b de b8 16 
+14 ee 88 2a dc 81 73 5d 3d a7 17 97 5e 14 ee 16 
+b8 c4 4e 49 b5 ba 28 b0 67 ad f7 31 4a d6 bc 76 
+t=0 (ShiftBytes):
+de b8 46 90 22 4f 60 19 64 7e c4 44 0b de d2 0b 
+88 2a dc 81 73 5d 3d a7 17 97 5e 14 16 5e 14 ee 
+4f 60 19 64 7e c4 44 0b de b8 16 de b8 46 90 22 
+97 5e 14 ee 16 14 ee 88 2a dc 81 73 5d 3d a7 17 
+5e 14 ee 88 2a dc 81 73 5d 3d a7 17 97 5e 14 16 
+46 90 22 4f 60 19 64 7e c4 44 0b de b8 16 de b8 
+dc 81 73 5d 3d a7 17 97 5e 14 ee 16 14 ee 88 2a 
+28 b0 67 ad f7 31 4a d6 bc 76 b8 c4 4e 49 b5 ba 
+t=0 (MixBytes):
+b9 9d c3 08 60 13 5a a3 76 5f 49 18 1d bd 13 ff 
+ca 1b 2e 93 dc c4 7d c4 de 72 a8 c9 c4 29 e6 a7 
+ad f6 d1 39 16 1e 81 d2 41 0f 3b 17 76 e6 86 4a 
+87 21 ba 62 89 76 f9 b1 6b 8a a2 b4 37 92 b1 95 
+47 17 ba dd e2 bd 94 f0 86 7e 43 34 ba 19 db 26 
+31 4c 5a 4f 8e 10 77 00 43 c5 d3 2b da da 83 f2 
+a2 99 6b cc 20 82 1c 62 82 33 72 5a 80 12 3b 6b 
+2b b8 dc 71 bf 38 71 05 da 81 98 06 f4 0d ab 11 
+t=1 (AddRoundConstant):
+46 62 3c f7 9f ec a5 5c 89 a0 b6 e7 e2 42 ec 00 
+35 e4 d1 6c 23 3b 82 3b 21 8d 57 36 3b d6 19 58 
+52 09 2e c6 e9 e1 7e 2d be f0 c4 e8 89 19 79 b5 
+78 de 45 9d 76 89 06 4e 94 75 5d 4b c8 6d 4e 6a 
+b8 e8 45 22 1d 42 6b 0f 79 81 bc cb 45 e6 24 d9 
+ce b3 a5 b0 71 ef 88 ff bc 3a 2c d4 25 25 7c 0d 
+5d 66 94 33 df 7d e3 9d 7d cc 8d a5 7f ed c4 94 
+d5 56 02 bf 01 96 ef 8b a4 ef c6 48 ca 23 b5 1f 
+t=1 (SubBytes):
+5a aa eb 68 db ce 06 4a a7 e0 4e 94 98 2c ce 63 
+96 69 3e 50 26 e2 13 e2 fd 5d 5b 05 e2 f6 d4 6a 
+00 01 31 b4 1e f8 f3 d8 ae 8c 1c 9b a7 d4 b6 d5 
+bc 1d 6e 5e 38 a7 6f 2f 22 9d 4c b3 e8 3c 2f 02 
+6c 9b 6e 93 a4 2c 7f 76 b6 0c 65 1f 6e 8e 36 35 
+8b 6d 06 e7 a3 df c4 16 65 80 71 48 3f 3f 10 d7 
+4c 33 22 c3 9e ff 11 5e ff 4b 5d 06 d2 55 1c 22 
+03 b1 77 08 7c 90 df 3d 49 df b4 52 74 26 d5 c0 
+t=1 (ShiftBytes):
+aa eb 68 db ce 06 4a a7 e0 4e 94 98 2c ce 63 5a 
+50 26 e2 13 e2 fd 5d 5b 05 e2 f6 d4 6a 96 69 3e 
+f8 f3 d8 ae 8c 1c 9b a7 d4 b6 d5 00 01 31 b4 1e 
+b3 e8 3c 2f 02 bc 1d 6e 5e 38 a7 6f 2f 22 9d 4c 
+6c 9b 6e 93 a4 2c 7f 76 b6 0c 65 1f 6e 8e 36 35 
+06 e7 a3 df c4 16 65 80 71 48 3f 3f 10 d7 8b 6d 
+9e ff 11 5e ff 4b 5d 06 d2 55 1c 22 4c 33 22 c3 
+df 3d 49 df b4 52 74 26 d5 c0 03 b1 77 08 7c 90 
+t=1 (MixBytes):
+30 6c 0e 5b 85 70 be 70 b4 ea c4 8d f7 4e 3c a8 
+7c ea cc bf 91 36 08 c8 4c 40 12 7d f4 ba 97 a7 
+0f c0 1e 42 67 26 46 c6 94 9c d8 b5 c1 2d cc 8e 
+5f bb a9 ba 04 4d bb 8b a1 a8 18 70 83 e3 86 f0 
+f9 aa 42 69 5e 8d 14 99 eb fa 9b 6b 05 a6 0f 6a 
+81 cf f6 d3 37 ea 54 9d f0 38 6f 98 c9 58 16 97 
+12 52 f5 b0 9e ac bd 62 7e 89 65 9c 78 51 3a fb 
+c3 72 22 81 00 6e 4b ad 42 db 78 f1 82 ee 99 30 
+t=2 (AddRoundConstant):
+cf 93 f1 a4 7a 8f 41 8f 4b 15 3b 72 08 b1 c3 57 
+83 15 33 40 6e c9 f7 37 b3 bf ed 82 0b 45 68 58 
+f0 3f e1 bd 98 d9 b9 39 6b 63 27 4a 3e d2 33 71 
+a0 44 56 45 fb b2 44 74 5e 57 e7 8f 7c 1c 79 0f 
+06 55 bd 96 a1 72 eb 66 14 05 64 94 fa 59 f0 95 
+7e 30 09 2c c8 15 ab 62 0f c7 90 67 36 a7 e9 68 
+ed ad 0a 4f 61 53 42 9d 81 76 9a 63 87 ae c5 04 
+3e 9f ff 4c bd c3 d6 20 3f b6 25 bc bf c3 84 3d 
+t=2 (SubBytes):
+8a dc a1 49 da 73 83 73 b3 59 e2 40 30 c8 2e 5b 
+ec 59 c3 09 9f dd 68 9a 6d 08 55 13 2b 6e 45 6a 
+8c 75 f8 7a 46 35 56 12 7f fb cc d6 b2 b5 c3 a3 
+e0 1b b1 6e 0f 37 1b 92 58 5b 94 73 10 9c b6 76 
+6f fc 7a 90 32 40 e9 33 fa 6b 43 22 2d cb 8c 2a 
+f3 04 01 71 e8 59 62 aa 76 c6 60 85 05 5c 1e 45 
+55 95 67 84 ef ed 2c 5e 0c 38 b8 fb 17 e4 a6 f2 
+b2 db 16 29 7a 2e f6 b7 75 4e 3f 65 08 2e 5f 27 
+t=2 (ShiftBytes):
+dc a1 49 da 73 83 73 b3 59 e2 40 30 c8 2e 5b 8a 
+09 9f dd 68 9a 6d 08 55 13 2b 6e 45 6a ec 59 c3 
+35 56 12 7f fb cc d6 b2 b5 c3 a3 8c 75 f8 7a 46 
+73 10 9c b6 76 e0 1b b1 6e 0f 37 1b 92 58 5b 94 
+6f fc 7a 90 32 40 e9 33 fa 6b 43 22 2d cb 8c 2a 
+01 71 e8 59 62 aa 76 c6 60 85 05 5c 1e 45 f3 04 
+ef ed 2c 5e 0c 38 b8 fb 17 e4 a6 f2 55 95 67 84 
+f6 b7 75 4e 3f 65 08 2e 5f 27 b2 db 16 29 7a 2e 
+t=2 (MixBytes):
+78 28 25 d1 c1 63 57 b6 a1 0f 1e 67 7d da e4 d8 
+44 f1 86 00 f4 4b 0f 96 4e de b8 1c be 68 05 90 
+f8 19 54 2e f6 d0 88 d7 d6 ba 6d 69 32 ba fa ea 
+70 00 df 69 5b ba 32 fe 65 9f 4c 7a 8c c0 03 75 
+3a 0b 2d d8 3a 41 88 9f 24 99 f6 44 d3 18 70 3d 
+5b ee 26 4e b3 b1 df ff f6 ee 81 ad c8 7e c7 7b 
+d2 4e f2 c5 c2 41 79 2f d6 95 44 8f a2 5b a9 97 
+30 81 b9 38 da 6c 7c 12 9d 6e 97 ca 9b 05 c5 27 
+t=3 (AddRoundConstant):
+87 d7 da 2e 3e 9c a8 49 5e f0 e1 98 82 25 1b 27 
+bb 0e 79 ff 0b b4 f0 69 b1 21 47 e3 41 97 fa 6f 
+07 e6 ab d1 09 2f 77 28 29 45 92 96 cd 45 05 15 
+8f ff 20 96 a4 45 cd 01 9a 60 b3 85 73 3f fc 8a 
+c5 f4 d2 27 c5 be 77 60 db 66 09 bb 2c e7 8f c2 
+a4 11 d9 b1 4c 4e 20 00 09 11 7e 52 37 81 38 84 
+2d b1 0d 3a 3d be 86 d0 29 6a bb 70 5d a4 56 68 
+cc 6d 65 f4 66 c0 e0 9e e1 02 cb 86 a7 29 d9 2b 
+t=3 (SubBytes):
+17 0e 57 31 b2 de c2 3b 58 8c f8 46 13 3f af cc 
+ea ab b6 16 2b 8d 8c f9 c8 fd a0 11 83 88 2d a8 
+c5 8e 62 3e 01 15 f5 34 a5 6e 4f 90 bd 6e 6b 59 
+73 16 b7 90 49 6e bd 7c b8 d0 6d 97 8f 75 b0 7e 
+a6 bf b5 cc a6 ae f5 d0 b9 33 01 ea 71 94 73 25 
+49 82 35 c8 29 2f b7 63 01 82 f3 00 9a 0c 07 5f 
+d8 c8 d7 80 27 ae 44 70 a5 02 ea 51 4c 49 b1 45 
+4b 3c 4d bf 33 ba e1 0b f8 77 1f 44 5c a5 35 f1 
+t=3 (ShiftBytes):
+0e 57 31 b2 de c2 3b 58 8c f8 46 13 3f af cc 17 
+16 2b 8d 8c f9 c8 fd a0 11 83 88 2d a8 ea ab b6 
+15 f5 34 a5 6e 4f 90 bd 6e 6b 59 c5 8e 62 3e 01 
+97 8f 75 b0 7e 73 16 b7 90 49 6e bd 7c b8 d0 6d 
+a6 bf b5 cc a6 ae f5 d0 b9 33 01 ea 71 94 73 25 
+35 c8 29 2f b7 63 01 82 f3 00 9a 0c 07 5f 49 82 
+27 ae 44 70 a5 02 ea 51 4c 49 b1 45 d8 c8 d7 80 
+e1 0b f8 77 1f 44 5c a5 35 f1 4b 3c 4d bf 33 ba 
+t=3 (MixBytes):
+18 d1 4d 2b 8f 5a 8b a5 6c 1c d6 6f 9d 3c a1 64 
+e0 52 f7 04 ff cb af 4e 29 c1 b6 d4 a0 d0 34 70 
+ed df c5 2e 4f 69 8e d5 13 fe 7d 77 84 f5 33 8e 
+de 09 8e f3 f0 2d d8 eb 5d 73 25 b8 c4 71 cc 39 
+78 ca ef 73 9d 02 f2 7a 3d c7 23 22 7f f0 2d 87 
+f7 80 42 b3 10 fc f9 a3 3f bc 37 88 e2 03 e3 ef 
+bd b9 c1 15 b0 33 34 0e db ba 49 18 59 d7 eb 03 
+b3 c1 e1 6d 4d c4 4b fe 22 fc d6 b6 28 29 b6 38 
+t=4 (AddRoundConstant):
+e7 2e b2 d4 70 a5 74 5a 93 e3 29 90 62 c3 5e 9b 
+1f ad 08 fb 00 34 50 b1 d6 3e 49 2b 5f 2f cb 8f 
+12 20 3a d1 b0 96 71 2a ec 01 82 88 7b 0a cc 71 
+21 f6 71 0c 0f d2 27 14 a2 8c da 47 3b 8e 33 c6 
+87 35 10 8c 62 fd 0d 85 c2 38 dc dd 80 0f d2 78 
+08 7f bd 4c ef 03 06 5c c0 43 c8 77 1d fc 1c 10 
+42 46 3e ea 4f cc cb f1 24 45 b6 e7 a6 28 14 fc 
+48 2a 3a a6 f6 6f d0 75 59 97 8d fd 13 02 ad 33 
+t=4 (SubBytes):
+94 31 37 48 51 06 92 be dc 11 a5 60 aa 2e 58 14 
+c0 95 30 0f 63 18 53 c8 f6 b2 3b f1 cf 15 1f 73 
+c9 b7 80 3e e7 90 a3 e5 ce 7c 13 c4 21 67 4b a3 
+fd 42 a3 fe 76 b5 cc fa 3a 64 57 a0 e2 19 c3 b4 
+17 96 ca 64 aa 54 d7 97 25 07 86 c1 cd 76 b5 bc 
+30 d2 7a 29 df 7b 6f 4a ba 1a e8 f5 a4 b0 9c ca 
+2c 5a b2 87 84 4b 1f a1 36 6e 4e 94 24 34 fa b0 
+52 e5 80 24 42 a8 70 9d cb 88 5d 54 7d 77 95 c3 
+t=4 (ShiftBytes):
+31 37 48 51 06 92 be dc 11 a5 60 aa 2e 58 14 94 
+0f 63 18 53 c8 f6 b2 3b f1 cf 15 1f 73 c0 95 30 
+90 a3 e5 ce 7c 13 c4 21 67 4b a3 c9 b7 80 3e e7 
+a0 e2 19 c3 b4 fd 42 a3 fe 76 b5 cc fa 3a 64 57 
+17 96 ca 64 aa 54 d7 97 25 07 86 c1 cd 76 b5 bc 
+7a 29 df 7b 6f 4a ba 1a e8 f5 a4 b0 9c ca 30 d2 
+84 4b 1f a1 36 6e 4e 94 24 34 fa b0 2c 5a b2 87 
+70 9d cb 88 5d 54 7d 77 95 c3 52 e5 80 24 42 a8 
+t=4 (MixBytes):
+4d f2 61 88 06 9f 2a 73 47 4e 33 c4 e7 7d 4e e9 
+a0 c2 49 b2 98 81 68 e7 33 71 b0 7b 4d 0b 03 50 
+40 9e e9 7d 90 21 02 9e 6f 6c 42 bf 43 e0 b8 ed 
+cb 92 5c 5f c7 fc aa df ec 14 f0 b4 29 b2 37 60 
+d9 35 42 8f 4f b2 76 4c fe ea f9 17 6e 75 ce 92 
+58 26 97 fb 25 6f e3 a6 02 c6 86 29 54 d1 f5 e4 
+b7 7a 98 e6 a3 9d d3 ae 45 10 9b 69 83 34 08 e4 
+f2 d1 67 c1 e3 6a cb 8c 41 8d f5 44 55 8f 18 59 
+t=5 (AddRoundConstant):
+b2 0d 9e 77 f9 60 d5 8c b8 b1 cc 3b 18 82 b1 16 
+5f 3d b6 4d 67 7e 97 18 cc 8e 4f 84 b2 f4 fc af 
+bf 61 16 82 6f de fd 61 90 93 bd 40 bc 1f 47 12 
+34 6d a3 a0 38 03 55 20 13 eb 0f 4b d6 4d c8 9f 
+26 ca bd 70 b0 4d 89 b3 01 15 06 e8 91 8a 31 6d 
+a7 d9 68 04 da 90 1c 59 fd 39 79 d6 ab 2e 0a 1b 
+48 85 67 19 5c 62 2c 51 ba ef 64 96 7c cb f7 1b 
+08 3b bd 0b 59 c0 51 06 3b e7 af 0e 6f a5 02 53 
+t=5 (SubBytes):
+37 d7 0b f5 99 d0 03 64 6c c8 4b e2 ad 13 c8 47 
+cf 27 4e e3 85 f3 88 ad 4b 19 84 5f 37 bf b0 79 
+08 ef 47 13 a8 1d 54 ef 60 dc 7a 09 65 c0 a0 c9 
+18 3c 0a e0 07 7b fc b7 7d e9 76 b3 f6 e3 e8 db 
+f7 74 7a 51 e7 e3 a7 6d 7c 59 6f 9b 81 7e c7 3c 
+5c 35 45 f2 57 60 9c cb 54 12 b6 f6 62 31 67 af 
+52 97 85 d4 4a aa 71 d1 f4 df 43 90 10 1f 68 af 
+30 e2 7a 2b cb ba d1 6f e2 94 79 ab a8 06 77 ed 
+t=5 (ShiftBytes):
+d7 0b f5 99 d0 03 64 6c c8 4b e2 ad 13 c8 47 37 
+e3 85 f3 88 ad 4b 19 84 5f 37 bf b0 79 cf 27 4e 
+1d 54 ef 60 dc 7a 09 65 c0 a0 c9 08 ef 47 13 a8 
+b3 f6 e3 e8 db 18 3c 0a e0 07 7b fc b7 7d e9 76 
+f7 74 7a 51 e7 e3 a7 6d 7c 59 6f 9b 81 7e c7 3c 
+45 f2 57 60 9c cb 54 12 b6 f6 62 31 67 af 5c 35 
+4a aa 71 d1 f4 df 43 90 10 1f 68 af 52 97 85 d4 
+d1 6f e2 94 79 ab a8 06 77 ed 30 e2 7a 2b cb ba 
+t=5 (MixBytes):
+04 9e c1 d8 50 88 c1 4c 9b ee 20 d0 72 73 8e e3 
+e7 78 cc 34 78 63 0d 98 63 ff e7 18 21 21 de da 
+62 32 a1 22 2b 76 c4 bb a0 fd 89 8b 0b 62 82 51 
+bf 49 e5 47 da cf 16 a6 1f ce c4 c2 17 52 5b 93 
+0d 0d 8f 71 e9 a3 f3 c1 27 db 45 0e 50 10 67 f5 
+d8 22 8f 7b 7f d7 b4 89 82 4d 4e 0b f3 e4 65 5f 
+8f e7 af c1 b0 7e d6 ed 84 33 f7 e1 bb 0b cf 45 
+aa e4 21 6e 70 c2 7f de 48 16 a3 77 48 6d 95 4f 
+t=6 (AddRoundConstant):
+fb 61 3e 27 af 77 3e b3 64 11 df 2f 8d 8c 71 1c 
+18 87 33 cb 87 9c f2 67 9c 00 18 e7 de de 21 25 
+9d cd 5e dd d4 89 3b 44 5f 02 76 74 f4 9d 7d ae 
+40 b6 1a b8 25 30 e9 59 e0 31 3b 3d e8 ad a4 6c 
+f2 f2 70 8e 16 5c 0c 3e d8 24 ba f1 af ef 98 0a 
+27 dd 70 84 80 28 4b 76 7d b2 b1 f4 0c 1b 9a a0 
+70 18 50 3e 4f 81 29 12 7b cc 08 1e 44 f4 30 ba 
+53 0d f8 a7 c9 6b e6 57 31 7f fa 3e 71 44 8c 46 
+t=6 (SubBytes):
+0f ef b2 cc 79 f5 b2 6d 43 82 9e 15 5d 64 a3 9c 
+ad 17 c3 1f 17 de 89 85 de 63 ad 94 1d 1d fd 3f 
+5e bd 58 c1 48 a7 e2 1b cf 77 38 92 bf 5e ff e4 
+09 4e a2 6c 3f 04 1e cb e1 c7 e2 27 9b 95 49 50 
+89 89 51 19 47 4a fe b2 61 36 f4 a1 79 df 46 67 
+cc c1 51 5f cd 34 b3 38 ff 37 c8 bf fe af b8 e0 
+51 ad 53 b2 84 0c a5 c9 21 4b 30 72 1b bf 04 f4 
+ed d7 41 5c dd 7f 8e 5b c7 d2 2d b2 a3 1b 64 5a 
+t=6 (ShiftBytes):
+ef b2 cc 79 f5 b2 6d 43 82 9e 15 5d 64 a3 9c 0f 
+1f 17 de 89 85 de 63 ad 94 1d 1d fd 3f ad 17 c3 
+a7 e2 1b cf 77 38 92 bf 5e ff e4 5e bd 58 c1 48 
+27 9b 95 49 50 09 4e a2 6c 3f 04 1e cb e1 c7 e2 
+89 89 51 19 47 4a fe b2 61 36 f4 a1 79 df 46 67 
+51 5f cd 34 b3 38 ff 37 c8 bf fe af b8 e0 cc c1 
+84 0c a5 c9 21 4b 30 72 1b bf 04 f4 51 ad 53 b2 
+8e 5b c7 d2 2d b2 a3 1b 64 5a ed d7 41 5c dd 7f 
+t=6 (MixBytes):
+d8 ea 4d 67 ca ca 17 56 88 27 86 22 ec 48 4f 6c 
+b2 66 ee 54 46 85 81 ff 00 37 20 c1 42 4a bf 27 
+cc ed 45 55 15 8d 95 9d 6c 13 23 6e 2e 02 1c 4e 
+03 c7 0e 09 00 5b 28 27 34 30 5a 96 dc b0 00 3f 
+95 0a ff 43 a7 15 92 65 d6 c4 a2 23 e3 be cb fb 
+11 90 62 9b 4a d6 2c 6a c4 92 27 51 20 60 33 08 
+11 d3 56 5b 0a 63 c3 d4 3c 8d 12 14 ca 86 49 6e 
+cd 08 85 2c 94 58 96 e9 f3 99 55 31 4a 63 dd b0 
+t=7 (AddRoundConstant):
+27 15 b2 98 35 35 e8 a9 77 d8 79 dd 13 b7 b0 93 
+4d 99 11 ab b9 7a 7e 00 ff c8 df 3e bd b5 40 d8 
+33 12 ba aa ea 72 6a 62 93 ec dc 91 d1 fd e3 b1 
+fc 38 f1 f6 ff a4 d7 d8 cb cf a5 69 23 4f ff c0 
+6a f5 00 bc 58 ea 6d 9a 29 3b 5d dc 1c 41 34 04 
+ee 6f 9d 64 b5 29 d3 95 3b 6d d8 ae df 9f cc f7 
+ee 2c a9 a4 f5 9c 3c 2b c3 72 ed eb 35 79 b6 91 
+35 e0 5d e4 2c f0 0e 61 8b f1 0d 79 72 4b c5 b8 
+t=7 (SubBytes):
+cc 59 37 46 96 96 9b d3 f5 61 b6 c1 7d a9 e7 dc 
+e3 ee 82 62 56 da f3 63 16 e8 9e b2 7a d5 09 61 
+c3 c9 f4 ac 87 40 02 aa dc ce 86 81 3e 54 11 c8 
+b0 07 a1 42 16 49 0e 61 1f 8a 06 f9 26 84 16 ba 
+02 e6 63 65 6a 87 3c b8 a5 e2 4c 86 9c 83 18 f2 
+28 a8 5e 43 d5 a5 66 2a e2 3c 61 e4 9e db 4b 68 
+28 71 d3 49 e6 de eb f1 2e 40 55 e9 96 b6 4e 81 
+96 e1 4c 69 71 8c ab ef 3d a1 d7 b6 40 b3 a6 6c 
+t=7 (ShiftBytes):
+59 37 46 96 96 9b d3 f5 61 b6 c1 7d a9 e7 dc cc 
+62 56 da f3 63 16 e8 9e b2 7a d5 09 61 e3 ee 82 
+40 02 aa dc ce 86 81 3e 54 11 c8 c3 c9 f4 ac 87 
+f9 26 84 16 ba b0 07 a1 42 16 49 0e 61 1f 8a 06 
+02 e6 63 65 6a 87 3c b8 a5 e2 4c 86 9c 83 18 f2 
+5e 43 d5 a5 66 2a e2 3c 61 e4 9e db 4b 68 28 a8 
+e6 de eb f1 2e 40 55 e9 96 b6 4e 81 28 71 d3 49 
+ab ef 3d a1 d7 b6 40 b3 a6 6c 96 e1 4c 69 71 8c 
+t=7 (MixBytes):
+b8 fa a9 a1 90 c1 c2 58 51 df 28 72 24 d8 6b 1d 
+f5 a1 6a 38 d9 2c c7 2d d8 39 41 91 bf 20 0b d8 
+aa 9d d8 75 eb 6f 30 53 83 47 ba 77 98 34 d8 09 
+4a 37 d7 79 06 14 fe d8 48 d2 d2 d2 ac 18 e5 ee 
+11 50 10 34 96 01 74 f0 65 87 ae ca 82 dd c8 9a 
+fd fe d2 3d 48 6e 86 02 2c 92 55 99 39 ba 6b 93 
+22 99 72 e7 21 01 27 1a df 3f 04 0c e4 31 ba 25 
+cd ae 11 3a c7 c3 84 68 87 60 44 8e 9e a6 d5 fe 
+t=8 (AddRoundConstant):
+47 05 56 5e 6f 3e 3d a7 ae 20 d7 8d db 27 94 e2 
+0a 5e 95 c7 26 d3 38 d2 27 c6 be 6e 40 df f4 27 
+55 62 27 8a 14 90 cf ac 7c b8 45 88 67 cb 27 f6 
+b5 c8 28 86 f9 eb 01 27 b7 2d 2d 2d 53 e7 1a 11 
+ee af ef cb 69 fe 8b 0f 9a 78 51 35 7d 22 37 65 
+02 01 2d c2 b7 91 79 fd d3 6d aa 66 c6 45 94 6c 
+dd 66 8d 18 de fe d8 e5 20 c0 fb f3 1b ce 45 da 
+3a 49 c6 fd 70 64 13 ef f0 07 13 c9 a9 81 c2 f9 
+t=8 (SubBytes):
+a0 6b b1 58 a8 b2 27 5c e4 b7 0e 5d b9 cc 22 98 
+67 58 2a c6 f7 66 07 b5 cc b4 ae 9f 09 9e bf cc 
+fc aa cc 7e fa 60 8a 91 10 6c 6e c4 85 1f cc 42 
+d5 e8 34 44 99 e9 7c cc a9 d8 d8 d8 ed 94 a2 82 
+28 79 df 1f f9 bb 3d 76 b8 bc d1 96 ff 93 9a 4d 
+77 7c d8 25 a9 81 b6 54 66 3c ac 33 b4 6e 22 50 
+c1 33 5d ad 1d bb 61 d9 b7 ba 0f 0d af 8b 6e 57 
+80 3b b4 54 51 43 7d df 8c c5 7d dd d3 0c 25 99 
+t=8 (ShiftBytes):
+6b b1 58 a8 b2 27 5c e4 b7 0e 5d b9 cc 22 98 a0 
+c6 f7 66 07 b5 cc b4 ae 9f 09 9e bf cc 67 58 2a 
+60 8a 91 10 6c 6e c4 85 1f cc 42 fc aa cc 7e fa 
+d8 ed 94 a2 82 d5 e8 34 44 99 e9 7c cc a9 d8 d8 
+28 79 df 1f f9 bb 3d 76 b8 bc d1 96 ff 93 9a 4d 
+d8 25 a9 81 b6 54 66 3c ac 33 b4 6e 22 50 77 7c 
+1d bb 61 d9 b7 ba 0f 0d af 8b 6e 57 c1 33 5d ad 
+7d df 8c c5 7d dd d3 0c 25 99 80 3b b4 54 51 43 
+t=8 (MixBytes):
+56 33 ab cd 40 da 4e 3c 25 4f cd 03 79 06 97 4c 
+ae fa 82 e5 c6 5a fe a4 58 7f 34 8d a0 78 dd 85 
+08 7a 99 83 89 01 d7 00 04 91 50 3f f2 b8 b9 52 
+1b 5d b4 c4 ca d3 49 69 7d a3 40 8a 9e 83 8d ca 
+7b 5f e2 4a 5f 6d 61 28 15 cf 3d 01 e7 23 fc f0 
+bf 2c eb 18 fd e4 04 c2 3d 53 2c df 29 f2 2e 30 
+76 34 12 a3 e5 c5 9b 41 2f 90 86 8e 03 5c a4 d5 
+cd 82 e4 24 36 6d 15 91 2f 44 40 5d 31 5f 9a dd 
+t=9 (AddRoundConstant):
+a9 cc 54 32 bf 25 b1 c3 da b0 32 fc 86 f9 68 b3 
+51 05 7d 1a 39 a5 01 5b a7 80 cb 72 5f 87 22 7a 
+f7 85 66 7c 76 fe 28 ff fb 6e af c0 0d 47 46 ad 
+e4 a2 4b 3b 35 2c b6 96 82 5c bf 75 61 7c 72 35 
+84 a0 1d b5 a0 92 9e d7 ea 30 c2 fe 18 dc 03 0f 
+40 d3 14 e7 02 1b fb 3d c2 ac d3 20 d6 0d d1 cf 
+89 cb ed 5c 1a 3a 64 be d0 6f 79 71 fc a3 5b 2a 
+3b 64 32 e2 80 cb 83 17 59 22 16 1b 07 79 8c db 
+t=9 (SubBytes):
+d3 4b 20 23 08 3f c8 2e 57 e7 23 b0 44 99 45 6d 
+d1 6b ff a2 12 06 7c 39 5c cd 1f 40 cf 17 93 da 
+68 97 33 10 38 bb 34 16 0f 9f 79 ba d7 a0 5a 95 
+69 3a b3 e2 96 71 4e 90 13 4a 08 9d ef 10 40 96 
+5f e0 a4 d5 e0 4f 0b 0e 87 04 25 bb ad 86 7b 76 
+09 66 fa 94 77 af 0f 27 25 91 66 b7 f6 d7 3e 8a 
+a7 1f 55 4a a2 80 43 ae 70 a8 b6 a3 b0 0a 39 e5 
+e2 43 23 98 cd 1f ec f0 cb 93 47 af c5 b6 64 b9 
+t=9 (ShiftBytes):
+4b 20 23 08 3f c8 2e 57 e7 23 b0 44 99 45 6d d3 
+a2 12 06 7c 39 5c cd 1f 40 cf 17 93 da d1 6b ff 
+bb 34 16 0f 9f 79 ba d7 a0 5a 95 68 97 33 10 38 
+9d ef 10 40 96 69 3a b3 e2 96 71 4e 90 13 4a 08 
+5f e0 a4 d5 e0 4f 0b 0e 87 04 25 bb ad 86 7b 76 
+fa 94 77 af 0f 27 25 91 66 b7 f6 d7 3e 8a 09 66 
+a2 80 43 ae 70 a8 b6 a3 b0 0a 39 e5 a7 1f 55 4a 
+ec f0 cb 93 47 af c5 b6 64 b9 e2 43 23 98 cd 1f 
+t=9 (MixBytes):
+de 13 b8 50 e1 58 9d a0 6d b5 db a3 db 81 d7 0b 
+b0 5f e0 42 05 e5 ca 86 8e 41 2a e4 ca 7f c1 19 
+64 93 93 b9 1b f3 5d 3d f2 63 8a e9 89 54 83 58 
+88 24 2e 1e 0a 96 b2 a2 5d 98 4c 58 da e8 f9 ee 
+2f 57 e2 23 c0 1a bc 96 81 b2 97 38 dd cb c0 ca 
+3b 4d 87 4c c2 7e 33 80 f5 e9 f4 9a ab 80 b4 0f 
+ca 8a 54 b6 df 86 7b 2b 35 bd 1b 92 25 4a 16 49 
+30 47 5c e8 4a 1c 0e 75 66 89 92 8b e4 02 cf c3 
+t=10 (AddRoundConstant):
+21 ec 47 af 1e a7 62 5f 92 4a 24 5c 24 7e 28 f4 
+4f a0 1f bd fa 1a 35 79 71 be d5 1b 35 80 3e e6 
+9b 6c 6c 46 e4 0c a2 c2 0d 9c 75 16 76 ab 7c a7 
+77 db d1 e1 f5 69 4d 5d a2 67 b3 a7 25 17 06 11 
+d0 a8 1d dc 3f e5 43 69 7e 4d 68 c7 22 34 3f 35 
+c4 b2 78 b3 3d 81 cc 7f 0a 16 0b 65 54 7f 4b f0 
+35 75 ab 49 20 79 84 d4 ca 42 e4 6d da b5 e9 b6 
+c5 a2 89 2d ff b9 9b f0 13 ec c7 ce d1 27 da c6 
+t=10 (SubBytes):
+fd ce a0 79 72 5c aa cf 4f d6 36 4a 36 f3 34 bf 
+84 e0 c0 7a 2d a2 96 b6 a3 ae 03 af 96 cd b2 8e 
+14 50 50 5a 69 fe 3a 25 d7 de 9d 47 38 62 10 5c 
+f5 b9 3e f8 e6 f9 e3 4c 3a 85 6d 5c 3f f0 6f 82 
+70 c2 a4 86 75 d9 1a f9 f3 e3 45 c6 93 18 75 96 
+1c 37 bc 6d 27 0c 4b d2 67 47 2b 4d 20 d2 b3 8c 
+96 9d 62 3b b7 b6 5f 48 74 2c 69 3c 57 d5 1e 4e 
+a6 3a a7 d8 16 56 14 8c 7d ce c6 8b 3e cc 57 b4 
+t=10 (ShiftBytes):
+ce a0 79 72 5c aa cf 4f d6 36 4a 36 f3 34 bf fd 
+7a 2d a2 96 b6 a3 ae 03 af 96 cd b2 8e 84 e0 c0 
+fe 3a 25 d7 de 9d 47 38 62 10 5c 14 50 50 5a 69 
+5c 3f f0 6f 82 f5 b9 3e f8 e6 f9 e3 4c 3a 85 6d 
+70 c2 a4 86 75 d9 1a f9 f3 e3 45 c6 93 18 75 96 
+bc 6d 27 0c 4b d2 67 47 2b 4d 20 d2 b3 8c 1c 37 
+b7 b6 5f 48 74 2c 69 3c 57 d5 1e 4e 96 9d 62 3b 
+14 8c 7d ce c6 8b 3e cc 57 b4 a6 3a a7 d8 16 56 
+t=10 (MixBytes):
+44 32 14 85 34 aa 6e 4f 58 c6 2b db a6 75 7f a1 
+8c 8e 04 67 1e 18 b7 de 09 51 41 69 03 b2 a0 e6 
+ce fa a0 9e e6 af 63 f9 a7 ac a5 3f f3 03 62 0a 
+25 f6 58 40 80 16 29 0b 4d 24 f6 ac 2d 49 08 b8 
+e0 8c 3f 72 0b 90 cc 31 73 5e 9d ea 24 1c fd e6 
+d3 f8 b7 ff 89 6f 8b c6 2d 30 7e e3 9a 49 58 60 
+9a 57 3c 74 33 49 a6 42 ca 2d 21 cd 60 44 cc f7 
+01 b4 b6 35 b3 f1 b6 da 62 ec e1 d0 35 81 60 80 
+t=11 (AddRoundConstant):
+bb cd eb 7a cb 55 91 b0 a7 39 d4 24 59 8a 80 5e 
+73 71 fb 98 e1 e7 48 21 f6 ae be 96 fc 4d 5f 19 
+31 05 5f 61 19 50 9c 06 58 53 5a c0 0c fc 9d f5 
+da 09 a7 bf 7f e9 d6 f4 b2 db 09 53 d2 b6 f7 47 
+1f 73 c0 8d f4 6f 33 ce 8c a1 62 15 db e3 02 19 
+2c 07 48 00 76 90 74 39 d2 cf 81 1c 65 b6 a7 9f 
+65 a8 c3 8b cc b6 59 bd 35 d2 de 32 9f bb 33 08 
+f5 50 62 f1 07 55 22 5e 16 88 b5 94 01 a5 74 84 
+t=11 (SubBytes):
+ea bd e9 da 1f fc 81 e7 5c 12 48 36 cb 7e cd 58 
+8f a3 0f 46 f8 94 52 fd 42 e4 ae 90 b0 e3 cf d4 
+c7 6b cf ef d4 53 de 6f 6a ed be ba fe b0 5e e6 
+57 01 5c 08 d2 1e f6 bf 37 b9 01 ed b5 4e 68 a0 
+c0 8f ba 5d bf a8 c3 8b 64 32 aa 59 b9 11 77 d4 
+71 c5 52 63 38 60 92 12 b5 8a 0c 9c 4d 4e 5c db 
+4d c2 2e 3d 4b 4e cb 7a 96 b5 1d 23 db ea c3 30 
+e6 53 aa a1 c5 fc 93 58 47 c4 d5 22 7c 06 92 5f 
+t=11 (ShiftBytes):
+bd e9 da 1f fc 81 e7 5c 12 48 36 cb 7e cd 58 ea 
+46 f8 94 52 fd 42 e4 ae 90 b0 e3 cf d4 8f a3 0f 
+53 de 6f 6a ed be ba fe b0 5e e6 c7 6b cf ef d4 
+ed b5 4e 68 a0 57 01 5c 08 d2 1e f6 bf 37 b9 01 
+c0 8f ba 5d bf a8 c3 8b 64 32 aa 59 b9 11 77 d4 
+52 63 38 60 92 12 b5 8a 0c 9c 4d 4e 5c db 71 c5 
+4b 4e cb 7a 96 b5 1d 23 db ea c3 30 4d c2 2e 3d 
+93 58 47 c4 d5 22 7c 06 92 5f e6 53 aa a1 c5 fc 
+t=11 (MixBytes):
+32 67 26 ee a5 b2 f7 24 46 c0 7d 09 ae 9c cd 44 
+00 2e 0f 76 32 12 fa 3e 0b 46 5b 10 d8 1c 3c e9 
+0b f0 2a 60 46 35 e0 32 47 d3 83 3e 08 d2 4f 7b 
+49 e8 6b ed df 45 d8 aa 8c c6 4a a8 d2 9e 1a 3c 
+9c b4 5f 86 86 98 22 05 57 88 e7 ab ae 65 e6 68 
+ec a0 54 fb bf ec 88 ba 72 bb 80 13 47 80 97 3a 
+14 39 c6 7d 69 77 ee e5 47 0c 0c b1 c8 65 cd ee 
+05 e7 06 5a 38 da 9b 44 c9 1d ae 45 09 79 d8 6d 
+t=12 (AddRoundConstant):
+cd 98 d9 11 5a 4d 08 db b9 3f 82 f6 51 63 32 bb 
+ff d1 f0 89 cd ed 05 c1 f4 b9 a4 ef 27 e3 c3 16 
+f4 0f d5 9f b9 ca 1f cd b8 2c 7c c1 f7 2d b0 84 
+b6 17 94 12 20 ba 27 55 73 39 b5 57 2d 61 e5 c3 
+63 4b a0 79 79 67 dd fa a8 77 18 54 51 9a 19 97 
+13 5f ab 04 40 13 77 45 8d 44 7f ec b8 7f 68 c5 
+eb c6 39 82 96 88 11 1a b8 f3 f3 4e 37 9a 32 11 
+f6 04 d5 99 8b 79 08 c7 ba 7e fd 06 3a 5a cb 6e 
+t=12 (SubBytes):
+bd 46 35 82 be e3 30 b9 56 75 13 42 d1 fb 23 ea 
+16 3e 8c a7 bd 55 6b 78 bf 56 49 df cc 11 2e 47 
+bf 76 03 db 56 74 c0 bd 6c 71 10 78 68 d8 e7 5f 
+4e f0 22 c9 b7 f4 cc fc 8f 12 d5 5b d8 ef d9 2e 
+fb b3 e0 b6 b6 85 c1 2d c2 f5 ad 20 d1 b8 d4 88 
+7d cf 62 f2 09 7d f5 6e 5d 1b d2 ce 6c d2 45 a6 
+e9 b4 12 13 90 c4 82 a2 6c 0d 0d 2f 9a b8 23 82 
+42 f2 03 ee 3d b6 30 c6 f4 f3 54 6f 80 be 1f 9f 
+t=12 (ShiftBytes):
+46 35 82 be e3 30 b9 56 75 13 42 d1 fb 23 ea bd 
+a7 bd 55 6b 78 bf 56 49 df cc 11 2e 47 16 3e 8c 
+74 c0 bd 6c 71 10 78 68 d8 e7 5f bf 76 03 db 56 
+5b d8 ef d9 2e 4e f0 22 c9 b7 f4 cc fc 8f 12 d5 
+fb b3 e0 b6 b6 85 c1 2d c2 f5 ad 20 d1 b8 d4 88 
+62 f2 09 7d f5 6e 5d 1b d2 ce 6c d2 45 a6 7d cf 
+90 c4 82 a2 6c 0d 0d 2f 9a b8 23 82 e9 b4 12 13 
+30 c6 f4 f3 54 6f 80 be 1f 9f 42 f2 03 ee 3d b6 
+t=12 (MixBytes):
+d8 c4 e8 60 2a 2c 3b 3e 26 a6 5b bb 3a 14 4a 45 
+f2 4b 56 fa b6 37 ef 5f 5a c9 3f ca a6 2b 57 70 
+70 4c 0c 37 8c e3 4c 34 6e 68 45 20 f9 c8 c9 e7 
+eb 43 ab ef 6a 96 b1 70 69 a9 ce 69 1c 20 45 0b 
+d0 0e 2e a2 d7 f6 f6 20 f5 81 4f 6a 9b 74 42 ad 
+c6 6c 1a b2 dd 29 18 55 3b 59 98 b9 7d 4a ec e9 
+66 a6 19 4b cc 6a 7a 91 e5 a2 4f a2 0c 3d ee 3f 
+c3 2a 1a 0c 66 33 27 cc 22 7a 9f 5b 4b c8 67 52 
+t=13 (AddRoundConstant):
+27 3b 17 9f d5 d3 c4 c1 d9 59 a4 44 c5 eb b5 ba 
+0d b4 a9 05 49 c8 10 a0 a5 36 c0 35 59 d4 a8 8f 
+8f b3 f3 c8 73 1c b3 cb 91 97 ba df 06 37 36 18 
+14 bc 54 10 95 69 4e 8f 96 56 31 96 e3 df ba f4 
+2f f1 d1 5d 28 09 09 df 0a 7e b0 95 64 8b bd 52 
+39 93 e5 4d 22 d6 e7 aa c4 a6 67 46 82 b5 13 16 
+99 59 e6 b4 33 95 85 6e 1a 5d b0 5d f3 c2 11 c0 
+31 c8 c8 ce d4 91 b5 4e 50 18 cd 19 79 ea 75 50 
+t=13 (SubBytes):
+cc e2 f0 db 03 66 1c 78 35 cb 49 1b a6 e9 d5 f4 
+d7 8d d3 6b 3b e8 ca e0 06 05 ba 96 cb 48 c2 73 
+73 6d 0d e8 8f 9c 6d 1f 81 88 f4 9e 6f 9a 05 ad 
+fa 65 20 ca 2a f9 2f 73 90 b1 c7 90 11 9e f4 bf 
+15 a1 3e 4c 34 01 01 9e 67 f3 e7 2a 43 3d 7a 00 
+12 dc d9 e3 93 f6 94 ac 1c 24 85 5a 13 d5 7d 47 
+ee cb 8e 8d c3 2a 97 9f a2 4c e7 4c 0d 25 82 ba 
+c7 e8 e8 8b 48 81 d5 2f 53 ad bd d4 b6 87 9d 53 
+t=13 (ShiftBytes):
+e2 f0 db 03 66 1c 78 35 cb 49 1b a6 e9 d5 f4 cc 
+6b 3b e8 ca e0 06 05 ba 96 cb 48 c2 73 d7 8d d3 
+9c 6d 1f 81 88 f4 9e 6f 9a 05 ad 73 6d 0d e8 8f 
+90 11 9e f4 bf fa 65 20 ca 2a f9 2f 73 90 b1 c7 
+15 a1 3e 4c 34 01 01 9e 67 f3 e7 2a 43 3d 7a 00 
+d9 e3 93 f6 94 ac 1c 24 85 5a 13 d5 7d 47 12 dc 
+c3 2a 97 9f a2 4c e7 4c 0d 25 82 ba ee cb 8e 8d 
+d5 2f 53 ad bd d4 b6 87 9d 53 c7 e8 e8 8b 48 81 
+t=13 (MixBytes):
+0e 1c 3e 31 1f 61 94 57 b9 57 3f cd 49 33 ff df 
+f0 64 cc 25 83 ed f3 d9 f2 be 05 e3 c9 7a ab 06 
+a5 ee 1d bd e7 e7 91 a8 ab 56 ac 88 6c 92 ab 04 
+f4 ba d5 6f 19 40 6b a0 6b dd f1 81 8b f9 e0 26 
+59 a3 99 54 34 57 9a 8d 65 86 06 81 ad 82 b8 44 
+1b 6a 92 93 04 ed 92 14 1a 9c 2b 64 f2 18 94 e9 
+af 90 a0 43 58 67 10 88 c4 d6 8c 3a 90 00 c8 c3 
+a3 7e e7 1e 18 95 c0 5f b1 38 07 5c 77 4c 72 07 
+:: END Q
+
+P(h+m) + Q(m) + h =
+c7 43 6b 02 6a b5 50 71 69 30 e1 10 79 e2 68 24 
+41 a9 dd e2 61 53 aa e1 0c db 2d 3b 2f dd 5c c2 
+6f 94 12 ba 1c dd 3d a5 2a 8c 13 70 60 c0 46 f4 
+21 69 5f 30 09 cb 34 0f b8 92 89 31 a2 62 c1 43 
+8c bc 24 63 26 0c 33 ca ac 46 80 70 b9 90 a0 50 
+dc b5 bb 92 57 c6 44 a1 02 06 68 1d 40 a5 4c 27 
+4d 79 c5 17 d6 39 88 9b 42 42 84 e9 60 8e df 5c 
+96 18 19 c3 6a 44 67 11 00 08 10 d4 32 cd 03 6f 
+
+
+========================================
+
+Block Contents:
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 02 
+
+:: BEGIN P
+Input:
+c7 43 6b 02 6a b5 50 71 69 30 e1 10 79 e2 68 24 
+41 a9 dd e2 61 53 aa e1 0c db 2d 3b 2f dd 5c c2 
+6f 94 12 ba 1c dd 3d a5 2a 8c 13 70 60 c0 46 f4 
+21 69 5f 30 09 cb 34 0f b8 92 89 31 a2 62 c1 43 
+8c bc 24 63 26 0c 33 ca ac 46 80 70 b9 90 a0 50 
+dc b5 bb 92 57 c6 44 a1 02 06 68 1d 40 a5 4c 27 
+4d 79 c5 17 d6 39 88 9b 42 42 84 e9 60 8e df 5c 
+96 18 19 c3 6a 44 67 11 00 08 10 d4 32 cd 03 6d 
+t=0 (AddRoundConstant):
+c7 53 4b 32 2a e5 30 01 e9 a0 41 a0 b9 32 88 d4 
+41 a9 dd e2 61 53 aa e1 0c db 2d 3b 2f dd 5c c2 
+6f 94 12 ba 1c dd 3d a5 2a 8c 13 70 60 c0 46 f4 
+21 69 5f 30 09 cb 34 0f b8 92 89 31 a2 62 c1 43 
+8c bc 24 63 26 0c 33 ca ac 46 80 70 b9 90 a0 50 
+dc b5 bb 92 57 c6 44 a1 02 06 68 1d 40 a5 4c 27 
+4d 79 c5 17 d6 39 88 9b 42 42 84 e9 60 8e df 5c 
+96 18 19 c3 6a 44 67 11 00 08 10 d4 32 cd 03 6d 
+t=0 (SubBytes):
+c6 ed b3 23 e5 d9 04 7c 1e e0 83 e0 56 23 c4 48 
+83 d3 c1 98 ef ed ac f8 fe b9 d8 e2 15 c1 4a 25 
+a8 22 c9 f4 9c c1 27 06 e5 64 7d 51 d0 ba 5a bf 
+fd f9 cf 04 01 1f 18 76 6c 4f a7 c7 3a aa 78 1a 
+64 65 36 fb f7 fe c3 74 91 5a cd 51 56 60 e0 53 
+86 d5 ea 4f 5b b4 1b 32 77 6f 45 a4 09 06 29 cc 
+e3 b6 a6 f0 f6 12 c4 14 2c 2c 5f 1e d0 19 9e 4a 
+90 ad d4 2e 02 1b 85 82 63 30 ca 48 23 bd 7b 3c 
+t=0 (ShiftBytes):
+c6 ed b3 23 e5 d9 04 7c 1e e0 83 e0 56 23 c4 48 
+d3 c1 98 ef ed ac f8 fe b9 d8 e2 15 c1 4a 25 83 
+c9 f4 9c c1 27 06 e5 64 7d 51 d0 ba 5a bf a8 22 
+04 01 1f 18 76 6c 4f a7 c7 3a aa 78 1a fd f9 cf 
+f7 fe c3 74 91 5a cd 51 56 60 e0 53 64 65 36 fb 
+b4 1b 32 77 6f 45 a4 09 06 29 cc 86 d5 ea 4f 5b 
+c4 14 2c 2c 5f 1e d0 19 9e 4a e3 b6 a6 f0 f6 12 
+48 23 bd 7b 3c 90 ad d4 2e 02 1b 85 82 63 30 ca 
+t=0 (MixBytes):
+a1 f0 a3 7b 64 16 00 6b e6 9c 36 a4 93 31 5f 37 
+db ed cd 1e 0f 3f a8 42 e9 13 10 c2 d0 1b 3a e4 
+b8 a0 67 f7 38 01 3e 0b 4b de 9c ae a4 54 8e 68 
+de 09 c3 17 7a 75 1e a9 ca f4 d2 ff 05 1b c2 8d 
+ab 43 32 a0 64 14 96 df e6 d2 48 37 94 58 42 74 
+18 c4 77 be ef 2e 28 8a 82 e2 c7 ec 6b ba e4 3a 
+d8 0b 26 7b bf b2 33 fc 4c 82 97 5e 6e 48 62 09 
+4e 25 ea 23 4a 5c c3 45 ba e1 3a da b5 96 fc 93 
+t=1 (AddRoundConstant):
+a0 e1 82 4a 25 47 61 1a 67 0d 97 15 52 e0 be c6 
+db ed cd 1e 0f 3f a8 42 e9 13 10 c2 d0 1b 3a e4 
+b8 a0 67 f7 38 01 3e 0b 4b de 9c ae a4 54 8e 68 
+de 09 c3 17 7a 75 1e a9 ca f4 d2 ff 05 1b c2 8d 
+ab 43 32 a0 64 14 96 df e6 d2 48 37 94 58 42 74 
+18 c4 77 be ef 2e 28 8a 82 e2 c7 ec 6b ba e4 3a 
+d8 0b 26 7b bf b2 33 fc 4c 82 97 5e 6e 48 62 09 
+4e 25 ea 23 4a 5c c3 45 ba e1 3a da b5 96 fc 93 
+t=1 (SubBytes):
+e0 f8 13 d6 3f a0 ef a2 85 d7 88 59 00 e1 ae b4 
+b9 55 bd 72 76 75 c2 2c 1e 7d ca 25 70 af 80 69 
+6c e0 85 68 07 7c b2 2b b3 1d de e4 49 20 19 45 
+1d 01 2e f0 da 9d 72 d3 74 bf b5 16 6b af 25 5d 
+62 1a 23 e0 43 fa 90 9e 8e b5 52 9a 22 6a 2c 92 
+ad 1c f5 ae df 31 34 7e 13 98 c6 ce 7f f4 69 80 
+61 2b f7 21 08 37 c3 b0 29 13 88 58 9f 52 aa 01 
+2f 3f 87 26 d6 4a 2e 6e f4 f8 80 57 d5 90 b0 dc 
+t=1 (ShiftBytes):
+e0 f8 13 d6 3f a0 ef a2 85 d7 88 59 00 e1 ae b4 
+55 bd 72 76 75 c2 2c 1e 7d ca 25 70 af 80 69 b9 
+85 68 07 7c b2 2b b3 1d de e4 49 20 19 45 6c e0 
+f0 da 9d 72 d3 74 bf b5 16 6b af 25 5d 1d 01 2e 
+43 fa 90 9e 8e b5 52 9a 22 6a 2c 92 62 1a 23 e0 
+31 34 7e 13 98 c6 ce 7f f4 69 80 ad 1c f5 ae df 
+c3 b0 29 13 88 58 9f 52 aa 01 61 2b f7 21 08 37 
+57 d5 90 b0 dc 2f 3f 87 26 d6 4a 2e 6e f4 f8 80 
+t=1 (MixBytes):
+53 4f bd 8b b7 9a b9 5a a1 c9 04 eb c3 50 95 e8 
+8a 5c 59 f4 84 72 b5 1c 0b 37 7b e1 a0 29 ef 2d 
+0d b3 5b 87 6f 73 d5 cc 81 86 d0 bd 8a 20 2e cd 
+88 29 5b 47 56 ed 83 e9 65 39 b6 03 0c c9 98 ad 
+0e 3f e6 29 ed 29 36 7c 03 c0 34 56 42 91 8f 14 
+ea 32 e3 d9 e1 e3 f0 8b bf e9 9a b3 76 4b 44 e6 
+28 0e af 57 61 18 0f 3b 99 eb ec 77 9c 5d a1 39 
+fa 6e a1 83 dc ef 9d c3 d5 49 14 1c 59 12 c4 b3 
+t=2 (AddRoundConstant):
+51 5d 9f b9 f5 c8 db 28 23 5b a6 59 01 82 77 1a 
+8a 5c 59 f4 84 72 b5 1c 0b 37 7b e1 a0 29 ef 2d 
+0d b3 5b 87 6f 73 d5 cc 81 86 d0 bd 8a 20 2e cd 
+88 29 5b 47 56 ed 83 e9 65 39 b6 03 0c c9 98 ad 
+0e 3f e6 29 ed 29 36 7c 03 c0 34 56 42 91 8f 14 
+ea 32 e3 d9 e1 e3 f0 8b bf e9 9a b3 76 4b 44 e6 
+28 0e af 57 61 18 0f 3b 99 eb ec 77 9c 5d a1 39 
+fa 6e a1 83 dc ef 9d c3 d5 49 14 1c 59 12 c4 b3 
+t=2 (SubBytes):
+d1 4c db 56 e6 e8 b9 34 26 39 24 cb 7c 13 f5 a2 
+7e 4a cb bf 5f 40 d5 9c 2b 9a 21 f8 e0 a5 df d8 
+d7 6d 39 17 a8 8f 03 4b 0c 44 70 7a 7e b7 31 bd 
+c4 a5 39 a0 b1 55 ec 1e 4d 12 4e 7b fe dd 46 95 
+ab 75 8e a5 55 a5 05 10 7b ba 18 b1 2c 81 73 fa 
+87 23 11 35 f8 11 8c 3d 08 1e b8 6d 38 b3 1b 8e 
+34 ab 79 5b ef ad 76 e2 ee e9 ce f5 de 4c 32 12 
+2d 9f 32 ec 86 df 5e 2e 03 3b fa 9c cb c9 1c 6d 
+t=2 (ShiftBytes):
+d1 4c db 56 e6 e8 b9 34 26 39 24 cb 7c 13 f5 a2 
+4a cb bf 5f 40 d5 9c 2b 9a 21 f8 e0 a5 df d8 7e 
+39 17 a8 8f 03 4b 0c 44 70 7a 7e b7 31 bd d7 6d 
+a0 b1 55 ec 1e 4d 12 4e 7b fe dd 46 95 c4 a5 39 
+55 a5 05 10 7b ba 18 b1 2c 81 73 fa ab 75 8e a5 
+11 8c 3d 08 1e b8 6d 38 b3 1b 8e 87 23 11 35 f8 
+76 e2 ee e9 ce f5 de 4c 32 12 34 ab 79 5b ef ad 
+9c cb c9 1c 6d 2d 9f 32 ec 86 df 5e 2e 03 3b fa 
+t=2 (MixBytes):
+b5 56 00 79 47 f0 a2 23 1e 10 9a 8a 80 ce 9a 1b 
+46 4b d2 09 3a 73 01 84 6e db 12 90 d0 92 05 6a 
+cd 84 ab 01 2b 0c 18 38 18 16 32 49 0c 74 b8 d6 
+65 b3 c4 5c 5c 23 0d 60 3c a0 a8 75 64 97 cd f5 
+a2 3e 9e a3 ea 31 4f 32 34 cc f3 1a 68 19 24 60 
+8c 57 2b 0d fb 78 c9 72 b2 cd f4 a1 f2 26 6c a0 
+df 8a 91 ae 8c 3b 7e 7a 1d 9e ae 0a 01 31 a3 e0 
+45 aa 08 bf 10 e6 5f f8 ce 4f 00 61 5e 31 51 ef 
+t=3 (AddRoundConstant):
+b6 45 23 4a 04 a3 c1 50 9d 83 39 39 43 1d 79 e8 
+46 4b d2 09 3a 73 01 84 6e db 12 90 d0 92 05 6a 
+cd 84 ab 01 2b 0c 18 38 18 16 32 49 0c 74 b8 d6 
+65 b3 c4 5c 5c 23 0d 60 3c a0 a8 75 64 97 cd f5 
+a2 3e 9e a3 ea 31 4f 32 34 cc f3 1a 68 19 24 60 
+8c 57 2b 0d fb 78 c9 72 b2 cd f4 a1 f2 26 6c a0 
+df 8a 91 ae 8c 3b 7e 7a 1d 9e ae 0a 01 31 a3 e0 
+45 aa 08 bf 10 e6 5f f8 ce 4f 00 61 5e 31 51 ef 
+t=3 (SubBytes):
+4e 6e 26 d6 f2 0a 78 53 5e ec 12 12 1a a4 b6 9b 
+5a b3 b5 01 80 8f 7c 5f 9f b9 c9 60 70 4f 6b 02 
+bd 5f 62 7c f1 fe ad 07 ad 47 23 3b fe 92 6c f6 
+4d 6d 1c 4a 4a 26 d7 d0 eb e0 c2 9d 43 88 bd e6 
+3a b2 0b 0a 87 c7 84 23 18 4b 0d a2 45 d4 36 d0 
+64 5b f1 d7 0f bc dd 40 37 bd bf 32 89 f7 50 e0 
+9e 7e 81 e4 64 e2 f3 da a4 0b e4 67 7c c7 0a e1 
+6e ac 30 08 ca 8e cf 41 8b 84 63 ef 58 c7 d1 df 
+t=3 (ShiftBytes):
+4e 6e 26 d6 f2 0a 78 53 5e ec 12 12 1a a4 b6 9b 
+b3 b5 01 80 8f 7c 5f 9f b9 c9 60 70 4f 6b 02 5a 
+62 7c f1 fe ad 07 ad 47 23 3b fe 92 6c f6 bd 5f 
+4a 4a 26 d7 d0 eb e0 c2 9d 43 88 bd e6 4d 6d 1c 
+87 c7 84 23 18 4b 0d a2 45 d4 36 d0 3a b2 0b 0a 
+bc dd 40 37 bd bf 32 89 f7 50 e0 64 5b f1 d7 0f 
+f3 da a4 0b e4 67 7c c7 0a e1 9e 7e 81 e4 64 e2 
+ef 58 c7 d1 df 6e ac 30 08 ca 8e cf 41 8b 84 63 
+t=3 (MixBytes):
+af 9c dd 14 ad 33 9e 95 a0 41 69 7c fb 2a 1b 4e 
+b6 a5 1f 48 61 c0 d7 d3 2d 09 76 a3 33 e7 79 10 
+65 fb d0 aa a4 cb 38 ac 5c f9 23 78 c2 9e f9 1a 
+6f 91 41 25 82 57 88 6f c9 ed 93 05 7b 1e 52 75 
+56 49 02 5c 83 e3 a7 42 fd 1a 44 d8 a5 ef 10 e3 
+b9 8c 1b 85 b1 2f 32 23 8b 62 c3 49 2d 86 21 ac 
+8b d5 a3 9b 53 b6 e7 d9 9e 60 5d 3e 2c e7 ee cf 
+7a dc 10 59 32 bc 1f 99 d0 49 28 d5 57 2b fe bb 
+t=4 (AddRoundConstant):
+ab 88 f9 20 e9 67 fa e1 24 d5 cd c8 3f fe ff ba 
+b6 a5 1f 48 61 c0 d7 d3 2d 09 76 a3 33 e7 79 10 
+65 fb d0 aa a4 cb 38 ac 5c f9 23 78 c2 9e f9 1a 
+6f 91 41 25 82 57 88 6f c9 ed 93 05 7b 1e 52 75 
+56 49 02 5c 83 e3 a7 42 fd 1a 44 d8 a5 ef 10 e3 
+b9 8c 1b 85 b1 2f 32 23 8b 62 c3 49 2d 86 21 ac 
+8b d5 a3 9b 53 b6 e7 d9 9e 60 5d 3e 2c e7 ee cf 
+7a dc 10 59 32 bc 1f 99 d0 49 28 d5 57 2b fe bb 
+t=4 (SubBytes):
+62 c4 99 b7 1e 85 2d f8 36 03 bd e8 75 bb 16 f4 
+4e 06 c0 52 ef ba 0e 66 d8 01 38 0a c3 94 b6 ca 
+4d 0f 70 ac 49 1f 07 91 4a 99 26 bc 25 0b 99 a2 
+a8 81 83 3f 13 5b c4 a8 dd 55 dc 6b 21 72 00 9d 
+b1 3b 77 4a ec 11 5c 2c 54 a2 1b 61 06 df ca 11 
+56 64 af 97 c8 15 23 26 3d aa 2e 3b d8 44 fd 91 
+3d 03 0a 14 ed 4e 94 35 0b d0 4c b2 71 94 28 8a 
+da 86 ca cb 23 65 c0 ee 70 3b 34 03 5b f1 bb ea 
+t=4 (ShiftBytes):
+62 c4 99 b7 1e 85 2d f8 36 03 bd e8 75 bb 16 f4 
+06 c0 52 ef ba 0e 66 d8 01 38 0a c3 94 b6 ca 4e 
+70 ac 49 1f 07 91 4a 99 26 bc 25 0b 99 a2 4d 0f 
+3f 13 5b c4 a8 dd 55 dc 6b 21 72 00 9d a8 81 83 
+ec 11 5c 2c 54 a2 1b 61 06 df ca 11 b1 3b 77 4a 
+15 23 26 3d aa 2e 3b d8 44 fd 91 56 64 af 97 c8 
+94 35 0b d0 4c b2 71 94 28 8a 3d 03 0a 14 ed 4e 
+03 5b f1 bb ea da 86 ca cb 23 65 c0 ee 70 3b 34 
+t=4 (MixBytes):
+11 e0 ba c6 f1 ee 2c 92 ae c2 47 9d 5a 43 81 9f 
+ec 1f e9 f7 1c 95 e4 41 94 26 9d 9c 8e 99 2e 26 
+f1 59 19 a0 08 69 70 d8 bc d4 b6 28 3b 49 47 19 
+18 4a 05 61 11 95 d9 df d1 8e d8 c9 28 e1 16 4a 
+af bd d1 ed 6b f8 07 64 a4 97 eb ba 12 1d d8 51 
+70 d6 79 9f 6e 2d d1 88 e7 0e 82 f4 9d 1d 14 9e 
+7b 05 52 9e 37 35 51 96 59 fe 76 54 39 b8 0a 4a 
+7f b0 5e 0c 33 02 78 33 3b ae 95 0d 16 c8 52 26 
+t=5 (AddRoundConstant):
+14 f5 9f f3 b4 bb 49 e7 2b 57 e2 28 9f 96 64 6a 
+ec 1f e9 f7 1c 95 e4 41 94 26 9d 9c 8e 99 2e 26 
+f1 59 19 a0 08 69 70 d8 bc d4 b6 28 3b 49 47 19 
+18 4a 05 61 11 95 d9 df d1 8e d8 c9 28 e1 16 4a 
+af bd d1 ed 6b f8 07 64 a4 97 eb ba 12 1d d8 51 
+70 d6 79 9f 6e 2d d1 88 e7 0e 82 f4 9d 1d 14 9e 
+7b 05 52 9e 37 35 51 96 59 fe 76 54 39 b8 0a 4a 
+7f b0 5e 0c 33 02 78 33 3b ae 95 0d 16 c8 52 26 
+t=5 (SubBytes):
+fa e6 db 0d 8d ea 3b 94 f1 5b 98 34 db 90 43 02 
+ce c0 1e 68 9c 2a 69 83 22 f7 5e de 19 ee 31 f7 
+a1 cb d4 e0 30 f9 51 61 65 48 4e 34 e2 3b a0 d4 
+ad d6 6b ef 82 2a 35 9e 3e 19 61 dd 34 f8 47 d6 
+79 7a 3e 55 7f 41 c5 43 49 88 e9 f4 c9 a4 61 d1 
+51 f6 b6 db 9f d8 3e c4 94 ab 13 bf 5e a4 fa 0b 
+21 6b 00 0b 9a 96 d1 90 cb bb 38 20 12 6c 67 d6 
+d2 e7 58 fe c3 77 bc c3 e2 e4 2a d7 47 e8 00 f7 
+t=5 (ShiftBytes):
+fa e6 db 0d 8d ea 3b 94 f1 5b 98 34 db 90 43 02 
+c0 1e 68 9c 2a 69 83 22 f7 5e de 19 ee 31 f7 ce 
+d4 e0 30 f9 51 61 65 48 4e 34 e2 3b a0 d4 a1 cb 
+ef 82 2a 35 9e 3e 19 61 dd 34 f8 47 d6 ad d6 6b 
+7f 41 c5 43 49 88 e9 f4 c9 a4 61 d1 79 7a 3e 55 
+d8 3e c4 94 ab 13 bf 5e a4 fa 0b 51 f6 b6 db 9f 
+d1 90 cb bb 38 20 12 6c 67 d6 21 6b 00 0b 9a 96 
+d7 47 e8 00 f7 d2 e7 58 fe c3 77 bc c3 e2 e4 2a 
+t=5 (MixBytes):
+c2 da 4a 6f 53 45 c3 8f 9c 4d 64 9e 1c 4b 00 fc 
+6e cc 1a 85 81 6c c1 e1 7d 08 e5 a1 d4 11 91 00 
+29 d9 2d 81 47 d7 09 05 c9 62 65 67 ea f9 b9 3e 
+65 28 c3 85 17 ba eb b5 8c e5 a0 89 e6 5b 33 b0 
+3a cd cd 5e 6e b8 c7 5b f4 5a 5e b6 95 49 88 05 
+27 06 10 93 78 a8 5d 9c 74 a5 24 0a bf ea 45 95 
+11 c8 93 c6 1c 3e 37 1f 50 ce d1 87 7b 45 4b ed 
+17 b2 76 b6 47 ae e4 05 d7 21 4f e0 84 02 75 21 
+t=6 (AddRoundConstant):
+c4 cc 6c 59 15 13 a5 f9 1a db c2 28 da 9d e6 0a 
+6e cc 1a 85 81 6c c1 e1 7d 08 e5 a1 d4 11 91 00 
+29 d9 2d 81 47 d7 09 05 c9 62 65 67 ea f9 b9 3e 
+65 28 c3 85 17 ba eb b5 8c e5 a0 89 e6 5b 33 b0 
+3a cd cd 5e 6e b8 c7 5b f4 5a 5e b6 95 49 88 05 
+27 06 10 93 78 a8 5d 9c 74 a5 24 0a bf ea 45 95 
+11 c8 93 c6 1c 3e 37 1f 50 ce d1 87 7b 45 4b ed 
+17 b2 76 b6 47 ae e4 05 d7 21 4f e0 84 02 75 21 
+t=6 (SubBytes):
+1c 4b 50 cb 59 7d 06 99 a2 b9 25 34 57 5e 8e 67 
+9f 4b a2 97 0c 50 78 f8 ff 30 d9 32 48 82 81 63 
+a5 35 d8 0c a0 0e 01 6b dd aa 4d 85 87 99 56 b2 
+4d 34 2e 97 f0 f4 e9 d5 64 d9 e0 a7 8e 39 c3 e7 
+80 bd bd 58 9f 6c c6 39 bf be 58 4e 2a 3b c4 6b 
+cc 6f ca dc bc c2 4c de 92 06 36 67 08 87 6e 2a 
+82 e8 dc b4 9c b2 9a c0 53 8b 3e 17 21 6e b3 55 
+f0 37 38 4e a0 e4 69 6b 0e fd 84 e1 5f 77 9d fd 
+t=6 (ShiftBytes):
+1c 4b 50 cb 59 7d 06 99 a2 b9 25 34 57 5e 8e 67 
+4b a2 97 0c 50 78 f8 ff 30 d9 32 48 82 81 63 9f 
+d8 0c a0 0e 01 6b dd aa 4d 85 87 99 56 b2 a5 35 
+97 f0 f4 e9 d5 64 d9 e0 a7 8e 39 c3 e7 4d 34 2e 
+9f 6c c6 39 bf be 58 4e 2a 3b c4 6b 80 bd bd 58 
+c2 4c de 92 06 36 67 08 87 6e 2a cc 6f ca dc bc 
+9a c0 53 8b 3e 17 21 6e b3 55 82 e8 dc b4 9c b2 
+e1 5f 77 9d fd f0 37 38 4e a0 e4 69 6b 0e fd 84 
+t=6 (MixBytes):
+6a 48 43 11 14 bb 78 94 ea 68 e9 9b 76 05 fa 0d 
+9b 09 39 32 e0 e6 3b 12 ed fb ba f8 62 cc 94 7d 
+7b 4f f2 23 26 be 5b e3 8c 4b 3c cd ca eb cc d3 
+3d 07 ba 83 e5 ba c5 c1 f1 6c d5 92 02 0c 3f 98 
+4a 27 47 c8 3c 3e 71 ad da d8 02 41 16 00 0a 49 
+fa df a8 6e a7 60 87 a1 f8 7a 37 08 3a 8f 68 83 
+7f 49 1c 42 2b 2b 12 97 76 80 a2 65 35 1b da 26 
+3a 5d 2b db 75 83 57 7b 56 d0 4e 10 81 96 a1 84 
+t=7 (AddRoundConstant):
+6d 5f 64 26 53 ec 1f e3 6d ff 4e 2c b1 d2 1d fa 
+9b 09 39 32 e0 e6 3b 12 ed fb ba f8 62 cc 94 7d 
+7b 4f f2 23 26 be 5b e3 8c 4b 3c cd ca eb cc d3 
+3d 07 ba 83 e5 ba c5 c1 f1 6c d5 92 02 0c 3f 98 
+4a 27 47 c8 3c 3e 71 ad da d8 02 41 16 00 0a 49 
+fa df a8 6e a7 60 87 a1 f8 7a 37 08 3a 8f 68 83 
+7f 49 1c 42 2b 2b 12 97 76 80 a2 65 35 1b da 26 
+3a 5d 2b db 75 83 57 7b 56 d0 4e 10 81 96 a1 84 
+t=7 (SubBytes):
+3c cf 43 f7 ed ce c0 11 3c 16 2f 71 c8 b5 a4 2d 
+14 01 12 23 e1 8e e2 c9 55 0f f4 41 aa 4b 22 ff 
+21 84 89 26 f7 ae 39 11 64 b3 eb bd 74 e9 4b 66 
+27 c5 f4 ec d9 f4 a6 78 a1 50 03 4f 77 fe 75 46 
+d6 cc a0 e8 eb b2 a3 95 57 61 77 83 47 63 67 3b 
+2d 9e c2 9f 5c d0 17 32 41 da 9a 30 80 73 45 ec 
+d2 3b 9c 2c f1 f1 c9 88 38 cd 3a 4d 96 af 57 f7 
+80 4c f1 b9 9d ec 5b 21 b1 70 2f ca 0c 90 32 5f 
+t=7 (ShiftBytes):
+3c cf 43 f7 ed ce c0 11 3c 16 2f 71 c8 b5 a4 2d 
+01 12 23 e1 8e e2 c9 55 0f f4 41 aa 4b 22 ff 14 
+89 26 f7 ae 39 11 64 b3 eb bd 74 e9 4b 66 21 84 
+ec d9 f4 a6 78 a1 50 03 4f 77 fe 75 46 27 c5 f4 
+eb b2 a3 95 57 61 77 83 47 63 67 3b d6 cc a0 e8 
+d0 17 32 41 da 9a 30 80 73 45 ec 2d 9e c2 9f 5c 
+c9 88 38 cd 3a 4d 96 af 57 f7 d2 3b 9c 2c f1 f1 
+ca 0c 90 32 5f 80 4c f1 b9 9d ec 5b 21 b1 70 2f 
+t=7 (MixBytes):
+e6 4d 75 15 47 5d 02 ac a0 07 5f af e4 29 13 4c 
+23 49 88 16 e6 63 36 db 87 69 54 41 3b 0a 62 de 
+cf 5e fe be fe 3c b9 1b 6c 2b ec 35 a3 05 23 34 
+70 27 67 6b f8 ce ab 0f 79 e4 6a 25 b4 24 0c 24 
+d5 8d ca 76 7b f5 ed ef 02 64 de 6d 06 bb 7d 3a 
+d4 b3 48 cb 55 60 97 6d db cc 28 11 9a 04 16 f0 
+9e f6 84 b4 9d d5 c2 98 06 c1 e6 26 f7 48 28 cf 
+45 b0 8c 80 51 69 65 99 3a 64 6e f7 2e 3a 1e e2 
+t=8 (AddRoundConstant):
+ee 55 5d 2d 0f 05 6a d4 28 9f f7 17 2c f1 fb b4 
+23 49 88 16 e6 63 36 db 87 69 54 41 3b 0a 62 de 
+cf 5e fe be fe 3c b9 1b 6c 2b ec 35 a3 05 23 34 
+70 27 67 6b f8 ce ab 0f 79 e4 6a 25 b4 24 0c 24 
+d5 8d ca 76 7b f5 ed ef 02 64 de 6d 06 bb 7d 3a 
+d4 b3 48 cb 55 60 97 6d db cc 28 11 9a 04 16 f0 
+9e f6 84 b4 9d d5 c2 98 06 c1 e6 26 f7 48 28 cf 
+45 b0 8c 80 51 69 65 99 3a 64 6e f7 2e 3a 1e e2 
+t=8 (SubBytes):
+28 fc 4c d8 76 6b 02 48 34 db 68 f0 71 a1 0f 8d 
+26 3b c4 47 8e fb 05 b9 17 f9 20 83 e2 67 aa 1d 
+8a 58 bb ae bb eb 56 af 50 f1 ce 96 0a 6b 26 18 
+51 cc 85 7f 41 8b 62 76 b6 69 02 3f 8d 36 fe 36 
+03 5d 74 38 21 e6 55 df 77 43 1d 3c 6f ea ff 80 
+48 6d 52 1f fc d0 88 3c b9 4b 34 82 b8 f2 47 8c 
+0b 42 5f 8d 5e 03 25 46 6f 78 8e f7 68 52 34 8a 
+6e e7 64 cd d1 f9 4d ee 80 43 9f 68 31 80 72 98 
+t=8 (ShiftBytes):
+28 fc 4c d8 76 6b 02 48 34 db 68 f0 71 a1 0f 8d 
+3b c4 47 8e fb 05 b9 17 f9 20 83 e2 67 aa 1d 26 
+bb ae bb eb 56 af 50 f1 ce 96 0a 6b 26 18 8a 58 
+7f 41 8b 62 76 b6 69 02 3f 8d 36 fe 36 51 cc 85 
+21 e6 55 df 77 43 1d 3c 6f ea ff 80 03 5d 74 38 
+d0 88 3c b9 4b 34 82 b8 f2 47 8c 48 6d 52 1f fc 
+25 46 6f 78 8e f7 68 52 34 8a 0b 42 5f 8d 5e 03 
+68 31 80 72 98 6e e7 64 cd d1 f9 4d ee 80 43 9f 
+t=8 (MixBytes):
+6b 84 e1 81 30 c7 86 87 40 7d 54 8b a2 87 cd bf 
+c7 c1 1e 41 7e b8 5a b5 9b 34 26 17 c0 92 49 f7 
+bd bf 95 a6 bf 54 82 d4 38 92 24 92 1b 5a f4 fc 
+33 a1 6a bf 06 5d 5e 61 99 b8 2d 13 40 de 9e 06 
+ef 58 06 d4 48 96 f9 32 f6 21 df 52 93 86 f1 ac 
+97 c3 a1 3e ca e9 eb a5 a7 86 3c 52 ff 16 11 04 
+4d e9 5f 29 a2 bc ab 3f c6 95 a2 20 9e 60 66 9a 
+aa 60 24 d4 45 05 14 0d 05 6b c0 fd bb a1 0e f2 
+t=9 (AddRoundConstant):
+62 9d c8 b8 79 9e ef fe c9 e4 fd 32 6b 5e 24 46 
+c7 c1 1e 41 7e b8 5a b5 9b 34 26 17 c0 92 49 f7 
+bd bf 95 a6 bf 54 82 d4 38 92 24 92 1b 5a f4 fc 
+33 a1 6a bf 06 5d 5e 61 99 b8 2d 13 40 de 9e 06 
+ef 58 06 d4 48 96 f9 32 f6 21 df 52 93 86 f1 ac 
+97 c3 a1 3e ca e9 eb a5 a7 86 3c 52 ff 16 11 04 
+4d e9 5f 29 a2 bc ab 3f c6 95 a2 20 9e 60 66 9a 
+aa 60 24 d4 45 05 14 0d 05 6b c0 fd bb a1 0e f2 
+t=9 (SubBytes):
+aa 5e e8 6c b6 0b df bb dd 69 54 23 7f 58 36 5a 
+c6 78 72 83 f3 6c be d5 14 18 f7 f0 ba 4f 3b 68 
+7a 08 2a 24 08 20 13 48 07 4f 36 4f af be bf b0 
+c3 32 02 08 6f 4c 58 ef ee 6c d8 7d 09 1d 0b 6f 
+df 6a 6f 48 52 90 99 23 42 fd 9e 00 dc 44 a1 91 
+88 2e 32 b2 74 1e e9 06 5c 44 eb 00 16 47 82 f2 
+e3 1e cf a5 3a 65 62 75 b4 2a 3a b7 0b d0 33 b8 
+ac d0 36 48 6e 6b fa d7 6b 7f ba 54 ea 32 ab 89 
+t=9 (ShiftBytes):
+aa 5e e8 6c b6 0b df bb dd 69 54 23 7f 58 36 5a 
+78 72 83 f3 6c be d5 14 18 f7 f0 ba 4f 3b 68 c6 
+2a 24 08 20 13 48 07 4f 36 4f af be bf b0 7a 08 
+08 6f 4c 58 ef ee 6c d8 7d 09 1d 0b 6f c3 32 02 
+52 90 99 23 42 fd 9e 00 dc 44 a1 91 df 6a 6f 48 
+1e e9 06 5c 44 eb 00 16 47 82 f2 88 2e 32 b2 74 
+62 75 b4 2a 3a b7 0b d0 33 b8 e3 1e cf a5 3a 65 
+54 ea 32 ab 89 ac d0 36 48 6e 6b fa d7 6b 7f ba 
+t=9 (MixBytes):
+84 4f e8 8b d6 0a 47 dc 70 7f 9b 0a 2c ae 4b 3d 
+4b 7a 06 be 72 b4 ce 02 c5 dd 69 0d 07 a1 cd 53 
+80 53 e5 b2 3b 48 b0 87 05 87 64 18 ab a8 61 75 
+aa da 05 cd 81 4e ad 76 a9 57 92 fd 47 63 f3 c6 
+73 e1 06 e0 58 59 b9 94 69 64 4d ee e8 a4 49 57 
+ea bd 80 19 cb 6d b9 17 fb 44 00 ee 0d 00 e3 86 
+b3 5e 2b 24 f4 3c d1 28 cc 62 e3 73 16 dc 4f 74 
+4a 26 f9 bc d7 92 29 c7 f5 73 e6 f9 2f 2d 78 e7 
+t=10 (AddRoundConstant):
+8e 55 c2 b1 9c 50 2d a6 fa e5 31 b0 e6 74 a1 c7 
+4b 7a 06 be 72 b4 ce 02 c5 dd 69 0d 07 a1 cd 53 
+80 53 e5 b2 3b 48 b0 87 05 87 64 18 ab a8 61 75 
+aa da 05 cd 81 4e ad 76 a9 57 92 fd 47 63 f3 c6 
+73 e1 06 e0 58 59 b9 94 69 64 4d ee e8 a4 49 57 
+ea bd 80 19 cb 6d b9 17 fb 44 00 ee 0d 00 e3 86 
+b3 5e 2b 24 f4 3c d1 28 cc 62 e3 73 16 dc 4f 74 
+4a 26 f9 bc d7 92 29 c7 f5 73 e6 f9 2f 2d 78 e7 
+t=10 (SubBytes):
+19 fc 25 c8 de 53 d8 24 2d d9 c7 e7 8e 92 32 c6 
+b3 da 6f ae 40 8d 8b 77 a6 c1 f9 d7 c5 32 bd ed 
+cd ed d9 37 e2 52 e7 17 6b 17 43 ad 62 c2 ef 9d 
+ac 57 6b bd 0c 2f 95 38 d3 5b 4f 54 a0 fb 0d b4 
+8f f8 6f e1 6a cb 56 22 f9 43 e3 28 9b 49 3b 5b 
+87 7a cd d4 1f 3c 56 f0 0f 1b 63 28 d7 63 11 44 
+6d 58 f1 36 bf eb 3e 34 4b aa 11 8f 47 86 84 92 
+d6 f7 99 65 0e 4f a5 c6 e6 8f 8e 99 15 d8 bc 94 
+t=10 (ShiftBytes):
+19 fc 25 c8 de 53 d8 24 2d d9 c7 e7 8e 92 32 c6 
+da 6f ae 40 8d 8b 77 a6 c1 f9 d7 c5 32 bd ed b3 
+d9 37 e2 52 e7 17 6b 17 43 ad 62 c2 ef 9d cd ed 
+bd 0c 2f 95 38 d3 5b 4f 54 a0 fb 0d b4 ac 57 6b 
+6a cb 56 22 f9 43 e3 28 9b 49 3b 5b 8f f8 6f e1 
+3c 56 f0 0f 1b 63 28 d7 63 11 44 87 7a cd d4 1f 
+3e 34 4b aa 11 8f 47 86 84 92 6d 58 f1 36 bf eb 
+99 15 d8 bc 94 d6 f7 99 65 0e 4f a5 c6 e6 8f 8e 
+t=10 (MixBytes):
+96 eb d0 09 fd 93 06 a1 ab 99 68 e6 d8 77 f4 f5 
+63 6f 04 ea cf 25 0d 08 f3 9b 78 af 99 6c 76 09 
+bd 9f 4f 3a 2e bd 77 4a ea 32 99 ae 98 45 53 77 
+4f ac 8c 3d 77 36 db 48 a1 9c 51 f4 2a 43 2f 82 
+3a 76 15 bb 73 79 ff de d1 c7 dc 2f 45 03 01 8c 
+4d cc bd 37 5a 3d 2f 03 10 68 29 e2 50 95 aa 67 
+1a 76 19 56 05 1e 64 fd dc 4f 90 8e 6e 84 50 bd 
+90 47 33 a2 61 c8 24 c5 33 6c da 1f e7 19 4c e7 
+t=11 (AddRoundConstant):
+9d f0 fb 32 b6 c8 6d da 20 02 c3 5d 13 ac 1f 0e 
+63 6f 04 ea cf 25 0d 08 f3 9b 78 af 99 6c 76 09 
+bd 9f 4f 3a 2e bd 77 4a ea 32 99 ae 98 45 53 77 
+4f ac 8c 3d 77 36 db 48 a1 9c 51 f4 2a 43 2f 82 
+3a 76 15 bb 73 79 ff de d1 c7 dc 2f 45 03 01 8c 
+4d cc bd 37 5a 3d 2f 03 10 68 29 e2 50 95 aa 67 
+1a 76 19 56 05 1e 64 fd dc 4f 90 8e 6e 84 50 bd 
+90 47 33 a2 61 c8 24 c5 33 6c da 1f e7 19 4c e7 
+t=11 (SubBytes):
+5e 8c 0f 23 4e e8 3c 57 b7 77 2e 4c 7d 91 c0 ab 
+fb a8 f2 87 8a 3f d7 30 0d 14 bc 79 ee 50 38 01 
+7a db 84 80 31 7a f5 d6 87 23 ee e4 46 6e ed f5 
+84 91 64 27 f5 05 b9 52 32 de d1 bf e5 1a 15 13 
+80 38 59 ea 8f b6 16 1d 3e c6 86 15 6e 7b 7c 64 
+e3 4b 7a 9a be 27 15 7b ca 45 a5 98 53 2a ac 85 
+a2 38 d4 b1 6b 72 43 54 86 84 60 19 9f 5f 53 7a 
+60 a0 c3 3a ef e8 36 a6 c3 50 57 c0 94 d4 29 94 
+t=11 (ShiftBytes):
+5e 8c 0f 23 4e e8 3c 57 b7 77 2e 4c 7d 91 c0 ab 
+a8 f2 87 8a 3f d7 30 0d 14 bc 79 ee 50 38 01 fb 
+84 80 31 7a f5 d6 87 23 ee e4 46 6e ed f5 7a db 
+27 f5 05 b9 52 32 de d1 bf e5 1a 15 13 84 91 64 
+8f b6 16 1d 3e c6 86 15 6e 7b 7c 64 80 38 59 ea 
+27 15 7b ca 45 a5 98 53 2a ac 85 e3 4b 7a 9a be 
+43 54 86 84 60 19 9f 5f 53 7a a2 38 d4 b1 6b 72 
+c0 94 d4 29 94 60 a0 c3 3a ef e8 36 a6 c3 50 57 
+t=11 (MixBytes):
+32 27 3d 44 86 96 5c 4b af 52 bd 32 a7 01 81 f4 
+29 c8 b9 63 68 18 f4 d9 1b f7 4e b4 19 8f 25 e3 
+0c a5 e1 52 94 8b 07 c2 c3 03 c3 a2 2a 0f be 30 
+b5 35 07 31 92 09 53 ca 78 2c be 6c ac 70 a1 f6 
+2a 0b 79 27 b5 4c 2d e5 9f 11 87 6d 2b 7b c6 e3 
+62 8c 37 49 b2 17 53 8e 5f 31 84 73 ee 77 d8 e3 
+d2 70 51 4a 21 f0 63 ca fa e6 53 df 25 92 c5 23 
+ba 30 e3 50 25 ff 7d ad 4f cf 0d 79 66 4c 0d 4b 
+t=12 (AddRoundConstant):
+3e 3b 11 78 ca ca 30 37 23 ce 11 8e 6b dd 6d 08 
+29 c8 b9 63 68 18 f4 d9 1b f7 4e b4 19 8f 25 e3 
+0c a5 e1 52 94 8b 07 c2 c3 03 c3 a2 2a 0f be 30 
+b5 35 07 31 92 09 53 ca 78 2c be 6c ac 70 a1 f6 
+2a 0b 79 27 b5 4c 2d e5 9f 11 87 6d 2b 7b c6 e3 
+62 8c 37 49 b2 17 53 8e 5f 31 84 73 ee 77 d8 e3 
+d2 70 51 4a 21 f0 63 ca fa e6 53 df 25 92 c5 23 
+ba 30 e3 50 25 ff 7d ad 4f cf 0d 79 66 4c 0d 4b 
+t=12 (SubBytes):
+b2 e2 82 bc 74 74 04 9a 26 8b 82 19 7f c1 3c 30 
+a5 e8 56 fb 45 ad bf 35 af 68 2f 8d d4 73 3f 11 
+fe 06 f8 00 22 3d c5 25 2e 7b 2e 3a e5 76 ae 04 
+d5 96 c5 c7 4f 01 ed 74 bc 71 ae 50 91 51 32 42 
+e5 2b b6 cc d5 29 d8 d9 db 82 17 3c f1 21 b4 11 
+aa 64 9a 3b 37 f0 ed 19 cf c7 5f 8f 28 f5 61 11 
+b5 51 d1 d6 fd 8c fb 74 2d 8e ed 9e 3f 4f a6 26 
+f4 04 11 53 3f 16 ff 95 84 8a d7 b6 33 29 d7 b3 
+t=12 (ShiftBytes):
+b2 e2 82 bc 74 74 04 9a 26 8b 82 19 7f c1 3c 30 
+e8 56 fb 45 ad bf 35 af 68 2f 8d d4 73 3f 11 a5 
+f8 00 22 3d c5 25 2e 7b 2e 3a e5 76 ae 04 fe 06 
+c7 4f 01 ed 74 bc 71 ae 50 91 51 32 42 d5 96 c5 
+d5 29 d8 d9 db 82 17 3c f1 21 b4 11 e5 2b b6 cc 
+f0 ed 19 cf c7 5f 8f 28 f5 61 11 aa 64 9a 3b 37 
+fb 74 2d 8e ed 9e 3f 4f a6 26 b5 51 d1 d6 fd 8c 
+b6 33 29 d7 b3 f4 04 11 53 3f 16 ff 95 84 8a d7 
+t=12 (MixBytes):
+24 d3 68 7e be 53 d1 c2 03 6a 21 a6 6c b2 87 13 
+6b 56 c3 7d c9 11 35 4d 9e cd b9 eb c8 c8 61 46 
+ee 68 d8 82 55 ab dd aa 4d 12 af 56 ba fb e7 40 
+c0 fc f2 ac 19 c8 89 df 84 30 d1 09 25 02 9d ae 
+8b 88 4d 1d 16 28 eb 78 95 fe 0d 7e eb 9e 18 64 
+b4 7b 4a 66 a2 96 3f 9f 80 0c c3 2d a3 94 79 6c 
+f7 19 27 4c 3b d6 60 f2 a3 eb 48 dc 43 1c 9d 5a 
+be 73 1b b0 ca 7d 48 0a ba 66 bc 22 5f da ba e8 
+t=13 (AddRoundConstant):
+29 ce 45 43 f3 0e bc bf 8e f7 8c 1b a1 6f 6a ee 
+6b 56 c3 7d c9 11 35 4d 9e cd b9 eb c8 c8 61 46 
+ee 68 d8 82 55 ab dd aa 4d 12 af 56 ba fb e7 40 
+c0 fc f2 ac 19 c8 89 df 84 30 d1 09 25 02 9d ae 
+8b 88 4d 1d 16 28 eb 78 95 fe 0d 7e eb 9e 18 64 
+b4 7b 4a 66 a2 96 3f 9f 80 0c c3 2d a3 94 79 6c 
+f7 19 27 4c 3b d6 60 f2 a3 eb 48 dc 43 1c 9d 5a 
+be 73 1b b0 ca 7d 48 0a ba 66 bc 22 5f da ba e8 
+t=13 (SubBytes):
+a5 8b 6e 1a 0d ab 65 08 19 68 64 af 32 a8 02 28 
+7f b1 2e ff dd 82 96 e3 0b bd 56 e9 e8 e8 ef 5a 
+28 45 61 13 fc 62 c1 ac e3 c9 79 b1 f4 0f 94 09 
+ba b0 89 91 d4 e8 a7 9e 5f 04 3e 01 3f 77 5e e4 
+3d c4 e3 a4 47 34 e9 bc 2a bb d7 f3 e9 0b ad 43 
+8d 21 d6 33 3a 90 75 db cd fe 2e d8 0a 22 b6 50 
+68 d4 cc 29 e2 f6 d0 89 0a e9 52 86 1a 9c 5e be 
+ae 8f af e7 74 ff 52 67 f4 33 65 93 cf 57 f4 9b 
+t=13 (ShiftBytes):
+a5 8b 6e 1a 0d ab 65 08 19 68 64 af 32 a8 02 28 
+b1 2e ff dd 82 96 e3 0b bd 56 e9 e8 e8 ef 5a 7f 
+61 13 fc 62 c1 ac e3 c9 79 b1 f4 0f 94 09 28 45 
+91 d4 e8 a7 9e 5f 04 3e 01 3f 77 5e e4 ba b0 89 
+47 34 e9 bc 2a bb d7 f3 e9 0b ad 43 3d c4 e3 a4 
+90 75 db cd fe 2e d8 0a 22 b6 50 8d 21 d6 33 3a 
+d0 89 0a e9 52 86 1a 9c 5e be 68 d4 cc 29 e2 f6 
+93 cf 57 f4 9b ae 8f af e7 74 ff 52 67 f4 33 65 
+t=13 (MixBytes):
+7b a2 21 35 65 2e 1e 08 64 89 06 28 e0 a4 f7 1c 
+26 b5 29 ea a8 14 63 bc 48 85 9b a9 af 9b bd b3 
+6a 8c 94 67 38 2c 77 fa 34 72 25 b1 0f 50 5c de 
+13 e1 12 65 22 d8 51 8a b8 4f fc 68 c5 92 5e 2b 
+4f b5 65 98 a4 12 b0 93 fe a4 10 07 51 90 1b 78 
+41 35 1e 11 23 1b e1 b3 f6 18 58 55 88 1f 6c 11 
+4b 3e 8c 61 bf b8 e9 f4 8b 7e 04 7b 7d c6 54 cc 
+f1 6b 5c 87 a3 ea f5 52 ca a1 a4 93 06 f9 33 5e 
+:: END P
+
+:: BEGIN Q
+Input:
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 02 
+t=0 (AddRoundConstant):
+ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
+ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
+ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
+ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
+ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
+ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
+ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
+ff ef df cf bf af 9f 8f 7f 6f 5f 4f 3f 2f 1f 0d 
+t=0 (SubBytes):
+16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 
+16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 
+16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 
+16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 
+16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 
+16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 
+16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 
+16 df 9e 8a 08 79 db 73 d2 a8 cf 84 75 15 c0 d7 
+t=0 (ShiftBytes):
+16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 
+16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 
+16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 
+16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 
+16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 
+16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 
+16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 
+db 73 d2 a8 cf 84 75 15 c0 d7 16 df 9e 8a 08 79 
+t=0 (MixBytes):
+6f 1a 50 2d 03 e9 08 33 2e 4b 3a 73 af c3 60 2c 
+ee d0 c3 4a aa d6 ce 35 99 d2 3a fa a4 e0 5c f2 
+76 95 6d e3 4a 97 9f 3f 5b 62 3a 7a b9 85 18 8b 
+ee d0 c3 4a aa d6 ce 35 99 d2 3a fa a4 e0 5c f2 
+23 b5 07 f4 73 44 ad 36 4f 13 3a 33 2c 7c 42 9d 
+76 95 6d e3 4a 97 9f 3f 5b 62 3a 7a b9 85 18 8b 
+bb f0 a9 5d 93 05 fc 3c 8d a3 3a b3 31 19 06 e4 
+bb f0 a9 5d 93 05 fc 3c 8d a3 3a b3 31 19 06 e4 
+t=1 (AddRoundConstant):
+90 e5 af d2 fc 16 f7 cc d1 b4 c5 8c 50 3c 9f d3 
+11 2f 3c b5 55 29 31 ca 66 2d c5 05 5b 1f a3 0d 
+89 6a 92 1c b5 68 60 c0 a4 9d c5 85 46 7a e7 74 
+11 2f 3c b5 55 29 31 ca 66 2d c5 05 5b 1f a3 0d 
+dc 4a f8 0b 8c bb 52 c9 b0 ec c5 cc d3 83 bd 62 
+89 6a 92 1c b5 68 60 c0 a4 9d c5 85 46 7a e7 74 
+44 0f 56 a2 6c fa 03 c3 72 5c c5 4c ce e6 f9 1b 
+45 1e 77 93 2d ab 62 b2 f3 cd 64 fd 0f 37 18 ea 
+t=1 (SubBytes):
+60 d9 79 b5 b0 47 68 4b 3e 8d a6 64 53 eb db 66 
+82 15 eb d5 fc a5 c7 74 33 d8 a6 6b 39 c0 0a d7 
+a7 02 4f 9c d5 45 d0 ba 49 5e a6 97 5a da 94 92 
+82 15 eb d5 fc a5 c7 74 33 d8 a6 6b 39 c0 0a d7 
+86 d6 41 2b 64 ea 00 dd e7 ce a6 4b 66 ec 7a aa 
+a7 02 4f 9c d5 45 d0 ba 49 5e a6 97 5a da 94 92 
+1b 76 b1 3a 50 2d 7b 2e 40 4a a6 29 8b 8e 99 af 
+6e 72 f5 dc d8 62 aa 37 0d bd 43 54 76 9a ad 87 
+t=1 (ShiftBytes):
+d9 79 b5 b0 47 68 4b 3e 8d a6 64 53 eb db 66 60 
+d5 fc a5 c7 74 33 d8 a6 6b 39 c0 0a d7 82 15 eb 
+45 d0 ba 49 5e a6 97 5a da 94 92 a7 02 4f 9c d5 
+6b 39 c0 0a d7 82 15 eb d5 fc a5 c7 74 33 d8 a6 
+86 d6 41 2b 64 ea 00 dd e7 ce a6 4b 66 ec 7a aa 
+4f 9c d5 45 d0 ba 49 5e a6 97 5a da 94 92 a7 02 
+50 2d 7b 2e 40 4a a6 29 8b 8e 99 af 1b 76 b1 3a 
+aa 37 0d bd 43 54 76 9a ad 87 6e 72 f5 dc d8 62 
+t=1 (MixBytes):
+69 9e 4d dd f8 0d 41 44 83 1e 60 18 7d e4 12 12 
+3d 54 44 cf 5a 8f 79 a4 83 cd 8d 52 da 89 f0 9d 
+89 6a d4 9b 41 7c f0 c7 7a 46 0c d9 2a 5a 12 23 
+63 89 7b 93 ae 31 6a 39 c0 88 e5 d2 6d 76 d8 d0 
+53 b4 3b 38 56 18 39 81 36 62 fe 74 7e cd 1a b8 
+92 5c 51 22 25 ae 1e 0a 32 09 bc e7 b6 cd ca 30 
+4f ce f6 e8 b2 b9 0d 9b 85 f9 f9 6f 22 98 54 f6 
+03 4b b9 a8 9b 93 0b 25 b2 7d 0c 22 f0 d1 32 1a 
+t=2 (AddRoundConstant):
+96 61 b2 22 07 f2 be bb 7c e1 9f e7 82 1b ed ed 
+c2 ab bb 30 a5 70 86 5b 7c 32 72 ad 25 76 0f 62 
+76 95 2b 64 be 83 0f 38 85 b9 f3 26 d5 a5 ed dc 
+9c 76 84 6c 51 ce 95 c6 3f 77 1a 2d 92 89 27 2f 
+ac 4b c4 c7 a9 e7 c6 7e c9 9d 01 8b 81 32 e5 47 
+6d a3 ae dd da 51 e1 f5 cd f6 43 18 49 32 35 cf 
+b0 31 09 17 4d 46 f2 64 7a 06 06 90 dd 67 ab 09 
+fe a6 64 65 26 3e 96 a8 cf 10 51 6f cd fc 2f 17 
+t=2 (SubBytes):
+90 ef 37 93 c5 89 ae ea 10 f8 db 94 13 af 55 55 
+25 62 ea 04 06 51 44 39 10 23 40 95 3f 38 76 aa 
+38 2a f1 43 ae ec 76 07 97 56 0d f7 03 06 55 86 
+de 38 5f 50 d1 8b 2a b4 75 f5 a2 d8 4f a7 cc 15 
+91 b3 1c c6 d3 94 b4 f3 dd 5e 7c 3d 0c 23 d9 a0 
+3c 0a e4 c1 57 d1 f8 e6 bd 42 1a ad 3b 23 96 8a 
+e7 c7 01 f0 e3 5a 89 43 da 6f 6f 60 c1 85 62 01 
+bb 24 43 4d f7 b2 90 c2 8a ca d1 a8 bd b0 15 f0 
+t=2 (ShiftBytes):
+ef 37 93 c5 89 ae ea 10 f8 db 94 13 af 55 55 90 
+04 06 51 44 39 10 23 40 95 3f 38 76 aa 25 62 ea 
+ec 76 07 97 56 0d f7 03 06 55 86 38 2a f1 43 ae 
+d8 4f a7 cc 15 de 38 5f 50 d1 8b 2a b4 75 f5 a2 
+91 b3 1c c6 d3 94 b4 f3 dd 5e 7c 3d 0c 23 d9 a0 
+e4 c1 57 d1 f8 e6 bd 42 1a ad 3b 23 96 8a 3c 0a 
+e3 5a 89 43 da 6f 6f 60 c1 85 62 01 e7 c7 01 f0 
+90 c2 8a ca d1 a8 bd b0 15 f0 bb 24 43 4d f7 b2 
+t=2 (MixBytes):
+e4 9f a9 29 ea 5b 33 d0 a2 d5 ef 7f 8b 03 70 85 
+f0 af fe 18 ea 9e 0c 41 21 4e db 77 12 b4 76 7b 
+f6 18 63 a4 e6 d4 12 1e 9c f8 0f 80 90 a8 df 5d 
+6e 31 a7 77 9d a6 7e 3a b1 d3 8a d3 27 d5 c2 18 
+9f 8d 51 71 e4 c6 c5 36 bd 44 7c 64 69 09 36 1a 
+40 74 06 1b 57 69 b2 46 8c 1f b5 a8 91 e8 36 83 
+b7 36 cc 16 34 0a 14 b9 ee 41 f6 3a 91 d7 ef 57 
+94 eb 76 52 92 61 4c cb 09 9b cf 79 b3 9e 59 cc 
+t=3 (AddRoundConstant):
+1b 60 56 d6 15 a4 cc 2f 5d 2a 10 80 74 fc 8f 7a 
+0f 50 01 e7 15 61 f3 be de b1 24 88 ed 4b 89 84 
+09 e7 9c 5b 19 2b ed e1 63 07 f0 7f 6f 57 20 a2 
+91 ce 58 88 62 59 81 c5 4e 2c 75 2c d8 2a 3d e7 
+60 72 ae 8e 1b 39 3a c9 42 bb 83 9b 96 f6 c9 e5 
+bf 8b f9 e4 a8 96 4d b9 73 e0 4a 57 6e 17 c9 7c 
+48 c9 33 e9 cb f5 eb 46 11 be 09 c5 6e 28 10 a8 
+68 07 aa 9e 2e cd d0 47 75 f7 93 35 8f b2 45 c0 
+t=3 (SubBytes):
+af d0 b1 f6 59 49 4b 15 4c e5 ca cd 92 b0 73 da 
+76 53 7c 94 59 ef 0d ae 1d c8 36 c4 55 b3 a7 5f 
+01 94 de 39 d4 f1 55 f8 fb c5 8c d2 a8 5b b7 3a 
+81 8b 6a c4 aa cb 0c a6 2f 71 9d 71 61 e5 27 94 
+d0 40 e4 19 af 12 80 dd 2c ea ec 14 90 42 dd d9 
+08 3d 99 69 c2 90 e3 56 8f e1 d6 5b 9f f0 dd 10 
+52 dd c3 1e 1f e6 e9 5a 82 ae 01 a6 9f 34 ca c2 
+45 c5 ac 0b 31 bd 70 a0 9d 68 dc 96 73 37 6e ba 
+t=3 (ShiftBytes):
+d0 b1 f6 59 49 4b 15 4c e5 ca cd 92 b0 73 da af 
+94 59 ef 0d ae 1d c8 36 c4 55 b3 a7 5f 76 53 7c 
+f1 55 f8 fb c5 8c d2 a8 5b b7 3a 01 94 de 39 d4 
+71 61 e5 27 94 81 8b 6a c4 aa cb 0c a6 2f 71 9d 
+d0 40 e4 19 af 12 80 dd 2c ea ec 14 90 42 dd d9 
+99 69 c2 90 e3 56 8f e1 d6 5b 9f f0 dd 10 08 3d 
+1f e6 e9 5a 82 ae 01 a6 9f 34 ca c2 52 dd c3 1e 
+70 a0 9d 68 dc 96 73 37 6e ba 45 c5 ac 0b 31 bd 
+t=3 (MixBytes):
+7a 55 02 de 62 5e ad 95 ab 14 77 9c 3e 1b 74 37 
+73 6b 4b b5 41 07 cd 6d 9b eb 5d 7c 6f 60 ad 4a 
+ad 68 4c 6a 3b c1 bc fe 75 26 7c cc b8 1b 40 e6 
+46 04 a8 72 61 8c ce 47 7a ae 18 45 5b 98 51 af 
+26 5b bf a2 fa 74 e3 5b bb ed 23 88 e0 8c d0 c5 
+b8 f0 a4 93 64 56 52 0d b0 42 03 10 56 c1 5f 06 
+07 dd 58 48 08 28 d1 a0 03 40 a6 ba 8b 3a 2f 6a 
+46 ea 14 5f 18 77 62 88 f3 44 5d 3d 3d 1f 59 e1 
+t=4 (AddRoundConstant):
+85 aa fd 21 9d a1 52 6a 54 eb 88 63 c1 e4 8b c8 
+8c 94 b4 4a be f8 32 92 64 14 a2 83 90 9f 52 b5 
+52 97 b3 95 c4 3e 43 01 8a d9 83 33 47 e4 bf 19 
+b9 fb 57 8d 9e 73 31 b8 85 51 e7 ba a4 67 ae 50 
+d9 a4 40 5d 05 8b 1c a4 44 12 dc 77 1f 73 2f 3a 
+47 0f 5b 6c 9b a9 ad f2 4f bd fc ef a9 3e a0 f9 
+f8 22 a7 b7 f7 d7 2e 5f fc bf 59 45 74 c5 d0 95 
+bd 01 cf 94 a3 dc f9 03 88 2f 06 76 06 34 42 ea 
+t=4 (SubBytes):
+97 ac 54 fd 5e 32 00 02 20 e9 c4 fb 78 69 3d e8 
+64 22 8d d6 ae 41 23 4f 43 fa 3a ec 60 db 00 d5 
+00 88 6d 2a 1c b2 1a 7c 7e 35 ec c3 a0 69 08 d4 
+56 0f 5b 5d 0b 8f c7 6c 97 d1 94 f4 49 85 e4 53 
+35 49 09 4c 6b 3d 9c 49 1b c9 86 f5 c0 8f 15 80 
+a0 76 39 50 14 d3 95 89 84 7a b0 df d3 b2 e0 99 
+41 93 5c a9 68 0e 31 cf b0 08 cb 6e 92 a6 70 2a 
+7a 7c 8a 22 0a 86 99 7b c4 15 6f 38 6f 18 2c 87 
+t=4 (ShiftBytes):
+ac 54 fd 5e 32 00 02 20 e9 c4 fb 78 69 3d e8 97 
+d6 ae 41 23 4f 43 fa 3a ec 60 db 00 d5 64 22 8d 
+b2 1a 7c 7e 35 ec c3 a0 69 08 d4 00 88 6d 2a 1c 
+f4 49 85 e4 53 56 0f 5b 5d 0b 8f c7 6c 97 d1 94 
+35 49 09 4c 6b 3d 9c 49 1b c9 86 f5 c0 8f 15 80 
+39 50 14 d3 95 89 84 7a b0 df d3 b2 e0 99 a0 76 
+68 0e 31 cf b0 08 cb 6e 92 a6 70 2a 41 93 5c a9 
+99 7b c4 15 6f 38 6f 18 2c 87 7a 7c 8a 22 0a 86 
+t=4 (MixBytes):
+5f 34 4b 79 da 23 18 c5 4a 6d 3d ed 58 5d 23 de 
+dc b5 e1 9e dc 10 07 5e 44 7c c6 7d 3d c6 52 9d 
+6a e5 f8 af e8 88 bb 26 f9 4f 6e ea 35 56 c6 8a 
+dd de 2f 59 5f 48 25 8e f0 72 b8 1e 71 e0 7e f1 
+0f b7 92 74 e3 86 01 d6 41 b7 ac fb ae 65 3d e5 
+78 e6 86 ef 0a 8c 8c 61 00 d0 d5 5f fd a3 77 aa 
+66 ec b0 03 da a7 08 94 a1 50 c7 49 1e b2 e1 da 
+7d 53 35 74 cc d9 87 e7 8b b0 ff 60 a2 55 0f 70 
+t=5 (AddRoundConstant):
+a0 cb b4 86 25 dc e7 3a b5 92 c2 12 a7 a2 dc 21 
+23 4a 1e 61 23 ef f8 a1 bb 83 39 82 c2 39 ad 62 
+95 1a 07 50 17 77 44 d9 06 b0 91 15 ca a9 39 75 
+22 21 d0 a6 a0 b7 da 71 0f 8d 47 e1 8e 1f 81 0e 
+f0 48 6d 8b 1c 79 fe 29 be 48 53 04 51 9a c2 1a 
+87 19 79 10 f5 73 73 9e ff 2f 2a a0 02 5c 88 55 
+99 13 4f fc 25 58 f7 6b 5e af 38 b6 e1 4d 1e 25 
+87 b9 ef be 76 73 1d 6d f1 da a5 2a 98 7f 15 7a 
+t=5 (SubBytes):
+e0 1f 8d 44 3f 86 94 80 d5 4f 25 c9 5c 3a 86 fd 
+26 d6 72 ef 26 df 41 32 ea ec 12 13 25 12 95 aa 
+2a a2 c5 53 f0 f5 1b 35 6f e7 81 59 74 d3 12 9d 
+93 fd 70 24 e0 a9 57 a3 76 5d a0 f8 19 c0 0c ab 
+8c 52 3c 3d 9c b6 bb a5 ae 52 ed f2 d1 b8 25 a2 
+17 d4 b6 ca e6 8f 8f 0b 16 15 e5 e0 77 4a c4 fc 
+ee 7d 84 b0 3f 6a 68 7f 58 79 07 4e f8 e3 72 3f 
+17 56 df ae 38 8f a4 3c a1 57 06 e5 46 d2 59 da 
+t=5 (ShiftBytes):
+1f 8d 44 3f 86 94 80 d5 4f 25 c9 5c 3a 86 fd e0 
+ef 26 df 41 32 ea ec 12 13 25 12 95 aa 26 d6 72 
+f5 1b 35 6f e7 81 59 74 d3 12 9d 2a a2 c5 53 f0 
+f8 19 c0 0c ab 93 fd 70 24 e0 a9 57 a3 76 5d a0 
+8c 52 3c 3d 9c b6 bb a5 ae 52 ed f2 d1 b8 25 a2 
+b6 ca e6 8f 8f 0b 16 15 e5 e0 77 4a c4 fc 17 d4 
+3f 6a 68 7f 58 79 07 4e f8 e3 72 3f ee 7d 84 b0 
+a4 3c a1 57 06 e5 46 d2 59 da 17 56 df ae 38 8f 
+t=5 (MixBytes):
+eb 2d 3b 18 ba 50 63 8f f3 d3 aa 03 c3 48 4e 3f 
+67 31 5b 15 dd a7 18 c7 e6 11 58 db 7f a8 a3 2b 
+97 17 4f f5 32 29 08 7a 6a d9 a5 0c ff 52 f5 e4 
+75 df b3 16 69 96 91 73 51 da 6d a3 91 15 2a 6c 
+08 b8 07 55 02 e3 31 a2 e9 16 be c6 3d e6 da a6 
+44 56 7c 9e 91 87 6c 99 14 88 52 0a 17 84 33 10 
+27 a5 e6 9b 0f 75 bd 4c b7 7f d7 d5 82 7e 3d 76 
+e1 36 86 2c 64 8e 6e 1c a7 ab 31 c1 be 2c 00 da 
+t=6 (AddRoundConstant):
+14 d2 c4 e7 45 af 9c 70 0c 2c 55 fc 3c b7 b1 c0 
+98 ce a4 ea 22 58 e7 38 19 ee a7 24 80 57 5c d4 
+68 e8 b0 0a cd d6 f7 85 95 26 5a f3 00 ad 0a 1b 
+8a 20 4c e9 96 69 6e 8c ae 25 92 5c 6e ea d5 93 
+f7 47 f8 aa fd 1c ce 5d 16 e9 41 39 c2 19 25 59 
+bb a9 83 61 6e 78 93 66 eb 77 ad f5 e8 7b cc ef 
+d8 5a 19 64 f0 8a 42 b3 48 80 28 2a 7d 81 c2 89 
+18 df 5f e5 dd 27 f7 95 de c2 68 88 87 05 19 d3 
+t=6 (SubBytes):
+fa b5 1c 94 6e 79 de 51 fe 71 fc b0 eb a9 c8 ba 
+46 8b 49 87 93 6a 94 07 d4 28 5c 36 cd 5b 4a 48 
+45 9b e7 67 bd f6 68 97 2a f7 be 0d 63 95 67 af 
+7e b7 29 1e 90 f9 9f 64 e4 3f 4f 4a 9f 87 03 dc 
+68 a0 41 ac 54 9c 8b 4c 47 1e 83 12 25 d4 3f cb 
+ea d3 ec ef 9f bc dc 33 e9 f5 95 e6 9b 21 4b df 
+61 be d4 43 8c 7e 2c 6d 52 cd 34 e5 ff 0c 25 a7 
+ad 9e cf d9 c1 cc 68 2a 1d 25 45 c4 17 6b d4 66 
+t=6 (ShiftBytes):
+b5 1c 94 6e 79 de 51 fe 71 fc b0 eb a9 c8 ba fa 
+87 93 6a 94 07 d4 28 5c 36 cd 5b 4a 48 46 8b 49 
+f6 68 97 2a f7 be 0d 63 95 67 af 45 9b e7 67 bd 
+4a 9f 87 03 dc 7e b7 29 1e 90 f9 9f 64 e4 3f 4f 
+68 a0 41 ac 54 9c 8b 4c 47 1e 83 12 25 d4 3f cb 
+ec ef 9f bc dc 33 e9 f5 95 e6 9b 21 4b df ea d3 
+8c 7e 2c 6d 52 cd 34 e5 ff 0c 25 a7 61 be d4 43 
+68 2a 1d 25 45 c4 17 6b d4 66 ad 9e cf d9 c1 cc 
+t=6 (MixBytes):
+23 80 44 51 02 1f 3f 6b 82 ff 3e 1f 2d 12 09 24 
+8c cb 65 89 86 76 49 06 70 fc 65 cc f6 9a 95 55 
+9b c4 ed da aa fa 6b fc c3 80 e9 2e d1 3c 7d 18 
+23 fb 42 12 0e ad 9b b7 d5 06 7e 87 61 c1 da c6 
+0c 55 ae e2 59 c9 a3 0e 81 2c 8a d4 6b 55 40 85 
+4c fe 36 9f 18 f1 99 a8 8e 79 2f 32 5d 8b bc 34 
+81 32 b7 f0 fd a7 d6 60 4e 7b d7 2a aa 6d 27 44 
+ff 48 a2 1b d9 15 f7 9a fa 57 c9 25 8e fe 00 3b 
+t=7 (AddRoundConstant):
+dc 7f bb ae fd e0 c0 94 7d 00 c1 e0 d2 ed f6 db 
+73 34 9a 76 79 89 b6 f9 8f 03 9a 33 09 65 6a aa 
+64 3b 12 25 55 05 94 03 3c 7f 16 d1 2e c3 82 e7 
+dc 04 bd ed f1 52 64 48 2a f9 81 78 9e 3e 25 39 
+f3 aa 51 1d a6 36 5c f1 7e d3 75 2b 94 aa bf 7a 
+b3 01 c9 60 e7 0e 66 57 71 86 d0 cd a2 74 43 cb 
+7e cd 48 0f 02 58 29 9f b1 84 28 d5 55 92 d8 bb 
+07 a0 7a d3 61 bd 6f 12 82 3f 91 6d b6 d6 18 33 
+t=7 (SubBytes):
+86 d2 ea e4 54 e1 ba 22 ff 63 78 e1 b5 55 42 b9 
+8f 18 b8 38 b6 a7 4e 99 73 7b b8 c3 01 4d 02 ac 
+43 e2 c9 3f fc 6b 22 7b eb d2 47 3e 31 2e 13 94 
+86 f2 7a 55 a1 00 43 52 e5 99 0c bc 0b b2 3f 12 
+0d ac d1 a4 24 05 4a a1 f3 66 9d f1 22 ac 08 da 
+6d 7c dd d0 94 ab 33 5b a3 44 70 bd 3a 92 1a 1f 
+f3 bd 52 76 77 6a a5 db c8 5f 34 03 fc 4f 61 ea 
+c5 e0 da 66 ef 7a a8 c9 13 75 81 3c 4e f6 ad c3 
+t=7 (ShiftBytes):
+d2 ea e4 54 e1 ba 22 ff 63 78 e1 b5 55 42 b9 86 
+38 b6 a7 4e 99 73 7b b8 c3 01 4d 02 ac 8f 18 b8 
+6b 22 7b eb d2 47 3e 31 2e 13 94 43 e2 c9 3f fc 
+bc 0b b2 3f 12 86 f2 7a 55 a1 00 43 52 e5 99 0c 
+0d ac d1 a4 24 05 4a a1 f3 66 9d f1 22 ac 08 da 
+dd d0 94 ab 33 5b a3 44 70 bd 3a 92 1a 1f 6d 7c 
+77 6a a5 db c8 5f 34 03 fc 4f 61 ea f3 bd 52 76 
+a8 c9 13 75 81 3c 4e f6 ad c3 c5 e0 da 66 ef 7a 
+t=7 (MixBytes):
+34 23 94 c0 5b 1e 87 0a ab 5b e6 eb 21 25 6f 80 
+66 cb d4 fc ae e7 72 b7 76 60 f7 0c b1 b1 96 e2 
+b7 09 b4 35 cc bb 01 40 65 a5 7d 7b 61 cf e8 f3 
+43 de dc 06 7c e4 78 8d b8 78 97 06 fd 9e b6 44 
+8e 7a 26 bd 6e a3 bf 54 0c c8 a2 99 2c b4 cf 40 
+f5 da 27 ed dc 4c 5b a0 1d 50 70 53 0b 16 4c c9 
+37 0d d2 cd 54 9e 93 92 16 d3 cf 82 76 e2 92 9a 
+bc 77 70 23 92 88 f1 32 1c 12 ab ab b5 05 cc 6a 
+t=8 (AddRoundConstant):
+cb dc 6b 3f a4 e1 78 f5 54 a4 19 14 de da 90 7f 
+99 34 2b 03 51 18 8d 48 89 9f 08 f3 4e 4e 69 1d 
+48 f6 4b ca 33 44 fe bf 9a 5a 82 84 9e 30 17 0c 
+bc 21 23 f9 83 1b 87 72 47 87 68 f9 02 61 49 bb 
+71 85 d9 42 91 5c 40 ab f3 37 5d 66 d3 4b 30 bf 
+0a 25 d8 12 23 b3 a4 5f e2 af 8f ac f4 e9 b3 36 
+c8 f2 2d 32 ab 61 6c 6d e9 2c 30 7d 89 1d 6d 65 
+4b 90 a7 e4 25 2f 66 b5 6b 75 fc ec 82 22 db 6d 
+t=8 (SubBytes):
+1f 86 7f 75 49 f8 bc e6 20 49 d4 fa 1d 57 60 d2 
+ee 18 f1 7b d1 ad 5d 52 a7 db 30 0d 2f 2f f9 a4 
+52 42 b3 74 c3 1b bb 08 b8 be 13 5f 0b 04 f0 fe 
+65 fd 26 99 ec af 17 40 a0 17 45 99 77 ef 3b ea 
+a3 97 35 2c 81 4a 09 62 0d 9a 4c 33 66 b3 04 08 
+67 3f 61 c9 26 6d 49 cf 98 79 73 91 bf 1e 6d 05 
+e8 89 d8 23 62 ef 50 3c 1e 71 04 ff a7 a4 3c 4d 
+b3 60 5c 69 3f 15 33 d5 7f 9d b0 ce 13 93 b9 3c 
+t=8 (ShiftBytes):
+86 7f 75 49 f8 bc e6 20 49 d4 fa 1d 57 60 d2 1f 
+7b d1 ad 5d 52 a7 db 30 0d 2f 2f f9 a4 ee 18 f1 
+1b bb 08 b8 be 13 5f 0b 04 f0 fe 52 42 b3 74 c3 
+99 77 ef 3b ea 65 fd 26 99 ec af 17 40 a0 17 45 
+a3 97 35 2c 81 4a 09 62 0d 9a 4c 33 66 b3 04 08 
+61 c9 26 6d 49 cf 98 79 73 91 bf 1e 6d 05 67 3f 
+62 ef 50 3c 1e 71 04 ff a7 a4 3c 4d e8 89 d8 23 
+33 d5 7f 9d b0 ce 13 93 b9 3c b3 60 5c 69 3f 15 
+t=8 (MixBytes):
+4c 88 c4 0e 20 4d b1 25 75 a1 67 fd 98 a6 da 3b 
+d2 07 29 91 18 60 32 1a 4f 16 d0 a1 fc c7 a9 31 
+08 ab 4c 48 32 e6 57 b3 69 dd 4c d5 c1 9b 66 e1 
+e7 93 8e 5a 36 bb 22 9a 99 3c f4 0c 6f 02 43 50 
+45 20 f4 da 4c 60 a1 73 4b 66 46 0b 33 9e 0c 16 
+53 d9 60 d3 b5 d7 c3 5f 81 51 46 66 04 b4 f2 4f 
+26 d0 52 4a 05 c2 b2 b0 0c dc 1a 29 40 0e 64 1c 
+6e 94 ec 57 73 fc 0d 54 dc 21 06 39 6f 9a bb 45 
+t=9 (AddRoundConstant):
+b3 77 3b f1 df b2 4e da 8a 5e 98 02 67 59 25 c4 
+2d f8 d6 6e e7 9f cd e5 b0 e9 2f 5e 03 38 56 ce 
+f7 54 b3 b7 cd 19 a8 4c 96 22 b3 2a 3e 64 99 1e 
+18 6c 71 a5 c9 44 dd 65 66 c3 0b f3 90 fd bc af 
+ba df 0b 25 b3 9f 5e 8c b4 99 b9 f4 cc 61 f3 e9 
+ac 26 9f 2c 4a 28 3c a0 7e ae b9 99 fb 4b 0d b0 
+d9 2f ad b5 fa 3d 4d 4f f3 23 e5 d6 bf f1 9b e3 
+98 72 3a 91 c5 5a 9b d2 aa 47 50 7f 59 bc ad 43 
+t=9 (SubBytes):
+6d f5 e2 a1 9e 37 2f 57 7e 58 46 77 85 cb 3f 1c 
+d8 41 f6 9f 94 db bd d9 e7 1e 15 58 7b 07 b1 8b 
+68 20 6d a9 bd d4 c2 29 90 93 6d e5 b2 43 ee 72 
+ad 50 a3 06 dd 1b c1 4d 33 2e 2b 0d 60 54 65 79 
+f4 9e 2b 3f 6d db 58 64 8d ee 56 bf 4b ef 0d 1e 
+91 f7 db 71 d6 34 eb e0 f3 e4 56 ee 0f b3 d7 e7 
+35 15 95 d5 2d 27 e3 84 0d 26 d9 f6 08 a1 14 11 
+46 40 80 81 a6 be 14 b5 ac a0 53 d2 cb 65 95 1a 
+t=9 (ShiftBytes):
+f5 e2 a1 9e 37 2f 57 7e 58 46 77 85 cb 3f 1c 6d 
+9f 94 db bd d9 e7 1e 15 58 7b 07 b1 8b d8 41 f6 
+d4 c2 29 90 93 6d e5 b2 43 ee 72 68 20 6d a9 bd 
+0d 60 54 65 79 ad 50 a3 06 dd 1b c1 4d 33 2e 2b 
+f4 9e 2b 3f 6d db 58 64 8d ee 56 bf 4b ef 0d 1e 
+db 71 d6 34 eb e0 f3 e4 56 ee 0f b3 d7 e7 91 f7 
+2d 27 e3 84 0d 26 d9 f6 08 a1 14 11 35 15 95 d5 
+14 b5 ac a0 53 d2 cb 65 95 1a 46 40 80 81 a6 be 
+t=9 (MixBytes):
+0d f4 09 12 e9 a9 07 5a 46 0d 93 cc 9d 09 db 82 
+28 4a 52 9b 4c ff 70 f3 57 e0 90 ac a5 d2 96 99 
+b6 c0 7b f7 e7 83 e4 69 79 d8 3f 61 5a 03 c6 a7 
+a4 08 a9 c3 23 c7 8f 4d 39 75 59 f9 3b ba 8c cb 
+45 72 06 fd 51 74 f9 3f 5a 06 d4 fd 5e f6 77 0e 
+43 6e 18 4d 5e bf 9f da 15 2e 78 be 3c fd 82 30 
+bc bf c5 35 ab 11 c5 3c da 90 95 0e 35 55 f7 03 
+79 35 96 28 ba 9a 70 ef c1 3c 6a ee 02 53 9a c0 
+t=10 (AddRoundConstant):
+f2 0b f6 ed 16 56 f8 a5 b9 f2 6c 33 62 f6 24 7d 
+d7 b5 ad 64 b3 00 8f 0c a8 1f 6f 53 5a 2d 69 66 
+49 3f 84 08 18 7c 1b 96 86 27 c0 9e a5 fc 39 58 
+5b f7 56 3c dc 38 70 b2 c6 8a a6 06 c4 45 73 34 
+ba 8d f9 02 ae 8b 06 c0 a5 f9 2b 02 a1 09 88 f1 
+bc 91 e7 b2 a1 40 60 25 ea d1 87 41 c3 02 7d cf 
+43 40 3a ca 54 ee 3a c3 25 6f 6a f1 ca aa 08 fc 
+8c d0 43 ed 0f 3f e5 6a b4 59 3f ab 37 76 8f c5 
+t=10 (SubBytes):
+89 2b 42 55 47 b1 41 06 56 89 50 c3 aa 42 36 ff 
+0e d5 95 43 6d 63 73 fe c2 c0 a8 ed be d8 f9 33 
+3b 75 5f 30 ad 10 af 90 44 cc ba 0b 06 b0 12 6a 
+39 68 b1 eb 86 07 51 37 b4 7e 24 6f 1c 6e 8f 18 
+f4 5d 99 77 e4 3d 6f ba 06 99 f1 77 32 01 c4 a1 
+65 81 94 37 32 09 d0 3f 87 3e 17 83 2e 77 ff 8a 
+1a 09 80 74 20 28 80 2e 3f a8 02 a1 74 ac 30 b0 
+64 70 1a 55 76 75 d9 02 8d cb 75 62 9a 38 73 a6 
+t=10 (ShiftBytes):
+2b 42 55 47 b1 41 06 56 89 50 c3 aa 42 36 ff 89 
+43 6d 63 73 fe c2 c0 a8 ed be d8 f9 33 0e d5 95 
+10 af 90 44 cc ba 0b 06 b0 12 6a 3b 75 5f 30 ad 
+6f 1c 6e 8f 18 39 68 b1 eb 86 07 51 37 b4 7e 24 
+f4 5d 99 77 e4 3d 6f ba 06 99 f1 77 32 01 c4 a1 
+94 37 32 09 d0 3f 87 3e 17 83 2e 77 ff 8a 65 81 
+20 28 80 2e 3f a8 02 a1 74 ac 30 b0 1a 09 80 74 
+d9 02 8d cb 75 62 9a 38 73 a6 64 70 1a 55 76 75 
+t=10 (MixBytes):
+70 29 c1 d4 10 af 8a 82 58 ff 29 90 75 6a 5e 20 
+39 98 43 78 8d 42 ef 0e 65 75 c9 00 ba 76 61 a9 
+1a 81 8d e2 3a 18 8a 63 e4 7e ea b1 97 c6 5b be 
+c3 15 cc 28 7f 01 86 e8 5e d0 6c fc 63 20 65 e1 
+ed 33 9c 95 25 bc f2 d9 3f 42 23 4f fc bc da ff 
+f9 e7 cc bc 3e d0 89 52 86 f8 60 b6 f9 b8 91 99 
+aa 8b 73 85 2f 32 e3 4d 0c 8e b9 7d d8 bb 3f 1a 
+a7 05 52 66 d8 e9 95 3d 49 ae 80 49 ff 49 20 6d 
+t=11 (AddRoundConstant):
+8f d6 3e 2b ef 50 75 7d a7 00 d6 6f 8a 95 a1 df 
+c6 67 bc 87 72 bd 10 f1 9a 8a 36 ff 45 89 9e 56 
+e5 7e 72 1d c5 e7 75 9c 1b 81 15 4e 68 39 a4 41 
+3c ea 33 d7 80 fe 79 17 a1 2f 93 03 9c df 9a 1e 
+12 cc 63 6a da 43 0d 26 c0 bd dc b0 03 43 25 00 
+06 18 33 43 c1 2f 76 ad 79 07 9f 49 06 47 6e 66 
+55 74 8c 7a d0 cd 1c b2 f3 71 46 82 27 44 c0 e5 
+53 e1 86 a2 6c 4d 01 b9 3d ca d4 0d cb 6d 34 69 
+t=11 (SubBytes):
+73 f6 b2 f1 df 53 9d ff 5c 63 f6 a8 7e 2a 32 9e 
+b4 85 65 17 40 7a ca a1 b8 7e 05 16 6e a7 0b b1 
+d9 f3 40 a4 a6 94 9d de af 0c 59 2f 45 12 49 83 
+eb 87 c3 0e cd bb b6 f0 32 15 dc 7b de 9e b8 72 
+c9 4b fb 02 57 1a d7 f7 ba 7a 86 e7 7b 1a 3f 63 
+6f ad c3 1a 78 15 38 95 b6 c5 db 3b 6f a0 9f 33 
+fc 92 64 da 70 bd 9c 37 0d a3 5a 13 cc 1b ba d9 
+ed f8 44 3a 50 e3 7c 56 27 74 48 d7 1f 3c 18 f9 
+t=11 (ShiftBytes):
+f6 b2 f1 df 53 9d ff 5c 63 f6 a8 7e 2a 32 9e 73 
+17 40 7a ca a1 b8 7e 05 16 6e a7 0b b1 b4 85 65 
+94 9d de af 0c 59 2f 45 12 49 83 d9 f3 40 a4 a6 
+7b de 9e b8 72 eb 87 c3 0e cd bb b6 f0 32 15 dc 
+c9 4b fb 02 57 1a d7 f7 ba 7a 86 e7 7b 1a 3f 63 
+c3 1a 78 15 38 95 b6 c5 db 3b 6f a0 9f 33 6f ad 
+70 bd 9c 37 0d a3 5a 13 cc 1b ba d9 fc 92 64 da 
+7c 56 27 74 48 d7 1f 3c 18 f9 ed f8 44 3a 50 e3 
+t=11 (MixBytes):
+d3 82 a7 9f ba fc 51 e5 6f 83 92 97 1e 72 a3 98 
+88 67 4d 9d 8e c6 5f a5 5b cf ac fd 2b d3 19 2f 
+ed 21 bb c5 4a 92 80 1b c3 04 68 75 94 7f e6 f6 
+e6 a0 12 e6 87 07 3b 89 f5 4c 2b b9 f7 76 2a ae 
+dd 42 d4 57 77 07 d7 ac 53 f4 fc 0c 79 ef 7a 72 
+25 d7 a4 cc fd e5 61 57 d4 1a 46 8e 88 f1 04 af 
+85 87 ed 6e df 36 fb d1 55 6f 36 a6 82 1d 1b 85 
+35 6b d0 2e 5d cf ef a5 af 5f 71 06 72 34 5a 01 
+t=12 (AddRoundConstant):
+2c 7d 58 60 45 03 ae 1a 90 7c 6d 68 e1 8d 5c 67 
+77 98 b2 62 71 39 a0 5a a4 30 53 02 d4 2c e6 d0 
+12 de 44 3a b5 6d 7f e4 3c fb 97 8a 6b 80 19 09 
+19 5f ed 19 78 f8 c4 76 0a b3 d4 46 08 89 d5 51 
+22 bd 2b a8 88 f8 28 53 ac 0b 03 f3 86 10 85 8d 
+da 28 5b 33 02 1a 9e a8 2b e5 b9 71 77 0e fb 50 
+7a 78 12 91 20 c9 04 2e aa 90 c9 59 7d e2 e4 7a 
+c6 88 03 ed ee 6c 7c 26 dc 3c 22 45 41 17 49 02 
+t=12 (SubBytes):
+71 ff 6a d0 6e 7b e4 a2 60 10 3c 45 f8 5d 4a 85 
+f5 46 37 aa a3 12 e0 be 49 04 ed 77 48 71 8e 70 
+c9 1d 1b 80 d5 3c d2 69 eb 0f 88 7e 7f cd d4 01 
+d4 cf 55 d4 bc 41 1c 38 67 6d 48 5a 30 a7 03 d1 
+93 7a f1 c2 c4 41 34 ed 91 2b 7b 0d 44 ca 97 5d 
+57 34 39 c3 77 a2 0b c2 f1 d9 56 a3 f5 ab 0f 53 
+da bc c9 81 b7 dd f2 31 ac 60 dd cb ff 98 69 da 
+b4 c4 7b 55 28 50 10 f7 86 eb 93 6e 83 f0 3b 77 
+t=12 (ShiftBytes):
+ff 6a d0 6e 7b e4 a2 60 10 3c 45 f8 5d 4a 85 71 
+aa a3 12 e0 be 49 04 ed 77 48 71 8e 70 f5 46 37 
+3c d2 69 eb 0f 88 7e 7f cd d4 01 c9 1d 1b 80 d5 
+5a 30 a7 03 d1 d4 cf 55 d4 bc 41 1c 38 67 6d 48 
+93 7a f1 c2 c4 41 34 ed 91 2b 7b 0d 44 ca 97 5d 
+39 c3 77 a2 0b c2 f1 d9 56 a3 f5 ab 0f 53 57 34 
+b7 dd f2 31 ac 60 dd cb ff 98 69 da da bc c9 81 
+10 f7 86 eb 93 6e 83 f0 3b 77 b4 c4 7b 55 28 50 
+t=12 (MixBytes):
+12 84 a7 65 f3 56 08 e7 69 a0 0b f6 26 3f b5 a5 
+27 d4 fe 02 77 e1 f0 a9 d2 fe f1 fd db 47 24 53 
+be 6b 0d a0 c3 aa d6 be b4 6f e3 46 d1 eb f2 7e 
+e2 3a 4d 92 88 ee 8d b5 a3 00 fb a2 3f fb eb 2a 
+57 e4 31 87 77 18 01 3c 64 db 5a 37 77 9d b8 a9 
+6b 74 e0 a4 bf d0 bc ee cb a0 62 f7 c0 88 a9 2a 
+b5 41 a9 7b ae cb 83 65 8d 0f 06 80 26 5d 0c 3c 
+a2 03 78 72 8f 74 12 11 09 c8 b5 82 bf ee 84 b8 
+t=13 (AddRoundConstant):
+ed 7b 58 9a 0c a9 f7 18 96 5f f4 09 d9 c0 4a 5a 
+d8 2b 01 fd 88 1e 0f 56 2d 01 0e 02 24 b8 db ac 
+41 94 f2 5f 3c 55 29 41 4b 90 1c b9 2e 14 0d 81 
+1d c5 b2 6d 77 11 72 4a 5c ff 04 5d c0 04 14 d5 
+a8 1b ce 78 88 e7 fe c3 9b 24 a5 c8 88 62 47 56 
+94 8b 1f 5b 40 2f 43 11 34 5f 9d 08 3f 77 56 d5 
+4a be 56 84 51 34 7c 9a 72 f0 f9 7f d9 a2 f3 c3 
+50 e1 aa b0 3d d6 80 93 7b aa e7 c0 8d cc 96 ba 
+t=13 (SubBytes):
+55 21 6a b8 fe d3 68 ad 90 cf bf 01 35 ba d6 be 
+61 f1 7c 54 c4 72 76 b1 d8 7c ab 77 36 6c b9 91 
+83 22 89 cf eb fc a5 83 b3 60 9c 56 31 fa d7 0c 
+a4 a6 37 3c f5 82 40 d6 4a 16 f2 4c ba f2 fa 03 
+c2 af 8b bc c4 94 bb 2e 14 36 06 e8 c4 aa a0 b1 
+22 3d c0 39 09 15 1a 82 18 cf 5e 30 75 f5 b1 03 
+d6 ae b1 5f d1 18 10 b8 40 8c 99 d2 35 3a 0d 2e 
+53 f8 ac e7 27 f6 cd dc 21 ac 94 ba 5d 4b 90 f4 
+t=13 (ShiftBytes):
+21 6a b8 fe d3 68 ad 90 cf bf 01 35 ba d6 be 55 
+54 c4 72 76 b1 d8 7c ab 77 36 6c b9 91 61 f1 7c 
+fc a5 83 b3 60 9c 56 31 fa d7 0c 83 22 89 cf eb 
+4c ba f2 fa 03 a4 a6 37 3c f5 82 40 d6 4a 16 f2 
+c2 af 8b bc c4 94 bb 2e 14 36 06 e8 c4 aa a0 b1 
+c0 39 09 15 1a 82 18 cf 5e 30 75 f5 b1 03 22 3d 
+d1 18 10 b8 40 8c 99 d2 35 3a 0d 2e d6 ae b1 5f 
+cd dc 21 ac 94 ba 5d 4b 90 f4 53 f8 ac e7 27 f6 
+t=13 (MixBytes):
+8f 59 c9 42 25 8c e7 78 14 04 ea af be 54 4a 59 
+0c e4 53 36 ce 4d eb dc ca a2 eb f9 22 2f 3e 51 
+ed 84 58 ea 8d 5b 21 9f 02 fc 14 21 a4 f9 61 42 
+5f 91 da d7 44 4b b0 6c aa 0b 5c 52 6b 0b c2 6a 
+f2 c0 02 34 89 56 63 f3 71 cb 88 d6 7f 67 8f 0b 
+f5 87 33 26 f4 9b 15 d2 69 db 7c 6a b3 7a cb 16 
+74 48 78 bf 6e e5 59 79 62 59 fb db 5b 14 1b ca 
+34 99 49 60 2c 1a 78 c0 a4 bd 0f d5 af 27 15 c8 
+:: END Q
+
+P(h+m) + Q(m) + h =
+33 b8 83 75 2a 17 a9 01 19 bd 0d 97 27 12 d5 61 
+6b f8 a7 3e 07 0a 22 81 8e fc 5d 6b a2 69 df 20 
+e8 9c de 37 a9 aa 6b c0 1c 02 22 e0 cb 69 7b 68 
+6d 19 97 82 6f 58 d5 e9 aa d6 29 0b 0c fb 5d 02 
+31 c9 43 cf 0b 48 e0 aa 23 29 18 a1 97 67 34 23 
+68 07 96 a5 80 46 b0 c0 9d c5 4c 22 7b c0 eb 20 
+72 0f 31 c9 07 64 38 16 ab 65 7b 49 46 5c 90 5a 
+53 ea 0c 24 e5 b4 ea 83 6e 14 bb 92 9b 13 25 f9 
+
+
+========================================
+
+Output transformation:
+
+:: BEGIN P
+Input:
+33 b8 83 75 2a 17 a9 01 19 bd 0d 97 27 12 d5 61 
+6b f8 a7 3e 07 0a 22 81 8e fc 5d 6b a2 69 df 20 
+e8 9c de 37 a9 aa 6b c0 1c 02 22 e0 cb 69 7b 68 
+6d 19 97 82 6f 58 d5 e9 aa d6 29 0b 0c fb 5d 02 
+31 c9 43 cf 0b 48 e0 aa 23 29 18 a1 97 67 34 23 
+68 07 96 a5 80 46 b0 c0 9d c5 4c 22 7b c0 eb 20 
+72 0f 31 c9 07 64 38 16 ab 65 7b 49 46 5c 90 5a 
+53 ea 0c 24 e5 b4 ea 83 6e 14 bb 92 9b 13 25 f9 
+t=0 (AddRoundConstant):
+33 a8 a3 45 6a 47 c9 71 99 2d ad 27 e7 c2 35 91 
+6b f8 a7 3e 07 0a 22 81 8e fc 5d 6b a2 69 df 20 
+e8 9c de 37 a9 aa 6b c0 1c 02 22 e0 cb 69 7b 68 
+6d 19 97 82 6f 58 d5 e9 aa d6 29 0b 0c fb 5d 02 
+31 c9 43 cf 0b 48 e0 aa 23 29 18 a1 97 67 34 23 
+68 07 96 a5 80 46 b0 c0 9d c5 4c 22 7b c0 eb 20 
+72 0f 31 c9 07 64 38 16 ab 65 7b 49 46 5c 90 5a 
+53 ea 0c 24 e5 b4 ea 83 6e 14 bb 92 9b 13 25 f9 
+t=0 (SubBytes):
+c3 c2 0a 6e 02 a0 dd a3 ee d8 95 cc 94 25 96 81 
+7f 41 5c b2 c5 67 93 0c 19 b0 4c 7f 3a f9 9e b7 
+9b de 1d 9a d3 ac 7f ba 9c 77 93 e1 1f f9 21 45 
+3c d4 88 13 a8 6a 03 1e ac f6 a5 2b fe 0f 4c 77 
+c7 dd 1a 8a 2b 52 e1 ac 26 a5 ad 32 88 85 18 26 
+45 c5 90 06 cd 5a e7 ba 5e a6 29 93 21 ba e9 b7 
+40 76 c7 dd c5 43 07 47 62 4d 21 3b 5a 4a 60 be 
+ed 87 fe 36 d9 8d 87 ec 9f fa ea 4f 14 7d 3f 99 
+t=0 (ShiftBytes):
+c3 c2 0a 6e 02 a0 dd a3 ee d8 95 cc 94 25 96 81 
+41 5c b2 c5 67 93 0c 19 b0 4c 7f 3a f9 9e b7 7f 
+1d 9a d3 ac 7f ba 9c 77 93 e1 1f f9 21 45 9b de 
+13 a8 6a 03 1e ac f6 a5 2b fe 0f 4c 77 3c d4 88 
+2b 52 e1 ac 26 a5 ad 32 88 85 18 26 c7 dd 1a 8a 
+5a e7 ba 5e a6 29 93 21 ba e9 b7 45 c5 90 06 cd 
+07 47 62 4d 21 3b 5a 4a 60 be 40 76 c7 dd c5 43 
+4f 14 7d 3f 99 ed 87 fe 36 d9 8d 87 ec 9f fa ea 
+t=0 (MixBytes):
+f0 1b b2 b9 3b 2b e3 78 8c 10 bd b0 98 09 dd a4 
+16 84 b3 69 24 e6 37 f4 bb 6d 65 fe 1d 04 ed 10 
+e6 37 e8 4a 37 45 59 5b d1 49 a4 44 35 80 91 94 
+b9 1f 84 6c 4e e8 7f 93 46 0d 19 31 1f 81 9b 1c 
+fd 5a af 6e 4b 62 06 f9 94 8d bf 26 d2 5a 48 e2 
+bd 5b 6e b1 58 fe ac 08 9a 51 d9 be cd 42 e2 f4 
+97 35 91 eb b1 65 cd b0 72 c9 e0 c4 9f f2 f3 ff 
+aa 5d f2 55 80 18 7d 4f 41 b7 50 0f 19 aa b4 1f 
+t=1 (AddRoundConstant):
+f1 0a 93 88 7a 7a 82 09 0d 81 1c 01 59 d8 3c 55 
+16 84 b3 69 24 e6 37 f4 bb 6d 65 fe 1d 04 ed 10 
+e6 37 e8 4a 37 45 59 5b d1 49 a4 44 35 80 91 94 
+b9 1f 84 6c 4e e8 7f 93 46 0d 19 31 1f 81 9b 1c 
+fd 5a af 6e 4b 62 06 f9 94 8d bf 26 d2 5a 48 e2 
+bd 5b 6e b1 58 fe ac 08 9a 51 d9 be cd 42 e2 f4 
+97 35 91 eb b1 65 cd b0 72 c9 e0 c4 9f f2 f3 ff 
+aa 5d f2 55 80 18 7d 4f 41 b7 50 0f 19 aa b4 1f 
+t=1 (SubBytes):
+a1 67 dc c4 da da 13 01 d7 0c 9c 7c cb 61 eb fc 
+47 5f 6d f9 36 8e 9a bf ea 3c 4d bb a4 f2 55 ca 
+8e 9a 9b d6 9a 6e cb 39 3e 3b 49 1b 96 cd 81 22 
+56 c0 5f 50 2f 9b d2 dc 5a d7 d4 c7 c0 0c 14 9c 
+54 be 79 9f b3 aa 6f 99 22 5d 08 f7 b5 be 52 98 
+7a 39 9f c8 6a bb 91 30 b8 d1 35 ae bd 2c 98 bf 
+88 96 81 e9 c8 4d bd e7 40 dd e1 1c db 89 0d 16 
+ac 4c 89 fc cd ad ff 84 83 a9 53 76 d4 ac 8d c0 
+t=1 (ShiftBytes):
+a1 67 dc c4 da da 13 01 d7 0c 9c 7c cb 61 eb fc 
+5f 6d f9 36 8e 9a bf ea 3c 4d bb a4 f2 55 ca 47 
+9b d6 9a 6e cb 39 3e 3b 49 1b 96 cd 81 22 8e 9a 
+50 2f 9b d2 dc 5a d7 d4 c7 c0 0c 14 9c 56 c0 5f 
+b3 aa 6f 99 22 5d 08 f7 b5 be 52 98 54 be 79 9f 
+bb 91 30 b8 d1 35 ae bd 2c 98 bf 7a 39 9f c8 6a 
+bd e7 40 dd e1 1c db 89 0d 16 88 96 81 e9 c8 4d 
+76 d4 ac 8d c0 ac 4c 89 fc cd ad ff 84 83 a9 53 
+t=1 (MixBytes):
+b3 19 0f 3a 4f d0 d4 2e ff 5a f4 c4 fa 43 94 14 
+db d4 ef 78 20 03 13 4c e3 3d 3d d1 b2 aa 36 c2 
+e9 b7 9f 76 2a 02 5e bb 47 e4 b7 cd 24 cb 15 e0 
+50 de 36 3b 79 15 90 de cf f4 4e 1e ab 16 72 ba 
+97 00 41 5a 16 18 5a eb 14 85 10 77 e9 4a 71 db 
+95 47 00 72 d7 d6 db 94 eb ce 9d dd 1f 93 be 5b 
+66 5c 5f 41 27 da 21 2e dc 2f d2 ab 15 e8 f2 d9 
+b4 a9 f5 27 72 c6 35 84 a0 ba f0 42 f0 18 22 71 
+t=2 (AddRoundConstant):
+b1 0b 2d 08 0d 82 b6 5c 7d c8 56 76 38 91 76 e6 
+db d4 ef 78 20 03 13 4c e3 3d 3d d1 b2 aa 36 c2 
+e9 b7 9f 76 2a 02 5e bb 47 e4 b7 cd 24 cb 15 e0 
+50 de 36 3b 79 15 90 de cf f4 4e 1e ab 16 72 ba 
+97 00 41 5a 16 18 5a eb 14 85 10 77 e9 4a 71 db 
+95 47 00 72 d7 d6 db 94 eb ce 9d dd 1f 93 be 5b 
+66 5c 5f 41 27 da 21 2e dc 2f d2 ab 15 e8 f2 d9 
+b4 a9 f5 27 72 c6 35 84 a0 ba f0 42 f0 18 22 71 
+t=2 (SubBytes):
+c8 2b d8 30 d7 13 4e 4a ff e8 b1 38 07 81 38 8e 
+b9 48 df bc b7 7b 7d 29 11 27 27 3e 37 ac 05 25 
+1e a9 db 38 e5 77 58 ea a0 69 a9 bd 36 1f 59 e1 
+53 1d 05 e2 b6 59 60 1d 8a bf 2f 72 62 47 40 f4 
+88 63 83 be 47 ad be e9 fa 97 ca f5 1e d6 a3 b9 
+2a a0 63 40 0e f6 b9 22 e9 8b 5e c1 c0 dc ae 39 
+33 4a cf 83 cc 57 fd 31 86 15 b5 62 59 9b 89 35 
+8d d3 e6 cc 40 b4 96 5f e0 f4 8c 2c 8c ad 93 a3 
+t=2 (ShiftBytes):
+c8 2b d8 30 d7 13 4e 4a ff e8 b1 38 07 81 38 8e 
+48 df bc b7 7b 7d 29 11 27 27 3e 37 ac 05 25 b9 
+db 38 e5 77 58 ea a0 69 a9 bd 36 1f 59 e1 1e a9 
+e2 b6 59 60 1d 8a bf 2f 72 62 47 40 f4 53 1d 05 
+47 ad be e9 fa 97 ca f5 1e d6 a3 b9 88 63 83 be 
+f6 b9 22 e9 8b 5e c1 c0 dc ae 39 2a a0 63 40 0e 
+fd 31 86 15 b5 62 59 9b 89 35 33 4a cf 83 cc 57 
+2c 8c ad 93 a3 8d d3 e6 cc 40 b4 96 5f e0 f4 8c 
+t=2 (MixBytes):
+69 d6 53 c2 75 87 41 a3 48 ba d4 87 66 02 3e 61 
+ca f5 bd 94 fb b7 96 9d f2 76 83 4e 91 3c de 23 
+38 ef fa b0 f0 4b a8 5b dd fb 39 43 39 67 76 bf 
+12 f3 36 c7 d5 c3 6d 72 b7 93 8a a2 9d aa 50 22 
+ca 77 b2 fc c7 01 8c 38 3b f2 bd b4 55 65 ad f4 
+e3 d8 8d 1b 2e 53 25 34 94 e2 b9 12 7e cd ba be 
+d2 79 ca 74 1e 89 0b bd e5 48 b4 29 46 31 8f 98 
+02 87 66 88 d5 1b a0 59 0d db 6a 86 e7 95 6a 06 
+t=3 (AddRoundConstant):
+6a c5 70 f1 36 d4 22 d0 cb 29 77 34 a5 d1 dd 92 
+ca f5 bd 94 fb b7 96 9d f2 76 83 4e 91 3c de 23 
+38 ef fa b0 f0 4b a8 5b dd fb 39 43 39 67 76 bf 
+12 f3 36 c7 d5 c3 6d 72 b7 93 8a a2 9d aa 50 22 
+ca 77 b2 fc c7 01 8c 38 3b f2 bd b4 55 65 ad f4 
+e3 d8 8d 1b 2e 53 25 34 94 e2 b9 12 7e cd ba be 
+d2 79 ca 74 1e 89 0b bd e5 48 b4 29 46 31 8f 98 
+02 87 66 88 d5 1b a0 59 0d db 6a 86 e7 95 6a 06 
+t=3 (SubBytes):
+02 a6 51 a1 05 48 93 70 1f a5 f5 18 06 3e c1 4f 
+74 e6 7a 22 0f a9 90 5e 89 38 ec 2f 81 eb 1d 26 
+07 df 2d e7 8c b3 c2 39 c1 0f 12 1a 12 85 38 08 
+c9 0d 05 c6 03 2e 3c 40 a9 dc 7e 3a 5e ac 53 93 
+74 f5 37 b0 c6 7c 64 07 e2 89 7a 8d fc 4d 95 bf 
+11 61 5d af 31 ed 3f 18 22 98 56 c9 f3 bd f4 ae 
+b5 b6 74 92 72 a7 2b 7a d9 52 8d a5 5a c7 73 46 
+77 17 33 c4 03 af e0 cb d7 b9 02 44 94 2a 02 6f 
+t=3 (ShiftBytes):
+02 a6 51 a1 05 48 93 70 1f a5 f5 18 06 3e c1 4f 
+e6 7a 22 0f a9 90 5e 89 38 ec 2f 81 eb 1d 26 74 
+2d e7 8c b3 c2 39 c1 0f 12 1a 12 85 38 08 07 df 
+c6 03 2e 3c 40 a9 dc 7e 3a 5e ac 53 93 c9 0d 05 
+c6 7c 64 07 e2 89 7a 8d fc 4d 95 bf 74 f5 37 b0 
+ed 3f 18 22 98 56 c9 f3 bd f4 ae 11 61 5d af 31 
+2b 7a d9 52 8d a5 5a c7 73 46 b5 b6 74 92 72 a7 
+44 94 2a 02 6f 77 17 33 c4 03 af e0 cb d7 b9 02 
+t=3 (MixBytes):
+0e 03 50 0b 68 4a 01 f5 a3 f6 36 62 17 43 4a 0e 
+a1 2f 98 27 22 09 18 63 89 a0 cb a6 62 10 20 4f 
+c0 f0 9d bd 29 c8 c5 15 b5 57 31 98 0e e9 ac 94 
+59 45 a7 b6 6a 39 cd 1b e2 ee b5 7e bf 54 d5 c7 
+e6 b7 08 4b 12 e1 0e 1b fd 74 76 ce 83 17 d5 82 
+e0 58 2c 70 2a 5b e7 7f 52 42 6c 3d e8 53 53 ff 
+e3 bc d9 9c c7 0e 00 a0 9f eb a9 e6 1b 50 ca 1b 
+0e 6e ed 7c 37 c9 8a 5a 5d 3a 05 f5 9b eb 86 20 
+t=4 (AddRoundConstant):
+0a 17 74 3f 2c 1e 65 81 27 62 92 d6 d3 97 ae fa 
+a1 2f 98 27 22 09 18 63 89 a0 cb a6 62 10 20 4f 
+c0 f0 9d bd 29 c8 c5 15 b5 57 31 98 0e e9 ac 94 
+59 45 a7 b6 6a 39 cd 1b e2 ee b5 7e bf 54 d5 c7 
+e6 b7 08 4b 12 e1 0e 1b fd 74 76 ce 83 17 d5 82 
+e0 58 2c 70 2a 5b e7 7f 52 42 6c 3d e8 53 53 ff 
+e3 bc d9 9c c7 0e 00 a0 9f eb a9 e6 1b 50 ca 1b 
+0e 6e ed 7c 37 c9 8a 5a 5d 3a 05 f5 9b eb 86 20 
+t=4 (SubBytes):
+67 f0 92 75 71 72 4d 0c cc aa 4f f6 66 88 e4 2d 
+32 15 46 cc 93 01 ad fb a7 e0 1f 24 aa ca b7 84 
+ba 8c 5e 7a a5 e8 a6 59 d5 5b c7 46 ab 1e 91 22 
+cb 6e 5c 4e 02 12 bd af 98 28 d5 f3 08 20 03 c6 
+8e a9 30 b3 c9 f8 ab af 54 92 38 8b ec f0 03 13 
+e1 6a 71 51 e5 39 94 d2 00 2c 50 27 9b ed ed 16 
+11 65 35 de c6 ab 63 e0 db e9 d3 8e af 53 74 af 
+ab 9f 55 10 9a dd 7e be 4c 80 6b e6 14 e9 44 b7 
+t=4 (ShiftBytes):
+67 f0 92 75 71 72 4d 0c cc aa 4f f6 66 88 e4 2d 
+15 46 cc 93 01 ad fb a7 e0 1f 24 aa ca b7 84 32 
+5e 7a a5 e8 a6 59 d5 5b c7 46 ab 1e 91 22 ba 8c 
+4e 02 12 bd af 98 28 d5 f3 08 20 03 c6 cb 6e 5c 
+c9 f8 ab af 54 92 38 8b ec f0 03 13 8e a9 30 b3 
+39 94 d2 00 2c 50 27 9b ed ed 16 e1 6a 71 51 e5 
+63 e0 db e9 d3 8e af 53 74 af 11 65 35 de c6 ab 
+e6 14 e9 44 b7 ab 9f 55 10 9a dd 7e be 4c 80 6b 
+t=4 (MixBytes):
+de 42 6f b4 6a f8 d7 4a 79 64 f5 7a 16 c5 eb 9c 
+48 d8 0c 9f 17 c8 b8 97 37 66 66 b4 36 c0 6d dc 
+ca 20 f2 82 87 c6 1f 44 16 f7 ed b6 09 1f 3c 47 
+f3 92 0f 3a 6c f6 e6 c4 e8 c6 a5 65 35 55 52 b3 
+f8 e3 d7 01 b1 02 9e 65 2d e6 95 3a 65 48 1e 37 
+85 26 4f 1f 9e 4b e0 94 bb c8 ae 04 f7 04 39 e3 
+6c 80 dc 38 66 8c 8f 87 16 06 fe 04 9d cd 17 8e 
+87 97 27 7d 70 d5 cb 7e b7 75 55 c4 b4 71 76 05 
+t=5 (AddRoundConstant):
+db 57 4a 81 2f ad b2 3f fc f1 50 cf d3 10 0e 69 
+48 d8 0c 9f 17 c8 b8 97 37 66 66 b4 36 c0 6d dc 
+ca 20 f2 82 87 c6 1f 44 16 f7 ed b6 09 1f 3c 47 
+f3 92 0f 3a 6c f6 e6 c4 e8 c6 a5 65 35 55 52 b3 
+f8 e3 d7 01 b1 02 9e 65 2d e6 95 3a 65 48 1e 37 
+85 26 4f 1f 9e 4b e0 94 bb c8 ae 04 f7 04 39 e3 
+6c 80 dc 38 66 8c 8f 87 16 06 fe 04 9d cd 17 8e 
+87 97 27 7d 70 d5 cb 7e b7 75 55 c4 b4 71 76 05 
+t=5 (SubBytes):
+b9 5b d6 0c 15 95 37 75 b0 a1 53 8a 66 ca ab f9 
+52 61 fe db f0 e8 6c 88 9a 33 33 8d 05 ba 3c 86 
+74 b7 89 13 17 b4 c0 1b 47 68 55 4e 01 c0 eb a0 
+0d 4f 76 80 50 42 8e 1c 9b b4 06 4d 96 fc 00 6d 
+41 11 0e 7c c8 77 0b 4d d8 8e 2a 80 4d 52 72 9a 
+97 f7 84 c0 0b b3 e1 22 ea e8 e4 f2 68 f2 12 11 
+50 cd 86 07 33 64 73 17 47 6f bb f2 5e bd f0 19 
+17 88 cc ff 51 03 1f f3 a9 9d fc 1c 8d a3 38 6b 
+t=5 (ShiftBytes):
+b9 5b d6 0c 15 95 37 75 b0 a1 53 8a 66 ca ab f9 
+61 fe db f0 e8 6c 88 9a 33 33 8d 05 ba 3c 86 52 
+89 13 17 b4 c0 1b 47 68 55 4e 01 c0 eb a0 74 b7 
+80 50 42 8e 1c 9b b4 06 4d 96 fc 00 6d 0d 4f 76 
+c8 77 0b 4d d8 8e 2a 80 4d 52 72 9a 41 11 0e 7c 
+b3 e1 22 ea e8 e4 f2 68 f2 12 11 97 f7 84 c0 0b 
+73 17 47 6f bb f2 5e bd f0 19 50 cd 86 07 33 64 
+1c 8d a3 38 6b 17 88 cc ff 51 03 1f f3 a9 9d fc 
+t=5 (MixBytes):
+e6 72 75 0d 17 5b 6d 46 74 65 e9 b1 31 93 8d eb 
+ef 92 07 0c 3d 8f 04 4d 3b 3d c7 86 a6 a0 0d d3 
+7c 91 15 7c 6e e9 a6 9d da 11 b7 3e 6d d4 84 54 
+59 1a 74 ef 9a 91 de e4 4a 39 1d 15 0f 4c d3 9a 
+ed cd 6a e6 da 5d 56 c4 4e 10 75 5c 45 14 79 5d 
+eb 47 82 cb 23 db cf fe 72 27 38 2a 33 81 ad 11 
+60 99 b7 4e fb 15 15 4f 5e 17 9d cf ee 17 a1 09 
+1e 5d e8 ab 84 3e 5b 2f c0 96 61 0e dd 89 38 27 
+t=6 (AddRoundConstant):
+e0 64 53 3b 51 0d 0b 30 f2 f3 4f 07 f7 45 6b 1d 
+ef 92 07 0c 3d 8f 04 4d 3b 3d c7 86 a6 a0 0d d3 
+7c 91 15 7c 6e e9 a6 9d da 11 b7 3e 6d d4 84 54 
+59 1a 74 ef 9a 91 de e4 4a 39 1d 15 0f 4c d3 9a 
+ed cd 6a e6 da 5d 56 c4 4e 10 75 5c 45 14 79 5d 
+eb 47 82 cb 23 db cf fe 72 27 38 2a 33 81 ad 11 
+60 99 b7 4e fb 15 15 4f 5e 17 9d cf ee 17 a1 09 
+1e 5d e8 ab 84 3e 5b 2f c0 96 61 0e dd 89 38 27 
+t=6 (SubBytes):
+e1 43 ed e2 d1 d7 2b 04 89 0d 84 c5 68 6e 7f a4 
+df 4f c5 fe 27 73 f2 e3 e2 27 c6 44 24 e0 d7 66 
+10 81 59 10 9f 1e 24 5e 57 82 a9 b2 3c 48 5f 20 
+cb a2 92 df b8 81 1d 69 d6 12 a4 59 76 29 66 b8 
+55 bd 02 8e 57 4c b1 1c 2f ca 9d 4a 6e fa b6 4c 
+e9 a0 13 1f 26 b9 8a bb 40 cc 07 e5 c3 0c 95 82 
+d0 ee a9 2f 0f 59 59 84 58 f0 5e 8a 28 f0 32 01 
+72 4c 9b 62 5f b2 39 15 ba 90 ef ab c1 a7 07 cc 
+t=6 (ShiftBytes):
+e1 43 ed e2 d1 d7 2b 04 89 0d 84 c5 68 6e 7f a4 
+4f c5 fe 27 73 f2 e3 e2 27 c6 44 24 e0 d7 66 df 
+59 10 9f 1e 24 5e 57 82 a9 b2 3c 48 5f 20 10 81 
+df b8 81 1d 69 d6 12 a4 59 76 29 66 b8 cb a2 92 
+57 4c b1 1c 2f ca 9d 4a 6e fa b6 4c 55 bd 02 8e 
+b9 8a bb 40 cc 07 e5 c3 0c 95 82 e9 a0 13 1f 26 
+59 84 58 f0 5e 8a 28 f0 32 01 d0 ee a9 2f 0f 59 
+ab c1 a7 07 cc 72 4c 9b 62 5f b2 39 15 ba 90 ef 
+t=6 (MixBytes):
+67 c0 40 63 3f ca a6 3a ce 9b 30 11 8d da 79 67 
+31 70 99 f6 4a 0b 95 30 46 58 4f a0 4d 2a eb 65 
+42 42 47 9f 7e 1e cb 94 4b 5d c0 31 dd c5 2c 12 
+51 f1 37 e8 41 7a 77 5d 0a 4c f5 3f 9a f5 b4 80 
+22 7c 44 b4 bf 55 74 9c 5c c7 80 56 90 a0 7c 29 
+27 0e ae 73 ca f0 e6 f5 a4 bd e6 0a e4 1c ab 0f 
+ae 09 1e a2 4e ea 60 32 85 b1 14 66 ca 12 dd bd 
+b2 94 4e 30 c8 59 d5 fe 00 5b a6 59 53 d5 7b 91 
+t=7 (AddRoundConstant):
+60 d7 67 54 78 9d c1 4d 49 0c 97 a6 4a 0d 9e 90 
+31 70 99 f6 4a 0b 95 30 46 58 4f a0 4d 2a eb 65 
+42 42 47 9f 7e 1e cb 94 4b 5d c0 31 dd c5 2c 12 
+51 f1 37 e8 41 7a 77 5d 0a 4c f5 3f 9a f5 b4 80 
+22 7c 44 b4 bf 55 74 9c 5c c7 80 56 90 a0 7c 29 
+27 0e ae 73 ca f0 e6 f5 a4 bd e6 0a e4 1c ab 0f 
+ae 09 1e a2 4e ea 60 32 85 b1 14 66 ca 12 dd bd 
+b2 94 4e 30 c8 59 d5 fe 00 5b a6 59 53 d5 7b 91 
+t=7 (SubBytes):
+d0 0e 85 20 bc 5e 78 e3 3b fe 88 24 d6 d7 0b 60 
+c7 51 ee 42 d6 2b 2a 04 5a 6a 84 e0 e3 e5 e9 4d 
+2c 2c a0 db f3 72 1f 22 b3 4c ba c7 c1 a6 71 c9 
+d1 a1 9a 9b 83 da f5 4c 67 29 e6 75 b8 e6 8d cd 
+93 10 1b 8d 08 fc 92 de 4a c6 cd b1 60 e0 10 a5 
+cc ab e4 8f 74 8c 8e e6 49 7a 8e 67 69 9c 62 76 
+e4 01 72 3a 2f 87 d0 23 97 c8 fa 33 74 c9 c1 7a 
+37 22 2f 04 e8 cb 03 bb 63 39 24 cb ed 03 21 81 
+t=7 (ShiftBytes):
+d0 0e 85 20 bc 5e 78 e3 3b fe 88 24 d6 d7 0b 60 
+51 ee 42 d6 2b 2a 04 5a 6a 84 e0 e3 e5 e9 4d c7 
+a0 db f3 72 1f 22 b3 4c ba c7 c1 a6 71 c9 2c 2c 
+9b 83 da f5 4c 67 29 e6 75 b8 e6 8d cd d1 a1 9a 
+08 fc 92 de 4a c6 cd b1 60 e0 10 a5 93 10 1b 8d 
+8c 8e e6 49 7a 8e 67 69 9c 62 76 cc ab e4 8f 74 
+d0 23 97 c8 fa 33 74 c9 c1 7a e4 01 72 3a 2f 87 
+cb ed 03 21 81 37 22 2f 04 e8 cb 03 bb 63 39 24 
+t=7 (MixBytes):
+e5 25 f7 ea 5d 09 be fd 08 bc e9 22 4e d2 8b 3d 
+42 92 3a 72 b9 33 b2 75 88 2e ee 85 d7 98 4e d8 
+82 a8 c0 41 87 98 a2 56 5d 66 aa 94 0e c5 21 69 
+3d d1 ee a3 f1 79 b3 67 37 58 a5 65 99 f9 3f be 
+cd 39 05 6f dc de 42 18 f6 53 33 d1 50 6d 80 35 
+9f 23 d6 ef 69 3b b9 1f d7 ce 59 7e c5 9b 78 c2 
+03 a2 bb 16 36 35 fc 8b 96 5d a0 18 26 2b 8d 3d 
+26 7a 99 fd 9b 8c 34 42 af 53 c8 73 3f 2d 75 25 
+t=8 (AddRoundConstant):
+ed 3d df d2 15 51 d6 85 80 24 41 9a 86 0a 63 c5 
+42 92 3a 72 b9 33 b2 75 88 2e ee 85 d7 98 4e d8 
+82 a8 c0 41 87 98 a2 56 5d 66 aa 94 0e c5 21 69 
+3d d1 ee a3 f1 79 b3 67 37 58 a5 65 99 f9 3f be 
+cd 39 05 6f dc de 42 18 f6 53 33 d1 50 6d 80 35 
+9f 23 d6 ef 69 3b b9 1f d7 ce 59 7e c5 9b 78 c2 
+03 a2 bb 16 36 35 fc 8b 96 5d a0 18 26 2b 8d 3d 
+26 7a 99 fd 9b 8c 34 42 af 53 c8 73 3f 2d 75 25 
+t=8 (SubBytes):
+55 27 9e b5 59 d1 f6 97 cd 36 83 b8 44 67 fb a6 
+2c 4f 80 40 56 c3 37 9d c4 31 28 97 0e 46 2f 61 
+13 c2 ba 83 17 46 3a b1 4c 33 ac 22 ab a6 fd f9 
+27 3e 28 0a a1 b6 6d 85 9a 6a 06 4d ee 99 75 ae 
+bd 12 6b a8 86 1d 2c ad 42 ed c3 3e 53 3c cd 96 
+db 26 f6 df f9 e2 56 c0 0e 8b cb f3 a6 14 bc 25 
+7b 3a ea 47 05 96 b0 3d 90 4c e0 ad f7 f1 5d 27 
+f7 da ee 54 14 64 18 2c 79 ed e8 8f 75 d8 9d 3f 
+t=8 (ShiftBytes):
+55 27 9e b5 59 d1 f6 97 cd 36 83 b8 44 67 fb a6 
+4f 80 40 56 c3 37 9d c4 31 28 97 0e 46 2f 61 2c 
+ba 83 17 46 3a b1 4c 33 ac 22 ab a6 fd f9 13 c2 
+0a a1 b6 6d 85 9a 6a 06 4d ee 99 75 ae 27 3e 28 
+86 1d 2c ad 42 ed c3 3e 53 3c cd 96 bd 12 6b a8 
+e2 56 c0 0e 8b cb f3 a6 14 bc 25 db 26 f6 df f9 
+b0 3d 90 4c e0 ad f7 f1 5d 27 7b 3a ea 47 05 96 
+8f 75 d8 9d 3f f7 da ee 54 14 64 18 2c 79 ed e8 
+t=8 (MixBytes):
+9a 73 6f 1c 64 af 6b 78 9e 0b 8c 5d 28 73 e0 8a 
+78 97 fb 0e 93 1a 5d b4 48 18 a6 13 86 f4 33 82 
+6f 60 9e b7 ec 6b 7d 20 f1 b0 ed e3 7f 82 8d f2 
+d1 ac 10 65 d2 95 08 d1 a0 84 c0 81 19 09 21 15 
+90 cd 51 3b 52 18 f2 f1 77 a2 05 90 7e b1 99 cd 
+41 bd 63 a9 36 f5 25 e5 ad e8 af 95 9b 33 45 6f 
+ec 5e 52 c9 e4 c5 cd cd 0f ca 64 f7 18 9e a8 c5 
+69 97 0c 4e 1c ab a9 dc a7 04 a1 c0 21 c4 2d 59 
+t=9 (AddRoundConstant):
+93 6a 46 25 2d f6 02 01 17 92 25 e4 e1 aa 09 73 
+78 97 fb 0e 93 1a 5d b4 48 18 a6 13 86 f4 33 82 
+6f 60 9e b7 ec 6b 7d 20 f1 b0 ed e3 7f 82 8d f2 
+d1 ac 10 65 d2 95 08 d1 a0 84 c0 81 19 09 21 15 
+90 cd 51 3b 52 18 f2 f1 77 a2 05 90 7e b1 99 cd 
+41 bd 63 a9 36 f5 25 e5 ad e8 af 95 9b 33 45 6f 
+ec 5e 52 c9 e4 c5 cd cd 0f ca 64 f7 18 9e a8 c5 
+69 97 0c 4e 1c ab a9 dc a7 04 a1 c0 21 c4 2d 59 
+t=9 (SubBytes):
+dc 02 5a 3f d8 42 77 7c f0 4f 3f 69 f8 ac 01 8f 
+bc 88 0f ab dc a2 4c 8d 52 ad 24 7d 44 bf c3 13 
+a8 d0 0b a9 ce 7f ff b7 a1 e7 55 11 d2 13 5d 89 
+3e 91 ca 4d b5 2a 30 3e e0 5f ba 0c d4 01 fd 59 
+60 bd d1 e2 00 ad 89 a1 f5 3a 6b 60 f3 c8 ee bd 
+83 7a fb d3 05 e6 3f d9 95 9b 79 2a 14 c3 6e a8 
+ce 58 00 dd 69 a6 bd bd 76 74 43 68 ad 0b c2 a6 
+f9 88 fe 2f 9c 62 d3 86 5c f2 32 ba fd 1c d8 cb 
+t=9 (ShiftBytes):
+dc 02 5a 3f d8 42 77 7c f0 4f 3f 69 f8 ac 01 8f 
+88 0f ab dc a2 4c 8d 52 ad 24 7d 44 bf c3 13 bc 
+0b a9 ce 7f ff b7 a1 e7 55 11 d2 13 5d 89 a8 d0 
+4d b5 2a 30 3e e0 5f ba 0c d4 01 fd 59 3e 91 ca 
+00 ad 89 a1 f5 3a 6b 60 f3 c8 ee bd 60 bd d1 e2 
+e6 3f d9 95 9b 79 2a 14 c3 6e a8 83 7a fb d3 05 
+bd bd 76 74 43 68 ad 0b c2 a6 ce 58 00 dd 69 a6 
+ba fd 1c d8 cb f9 88 fe 2f 9c 62 d3 86 5c f2 32 
+t=9 (MixBytes):
+df cc 12 aa bf 20 68 9c 13 1e 9b 7b dc c4 5d d6 
+03 24 5d fc f1 e5 a0 22 d4 10 e8 97 50 0c b5 a2 
+87 6c de 29 03 72 60 46 78 52 d4 7d ef 5d dc df 
+dd d0 01 65 42 26 56 92 99 ec 19 5a ba fa 6f fd 
+08 3c 88 0d e4 b9 d1 1c 4e ab a2 75 53 ce 8e 4b 
+df e1 7a ec 9d 6f 14 a0 9d 73 d0 3c 27 94 38 47 
+13 d7 a7 42 4a 14 29 32 2b d3 57 25 91 a6 43 db 
+4c 00 b4 e5 db d5 b2 e9 ae ed 16 3d 46 b2 63 6f 
+t=10 (AddRoundConstant):
+d5 d6 38 90 f5 7a 02 e6 99 84 31 c1 16 1e b7 2c 
+03 24 5d fc f1 e5 a0 22 d4 10 e8 97 50 0c b5 a2 
+87 6c de 29 03 72 60 46 78 52 d4 7d ef 5d dc df 
+dd d0 01 65 42 26 56 92 99 ec 19 5a ba fa 6f fd 
+08 3c 88 0d e4 b9 d1 1c 4e ab a2 75 53 ce 8e 4b 
+df e1 7a ec 9d 6f 14 a0 9d 73 d0 3c 27 94 38 47 
+13 d7 a7 42 4a 14 29 32 2b d3 57 25 91 a6 43 db 
+4c 00 b4 e5 db d5 b2 e9 ae ed 16 3d 46 b2 63 6f 
+t=10 (SubBytes):
+03 f6 07 60 e6 da 77 8e ee 5f c7 78 47 72 a9 71 
+7b 36 4c b0 a1 d9 e0 93 48 ca 9b 88 53 fe d5 3a 
+17 50 1d a5 7b 40 d0 5a bc 00 48 ff df 4c 86 9e 
+c1 70 7c 4d 2c f7 b1 4f ee ce d4 be f4 2d a8 54 
+30 eb c4 d7 69 56 3e 9c 2f 62 3a 9d ed 8b 19 b3 
+9e f8 da ce 5e a8 fa e0 5e 8f 70 eb cc 22 07 a0 
+7d 0e 5c 2c d6 fa a5 23 f1 66 5b 3f 81 24 1a b9 
+29 63 8d d9 b9 03 37 1e e4 55 47 27 5a 37 fb a8 
+t=10 (ShiftBytes):
+03 f6 07 60 e6 da 77 8e ee 5f c7 78 47 72 a9 71 
+36 4c b0 a1 d9 e0 93 48 ca 9b 88 53 fe d5 3a 7b 
+1d a5 7b 40 d0 5a bc 00 48 ff df 4c 86 9e 17 50 
+4d 2c f7 b1 4f ee ce d4 be f4 2d a8 54 c1 70 7c 
+69 56 3e 9c 2f 62 3a 9d ed 8b 19 b3 30 eb c4 d7 
+a8 fa e0 5e 8f 70 eb cc 22 07 a0 9e f8 da ce 5e 
+a5 23 f1 66 5b 3f 81 24 1a b9 7d 0e 5c 2c d6 fa 
+27 5a 37 fb a8 29 63 8d d9 b9 03 37 1e e4 55 47 
+t=10 (MixBytes):
+a5 19 69 a1 72 72 6c 40 07 85 4d 57 3d cc 7c ba 
+46 79 cc c1 ad 82 a7 00 f7 f3 40 7d b5 b8 25 87 
+6e 8b 8b 67 fb bf 59 49 6a e3 96 1d bb ca 4d 7b 
+0a 74 85 69 a4 47 7a 38 3d a5 94 2f 8b 05 02 9e 
+35 41 dc 96 48 f0 8e 8e b8 5b da f0 51 cf 4f 5c 
+d0 04 10 94 bb 4d fd 6d 47 9e a7 43 43 49 77 bd 
+df 6e b6 fb fa 4e 7a 11 81 16 71 97 e2 b6 6b ad 
+d7 85 b4 26 87 7e 15 e6 a0 26 8d 4a 70 88 c2 a2 
+t=11 (AddRoundConstant):
+ae 02 42 9a 39 29 07 3b 8c 1e e6 ec f6 17 97 41 
+46 79 cc c1 ad 82 a7 00 f7 f3 40 7d b5 b8 25 87 
+6e 8b 8b 67 fb bf 59 49 6a e3 96 1d bb ca 4d 7b 
+0a 74 85 69 a4 47 7a 38 3d a5 94 2f 8b 05 02 9e 
+35 41 dc 96 48 f0 8e 8e b8 5b da f0 51 cf 4f 5c 
+d0 04 10 94 bb 4d fd 6d 47 9e a7 43 43 49 77 bd 
+df 6e b6 fb fa 4e 7a 11 81 16 71 97 e2 b6 6b ad 
+d7 85 b4 26 87 7e 15 e6 a0 26 8d 4a 70 88 c2 a2 
+t=11 (SubBytes):
+e4 77 2c b8 12 a5 c5 e2 64 72 8e ce 42 f0 88 83 
+5a b6 4b 78 95 13 5c 63 68 0d 09 ff d5 6c 3f 17 
+9f 3d 3d 85 0f 08 cb 3b 02 11 90 a4 ea 74 e3 21 
+67 92 97 f9 49 a0 da 07 27 06 22 15 3d 6b 77 0b 
+96 83 86 90 52 8c 19 19 6c 39 57 8c d1 8a 84 4a 
+70 f2 ca 22 ea e3 54 3c a0 0b 5c 1a 1a 3b f5 7a 
+9e 9f 4e 0f 2d 2f da 82 0c 47 a3 88 98 4e 7f 95 
+0e 97 8d f7 17 f3 59 8e e0 f7 5d d6 51 c4 25 3a 
+t=11 (ShiftBytes):
+e4 77 2c b8 12 a5 c5 e2 64 72 8e ce 42 f0 88 83 
+b6 4b 78 95 13 5c 63 68 0d 09 ff d5 6c 3f 17 5a 
+3d 85 0f 08 cb 3b 02 11 90 a4 ea 74 e3 21 9f 3d 
+f9 49 a0 da 07 27 06 22 15 3d 6b 77 0b 67 92 97 
+52 8c 19 19 6c 39 57 8c d1 8a 84 4a 96 83 86 90 
+e3 54 3c a0 0b 5c 1a 1a 3b f5 7a 70 f2 ca 22 ea 
+da 82 0c 47 a3 88 98 4e 7f 95 9e 9f 4e 0f 2d 2f 
+d6 51 c4 25 3a 0e 97 8d f7 17 f3 59 8e e0 f7 5d 
+t=11 (MixBytes):
+9e b5 60 3a 3d b5 71 f3 b3 f7 63 c5 51 38 45 5c 
+50 88 94 5b 7c 97 de 25 00 be 14 98 e6 da c6 92 
+4c 52 1a a5 6f 1c 3b 24 c3 05 e8 fb 25 bf 63 31 
+49 0e 3e cc 8d 9a 89 5c 77 b2 10 34 11 c8 c4 a1 
+f1 47 09 e6 68 b0 02 a3 ca 0d 40 ef 82 f9 74 bc 
+24 94 4c 53 50 6d d6 42 d3 a2 b5 56 e8 a3 a8 02 
+86 52 05 18 66 64 8b e4 53 81 8f b3 b9 c7 4e 24 
+e5 f6 aa c9 a8 17 79 84 c4 f1 50 af f6 79 99 49 
+t=12 (AddRoundConstant):
+92 a9 4c 06 71 e9 1d 8f 3f 6b cf 79 9d e4 a9 a0 
+50 88 94 5b 7c 97 de 25 00 be 14 98 e6 da c6 92 
+4c 52 1a a5 6f 1c 3b 24 c3 05 e8 fb 25 bf 63 31 
+49 0e 3e cc 8d 9a 89 5c 77 b2 10 34 11 c8 c4 a1 
+f1 47 09 e6 68 b0 02 a3 ca 0d 40 ef 82 f9 74 bc 
+24 94 4c 53 50 6d d6 42 d3 a2 b5 56 e8 a3 a8 02 
+86 52 05 18 66 64 8b e4 53 81 8f b3 b9 c7 4e 24 
+e5 f6 aa c9 a8 17 79 84 c4 f1 50 af f6 79 99 49 
+t=12 (SubBytes):
+4f d3 29 6f a3 1e a4 73 75 7f 8a b6 5e 69 d3 e0 
+53 c4 22 39 10 88 1d 3f 63 ae fa 46 8e 57 b4 4f 
+29 00 a2 06 a8 9c e2 36 2e 6b 9b 0f 3f 08 fb c7 
+3b ab b2 4b 5d b8 a7 4a f5 37 ca 18 82 e8 1c 32 
+a1 a0 01 8e 45 e7 77 0a 74 d7 09 df 13 99 92 65 
+36 22 29 ed 53 3c f6 2c 66 3a d5 b1 9b 0a c2 77 
+44 00 6b ad 33 43 3d 69 ed 0c 73 6d 56 c6 2f 36 
+d9 42 ac dd c2 f0 b6 5f 1c a1 53 79 42 b6 ee 3b 
+t=12 (ShiftBytes):
+4f d3 29 6f a3 1e a4 73 75 7f 8a b6 5e 69 d3 e0 
+c4 22 39 10 88 1d 3f 63 ae fa 46 8e 57 b4 4f 53 
+a2 06 a8 9c e2 36 2e 6b 9b 0f 3f 08 fb c7 29 00 
+4b 5d b8 a7 4a f5 37 ca 18 82 e8 1c 32 3b ab b2 
+45 e7 77 0a 74 d7 09 df 13 99 92 65 a1 a0 01 8e 
+3c f6 2c 66 3a d5 b1 9b 0a c2 77 36 22 29 ed 53 
+3d 69 ed 0c 73 6d 56 c6 2f 36 44 00 6b ad 33 43 
+79 42 b6 ee 3b d9 42 ac dd c2 f0 b6 5f 1c a1 53 
+t=12 (MixBytes):
+74 c8 8a e3 ac 9c a6 3a 8c 3e 93 87 e3 09 5e 00 
+e5 f8 1a 45 15 f2 e6 fc 89 02 55 25 09 14 13 36 
+b6 3d 9e 46 5a 01 b7 f3 32 6f c6 41 47 40 c6 ef 
+41 56 e3 b8 ca d6 58 e8 63 c7 06 89 f1 32 65 a1 
+83 c8 89 23 d5 a8 d2 c2 c0 d4 c3 e5 a7 d3 b6 b8 
+16 93 f2 8e e8 4f d0 2f 6e 39 c1 97 a6 12 1b b7 
+5b eb b0 0d f8 74 fb 2d 6e aa a7 dc 5c 56 ad a3 
+49 40 26 bd 78 b0 24 a7 5a 21 7d 84 98 d3 4e 9b 
+t=13 (AddRoundConstant):
+79 d5 a7 de e1 c1 cb 47 01 a3 3e 3a 2e d4 b3 fd 
+e5 f8 1a 45 15 f2 e6 fc 89 02 55 25 09 14 13 36 
+b6 3d 9e 46 5a 01 b7 f3 32 6f c6 41 47 40 c6 ef 
+41 56 e3 b8 ca d6 58 e8 63 c7 06 89 f1 32 65 a1 
+83 c8 89 23 d5 a8 d2 c2 c0 d4 c3 e5 a7 d3 b6 b8 
+16 93 f2 8e e8 4f d0 2f 6e 39 c1 97 a6 12 1b b7 
+5b eb b0 0d f8 74 fb 2d 6e aa a7 dc 5c 56 ad a3 
+49 40 26 bd 78 b0 24 a7 5a 21 7d 84 98 d3 4e 9b 
+t=13 (SubBytes):
+b6 03 5c 1d f8 78 1f a0 7c 0a b2 80 31 48 6d 54 
+d9 41 a2 6e 59 89 8e b0 a7 77 fc 3f 01 fa 7d 05 
+4e 27 0b 5a be 7c a9 0d 23 a8 b4 83 a0 09 b4 df 
+83 b1 11 6c 74 f6 6a 9b fb c6 6f a7 a1 23 4d 32 
+ec e8 a7 26 03 c2 b5 25 ba 48 2e d9 5c 66 4e 6c 
+47 dc 89 19 9b 84 70 15 9f 12 78 88 24 c9 af a9 
+39 e9 e7 d7 41 92 0f d8 9f ac 5c 86 4a b1 95 0a 
+3b 09 f7 7a bc e7 36 5c be fd ff 5f 46 66 2f 14 
+t=13 (ShiftBytes):
+b6 03 5c 1d f8 78 1f a0 7c 0a b2 80 31 48 6d 54 
+41 a2 6e 59 89 8e b0 a7 77 fc 3f 01 fa 7d 05 d9 
+0b 5a be 7c a9 0d 23 a8 b4 83 a0 09 b4 df 4e 27 
+6c 74 f6 6a 9b fb c6 6f a7 a1 23 4d 32 83 b1 11 
+03 c2 b5 25 ba 48 2e d9 5c 66 4e 6c ec e8 a7 26 
+84 70 15 9f 12 78 88 24 c9 af a9 47 dc 89 19 9b 
+0f d8 9f ac 5c 86 4a b1 95 0a 39 e9 e7 d7 41 92 
+5f 46 66 2f 14 3b 09 f7 7a bc e7 36 5c be fd ff 
+t=13 (MixBytes):
+6e 57 dc 53 51 d3 46 06 86 ef a5 c1 55 7e 4d 03 
+88 c6 c9 9a 0c 86 e4 d1 86 f2 76 4f 44 26 76 b9 
+bb c9 59 af 55 35 89 7a 7b 79 43 b0 f2 ed e8 8c 
+e3 6b 28 5f a1 27 d8 6c 53 b6 cb 4d 13 36 6b 11 
+c0 83 63 24 9d f9 ce 14 62 9f dd ce 15 b0 e7 be 
+8f b8 ff e3 dc 1f e2 9a 28 23 91 48 e6 a1 db 1d 
+53 85 e3 2d 06 c8 ac 3e 58 70 fa c9 ac 02 27 b5 
+6b 73 7e 6e 10 e5 99 fc 9c f8 b4 6f fe 33 07 8c 
+:: END P
+
+P(h) + h =
+5d ef 5f 26 7b c4 ef 07 9f 52 a8 56 72 6c 98 62 
+e3 3e 6e a4 0b 8c c6 50 08 0e 2b 24 e6 4f a9 99 
+53 55 87 98 fc 9f e2 ba 67 7b 61 50 39 84 93 e4 
+8e 72 bf dd ce 7f 0d 85 f9 60 e2 46 1f cd 36 13 
+f1 4a 20 eb 96 b1 2e be 41 b6 c5 6f 82 d7 d3 9d 
+e7 bf 69 46 5c 59 52 5a b5 e6 dd 6a 9d 61 30 3d 
+21 8a d2 e4 01 ac 94 28 f3 15 81 80 ea 5e b7 ef 
+38 99 72 4a f5 51 73 7f f2 ec 0f fd 65 20 22 75 
+
+----------------------------------------
+
+Message Digest is
+9f0867f941b5f3f2520e7b60b6e615eca82b61e2c5dd810f562450466f6a80fd72e6391f829dea656c4f84cdd7615e2098a99336d330b7226299e4139d3def75

@@ -1,0 +1,7 @@
+# ExtremelyLongMsgKAT_384.txt
+# Algorithm Name: Groestl
+# Principal Submitter: Lars Ramkilde Knudsen
+
+Repeat = 16777216
+Text = abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmno
+MD = 742C6BBDA24B3DD7F41799B7565A1189E03B406DCF4C4697C3FBA3B7DEA1F65A7F15CAEA841C3FE1B252893D3F918066
