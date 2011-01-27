@@ -238,6 +238,30 @@ def single_round(data, round)
   return b
 end
 
+def next_rc(data)
+  a = Array.new
+=begin
+  printf("\n== rc round ==\n\t")
+  4.times do |y|
+    8.times do |x|
+      printf("%02X ", data[8*y+x])
+    end
+    print("\n\t")
+  end
+=end
+  32.times do |idx| 
+    x,y=split_byte($lutbox[0][data[idx]])
+    a << x << y
+#    if(x==nil)or(y==nil)
+#      printf("DBG: idx=%2d, x=%2x, y=%2x", idx, x, y)
+#    end
+  end 
+  a = permutation(a, 6)
+  b = Array.new
+  32.times {|idx| b << join_nibbles(a[2*idx],a[2*idx+1])}
+  return b
+end
+
 def encrypt(data)
 =begin  
   print("\n== ENCRYPT ==\n")
@@ -345,3 +369,20 @@ end
 #=end
 puts("")
 
+c0 = [  0x6a, 0x09, 0xe6, 0x67, 0xf3, 0xbc, 0xc9, 0x08, 
+        0xb2, 0xfb, 0x13, 0x66, 0xea, 0x95, 0x7d, 0x3e, 
+        0x3a, 0xde, 0xc1, 0x75, 0x12, 0x77, 0x50, 0x99, 
+        0xda, 0x2f, 0x59, 0x0b, 0x06, 0x67, 0x32, 0x2a ]
+
+rc = c0
+42.times do |i|
+  printf("/* C_%02d: */\n", i)
+  4.times do |y|
+    printf("\t")
+    8.times do |x|
+      printf("0x%02x, ", rc[y*8+x])
+    end
+    printf("\n")
+  end
+  rc = next_rc(rc)
+end

@@ -119,20 +119,10 @@ void jh_encrypt(uint8_t* a){
 	cli_hexdump_block(a, 128, 4, 16);
 #endif
 	group(a);
-	for(i=0;i<35;++i){
+	for(i=0;i<42;++i){
 		jh_round(a, i);
 	}
-	uint8_t r=0;
-	uint8_t *pr;
 
-	pr = jh_round_const + 32*35;
-	for(i=0; i<128; ++i){
-		if(i%4==0){
-			r = pgm_read_byte(pr++);
-		}
-		a[i]=jh_l_inv(pgm_read_byte(&(jh_lutbox[((r&0xC0)<<2)|a[i]])));
-		r<<=2;
-	}
 	/* degrouping */
 #if DEBUG
 	cli_putstr_P(PSTR("\r\n== pre degroup ==\r\n"));

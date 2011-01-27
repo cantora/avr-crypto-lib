@@ -31,37 +31,37 @@
 #include "blake_small.h"
 
 
-static const char blake28_str[]   PROGMEM = "Blake-28";
-static const char blake32_str[]   PROGMEM = "Blake-32";
+static const char blake224_str[]   PROGMEM = "Blake-224";
+static const char blake256_str[]   PROGMEM = "Blake-256";
 
-const hfdesc_t blake28_desc PROGMEM = {
+const hfdesc_t blake224_desc PROGMEM = {
 	HFDESC_TYPE_HASHFUNCTION,
 	0,
-	blake28_str,
-	sizeof(blake28_ctx_t),
-	BLAKE28_BLOCKSIZE,
+	blake224_str,
+	sizeof(blake224_ctx_t),
+	BLAKE224_BLOCKSIZE,
 	224,
-	(hf_init_fpt)blake28_init,
+	(hf_init_fpt)blake224_init,
 	(hf_nextBlock_fpt)blake_small_nextBlock,
 	(hf_lastBlock_fpt)blake_small_lastBlock,
-	(hf_ctx2hash_fpt)blake28_ctx2hash,
+	(hf_ctx2hash_fpt)blake224_ctx2hash,
 	(hf_free_fpt)NULL,
-	(hf_mem_fpt)blake28
+	(hf_mem_fpt)blake224
 };
 
-const hfdesc_t blake32_desc PROGMEM = {
+const hfdesc_t blake256_desc PROGMEM = {
 	HFDESC_TYPE_HASHFUNCTION,
 	0,
-	blake32_str,
-	sizeof(blake32_ctx_t),
-	BLAKE32_BLOCKSIZE,
+	blake256_str,
+	sizeof(blake256_ctx_t),
+	BLAKE256_BLOCKSIZE,
 	256,
-	(hf_init_fpt)blake32_init,
+	(hf_init_fpt)blake256_init,
 	(hf_nextBlock_fpt)blake_small_nextBlock,
 	(hf_lastBlock_fpt)blake_small_lastBlock,
-	(hf_ctx2hash_fpt)blake32_ctx2hash,
+	(hf_ctx2hash_fpt)blake256_ctx2hash,
 	(hf_free_fpt)NULL,
-	(hf_mem_fpt)blake32
+	(hf_mem_fpt)blake256
 };
 
 

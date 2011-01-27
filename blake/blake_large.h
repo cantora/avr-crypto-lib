@@ -31,10 +31,10 @@
 
 #define BLAKE_LARGE_BLOCKSIZE   1024
 #define BLAKE_LARGE_BLOCKSIZE_B ((BLAKE_LARGE_BLOCKSIZE+7)/8)
-#define BLAKE48_BLOCKSIZE      BLAKE_LARGE_BLOCKSIZE
-#define BLAKE48_BLOCKSIZE_B    BLAKE_LARGE_BLOCKSIZE_B
-#define BLAKE64_BLOCKSIZE      BLAKE_LARGE_BLOCKSIZE
-#define BLAKE64_BLOCKSIZE_B    BLAKE_LARGE_BLOCKSIZE_B
+#define BLAKE384_BLOCKSIZE      BLAKE_LARGE_BLOCKSIZE
+#define BLAKE384_BLOCKSIZE_B    BLAKE_LARGE_BLOCKSIZE_B
+#define BLAKE512_BLOCKSIZE      BLAKE_LARGE_BLOCKSIZE
+#define BLAKE512_BLOCKSIZE_B    BLAKE_LARGE_BLOCKSIZE_B
 
 typedef struct {
 	uint64_t h[8];
@@ -43,25 +43,25 @@ typedef struct {
 	uint8_t  appendone;
 } blake_large_ctx_t;
 
-typedef blake_large_ctx_t blake48_ctx_t;
-typedef blake_large_ctx_t blake64_ctx_t;
+typedef blake_large_ctx_t blake384_ctx_t;
+typedef blake_large_ctx_t blake512_ctx_t;
 
-void blake48_init(blake48_ctx_t* ctx);
-void blake64_init(blake64_ctx_t* ctx);
+void blake384_init(blake384_ctx_t* ctx);
+void blake512_init(blake512_ctx_t* ctx);
 
 void blake_large_nextBlock(blake_large_ctx_t* ctx, const void* block);
 void blake_large_lastBlock(blake_large_ctx_t* ctx, const void* block, uint16_t length_b);
 
-void blake48_nextBlock(blake48_ctx_t* ctx, const void* block);
-void blake48_lastBlock(blake48_ctx_t* ctx, const void* block, uint16_t length_b);
+void blake384_nextBlock(blake384_ctx_t* ctx, const void* block);
+void blake384_lastBlock(blake384_ctx_t* ctx, const void* block, uint16_t length_b);
 
-void blake64_nextBlock(blake64_ctx_t* ctx, const void* block);
-void blake64_lastBlock(blake64_ctx_t* ctx, const void* block, uint16_t length_b);
+void blake512_nextBlock(blake512_ctx_t* ctx, const void* block);
+void blake512_lastBlock(blake512_ctx_t* ctx, const void* block, uint16_t length_b);
 
-void blake48_ctx2hash(void* dest, const blake48_ctx_t* ctx);
-void blake64_ctx2hash(void* dest, const blake64_ctx_t* ctx);
+void blake384_ctx2hash(void* dest, const blake384_ctx_t* ctx);
+void blake512_ctx2hash(void* dest, const blake512_ctx_t* ctx);
 
-void blake48(void* dest, const void* msg, uint32_t length_b);
-void blake64(void* dest, const void* msg, uint32_t length_b);
+void blake384(void* dest, const void* msg, uint32_t length_b);
+void blake512(void* dest, const void* msg, uint32_t length_b);
 
 #endif /* BLAKE_LARGE_H_ */

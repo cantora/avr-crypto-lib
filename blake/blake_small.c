@@ -72,17 +72,20 @@ void blake_small_changeendian(void* dest, const void* src){
 static
 void blake_small_compress(uint32_t* v,const void* m){
 	uint8_t r,i;
-	uint8_t a,b,c,d, s0, s1;
+	uint8_t a,b,c,d, s0, s1, sigma_idx=0;
 	uint32_t lv[4];
-	for(r=0; r<10; ++r){
+	for(r=0; r<14; ++r){
 		for(i=0; i<8; ++i){
 			a = pgm_read_byte(blake_index_lut+4*i+0);
 			b = pgm_read_byte(blake_index_lut+4*i+1);
 			c = pgm_read_byte(blake_index_lut+4*i+2);
 			d = pgm_read_byte(blake_index_lut+4*i+3);
-			s0 = pgm_read_byte(blake_sigma+16*r+2*i+0);
-			s1 = pgm_read_byte(blake_sigma+16*r+2*i+1);
-
+			s0 = pgm_read_byte(blake_sigma+sigma_idx);
+			s1 = s0&0xf;
+			s0 >>= 4;++sigma_idx;
+			if(sigma_idx>=80){
+				sigma_idx-=80;
+			}
 			lv[0] = v[a];
 			lv[1] = v[b];
 			lv[2] = v[c];
@@ -176,90 +179,90 @@ void blake_small_lastBlock(blake_small_ctx_t* ctx, const void* msg, uint16_t len
 
 }
 
-uint32_t blake32_iv[] PROGMEM = {
+uint32_t blake256_iv[] PROGMEM = {
 	0x6A09E667L, 0xBB67AE85,
 	0x3C6EF372L, 0xA54FF53A,
 	0x510E527FL, 0x9B05688C,
 	0x1F83D9ABL, 0x5BE0CD19
 };
 
-void blake32_init(blake32_ctx_t* ctx){
+void blake256_init(blake256_ctx_t* ctx){
 	uint8_t i;
 	for(i=0; i<8; ++i){
-		ctx->h[i] = pgm_read_dword(&(blake32_iv[i]));
+		ctx->h[i] = pgm_read_dword(&(blake256_iv[i]));
 	}
 	memset(ctx->s, 0, 4*4);
 	ctx->counter = 0;
 	ctx->appendone = 1;
 }
 
-uint32_t blake28_iv[] PROGMEM = {
+uint32_t blake224_iv[] PROGMEM = {
 	0xC1059ED8, 0x367CD507,
 	0x3070DD17, 0xF70E5939,
 	0xFFC00B31, 0x68581511,
 	0x64F98FA7, 0xBEFA4FA4
 };
 
-void blake28_init(blake28_ctx_t* ctx){
+void blake224_init(blake224_ctx_t* ctx){
 	uint8_t i;
 	for(i=0; i<8; ++i){
-		ctx->h[i] = pgm_read_dword(&(blake28_iv[i]));
+		ctx->h[i] = pgm_read_dword(&(blake224_iv[i]));
 	}
 	memset(ctx->s, 0, 4*4);
 	ctx->counter = 0;
 	ctx->appendone = 0;
 }
 
-void blake32_ctx2hash(void* dest, const blake32_ctx_t* ctx){
+void blake256_ctx2hash(void* dest, const blake256_ctx_t* ctx){
 	uint8_t i;
 	for(i=0; i<8; ++i){
 		((uint32_t*)dest)[i] = CHANGE_ENDIAN32(ctx->h[i]);
 	}
 }
 
-void blake28_ctx2hash(void* dest, const blake28_ctx_t* ctx){
+void blake224_ctx2hash(void* dest, const blake224_ctx_t* ctx){
 	uint8_t i;
 	for(i=0; i<7; ++i){
 		((uint32_t*)dest)[i] = CHANGE_ENDIAN32(ctx->h[i]);
 	}
 }
 
-void blake32_nextBlock(blake32_ctx_t* ctx, const void* block){
+void blake256_nextBlock(blake256_ctx_t* ctx, const void* block){
 	blake_small_nextBlock(ctx, block);
 }
 
-void blake28_nextBlock(blake28_ctx_t* ctx, const void* block){
+void blake224_nextBlock(blake224_ctx_t* ctx, const void* block){
 	blake_small_nextBlock(ctx, block);
 }
 
-void blake32_lastBlock(blake32_ctx_t* ctx, const void* block, uint16_t length_b){
+void blake256_lastBlock(blake256_ctx_t* ctx, const void* block, uint16_t length_b){
 	blake_small_lastBlock(ctx, block, length_b);
 }
 
-void blake28_lastBlock(blake28_ctx_t* ctx, const void* block, uint16_t length_b){
+void blake224_lastBlock(blake224_ctx_t* ctx, const void* block, uint16_t length_b){
 	blake_small_lastBlock(ctx, block, length_b);
 }
 
-void blake32(void* dest, const void* msg, uint32_t length_b){
+void blake256(void* dest, const void* msg, uint32_t length_b){
 	blake_small_ctx_t ctx;
-	blake32_init(&ctx);
+	blake256_init(&ctx);
 	while(length_b>=BLAKE_SMALL_BLOCKSIZE){
 		blake_small_nextBlock(&ctx, msg);
 		msg = (uint8_t*)msg + BLAKE_SMALL_BLOCKSIZE_B;
 		length_b -= BLAKE_SMALL_BLOCKSIZE;
 	}
 	blake_small_lastBlock(&ctx, msg, length_b);
-	blake32_ctx2hash(dest, &ctx);
+	blake256_ctx2hash(dest, &ctx);
 }
 
-void blake28(void* dest, const void* msg, uint32_t length_b){
+void blake224(void* dest, const void* msg, uint32_t length_b){
 	blake_small_ctx_t ctx;
-	blake28_init(&ctx);
+	blake224_init(&ctx);
 	while(length_b>=BLAKE_SMALL_BLOCKSIZE){
 		blake_small_nextBlock(&ctx, msg);
 		msg = (uint8_t*)msg + BLAKE_SMALL_BLOCKSIZE_B;
 		length_b -= BLAKE_SMALL_BLOCKSIZE;
 	}
 	blake_small_lastBlock(&ctx, msg, length_b);
-	blake28_ctx2hash(dest, &ctx);
+	blake224_ctx2hash(dest, &ctx);
 }

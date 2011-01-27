@@ -150,21 +150,11 @@ void jh_encrypt(uint8_t* a){
 	for(i=0;i<32;++i){
 		rc[i] = pgm_read_byte(&(round_const_0[i]));
 	}
-	for(i=0;i<35;++i){
+	for(i=0;i<42;++i){
 		jh_round(a, rc);
 		jh_next_round_const(rc);
 	}
-	uint8_t r=0,x,y;
 
-	for(i=0; i<128; ++i){
-		if(i%4==0){
-			r = rc[i/4];
-		}
-		x = pgm_read_byte(((r&0x80)?sbox1:sbox0)+(a[i]>>4));
-		y = pgm_read_byte(((r&0x40)?sbox1:sbox0)+(a[i]&0xf));
-		a[i]=(x<<4)|y;
-		r<<=2;
-	}
 	/* degrouping */
 #if DEBUG
 	cli_putstr_P(PSTR("\r\n== pre degroup ==\r\n"));
