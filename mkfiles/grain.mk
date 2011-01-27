@@ -10,4 +10,4 @@ $(ALGO_NAME)_INCDIR   := memxor/ scal/
 $(ALGO_NAME)_TEST_BIN := main-grain-test.o $(CLI_STD) $(SCAL_STD) scal_grain.o
 $(ALGO_NAME)_NESSIE_TEST      := "nessie"
 $(ALGO_NAME)_PERFORMANCE_TEST := "performance"
-
+$(ALGO_NAME)_DEF := NESSIE_ESTREAM=1

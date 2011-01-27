@@ -65,30 +65,72 @@ static uint8_t matrix[] PROGMEM = {
  2, 3, 4, 5, 3, 5, 7, 2
 };
 
+
+static const uint8_t p_shifts[] PROGMEM = {
+		0, 1, 2, 3, 4, 5, 6, 7
+};
+
+static const uint8_t q_shifts[] PROGMEM = {
+		1, 3, 5, 7, 0, 2, 4, 6
+};
+
+
+static
+void shift_columns(uint8_t *a, PGM_VOID_P shifts){
+	uint8_t s;
+	uint8_t tmp[8];
+	uint8_t i,j;
+	for(i=0; i<8; ++i){
+		s = pgm_read_byte(shifts);
+		shifts = (uint8_t*)shifts + 1;
+		if(s==0){
+			continue;
+		}
+		for(j=0;j<8;++j){
+			tmp[j] = a[i+j*8];
+		}
+		for(j=0; j<8; ++j){
+			a[i+((j-s+8)%8)*8] = tmp[j];
+		}
+	}
+}
+
+
+
 void groestl_small_rounds(uint8_t *m, uint8_t q){
 	uint8_t r,i,j;
 	uint8_t tmp[8];
+#if DEBUG
+	cli_putstr_P(PSTR("\r\n:: BEGIN "));
+	cli_putc(q?'Q':'P');
+#endif
+
 	for(r=0; r<ROUNDS; ++r){
 		if(q){
-			m[7] ^= 0xff ^ r;
+			for(i=0; i<8*8; ++i){
+				m[i] ^= 0xff;
+			}
+			for(i=0; i<8; ++i){
+				m[7+i*8] ^=  r ^ (i<<4);
+			}
 		}else{
-			m[0] ^= r;
+			for(i=0; i<8; ++i){
+				m[i*8] ^= r ^ (i<<4);
+			}
 		}
 #if DEBUG
-		if(r<2){
+	//	if(r<2){
 			cli_putstr_P(PSTR("\r\npost add-const"));
 			dump_m(m);
-		}
+	//	}
 #endif
 		for(i=0;i<8*8; ++i){
 			m[i] = pgm_read_byte(aes_sbox+m[i]);
 		}
-		for(i=1; i<8; ++i){
-			for(j=0; j<8; ++j)
-				tmp[j] = m[i+8*j];
-			for(j=0; j<8; ++j){
-				m[i+((j-i+8)%8)*8] = tmp[j];
-			}
+		if(!q){
+			shift_columns(m, p_shifts);
+		}else{
+			shift_columns(m, q_shifts);
 		}
 #if DEBUG
 		if(r<2){

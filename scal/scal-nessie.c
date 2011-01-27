@@ -25,6 +25,11 @@
 #include "memxor.h"
 #include <avr/pgmspace.h>
 
+#ifndef NESSIE_ESTREAM
+#define NESSIE_ESTREAM 0
+#endif
+
+
 static const uint8_t normal_hooks[] PROGMEM = {
 		0, 192/64, 256/64, 448/64
 };
@@ -37,7 +42,12 @@ static const char stream0_n[] PROGMEM = "stream[0..63]";
 static const char stream1_n[] PROGMEM = "stream[192..255]";
 static const char stream2_n[] PROGMEM = "stream[256..319]";
 static const char stream3_n[] PROGMEM = "stream[448..511]";
+
+#if NESSIE_ESTREAM
+static const char streamX_n[] PROGMEM = "xor-digest";
+#else
 static const char streamX_n[] PROGMEM = "stream[0..511]xored";
+#endif
 
 static const char* stream_n_str[] PROGMEM = {
 		stream0_n,
@@ -50,7 +60,11 @@ static const char* stream_n_str[] PROGMEM = {
 static const char stream1_l[] PROGMEM = "stream[65472..65535]";
 static const char stream2_l[] PROGMEM = "stream[65536..65599]";
 static const char stream3_l[] PROGMEM = "stream[131008..131071]";
+#if NESSIE_ESTREAM
+static const char streamX_l[] PROGMEM = "xor-digest";
+#else
 static const char streamX_l[] PROGMEM = "stream[0..131071]xored";
+#endif
 
 static const char* stream_l_str[] PROGMEM = {
 		stream0_n,
@@ -141,7 +155,11 @@ void scal_nessie_stream_run(const scdesc_t *desc, uint16_t keysize_b, uint16_t i
 	memset(key, 0, (keysize_b+7)/8);
 	/***  Test SET 1 ***/
 	nessie_print_setheader(1);
+#if NESSIE_ESTREAM
+	for(v=0;v<keysize_b; v+=9){
+#else
 	for(v=0;v<keysize_b; ++v){
+#endif
 		nessie_print_set_vector(1,v);
 		key[v/8] |= 0x80>>(v&7);
 		nessie_print_item("key", key, (keysize_b+7)/8);
@@ -155,7 +173,11 @@ void scal_nessie_stream_run(const scdesc_t *desc, uint16_t keysize_b, uint16_t i
 	}
 	/***  Test SET 2 ***/
 	nessie_print_setheader(2);
+#if NESSIE_ESTREAM
+	for(v=0;v<256; v+=9){
+#else
 	for(v=0;v<256; ++v){
+#endif
 		nessie_print_set_vector(2,v);
 		memset(key, v&0xff, (keysize_b+7)/8);
 		nessie_print_item("key", key, (keysize_b+7)/8);
@@ -168,7 +190,11 @@ void scal_nessie_stream_run(const scdesc_t *desc, uint16_t keysize_b, uint16_t i
 	}
 	/***  Test SET 3 ***/
 	nessie_print_setheader(3);
+#if NESSIE_ESTREAM
+	for(v=0;v<256; v+=9){
+#else
 	for(v=0;v<256; ++v){
+#endif
 		uint8_t i;
 		nessie_print_set_vector(3,v);
 		for(i=0; i<((keysize_b+7)/8); ++i){
@@ -205,7 +231,11 @@ void scal_nessie_stream_run(const scdesc_t *desc, uint16_t keysize_b, uint16_t i
 	/***  Test SET 5 ***/
 	nessie_print_setheader(5);
 	memset(key, 0, (keysize_b+7)/8);
+#if NESSIE_ESTREAM
+	for(v=0;v<ivsize_b; v+=9){
+#else
 	for(v=0;v<ivsize_b; ++v){
+#endif
 		nessie_print_set_vector(5,v);
 		iv[v/8] |= 0x80>>(v&7);
 		nessie_print_item("key", key, (keysize_b+7)/8);
@@ -233,6 +263,7 @@ void scal_nessie_stream_run(const scdesc_t *desc, uint16_t keysize_b, uint16_t i
 		scal_cipher_free(&ctx);
 	}
 	/***  Test SET 7 ***/
+#if !NESSIE_ESTREAM
 	nessie_print_setheader(7);
 	uint8_t u;
 	for(v=0;v<3; ++v){
@@ -252,6 +283,7 @@ void scal_nessie_stream_run(const scdesc_t *desc, uint16_t keysize_b, uint16_t i
 		long_block(&ctx);
 		scal_cipher_free(&ctx);
 	}
+#endif
 	nessie_print_footer();
 }
 
