@@ -1,7 +1,7 @@
-# Makefile for Grøstl
+# Makefile for JH
 ALGO_NAME := JH_SIMPLE_SMALL_C
 
-# comment out the following line for removement of Grøstl from the build process
+# comment out the following line for removement of JH from the build process
 HASHES += $(ALGO_NAME)
 
 $(ALGO_NAME)_DIR      := jh/

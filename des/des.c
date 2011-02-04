@@ -380,9 +380,9 @@ void tdes_enc(void* out, void* in, const void* key){
 /******************************************************************************/
 
 void tdes_dec(void* out, void* in, const uint8_t* key){
-	des_dec(out,  in, (uint8_t*)key + 0);
+	des_dec(out,  in, (uint8_t*)key +16);
 	des_enc(out, out, (uint8_t*)key + 8);
-	des_dec(out, out, (uint8_t*)key +16);
+	des_dec(out, out, (uint8_t*)key + 0);
 }
 
 /******************************************************************************/
