@@ -1,0 +1,87 @@
+@c acl_hashes.texi
+
+@section Hash functions
+ A hash function is an algorithm to map an arbitrary long message (in the form
+ of a bit string) to a fixed length message digest or hash value.
+ The hash function aims to be collision free, which means that it is not 
+ practicable to find two messages with the same hash value (although this 
+ collision must exist). Also it should not be practicable to construct a 
+ message which maps to a given hash value.
+ 
+@subsection List of available hash functions
+ The following hash functions are currently implemented:
+@itemize @bullet 
+  @item Blake
+  @item BlueMidnightWish
+  @item CubeHash
+  @item Echo
+  @item Grøstl
+  @item Keccak
+  @item MD5
+  @item SHA-256
+  @item SHA-1
+  @item Shabal
+  @item Skein 
+@end itemize 
+
+@subsection High frequent parameters:
+@table @asis
+  @item block size 
+  512 bits
+  @item hash value size
+  128 bits, 160 bits, 224 bits, 256 bits, 384 bits, 512 bits
+@end table
+
+
+@subsection Parts of a hash function 
+@itemize @bullet  
+  @item initialization function 
+  @item compression algorithm
+  @item finalization function
+@end itemize 
+
+@subsection hash function API
+ The API is not always consistent due to the fact that we tried to optimize the
+ code for size (flash, heap and stack) and speed (runtime of the different 
+ components).
+ Generally the API of the implemented block ciphers consists of:
+@table @code
+ @item *_init
+ function, which implements the initialisation of the context
+ @item *_nextBlock 
+ function, which implements the compression algorithm
+ @item *_lastBlock 
+ function, which implements the the padding algorithm
+ @item *_ctx2hash  
+ function, which turns a context into an actual hash value
+ @item *_ctx_t
+ context type, which can contains the state of a hashing process
+@end table
+
+@subsubsection @code{*_init} function
+ The @code{*_init} function generally takes a pointer to the context as parameter.
+ This function initializes the context with algorithm specific values.
+ 
+@subsubsection @code{*_nextBlock} function
+ The @code{*_nextBlock} function is the core of each hash function. It updates the hash 
+ state with a given message block. So this function uses a context pointer and 
+ a message pointer as parameters. The size of a message block is fixed for each
+ hash function (mostly 512 bit). For the last block of a messages which may be
+ smaller than the blocksize you have to use the @code{*_lastBlock} function described
+ below.
+ 
+@subsubsection @code{*_lastBlock} function
+ The @code{*_lastBlock} function finalizes the context with the last bits of a 
+ message. Since the last block is not required to have the blocksize you have
+ to specify the length of the last block (normally in bits). This function
+ performs the padding and final processing.
+
+@subsubsection @code{*_ctx2hash} function
+ The @code{*_ctx2hash} function turns a given hash context into an actual hash value.
+ If multiple sized hash value may be created from a context it is necessary to
+ give the the size of the hash value as parameter. 
+ 
+
+@subsection Hash function abstraction layer (HFAL)
+
+
