@@ -6,7 +6,7 @@
 
 @copying
 This is a short example of a complete Texinfo file.
-Copyright © 2011 Daniel Otte
+Copyright © 2011 Daniel Otte (@email{daniel.otte@@rub.de})
 @end copying
 
 @titlepage
@@ -255,8 +255,81 @@ typedef struct {
  that the chosen keysize is valid
 @end table
 
+@subsubsection BCAL-Basic context
+Besides the context types for individual ciphers there is a generic context
+type for BCAL. This is the context to use when using BCAL based functions.
+The BCAL context has the following structure:
+@verbatim
+typedef struct{
+	bcdesc_t* desc_ptr;
+	uint16_t  keysize;
+	void*     ctx;
+} bcgen_ctx_t;
+@end verbatim
+@table @code
+@item desc_ptr
+a pointer to the BCAL descriptor
+@item keysize
+the chosen keysize
+@item ctx
+pointer to the cipher specific context
+@end table
 
 
+
+@subsubsection BCAL-Basic
+BCAL-Basic provides the basic features of an block cipher on top of the
+BCAL. To use it you simply have to include the algorithms you want to use,
+the BCAL descriptor file and of course the BCAL-Basic implementation.
+
+The following functions are provided:
+@table @code
+@item bcal_cipher_init
+@code{uint8_t bcal_cipher_init(const bcdesc_t* cipher_descriptor, const void* key, uint16_t keysize_b, bcgen_ctx_t* ctx)}
+ this function initializes a BCAL context based on the given BCAL descriptor
+ pointer (first parameter) with a given key (second parameter) of a given length
+ (third parameter). The context to initialize is designated by the pointer 
+ passed as fourth parameter.
+
+ If everything works fine @samp{0} is returned. In the case something fails
+ the following codes are returned:
+@table @samp
+  @item 1
+  The specified keysize is not available with this cipher
+  @item 2
+  It was not possible to allocate enough memory to hold the key.
+  (This is returned when there is no actual init function and you ran out 
+  of memory)	
+  @item 3
+  It was not possible to allocate enough memory to hold the context variable
+  for the selected cipher.
+@end table
+
+@item bcal_cipher_free
+@code{void bcal_cipher_free(bcgen_ctx_t* ctx)} this function frees the memory 
+allocated by the init function and should be called whenever you are finished 
+with BCAL context. It automatically also calls the @code{free} function if
+necessary.
+
+@item bcal_cipher_enc
+@code{void bcal_cipher_enc(void* block, const bcgen_ctx_t* ctx)}
+this function encrypts a block in-place using a given BCAL contex.
+
+@item bcal_cipher_dec
+@code{void bcal_cipher_dec(void* block, const bcgen_ctx_t* ctx)}
+this function decrypts a block in-place using a given BCAL contex.
+
+@item bcal_cipher_getBlocksize_b
+@code{uint16_t bcal_cipher_getBlocksize_b(const bcdesc_t* desc)}
+this function returns the block size of a given cipher by using the BCAL
+descriptor (to which a pointer must be passed).
+
+@item bcal_cipher_getKeysizeDesc
+@code{PGM_VOID_P bcal_cipher_getKeysizeDesc(const bcdesc_t* desc)}
+this function returns a pointer to the keysize descriptor of a given cipher by 
+using the BCAL descriptor (to which a pointer must be passed).
+
+@end table
 @section Modes of operation
 
 @section Stream ciphers
