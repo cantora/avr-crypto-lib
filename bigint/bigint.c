@@ -77,9 +77,9 @@ void bigint_adjust(bigint_t* a){
 /******************************************************************************/
 
 void bigint_copy(bigint_t* dest, const bigint_t* src){
-	memcpy(dest->wordv, src->wordv, src->length_B);
 	dest->length_B = src->length_B;
 	dest->info = src->info;
+	memcpy(dest->wordv, src->wordv, src->length_B);
 }
 
 /******************************************************************************/
@@ -611,7 +611,6 @@ void bigint_reduce(bigint_t* a, const bigint_t* r){
 	while(bigint_cmp_u(a,r)>=0){
 		bigint_sub_u(a,a,r);
 	}
-	bigint_adjust(a);
 }
 
 /******************************************************************************/

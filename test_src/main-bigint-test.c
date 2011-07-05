@@ -104,12 +104,12 @@ void test_add_scale_bigint(void){
 	for(;;){
 		cli_putstr_P(PSTR("\r\nenter a:"));
 		if(bigint_read_hex_echo(&a)){
-			cli_putstr_P(PSTR("\r\n end add test"));
+			cli_putstr_P(PSTR("\r\n end add-scale test"));
 			return;
 		}
 		cli_putstr_P(PSTR("\r\nenter b:"));
 		if(bigint_read_hex_echo(&b)){
-			cli_putstr_P(PSTR("\r\n end add test"));
+			cli_putstr_P(PSTR("\r\n end add-scale test"));
 			return;
 		}
 		cli_putstr_P(PSTR("\r\nenter scale:"));
@@ -140,8 +140,8 @@ void test_add_scale_bigint(void){
 			free(b.wordv);
 			continue;
 		}
-		bigint_copy(&c, &a);
 		c.wordv = c_b;
+		bigint_copy(&c, &a);
 		bigint_add_scale_u(&c, &b, scale);
 		bigint_print_hex(&c);
 		cli_putstr_P(PSTR("\r\n"));

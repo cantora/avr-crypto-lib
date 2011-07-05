@@ -254,17 +254,18 @@ def add_scale_test(a, b, scale)
   begin
     line = $sp.gets()
     line = "" if line==nil
-    puts("DBG got: "+line) if $debug
+    puts("DBG got (#{__LINE__}): "+line) if $debug
     if /^Error:.*/.match(line)
       puts line
       return false
     end
   end while not /[\s]*enter a:[\s]*/.match(line)
+  puts("DBG put (#{__LINE__}): "+a.to_s(16)+" ") if $debug
   $sp.print(a.to_s(16)+" ")
   begin
     line = $sp.gets()
     line = "" if line==nil
-    puts("DBG got: "+line) if $debug
+    puts("DBG got (#{__LINE__}): "+line) if $debug
     if /^Error:.*/.match(line)
       puts line
       return false
@@ -274,17 +275,17 @@ def add_scale_test(a, b, scale)
   begin
     line = $sp.gets()
     line = "" if line==nil
-    puts("DBG got: "+line) if $debug
+    puts("DBG got (#{__LINE__}): "+line) if $debug
     if /^Error:.*/.match(line)
       puts line
       return false
     end
   end while not /[\s]*enter scale:[\s]*/.match(line)
-  $sp.print(scale.to_s(16)+"\n")
+  $sp.print(scale.to_s(10)+"\r")
   begin
     line = $sp.gets()
     line = "" if line==nil
-    puts("DBG got: "+line) if $debug
+    puts("DBG got (#{__LINE__}): "+line) if $debug
     if /^Error:.*/.match(line)
       puts line
       return false
@@ -295,12 +296,13 @@ def add_scale_test(a, b, scale)
   s_ = m[3].to_i(16)
   c_ = m[4].to_i(16)
   line.chomp!
-  if(a_== a && b_ == b && c_ == (a+b))
+  should = a + (b<<(8*scale))
+  if(a_== a && b_ == b && s_ == scale && c_ == should )
     $logfile.printf("[pass]: %s\n", line)
     return true
   else
-    $logfile.printf("[fail (%s%s%s)]: %s", (a==a_)?"":"a", (b==b_)?"":"b", (c_==a+b)?"":"c",line)
-    $logfile.printf(" ; should %s + %s = %s\n", a.to_s(16), b.to_s(16), (a+b).to_s(16))
+    $logfile.printf("[fail (%s%s%s)]: %s", (a==a_)?"":"a", (b==b_)?"":"b", (scale==s_)?"":"s",(c_==should)?"":"c",line)
+    $logfile.printf(" ; should %s + %s << 8*%s = %s\n", a.to_s(16), b.to_s(16), scale.to_s(16), should.to_s(16))
     return false
   end
   return false
@@ -553,6 +555,41 @@ def run_test_add(skip=0)
 end
 
 ################################################################################
+# run_test_add_scale                                                           #
+################################################################################
+
+def run_test_add_scale(skip=0)
+  length_a_B = skip+1
+  length_b_B = skip+1
+  begin
+    $size = length_a_B
+    (0..16).each do |i|
+      (0..300).each do |scale|
+        a = rand(256**length_a_B)
+        b = rand(256**length_a_B)
+        v = add_scale_test(a, b, scale)
+        screen_progress(v)
+        v = add_scale_test(b, a, scale)
+        screen_progress(v)
+      end
+    end
+    (0..16).each do |i|
+      (0..300).each do |scale|
+        b_size = rand(length_b_B+1)
+        a = rand(256**length_a_B)
+        b = rand(256**b_size)
+        v = add_scale_test(a, b, scale)
+        screen_progress(v)      
+        v = add_scale_test(b, a, scale)
+        screen_progress(v)
+      end
+    end
+    length_a_B += 1
+    length_b_B += 1
+  end while length_a_B<4096/8
+end
+
+################################################################################
 # run_test_mul                                                                 #
 ################################################################################
 
@@ -762,12 +799,14 @@ $logfile.printf("seed = 0x%X\n", 0xdeadbeef)
 tests = Hash.new
 tests['a'] = proc {|x| run_test_add(x) }
 tests['m'] = proc {|x| run_test_mul(x) }
+tests['x'] = proc {|x| run_test_add_scale(x) }
 tests['s'] = proc {|x| run_test_square(x) }
 tests['r'] = proc {|x| run_test_reduce(x) }
 tests['e'] = proc {|x| run_test_expmod(x) }
 tests['g'] = proc {|x| run_test_gcdext(x) }
 init_str = Hash.new
 init_str['a'] = 'add-test'
+init_str['x'] = 'add-scale-test'
 init_str['m'] = 'mul-test'
 init_str['s'] = 'square-test'
 init_str['r'] = 'reduce-test'

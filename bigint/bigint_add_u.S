@@ -26,7 +26,6 @@
  *
  */
 
-#include "avr-asm-macros.S"
 
 /*
  param dest: r24:r25
@@ -132,6 +131,6 @@ bigint_add_u:
 9:
 	pop_range 24, 25
 	pop_range 28, 29
-	jmp bigint_adjust
+	rjmp bigint_adjust
 
 

@@ -1,0 +1,334 @@
+/* bigint_asm.S */
+/*
+    This file is part of the ARM-Crypto-Lib.
+    Copyright (C) 2006-2010 Daniel Otte (daniel.otte@rub.de)
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+#include "avr-asm-macros.S"
+#include "bigint_adjust.S"
+#include "bigint_add_u.S"
+
+
+/******************************************************************************/
+/*
+void bigint_add_scale_u(bigint_t* dest, const bigint_t* a, uint16_t scale){
+	uint16_t i,j=0;
+	uint16_t t=0;
+	if(scale>dest->length_B)
+		memset(dest->wordv+dest->length_B, 0, scale-dest->length_B);
+	for(i=scale; i<a->length_B+scale; ++i,++j){
+		t = a->wordv[j] + t;
+		if(dest->length_B>i){
+			t += dest->wordv[i];
+		}
+		dest->wordv[i] = (uint8_t)t;
+		t>>=8;
+	}
+	while(t){
+		if(dest->length_B>i){
+			t = dest->wordv[i] + t;
+		}
+		dest->wordv[i] = (uint8_t)t;
+		t>>=8;
+		++i;
+	}
+	if(dest->length_B < i){
+		dest->length_B = i;
+	}
+	bigint_adjust(dest);
+}
+*/
+
+DST_SIZE_0 = 22
+DST_SIZE_1 = 23
+SRC_SIZE_0 = 20
+SRC_SIZE_1 = 23
+SCALE_0    = 18
+SCALE_1    = 19
+DST_CTX_0  =  6
+DST_CTX_1  =  7
+SRC_CTX_0  =  8
+SRC_CTX_1  =  9
+TMP_0      = 10
+TMP_1      = 11
+
+.global bigint_add_scale_u
+#if 0
+bigint_add_scale_u:
+	push_range 6, 11
+	movw r30, r24 /* dest ptr */
+	movw r26, r22 /* src ptr */
+	movw r24, r20 /* scale */
+	movw DST_CTX_0, r30
+	movw SRC_CTX_0, r26
+	movw SCALE_0, r24
+	/* pad dst with zeros if scale > dst_length */
+	ld DST_SIZE_0, Z+
+	ld DST_SIZE_1, Z+
+	sub r24, DST_SIZE_0
+	sbc r25, DST_SIZE_1
+	ldd TMP_0, Z+1 /* load tmp with DST_WORDV */
+	ldd TMP_1, Z+2
+	movw r30, TMP_0
+	brmi 20f /* branch if DST_SIZE > scale */
+	add r30, DST_SIZE_0
+	adc r31, DST_SIZE_1
+10:
+	sbiw r24, 1
+	brmi 25f
+	st Z+, r1
+	rjmp 10b
+20:
+	add r30, r20 /* add scale to DST_WORDV */
+	adc r31, r21
+	/* add src to dest until one of the two ends */
+25:
+	ld SRC_SIZE_0, X+
+	ld SRC_SIZE_1, X+
+	adiw r26, 1
+	ld TMP_0, X+ /* load tmp with SRC_WORDV */
+	ld TMP_1, X
+	movw r26, TMP_0
+	movw r24, SRC_SIZE_0
+	add r24, SCALE_0
+	adc r25, SCALE_1
+	clt
+	cp  r24, DST_SIZE_0
+	cpc r25, DST_SIZE_1
+	brlo 30f
+	set
+	movw r24, DST_SIZE_0
+30:
+	adiw r24, 0
+	breq 35f
+	inc r25
+	clc
+31:
+	ld TMP_0, X+
+	ld TMP_1, Z
+	adc TMP_1, TMP_0
+	st Z+, TMP_1
+	dec r24
+	brne 31b
+	dec r25
+	brne 31b
+35:
+	rol TMP_1
+	brts 40f
+	/* dst is longer than src+scale */
+	ror TMP_1
+38:
+	ld TMP_0, Z
+	adc TMP_0, r1
+	st Z+, TMP_0
+	brcs 38b
+	rjmp 90f
+40:
+	/* dst is shorter than src+scale */
+	movw r24, SRC_SIZE_0
+	sub r24, DST_SIZE_0
+	sbc r25, DST_SIZE_1
+	add r24, SCALE_0
+	adc r25, SCALE_1
+	adiw r24, 0
+	breq 90f
+	inc r25
+	ror TMP_1
+45:
+	ld TMP_0, X+
+	adc TMP_0, r1
+	st Z+, TMP_0
+	dec r24
+	brne 45b
+	dec r25
+	brne 45b
+
+90:
+	movw r24, DST_CTX_0
+	pop_range 6, 11
+	rjmp bigint_adjust
+
+#endif
+
+/******************************************************************************/
+/******************************************************************************/
+/******************************************************************************/
+
+DST_LEN_0 = 22
+DST_LEN_1 = 23
+SRC_LEN_0 = 20
+SRC_LEN_1 = 21
+SCALE_0   = 18
+SCALE_1   = 19
+DST_CTX_0 =  6
+DST_CTX_1 =  7
+SRC_CTX_0 =  8
+SRC_CTX_1 =  9
+TMP_0     = 10
+TMP_1     = 11
+
+bigint_add_scale_u:
+	push_range 6, 11
+	movw r30, r24 /* dest ptr */
+	movw r26, r22 /* src ptr */
+	movw r24, r20 /* scale */
+	movw DST_CTX_0, r30
+	movw SRC_CTX_0, r26
+	movw SCALE_0, r24
+
+	/* pad dest with zeros to length of SRC_LENGTH + scale */
+	ld SRC_LEN_0, X+
+	ld SRC_LEN_1, X+
+	adiw r26, 1
+	ld TMP_0, X+
+	ld TMP_1, X+
+	movw r26, TMP_0 /* move SRC_WORDV to X */
+	ldd DST_LEN_0, Z+0
+	ldd DST_LEN_1, Z+1
+    ldd TMP_0, Z+3
+    ldd TMP_1, Z+4
+    movw r30, TMP_0 /* move DEST_WORDV to Z */
+	movw TMP_0, SCALE_0
+	sub TMP_0, DST_LEN_0
+	sbc TMP_1, DST_LEN_1
+	movw r24, TMP_0
+	brmi 40f /* no padding needed since DST_LEN > scale */
+	add r30, DST_LEN_0 /* add DST_LEN to Z (DEST_WORDV)*/
+	adc r31, DST_LEN_1
+	/* pad and copy src in front of dest */
+10: /* padding loop */
+	sbiw r24, 1
+	brmi 11f
+	st Z+, r1
+	rjmp 10b
+11:
+	/* start of copy */
+
+	movw r24, SRC_LEN_0
+
+12: /* copy loop */
+	sbiw r24, 1
+	brmi 13f
+	ld TMP_0, X+
+	st Z+, TMP_0
+	rjmp 12b
+13:
+	movw TMP_0, SCALE_0
+	add TMP_0, SRC_LEN_0
+	adc TMP_1, SRC_LEN_1
+	movw r30, DST_CTX_0
+	std Z+0, TMP_0
+	std Z+1, TMP_1
+	movw r24, r30
+99:
+	pop_range 6, 11
+	rjmp bigint_adjust
+40:
+    /* TODO */
+    /* Z points at DST_WORDV */
+    /* X points at SRC_WORDV */
+    /* r24:r25 contains scale - DST_LEN (negativ) */
+    /* set T bit if DST_LEN > SCR_LEN + scale */
+    clt
+    add r30, SCALE_0
+    adc r31, SCALE_1
+    add TMP_0, SRC_LEN_0
+    adc TMP_1, SRC_LEN_1
+	brpl 41f
+	set
+	/* DST_LEN > SRC_LEN + scale && DST_LEN > scale */
+	/*
+	       +-------+-------+ SRC + scale
+	   +------+------------+ DST
+	*/
+	movw r24, SRC_LEN_0
+	rjmp 44f
+41:
+	/* DST_LEN <= SRC_LEN + scale && DST_LEN > scale */
+	/*
+	       +-------+-------+ SRC + scale
+	          +------------+ DST
+	*/
+	com r24 /* negate r24:r25 */
+	com r25
+	adiw r24, 1
+44:
+	clc
+45:
+	dec r24
+	brpl 46f
+	dec r25
+	brmi 50f
+46:	ld TMP_0, X+
+	ld TMP_1, Z
+	adc TMP_0, TMP_1
+	st Z+, TMP_0
+	rjmp 45b
+
+50:
+    /* do the overhaning part */
+    rol r1
+    movw r24, r30
+    movw r30, DST_CTX_0
+    ldd TMP_0, Z+3
+    ldd TMP_1, Z+4
+    movw r30, TMP_0
+    add r30, DST_LEN_0
+    adc r31, DST_LEN_1
+    adiw r30, 1
+    st Z, r1
+    movw r30, r24
+    ror r1
+	brtc 60f
+51:	brcc 53f
+52:	ld TMP_0, Z
+	adc TMP_0, r1
+	st Z+, TMP_0
+	brcs 52b
+53:
+    /* TODO */
+    movw r24, r30
+    movw r30, DST_CTX_0
+    ldd TMP_0, Z+3
+    ldd TMP_1, Z+4
+    sub r24, TMP_0
+    sbc r25, TMP_1
+    std Z+0, r24
+    std Z+1, r25
+    movw r24, r30
+    rjmp 99b
+
+60: rol r1 /* backup carry */
+	movw r24, SRC_LEN_0
+    add r24, SCALE_0
+    adc r25, SCALE_1
+    sub r24, DST_LEN_0
+    sbc r25, DST_LEN_1
+    ror r1 /* restore carry */
+
+61: dec r24
+    brpl 62f
+    dec r25
+    brmi 63f
+62: ld TMP_0, X+
+    adc TMP_0, r1
+    st Z+, TMP_0
+    rjmp 61b
+63:
+	brcc 53b
+	ldi r24, 1
+	st Z+, r24
+	rjmp 53b

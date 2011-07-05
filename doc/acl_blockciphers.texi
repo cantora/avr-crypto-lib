@@ -1,8 +1,7 @@
 @c acl_blockcipher.texi
 
 @section Block ciphers
-@subsection What a block cipher does
- A block cipher is a algorithm which turn an input of fixed length into an 
+ A block cipher is a algorithm which turns an input of fixed length into an 
  output of the same length (enciphering or encrypting). The transformation is 
  specified by a key which has to be of a fixed length, or a length of a given 
  set or range.
