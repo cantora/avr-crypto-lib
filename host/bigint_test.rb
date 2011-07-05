@@ -564,7 +564,10 @@ def run_test_add_scale(skip=0)
   begin
     $size = length_a_B
     (0..16).each do |i|
-      (0..300).each do |scale|
+      scales = [0, 300]
+      16.times { scales << rand(301) }
+      scales.sort!
+      scales.each do |scale|
         a = rand(256**length_a_B)
         b = rand(256**length_a_B)
         v = add_scale_test(a, b, scale)
@@ -574,7 +577,10 @@ def run_test_add_scale(skip=0)
       end
     end
     (0..16).each do |i|
-      (0..300).each do |scale|
+      scales = [0, 300]
+      16.times { scales << rand(301) }
+      scales.sort!
+      scales.each do |scale|
         b_size = rand(length_b_B+1)
         a = rand(256**length_a_B)
         b = rand(256**b_size)
@@ -584,8 +590,8 @@ def run_test_add_scale(skip=0)
         screen_progress(v)
       end
     end
-    length_a_B += 1
-    length_b_B += 1
+    length_a_B += 10
+    length_b_B += 10
   end while length_a_B<4096/8
 end
 

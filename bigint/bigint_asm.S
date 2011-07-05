@@ -66,102 +66,7 @@ TMP_0      = 10
 TMP_1      = 11
 
 .global bigint_add_scale_u
-#if 0
-bigint_add_scale_u:
-	push_range 6, 11
-	movw r30, r24 /* dest ptr */
-	movw r26, r22 /* src ptr */
-	movw r24, r20 /* scale */
-	movw DST_CTX_0, r30
-	movw SRC_CTX_0, r26
-	movw SCALE_0, r24
-	/* pad dst with zeros if scale > dst_length */
-	ld DST_SIZE_0, Z+
-	ld DST_SIZE_1, Z+
-	sub r24, DST_SIZE_0
-	sbc r25, DST_SIZE_1
-	ldd TMP_0, Z+1 /* load tmp with DST_WORDV */
-	ldd TMP_1, Z+2
-	movw r30, TMP_0
-	brmi 20f /* branch if DST_SIZE > scale */
-	add r30, DST_SIZE_0
-	adc r31, DST_SIZE_1
-10:
-	sbiw r24, 1
-	brmi 25f
-	st Z+, r1
-	rjmp 10b
-20:
-	add r30, r20 /* add scale to DST_WORDV */
-	adc r31, r21
-	/* add src to dest until one of the two ends */
-25:
-	ld SRC_SIZE_0, X+
-	ld SRC_SIZE_1, X+
-	adiw r26, 1
-	ld TMP_0, X+ /* load tmp with SRC_WORDV */
-	ld TMP_1, X
-	movw r26, TMP_0
-	movw r24, SRC_SIZE_0
-	add r24, SCALE_0
-	adc r25, SCALE_1
-	clt
-	cp  r24, DST_SIZE_0
-	cpc r25, DST_SIZE_1
-	brlo 30f
-	set
-	movw r24, DST_SIZE_0
-30:
-	adiw r24, 0
-	breq 35f
-	inc r25
-	clc
-31:
-	ld TMP_0, X+
-	ld TMP_1, Z
-	adc TMP_1, TMP_0
-	st Z+, TMP_1
-	dec r24
-	brne 31b
-	dec r25
-	brne 31b
-35:
-	rol TMP_1
-	brts 40f
-	/* dst is longer than src+scale */
-	ror TMP_1
-38:
-	ld TMP_0, Z
-	adc TMP_0, r1
-	st Z+, TMP_0
-	brcs 38b
-	rjmp 90f
-40:
-	/* dst is shorter than src+scale */
-	movw r24, SRC_SIZE_0
-	sub r24, DST_SIZE_0
-	sbc r25, DST_SIZE_1
-	add r24, SCALE_0
-	adc r25, SCALE_1
-	adiw r24, 0
-	breq 90f
-	inc r25
-	ror TMP_1
-45:
-	ld TMP_0, X+
-	adc TMP_0, r1
-	st Z+, TMP_0
-	dec r24
-	brne 45b
-	dec r25
-	brne 45b
 
-90:
-	movw r24, DST_CTX_0
-	pop_range 6, 11
-	rjmp bigint_adjust
-
-#endif
 
 /******************************************************************************/
 /******************************************************************************/
@@ -181,17 +86,22 @@ TMP_0     = 10
 TMP_1     = 11
 
 bigint_add_scale_u:
-	push_range 6, 11
 	movw r30, r24 /* dest ptr */
 	movw r26, r22 /* src ptr */
 	movw r24, r20 /* scale */
+	movw SCALE_0, r24
+	ld r24, X+
+	ld r25, X+
+	adiw r24, 0
+	brne 10f
+	ret
+10:
+	movw SRC_LEN_0, r24
+	push_range 6, 11
 	movw DST_CTX_0, r30
 	movw SRC_CTX_0, r26
-	movw SCALE_0, r24
 
 	/* pad dest with zeros to length of SRC_LENGTH + scale */
-	ld SRC_LEN_0, X+
-	ld SRC_LEN_1, X+
 	adiw r26, 1
 	ld TMP_0, X+
 	ld TMP_1, X+
