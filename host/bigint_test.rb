@@ -127,6 +127,9 @@ end
 ################################################################################
 
 def init_system(test_prog)
+  begin
+    line = $sp.gets()
+  end while line!=nil
   $sp.print("echo off \r")
   print("DBG i: " + "echo off \r"+"\n") if $debug
   sleep 0.1
@@ -135,6 +138,27 @@ def init_system(test_prog)
   sleep 1
 end
 
+################################################################################
+# wait_for_prompt                                                                  #
+################################################################################
+
+def wait_for_prompt(prompt)
+  prompt = /[\s]*#{prompt}[\s]*/ if(prompt.class == String)
+  start_time = Time.now.to_i
+  begin
+    line = $sp.gets()
+    puts("DBG got (#{__LINE__}): "+line) if $debug && line
+    line = "" if line==nil
+    if /^(Error:|Crypto-VS).*/.match(line)
+      puts line
+      return false
+    end
+    if (Time.now.to_i- start_time) > $max_timeout
+      return false
+    end
+  end while not m=prompt.match(line)
+  return m
+end
 
 ################################################################################
 # screen_progress                                                              #
@@ -249,59 +273,42 @@ end
 ################################################################################
 # add_scale_test                                                               #
 ################################################################################
+def add_scale_test_dummy(a, b, scale)
+  should = a + (b<<(8*scale))
+  printf("[dummy] %s + %s <<8*%04x = %s\n",a.to_s(16), b.to_s(16), scale, should.to_s(16))
+end
 
 def add_scale_test(a, b, scale)
-  begin
-    line = $sp.gets()
-    line = "" if line==nil
-    puts("DBG got (#{__LINE__}): "+line) if $debug
-    if /^Error:.*/.match(line)
-      puts line
-      return false
-    end
-  end while not /[\s]*enter a:[\s]*/.match(line)
+  m = wait_for_prompt("enter a:")
+  return false if !m 
   puts("DBG put (#{__LINE__}): "+a.to_s(16)+" ") if $debug
   $sp.print(a.to_s(16)+" ")
-  begin
-    line = $sp.gets()
-    line = "" if line==nil
-    puts("DBG got (#{__LINE__}): "+line) if $debug
-    if /^Error:.*/.match(line)
-      puts line
-      return false
-    end
-  end while not /[\s]*enter b:[\s]*/.match(line)
+  m = wait_for_prompt("enter b:")
+  return false if !m 
+  puts("DBG put (#{__LINE__}): "+b.to_s(16)+" ") if $debug
   $sp.print(b.to_s(16)+" ")
-  begin
-    line = $sp.gets()
-    line = "" if line==nil
-    puts("DBG got (#{__LINE__}): "+line) if $debug
-    if /^Error:.*/.match(line)
-      puts line
-      return false
-    end
-  end while not /[\s]*enter scale:[\s]*/.match(line)
+  m = wait_for_prompt("enter scale:")
+  return false if !m 
+  puts("DBG put (#{__LINE__}): "+scale.to_s(10)+" ") if $debug
   $sp.print(scale.to_s(10)+"\r")
-  begin
-    line = $sp.gets()
-    line = "" if line==nil
-    puts("DBG got (#{__LINE__}): "+line) if $debug
-    if /^Error:.*/.match(line)
-      puts line
-      return false
-    end
-  end while not m=/[\s]*([-]?[0-9a-fA-F]*)[\s]+\+[\s]+([+-]?[0-9a-fA-F]*)[\s]*<<8\*[\s]*([+-]?[0-9a-fA-F]*)[\s]*=[\s]*([+-]?[0-9a-fA-F]*)/.match(line)
+  should = a + (b<<(8*scale))
+  m = wait_for_prompt(/[\s]*([-]?[0-9a-fA-F]+)[\s]+\+[\s]+([+-]?[0-9a-fA-F]+)[\s]*<<8\*[\s]*([+-]?[0-9a-fA-F]+)[\s]*=[\s]*([+-]?[0-9a-fA-F]+)/)
+  if !m 
+    $logfile.printf("[fail (CRASH)]:")
+    $logfile.printf(" ; should %s + %s << 8*%s = %s\n", a.to_s(16), b.to_s(16), scale.to_s(16), should.to_s(16))
+    return false
+  end 
+  line = m[0]
   a_ = m[1].to_i(16)
   b_ = m[2].to_i(16)
   s_ = m[3].to_i(16)
   c_ = m[4].to_i(16)
   line.chomp!
-  should = a + (b<<(8*scale))
   if(a_== a && b_ == b && s_ == scale && c_ == should )
     $logfile.printf("[pass]: %s\n", line)
     return true
   else
-    $logfile.printf("[fail (%s%s%s)]: %s", (a==a_)?"":"a", (b==b_)?"":"b", (scale==s_)?"":"s",(c_==should)?"":"c",line)
+    $logfile.printf("[fail (%s%s%s%s)]: %s", (a==a_)?"":"a", (b==b_)?"":"b", (scale==s_)?"":"s",(c_==should)?"":"c",line)
     $logfile.printf(" ; should %s + %s << 8*%s = %s\n", a.to_s(16), b.to_s(16), scale.to_s(16), should.to_s(16))
     return false
   end
@@ -563,7 +570,7 @@ def run_test_add_scale(skip=0)
   length_b_B = skip+1
   begin
     $size = length_a_B
-    (0..16).each do |i|
+    (0..4).each do |i|
       scales = [0, 300]
       16.times { scales << rand(301) }
       scales.sort!
@@ -576,7 +583,42 @@ def run_test_add_scale(skip=0)
         screen_progress(v)
       end
     end
-    (0..16).each do |i|
+    (0..4).each do |i|
+      scales = [0, 300]
+      16.times { scales << rand(301) }
+      scales.sort!
+      scales.each do |scale|
+        b_size = rand(length_b_B+1)+1
+        a = rand(256**length_a_B)
+        b = rand(256**b_size)
+        v = add_scale_test(a, b, scale)
+        screen_progress(v)      
+        v = add_scale_test(b, a, scale)
+        screen_progress(v)
+      end
+    end
+    length_a_B += 10
+    length_b_B += 10
+  end while length_a_B<4096/8
+end
+
+def run_test_add_scale_dummy(skip=0)
+  length_a_B = skip+1
+  length_b_B = skip+1
+  begin
+    $size = length_a_B
+    (0..4).each do |i|
+      scales = [0, 300]
+      16.times { scales << rand(301) }
+      scales.sort!
+      scales.each do |scale|
+        a = rand(256**length_a_B)
+        b = rand(256**length_a_B)
+        v = add_scale_test_dummy(a, b, scale)
+        v = add_scale_test_dummy(b, a, scale)
+      end
+    end
+    (0..4).each do |i|
       scales = [0, 300]
       16.times { scales << rand(301) }
       scales.sort!
@@ -584,10 +626,8 @@ def run_test_add_scale(skip=0)
         b_size = rand(length_b_B+1)
         a = rand(256**length_a_B)
         b = rand(256**b_size)
-        v = add_scale_test(a, b, scale)
-        screen_progress(v)      
-        v = add_scale_test(b, a, scale)
-        screen_progress(v)
+        v = add_scale_test_dummy(a, b, scale)
+        v = add_scale_test_dummy(b, a, scale)
       end
     end
     length_a_B += 10
@@ -733,6 +773,36 @@ def run_test_gcdext(skip=0)
   end while length_a_B<4096/8
 end
 
+def init_serialport(conf)
+  puts("serial port interface version: " + SerialPort::VERSION);
+  $linewidth = 64
+  $linepos = 0
+  $testno = 0
+  params = { "baud"       => conf["PORT"]["baud"].to_i,
+              "data_bits" => conf["PORT"]["databits"].to_i,
+              "stop_bits" => conf["PORT"]["stopbits"].to_i,
+              "parity"    => SerialPort::NONE }
+  params["paraty"] = SerialPort::ODD   if conf["PORT"]["paraty"].downcase == "odd"
+  params["paraty"] = SerialPort::EVEN  if conf["PORT"]["paraty"].downcase == "even"
+  params["paraty"] = SerialPort::MARK  if conf["PORT"]["paraty"].downcase == "mark"
+  params["paraty"] = SerialPort::SPACE if conf["PORT"]["paraty"].downcase == "space"
+  
+  puts("\nPort: "+conf["PORT"]["port"]+"@"    +
+                  params["baud"].to_s      +
+                  " "                      +
+                  params["data_bits"].to_s +
+                  conf["PORT"]["paraty"][0,1].upcase +
+                  params["stop_bits"].to_s +
+                  "\n")
+  
+  $sp = SerialPort.new(conf["PORT"]["port"], params)
+  
+  $sp.read_timeout=1000; # 5 minutes
+  $sp.flow_control = SerialPort::SOFT
+  
+  reset_system()
+end
+
 ################################################################################
 # MAIN                                                                         #
 ################################################################################
@@ -746,34 +816,9 @@ conf = readconfigfile("testport.conf", conf)
 conf = readconfigfile(opts["f"], conf) if opts["f"]
 
 #puts conf.inspect
+init_serialport(conf)
 
-puts("serial port interface version: " + SerialPort::VERSION);
-$linewidth = 64
-$linepos = 0
-$testno = 0
-params = { "baud"       => conf["PORT"]["baud"].to_i,
-            "data_bits" => conf["PORT"]["databits"].to_i,
-            "stop_bits" => conf["PORT"]["stopbits"].to_i,
-            "parity"    => SerialPort::NONE }
-params["paraty"] = SerialPort::ODD   if conf["PORT"]["paraty"].downcase == "odd"
-params["paraty"] = SerialPort::EVEN  if conf["PORT"]["paraty"].downcase == "even"
-params["paraty"] = SerialPort::MARK  if conf["PORT"]["paraty"].downcase == "mark"
-params["paraty"] = SerialPort::SPACE if conf["PORT"]["paraty"].downcase == "space"
-
-puts("\nPort: "+conf["PORT"]["port"]+"@"    +
-                params["baud"].to_s      +
-                " "                      +
-                params["data_bits"].to_s +
-                conf["PORT"]["paraty"][0,1].upcase +
-                params["stop_bits"].to_s +
-                "\n")
-
-$sp = SerialPort.new(conf["PORT"]["port"], params)
-
-$sp.read_timeout=1000; # 5 minutes
-$sp.flow_control = SerialPort::SOFT
-
-reset_system()
+  $max_timeout = 2 * 60
 
 if opts['d']
   $debug = true

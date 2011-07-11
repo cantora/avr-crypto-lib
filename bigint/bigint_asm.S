@@ -78,10 +78,8 @@ SRC_LEN_0 = 20
 SRC_LEN_1 = 21
 SCALE_0   = 18
 SCALE_1   = 19
-DST_CTX_0 =  6
-DST_CTX_1 =  7
-SRC_CTX_0 =  8
-SRC_CTX_1 =  9
+DST_CTX_0 =  8
+DST_CTX_1 =  9
 TMP_0     = 10
 TMP_1     = 11
 
@@ -89,7 +87,14 @@ bigint_add_scale_u:
 	movw r30, r24 /* dest ptr */
 	movw r26, r22 /* src ptr */
 	movw r24, r20 /* scale */
+	/* check if scale is zero */
 	movw SCALE_0, r24
+	adiw r24, 0
+	brne 10f
+	movw r24, r30
+	movw r20, r30
+	rjmp bigint_add_u
+10:	/* check if src is zero */
 	ld r24, X+
 	ld r25, X+
 	adiw r24, 0
@@ -97,9 +102,8 @@ bigint_add_scale_u:
 	ret
 10:
 	movw SRC_LEN_0, r24
-	push_range 6, 11
+	push_range 8, 11
 	movw DST_CTX_0, r30
-	movw SRC_CTX_0, r26
 
 	/* pad dest with zeros to length of SRC_LENGTH + scale */
 	adiw r26, 1
@@ -126,7 +130,6 @@ bigint_add_scale_u:
 	rjmp 10b
 11:
 	/* start of copy */
-
 	movw r24, SRC_LEN_0
 
 12: /* copy loop */
@@ -144,13 +147,12 @@ bigint_add_scale_u:
 	std Z+1, TMP_1
 	movw r24, r30
 99:
-	pop_range 6, 11
+	pop_range 8, 11
 	rjmp bigint_adjust
 40:
-    /* TODO */
     /* Z points at DST_WORDV */
     /* X points at SRC_WORDV */
-    /* r24:r25 contains scale - DST_LEN (negativ) */
+    /* r24:r25 and TMP contain scale - DST_LEN (negativ) */
     /* set T bit if DST_LEN > SCR_LEN + scale */
     clt
     add r30, SCALE_0
@@ -172,36 +174,24 @@ bigint_add_scale_u:
 	       +-------+-------+ SRC + scale
 	          +------------+ DST
 	*/
-	com r24 /* negate r24:r25 */
+	com r24 /* negate r24:r25 ==> DST_LEN - scale */
 	com r25
 	adiw r24, 1
+	breq 50f
 44:
+	inc r25
 	clc
 45:
-	dec r24
-	brpl 46f
-	dec r25
-	brmi 50f
 46:	ld TMP_0, X+
 	ld TMP_1, Z
 	adc TMP_0, TMP_1
 	st Z+, TMP_0
-	rjmp 45b
+	dec r24
+	brne 46b
+	dec r25
+	brne 46b
 
-50:
-    /* do the overhaning part */
-    rol r1
-    movw r24, r30
-    movw r30, DST_CTX_0
-    ldd TMP_0, Z+3
-    ldd TMP_1, Z+4
-    movw r30, TMP_0
-    add r30, DST_LEN_0
-    adc r31, DST_LEN_1
-    adiw r30, 1
-    st Z, r1
-    movw r30, r24
-    ror r1
+50: ;st Z, r1
 	brtc 60f
 51:	brcc 53f
 52:	ld TMP_0, Z
@@ -209,34 +199,42 @@ bigint_add_scale_u:
 	st Z+, TMP_0
 	brcs 52b
 53:
-    /* TODO */
+    /* epilogue */
     movw r24, r30
     movw r30, DST_CTX_0
     ldd TMP_0, Z+3
     ldd TMP_1, Z+4
     sub r24, TMP_0
     sbc r25, TMP_1
+    cp  r24, DST_LEN_0
+    cpc r25, DST_LEN_1
+    brmi 54f
     std Z+0, r24
     std Z+1, r25
-    movw r24, r30
+54: movw r24, r30
     rjmp 99b
 
-60: rol r1 /* backup carry */
+60: st Z, r1
+	rol r1 /* backup carry */
 	movw r24, SRC_LEN_0
     add r24, SCALE_0
     adc r25, SCALE_1
     sub r24, DST_LEN_0
     sbc r25, DST_LEN_1
+
+	adiw r24, 0
+	breq 63f
+	inc r25
     ror r1 /* restore carry */
 
-61: dec r24
-    brpl 62f
-    dec r25
-    brmi 63f
+61:
 62: ld TMP_0, X+
     adc TMP_0, r1
     st Z+, TMP_0
-    rjmp 61b
+    dec r24
+    brne 62b
+    dec r25
+    brne 62b
 63:
 	brcc 53b
 	ldi r24, 1

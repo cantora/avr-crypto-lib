@@ -125,13 +125,6 @@ void test_add_scale_bigint(void){
 			return;
 		}
 	*/
-		cli_putstr_P(PSTR("\r\n "));
-		bigint_print_hex(&a);
-		cli_putstr_P(PSTR(" + "));
-		bigint_print_hex(&b);
-		cli_putstr_P(PSTR("<<8*"));
-		cli_hexdump_rev(&scale, 2);
-		cli_putstr_P(PSTR(" = "));
 		uint8_t *c_b;
 		c_b = malloc(((a.length_B>(b.length_B+scale))?a.length_B:(b.length_B+scale))+2);
 		if(c_b==NULL){
@@ -143,6 +136,13 @@ void test_add_scale_bigint(void){
 		c.wordv = c_b;
 		bigint_copy(&c, &a);
 		bigint_add_scale_u(&c, &b, scale);
+		cli_putstr_P(PSTR("\r\n "));
+		bigint_print_hex(&a);
+		cli_putstr_P(PSTR(" + "));
+		bigint_print_hex(&b);
+		cli_putstr_P(PSTR("<<8*"));
+		cli_hexdump_rev(&scale, 2);
+		cli_putstr_P(PSTR(" = "));
 		bigint_print_hex(&c);
 		cli_putstr_P(PSTR("\r\n"));
 		free(a.wordv);
