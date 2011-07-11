@@ -231,6 +231,10 @@ $(foreach algo, $(ALGORITHMS), \
 .PHONY: all
 all: cores
 
+.PHONY: reset
+reset:
+	$(RESETCMD)
+
 .PHONY: cores
 cores: $(foreach algo, $(ALGORITHMS), $(algo)_OBJ)
 

@@ -1,4 +1,4 @@
-/* scal-nessie.h */
+/* salsa20.h */
 /*
     This file is part of the AVR-Crypto-Lib.
     Copyright (C) 2011 Daniel Otte (daniel.otte@rub.de)
@@ -17,16 +17,24 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SCALNESSIE_H_
-#define SCALNESSIE_H_
+#ifndef SALSA20_H_
+#define SALSA20_H_
 
 #include <stdint.h>
-#include <streamcipher_descriptor.h>
 
-void scal_nessie_set_estream(uint8_t v);
-uint8_t scal_nessie_get_estream(void);
+typedef struct{
+	uint8_t a[64];
+	uint8_t buffer[64];
+	uint8_t buffer_idx;
+} salsa20_ctx_t;
 
-void scal_nessie_stream_run(const scdesc_t *desc, uint16_t keysize_b, uint16_t ivsize_b);
-void scal_nessie_run(const scdesc_t* desc);
+void salsa20_hash(uint32_t* a);
+void salsa_k32(uint32_t* dest, const uint32_t* k, const uint32_t* n);
+void salsa_k16(uint32_t* dest, const uint32_t* k, const uint32_t* n);
+void salsa20_genBlock256(void* dest, const void* k, const void* iv, uint64_t i);
+void salsa20_genBlock128(void* dest, const void* k, const void* iv, uint64_t i);
 
-#endif /* SCALNESSIE_H_ */
+void salsa20_init(void* key, uint16_t keylength_b, void* iv, salsa20_ctx_t* ctx);
+uint8_t salsa20_gen(salsa20_ctx_t* ctx);
+
+#endif /* SALSA20_H_ */

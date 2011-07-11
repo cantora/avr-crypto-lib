@@ -1,4 +1,4 @@
-/* scal-nessie.h */
+/* scal_salsa20.h */
 /*
     This file is part of the AVR-Crypto-Lib.
     Copyright (C) 2011 Daniel Otte (daniel.otte@rub.de)
@@ -17,16 +17,11 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SCALNESSIE_H_
-#define SCALNESSIE_H_
+#ifndef SCAL_SALSA20_H_
+#define SCAL_SALSA20_H_
 
-#include <stdint.h>
-#include <streamcipher_descriptor.h>
+#include "streamcipher_descriptor.h"
 
-void scal_nessie_set_estream(uint8_t v);
-uint8_t scal_nessie_get_estream(void);
+extern const scdesc_t salsa20_desc;
 
-void scal_nessie_stream_run(const scdesc_t *desc, uint16_t keysize_b, uint16_t ivsize_b);
-void scal_nessie_run(const scdesc_t* desc);
-
-#endif /* SCALNESSIE_H_ */
+#endif /* SCAL_SALSA20_H_ */

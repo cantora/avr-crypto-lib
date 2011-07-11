@@ -7,6 +7,7 @@ PROGRAMMER     = avr911
 DEFS           = -D$(call uc, $(MCU_TARGET))
 FLASHCMD       = avrdude -p $(MCU_TARGET) -P /dev/ttyUSB0 -c $(PROGRAMMER) -U flash:w:# no space at the end
 #FLASHCMD       = avrdude -p $(MCU_TARGET) -c usbasp -U flash:w:# no space at the end
+RESETCMD       = avrdude -p $(MCU_TARGET) -P /dev/ttyUSB0 -c $(PROGRAMMER) 
 DEP_DIR        = deps/
 TEST_DIR       = test/
 BIN_DIR        = bin/

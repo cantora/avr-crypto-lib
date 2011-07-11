@@ -25,9 +25,17 @@
 #include "memxor.h"
 #include <avr/pgmspace.h>
 
-#ifndef NESSIE_ESTREAM
-#define NESSIE_ESTREAM 0
-#endif
+static
+uint8_t estream_flag = 0;
+
+void scal_nessie_set_estream(uint8_t v){
+	estream_flag = v?1:0;
+}
+
+uint8_t scal_nessie_get_estream(void){
+	return estream_flag?1:0;
+}
+
 
 
 static const uint8_t normal_hooks[] PROGMEM = {
@@ -43,35 +51,29 @@ static const char stream1_n[] PROGMEM = "stream[192..255]";
 static const char stream2_n[] PROGMEM = "stream[256..319]";
 static const char stream3_n[] PROGMEM = "stream[448..511]";
 
-#if NESSIE_ESTREAM
-static const char streamX_n[] PROGMEM = "xor-digest";
-#else
-static const char streamX_n[] PROGMEM = "stream[0..511]xored";
-#endif
+static const char streamX_n_estream[] PROGMEM = "xor-digest";
+static const char streamX_n_nessie[] PROGMEM = "stream[0..511]xored";
 
-static const char* stream_n_str[] PROGMEM = {
+static const char* stream_n_str[] = {
 		stream0_n,
 		stream1_n,
 		stream2_n,
 		stream3_n,
-		streamX_n
+		streamX_n_nessie
 };
 
 static const char stream1_l[] PROGMEM = "stream[65472..65535]";
 static const char stream2_l[] PROGMEM = "stream[65536..65599]";
 static const char stream3_l[] PROGMEM = "stream[131008..131071]";
-#if NESSIE_ESTREAM
-static const char streamX_l[] PROGMEM = "xor-digest";
-#else
-static const char streamX_l[] PROGMEM = "stream[0..131071]xored";
-#endif
+static const char streamX_l_estream[] PROGMEM = "xor-digest";
+static const char streamX_l_nessie[] PROGMEM = "stream[0..131071]xored";
 
-static const char* stream_l_str[] PROGMEM = {
+static const char* stream_l_str[] = {
 		stream0_n,
 		stream1_l,
 		stream2_l,
 		stream3_l,
-		streamX_l
+		streamX_l_nessie
 };
 
 static const uint8_t list_of_keys[][20] PROGMEM = {
@@ -94,7 +96,7 @@ void normal_block(scgen_ctx_t *ctx){
 	uint8_t xor_block[64];
 	uint8_t block[64];
 	PGM_VOID_P hook_ptr = normal_hooks;
-	PGM_VOID_P hook_str_ptr = stream_n_str;
+	const char* *hook_str_ptr = stream_n_str;
 	char str[21];
 	uint8_t i;
 
@@ -104,12 +106,12 @@ void normal_block(scgen_ctx_t *ctx){
 		memxor(xor_block, block, 64);
 		if(i==pgm_read_byte(hook_ptr)){
 			hook_ptr = (uint8_t*)hook_ptr + 1;
-			strcpy_P(str, (PGM_VOID_P)pgm_read_word(hook_str_ptr));
-			hook_str_ptr = (uint8_t*)hook_str_ptr + 2;
+			strcpy_P(str, *(hook_str_ptr));
+			hook_str_ptr = (const char **)((uint8_t*)hook_str_ptr + 2);
 			nessie_print_item(str, block, 64);
 		}
 	}
-	strcpy_P(str, (PGM_VOID_P)pgm_read_word(hook_str_ptr));
+	strcpy_P(str, *(hook_str_ptr));
 	nessie_print_item(str, xor_block, 64);
 }
 
@@ -118,7 +120,7 @@ void long_block(scgen_ctx_t *ctx){
 	uint8_t xor_block[64];
 	uint8_t block[64];
 	PGM_VOID_P hook_ptr = long_hooks;
-	PGM_VOID_P hook_str_ptr = stream_l_str;
+	const char* *hook_str_ptr = stream_l_str;
 	char str[24];
 	uint16_t i;
 
@@ -128,15 +130,15 @@ void long_block(scgen_ctx_t *ctx){
 		memxor(xor_block, block, 64);
 		if(i==pgm_read_word(hook_ptr)){
 			hook_ptr = (uint8_t*)hook_ptr + 2;
-			strcpy_P(str, (PGM_VOID_P)pgm_read_word(hook_str_ptr));
-			hook_str_ptr =  (uint8_t*)hook_str_ptr + 2;
+			strcpy_P(str, *(hook_str_ptr));
+			hook_str_ptr =  (const char **)((uint8_t*)hook_str_ptr + 2);
 			nessie_print_item(str, block, 64);
 		}
 		if(i%64==0){
 			NESSIE_SEND_ALIVE;
 		}
 	}
-	strcpy_P(str, (PGM_VOID_P)pgm_read_word(hook_str_ptr));
+	strcpy_P(str, *(hook_str_ptr));
 	nessie_print_item(str, xor_block, 64);
 }
 
@@ -150,16 +152,18 @@ void scal_nessie_stream_run(const scdesc_t *desc, uint16_t keysize_b, uint16_t i
 	uint16_t v;
 	scgen_ctx_t ctx;
 	nessie_print_header(name, keysize_b, 0, 0, 0, ivsize_b?ivsize_b:((uint16_t)-1));
-
+	if(estream_flag){
+		stream_n_str[4] = streamX_n_estream;
+		stream_l_str[4] = streamX_l_estream;
+	}else{
+		stream_n_str[4] = streamX_n_nessie;
+		stream_l_str[4] = streamX_l_nessie;
+	}
 	memset(iv, 0, (ivsize_b+7)/8);
 	memset(key, 0, (keysize_b+7)/8);
 	/***  Test SET 1 ***/
 	nessie_print_setheader(1);
-#if NESSIE_ESTREAM
-	for(v=0;v<keysize_b; v+=9){
-#else
-	for(v=0;v<keysize_b; ++v){
-#endif
+	for(v=0;v<keysize_b; v+=estream_flag?9:1){
 		nessie_print_set_vector(1,v);
 		key[v/8] |= 0x80>>(v&7);
 		nessie_print_item("key", key, (keysize_b+7)/8);
@@ -173,11 +177,7 @@ void scal_nessie_stream_run(const scdesc_t *desc, uint16_t keysize_b, uint16_t i
 	}
 	/***  Test SET 2 ***/
 	nessie_print_setheader(2);
-#if NESSIE_ESTREAM
-	for(v=0;v<256; v+=9){
-#else
-	for(v=0;v<256; ++v){
-#endif
+	for(v=0;v<256; v+=estream_flag?9:1){
 		nessie_print_set_vector(2,v);
 		memset(key, v&0xff, (keysize_b+7)/8);
 		nessie_print_item("key", key, (keysize_b+7)/8);
@@ -190,11 +190,7 @@ void scal_nessie_stream_run(const scdesc_t *desc, uint16_t keysize_b, uint16_t i
 	}
 	/***  Test SET 3 ***/
 	nessie_print_setheader(3);
-#if NESSIE_ESTREAM
-	for(v=0;v<256; v+=9){
-#else
-	for(v=0;v<256; ++v){
-#endif
+	for(v=0;v<256; v+=estream_flag?9:1){
 		uint8_t i;
 		nessie_print_set_vector(3,v);
 		for(i=0; i<((keysize_b+7)/8); ++i){
@@ -231,11 +227,7 @@ void scal_nessie_stream_run(const scdesc_t *desc, uint16_t keysize_b, uint16_t i
 	/***  Test SET 5 ***/
 	nessie_print_setheader(5);
 	memset(key, 0, (keysize_b+7)/8);
-#if NESSIE_ESTREAM
-	for(v=0;v<ivsize_b; v+=9){
-#else
-	for(v=0;v<ivsize_b; ++v){
-#endif
+	for(v=0;v<ivsize_b; v+=estream_flag?9:1){
 		nessie_print_set_vector(5,v);
 		iv[v/8] |= 0x80>>(v&7);
 		nessie_print_item("key", key, (keysize_b+7)/8);
@@ -263,27 +255,27 @@ void scal_nessie_stream_run(const scdesc_t *desc, uint16_t keysize_b, uint16_t i
 		scal_cipher_free(&ctx);
 	}
 	/***  Test SET 7 ***/
-#if !NESSIE_ESTREAM
-	nessie_print_setheader(7);
-	uint8_t u;
-	for(v=0;v<3; ++v){
-		for(u=0; u<3; ++u){
-			uint8_t i;
-			nessie_print_set_vector(7,v*3+u);
-			for(i=0; i<((keysize_b+7)/8); ++i){
-				key[i]=pgm_read_byte(list_of_keys+20*v+(i%20));
+	if(!estream_flag){
+		nessie_print_setheader(7);
+		uint8_t u;
+		for(v=0;v<3; ++v){
+			for(u=0; u<3; ++u){
+				uint8_t i;
+				nessie_print_set_vector(7,v*3+u);
+				for(i=0; i<((keysize_b+7)/8); ++i){
+					key[i]=pgm_read_byte(list_of_keys+20*v+(i%20));
+				}
+				for(i=0; i<((ivsize_b+7)/8); ++i){
+					key[i]=pgm_read_byte(list_of_keys+4*u+(i%4));
+				}
 			}
-			for(i=0; i<((ivsize_b+7)/8); ++i){
-				key[i]=pgm_read_byte(list_of_keys+4*u+(i%4));
-			}
+			nessie_print_item("key", key, (keysize_b+7)/8);
+			nessie_print_item("IV", iv, (ivsize_b+7)/8);
+			scal_cipher_init(desc, key, keysize_b, iv, ivsize_b, &ctx);
+			long_block(&ctx);
+			scal_cipher_free(&ctx);
 		}
-		nessie_print_item("key", key, (keysize_b+7)/8);
-		nessie_print_item("IV", iv, (ivsize_b+7)/8);
-		scal_cipher_init(desc, key, keysize_b, iv, ivsize_b, &ctx);
-		long_block(&ctx);
-		scal_cipher_free(&ctx);
 	}
-#endif
 	nessie_print_footer();
 }
 

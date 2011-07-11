@@ -145,6 +145,7 @@ end
 def wait_for_prompt(prompt)
   prompt = /[\s]*#{prompt}[\s]*/ if(prompt.class == String)
   start_time = Time.now.to_i
+  acc = ''
   begin
     line = $sp.gets()
     puts("DBG got (#{__LINE__}): "+line) if $debug && line
@@ -156,7 +157,8 @@ def wait_for_prompt(prompt)
     if (Time.now.to_i- start_time) > $max_timeout
       return false
     end
-  end while not m=prompt.match(line)
+  acc += line
+  end while not m=prompt.match(acc)
   return m
 end
 
@@ -818,7 +820,7 @@ conf = readconfigfile(opts["f"], conf) if opts["f"]
 #puts conf.inspect
 init_serialport(conf)
 
-  $max_timeout = 2 * 60
+  $max_timeout = 5 * 60
 
 if opts['d']
   $debug = true
