@@ -1,7 +1,7 @@
 # Makefile for Salsa20
 ALGO_NAME := SALSA20_C
 
-# comment out the following line for removement of ARCFOUR from the build process
+# comment out the following line for removement of Salsa20 from the build process
 STREAM_CIPHERS += $(ALGO_NAME)
 
 $(ALGO_NAME)_DIR      := salsa20/

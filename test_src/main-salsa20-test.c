@@ -232,12 +232,11 @@ void testrun_nessie_salsa20(void){
 	scal_nessie_run(&salsa20_desc);
 }
 
-/*
-void testrun_performance_arcfour(void){
+void testrun_performance_salsa20(void){
 	uint64_t t;
 	char str[16];
-	uint8_t key[16];
-	arcfour_ctx_t ctx;
+	uint8_t key[32];
+	salsa20_ctx_t ctx;
 
 	calibrateTimer();
 	print_overhead();
@@ -245,14 +244,14 @@ void testrun_performance_arcfour(void){
 	memset(key,  0, 16);
 
 	startTimer(1);
-	arcfour_init(key, 16, &ctx);
+	salsa20_init(key, 128, NULL, &ctx);
 	t = stopTimer();
 	cli_putstr_P(PSTR("\r\n\tctx-gen time: "));
 	ultoa((unsigned long)t, str, 10);
 	cli_putstr(str);
 
 	startTimer(1);
-	arcfour_gen(&ctx);
+	salsa20_gen(&ctx);
 	t = stopTimer();
 	cli_putstr_P(PSTR("\r\n\tencrypt time: "));
 	ultoa((unsigned long)t, str, 10);
@@ -260,7 +259,7 @@ void testrun_performance_arcfour(void){
 
 	cli_putstr_P(PSTR("\r\n"));
 }
-*/
+
 
 /*****************************************************************************
  *  main																	 *
@@ -273,7 +272,7 @@ const char echo_str[]        PROGMEM = "echo";
 
 cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ nessie_str,      NULL, testrun_nessie_salsa20 },
-//	{ performance_str, NULL, testrun_performance_arcfour},
+	{ performance_str, NULL, testrun_performance_salsa20},
 	{ test_str,        NULL, spec_test},
 	{ echo_str,    (void*)1, (void_fpt)echo_ctrl},
 	{ NULL,            NULL, NULL}
