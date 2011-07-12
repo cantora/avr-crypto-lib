@@ -25,7 +25,7 @@
 
 #include "rabbit.h"
 
-const char rabbit_str[]   PROGMEM = "rabbit";
+const char rabbit_str[]   PROGMEM = "Rabbit";
 
 const uint8_t rabbit_keysize_desc[] PROGMEM = {
 		KS_TYPE_LIST, 2, KS_INT(128), KS_INT(80),

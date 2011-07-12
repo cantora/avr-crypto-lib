@@ -23,7 +23,7 @@
 #include "rabbit.h"
 
 #ifndef ESTREAM
-#define ESTREAM 1
+#define ESTREAM 0
 #endif
 
 /*

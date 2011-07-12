@@ -1,5 +1,5 @@
 # Makefile for Rabbit
-ALGO_NAME := RABBIT_C
+ALGO_NAME := RABBIT_ESTREAM_C
 
 # comment out the following line for removement of Rabbit from the build process
 STREAM_CIPHERS += $(ALGO_NAME)
@@ -10,4 +10,5 @@ $(ALGO_NAME)_INCDIR   := memxor/ scal/
 $(ALGO_NAME)_TEST_BIN := main-rabbit-test.o $(CLI_STD) $(SCAL_STD) scal_rabbit.o
 $(ALGO_NAME)_NESSIE_TEST      := "nessie"
 $(ALGO_NAME)_PERFORMANCE_TEST := "performance"
-$(ALGO_NAME)_DEF := ESTREAM=0
+$(ALGO_NAME)_DEF := ESTREAM=1
+
