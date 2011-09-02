@@ -157,7 +157,7 @@
 
 .macro CLEAR_BIT_IO io:req bit:req reg:req
 .if _SFR_IO_REG_P(\io)
-	cbi _SFR_IO_ADDR(\io), bit
+	cbi _SFR_IO_ADDR(\io), \bit
 .else
 	lds \reg, _SFR_MEM_ADDR(\io)
 	andi \reg, ~_BV(\bit)
@@ -167,7 +167,7 @@
 
 .macro SET_BIT_IO io:req bit:req reg:req
 .if _SFR_IO_REG_P(\io)
-	sbi _SFR_IO_ADDR(\io),bit
+	sbi _SFR_IO_ADDR(\io), \bit
 .else
 	lds \reg, _SFR_MEM_ADDR(\io)
 	ori \reg, _BV(\bit)

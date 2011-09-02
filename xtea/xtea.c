@@ -24,7 +24,6 @@
  */
  
 #include <stdint.h> 
- 
 
 void xtea_enc(void* dest, const void* v, const void* k) {
     uint8_t i;

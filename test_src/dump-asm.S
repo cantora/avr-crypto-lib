@@ -415,6 +415,10 @@ ram_read_block:
  *   param addr:    r20:r23
  *   param length:  r18
  */
+#ifdef EEWE
+# define EEPE EEWE
+#endif
+
 .global ee_read_block
 ee_read_block:
 	movw r26, r24

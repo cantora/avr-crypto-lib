@@ -54,6 +54,25 @@ void testrun_performance_xtea(void){
 	bcal_performance_multiple(algolist);
 }
 
+void test_xtea(void){
+	uint8_t key[16];
+	uint8_t data[8];
+
+	memset(key, 0, 16);
+	key[0] = 0x80;
+	memset(data, 0, 8);
+	cli_putstr_P(PSTR("\r\n*** XTEA test ***\r\n key:   "));
+	cli_hexdump(key, 16);
+	cli_putstr_P(PSTR("\r\n plain: "));
+	cli_hexdump(data, 8);
+	xtea_enc(data, data, key);
+	cli_putstr_P(PSTR("\r\n crypt: "));
+	cli_hexdump(data, 8);
+	xtea_dec(data, data, key);
+	cli_putstr_P(PSTR("\r\n plain: "));
+	cli_hexdump(data, 8);
+}
+
 /*****************************************************************************
  *  main																	 *
  *****************************************************************************/
@@ -65,7 +84,7 @@ const char echo_str[]        PROGMEM = "echo";
 
 cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ nessie_str,      NULL, testrun_nessie_xtea},
-	{ test_str,        NULL, testrun_nessie_xtea},
+	{ test_str,        NULL, test_xtea},
 	{ performance_str, NULL, testrun_performance_xtea},
 	{ echo_str,    (void*)1, (void_fpt)echo_ctrl},
 	{ NULL,            NULL, NULL}

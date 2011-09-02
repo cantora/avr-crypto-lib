@@ -48,7 +48,7 @@ void xtea_dummy_dec(void* block, void* key){
 
 const bcdesc_t xtea_desc PROGMEM = {
 	BCDESC_TYPE_BLOCKCIPHER,
-	BC_INIT_TYPE_2,
+	BC_INIT_TYPE_1,
 	xtea_str,
 	16,
 	64,

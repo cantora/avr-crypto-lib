@@ -1,11 +1,11 @@
 
-MCU_TARGET     = atmega644
-F_CPU          = 20000000
+MCU_TARGET     = atmega128
+F_CPU          = 14745600
 OPTIMIZE       = -Os # -Os
 DEBUG          = -gdwarf-2
 WARNING        = -pedantic -Wall -Wstrict-prototypes
-PROGRAMMER     = avr911
-PROG_PORT      = /dev/ttyUSB0
+PROGRAMMER     = jtagmkII
+PROG_PORT      = usb
 DEFS           = -D$(call uc, $(MCU_TARGET)) -DF_CPU=$(F_CPU)
 FLASHCMD       = avrdude -p $(MCU_TARGET) -P $(PROG_PORT) -c $(PROGRAMMER) -U flash:w:# no space at the end
 #FLASHCMD       = avrdude -p $(MCU_TARGET) -c usbasp -U flash:w:# no space at the end
@@ -16,7 +16,7 @@ BIN_DIR        = bin/
 TESTSRC_DIR    = test_src/
 #uisp -dprog=bsd -dlpt=/dev/parport1 --upload if=$(PRG).hex
 ERASECMD       =
-TESTPORT       = /dev/ttyUSB1
+TESTPORT       = /dev/ttyUSB0
 TESTPORTBAUDR  = 115200
 TESTLOG_DIR    = testlog/#
 TESTPREFIX     = nessie-
