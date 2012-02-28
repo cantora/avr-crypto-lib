@@ -1,6 +1,6 @@
-/* xtea-enc.S */
+/* xtea-asm.S */
 /*
-    This file is part of the ARM-Crypto-Lib.
+    This file is part of the AVR-Crypto-Lib.
     Copyright (C) 2006-2011 Daniel Otte (daniel.otte@rub.de)
 
     This program is free software: you can redistribute it and/or modify
@@ -29,15 +29,15 @@ A1 =  9
 A2 = 10
 A3 = 11
 
-V10 = 12
-V11 = 13
-V12 = 14
-V13 = 15
+V00 = 12
+V01 = 13
+V02 = 14
+V03 = 15
 
-V00 = 16
-V01 = 17
-V02 = 18
-V03 = 19
+V10 = 16
+V11 = 17
+V12 = 18
+V13 = 19
 
 S0 = 20
 S1 = 21
@@ -124,6 +124,7 @@ main1:
 	mov r24, S0
 	lsl r24
 	lsl r24
+20:
 	rcall sum_plus_k
 	ret
 
@@ -132,9 +133,8 @@ main2:
 	rcall g_func
 	mov r24, S1
 	lsr r24
-	rcall sum_plus_k
 	rcall xchg_V0V1
-	ret
+	rjmp 20b
 
 .global xtea_enc
 xtea_enc:
@@ -184,6 +184,7 @@ xtea_intro:
 xtea_enc_exit:
 	pop r27
 	pop r26
+/*
 	st X+, V00
 	st X+, V01
 	st X+, V02
@@ -192,13 +193,22 @@ xtea_enc_exit:
 	st X+, V11
 	st X+, V12
 	st X+, V13
+*/
+	clr r31
+	ldi r30, V00
+	ldi r24, 8
+10:
+	ld r0, Z+
+	st X+, r0
+	dec r24
+	brne 10b
 
-	clr r27
-	ldi r26, 18
+;	clr r31
+	ldi r30, 18
 	ldi r24, 14
 10:
 	pop r0
-	st -X, r0
+	st -Z, r0
 	dec r24
 	brne 10b
 	ret

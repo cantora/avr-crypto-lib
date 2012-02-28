@@ -87,7 +87,7 @@ void entropium_addEntropy(unsigned length_b, const void* data){
 
 void entropium_getRandomBlock(void *b){
 	sha256_ctx_t s;
-	uint8_t offset=8;
+	static uint8_t offset=8;
 	
 	sha256_init(&s);
 	sha256_lastBlock(&s, rndCore, 512); /* remeber the byte order! */
