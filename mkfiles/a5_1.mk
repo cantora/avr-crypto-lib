@@ -1,7 +1,7 @@
-# Makefile for ARCFOUR (RC4 compatible)
+# Makefile for A5/1 (from GSM)
 ALGO_NAME := A51
 
-# comment out the following line for removement of ARCFOUR from the build process
+# comment out the following line for removement of A5/1 from the build process
 STREAM_CIPHERS += $(ALGO_NAME)
 
 $(ALGO_NAME)_OBJ      := A5_1.o

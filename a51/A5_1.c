@@ -74,9 +74,9 @@ void shiftreg(uint8_t* d){
 	d[2] = (d[2]<<1) | c2;
 } 
 
-	uint8_t parity3_lut[] PROGMEM = {0, 1, 1, 0,
+const uint8_t parity3_lut[] PROGMEM = {0, 1, 1, 0,
 		                             1, 0, 0, 1}; 	
-	uint8_t clock_lut[] PROGMEM =  {0x7, 0x6, 0x5, 0x3,
+const uint8_t clock_lut[] PROGMEM =  {0x7, 0x6, 0x5, 0x3,
 		                            0x3, 0x5, 0x6, 0x7}; 
 		                            
 uint8_t a5_1_clock_core(a5_1_ctx_t *c, uint8_t clockoverride){
