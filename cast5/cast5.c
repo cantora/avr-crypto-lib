@@ -27,15 +27,16 @@
  * 
  */
  
- #include <stdint.h>
- #include <string.h>
- #include "cast5.h"
+#include <stdint.h>
+#include <string.h>
+#include "cast5.h"
+#include <avr/pgmspace.h> 
+
+#undef DEBUG
  
- #undef DEBUG
- 
- #ifdef DEBUG
-  #include "cli.h"
- #endif
+#ifdef DEBUG
+ #include "cli.h"
+#endif
  
 #include "cast5-sbox.h"
 
