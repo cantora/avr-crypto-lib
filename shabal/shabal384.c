@@ -30,7 +30,7 @@
 #include <avr/pgmspace.h>
 #include <string.h>
 
-uint32_t shabal384_iv[] PROGMEM = {
+const uint32_t shabal384_iv[] PROGMEM = {
 	/* A */ 
 	0xC8FCA331, 0xE55C504E, 0x003EBF26, 0xBB6B8D83, 
 	0x7B0448C1, 0x41B82789, 0x0A7C9601, 0x8D659CFF,

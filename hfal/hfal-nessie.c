@@ -48,7 +48,7 @@ void hfal_nessie(const hfdesc_t* hd){
 	nessie_hash_run();
 }
 
-void hfal_nessie_multiple(const hfdesc_t** hd_list){
+void hfal_nessie_multiple(const hfdesc_t* const* hd_list){
 	const hfdesc_t* hd;
 	for(;;){
 		hd = (void*)pgm_read_word(hd_list);

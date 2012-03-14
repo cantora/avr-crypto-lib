@@ -39,7 +39,7 @@
 
 char* algo_name = "Camellia";
 
-const bcdesc_t* algolist[] PROGMEM = {
+const bcdesc_t* const algolist[] PROGMEM = {
 	(bcdesc_t*)&camellia128_desc,
 	NULL
 };
@@ -56,7 +56,7 @@ void testrun_nessie_camellia(void){
  * P No.001 : 80 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
  */
 
-uint8_t test_keys[] PROGMEM = {
+const uint8_t test_keys[] PROGMEM = {
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 	0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
 	0x0F, 0x0F, 0x0F, 0x0F, 0x0F, 0x0F, 0x0F, 0x0F, 0x0F, 0x0F, 0x0F, 0x0F, 0x0F, 0x0F, 0x0F, 0x0F,
@@ -173,7 +173,7 @@ const char test128_str[]     PROGMEM = "test128";
 const char performance_str[] PROGMEM = "performance";
 const char echo_str[]        PROGMEM = "echo";
 
-cmdlist_entry_t cmdlist[] PROGMEM = {
+const cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ nessie_str,      NULL, testrun_nessie_camellia },
 	{ test_str,        NULL, testrun_camellia},
 	{ test128_str,     NULL, testrun_camellia128},

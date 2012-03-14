@@ -35,24 +35,26 @@
 
 void arcfour_init(const void *key, uint16_t length_b, arcfour_ctx_t *ctx){
 	uint8_t t;
-	uint8_t length_B = length_b/8;
+	const uint8_t length_B = length_b/8;
+	uint8_t nidx = length_B;
 	uint8_t x=0,y=0;
-	uint8_t *kptr=key;
+	const uint8_t *kptr = (const uint8_t*)key;
 	do{
 		ctx->s[x]=x;
-	}while(++x);
+	}while((uint8_t)++x);
 
 	do{
 		y += ctx->s[x] + *kptr++;
-		if(x==length_B){
-			kptr = key;
+		if(!--nidx){
+			kptr = (const uint8_t*)key;
+			nidx = length_B;
 		}
 		y &= 0xff;
 		/* ctx->s[y] <--> ctx->s[x] */
 		t = ctx->s[y];
 		ctx->s[y] = ctx->s[x];
 		ctx->s[x] = t;
-	}while(++x);
+	}while((uint8_t)++x);
 
 	ctx->i = ctx->j = 0;
 }

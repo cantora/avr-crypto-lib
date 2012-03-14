@@ -203,7 +203,7 @@ uint64_t bmw_large_r7(uint64_t x){
 #define K    0x0555555555555555LL
 #define MASK 0xFFFFFFFFFFFFFFFFLL
 static
-uint64_t k_lut[] PROGMEM = {
+const uint64_t k_lut[] PROGMEM = {
 	16LL*K, 17LL*K, 18LL*K, 19LL*K,
 	20LL*K, 21LL*K, 22LL*K, 23LL*K,
 	24LL*K, 25LL*K, 26LL*K, 27LL*K,
@@ -211,7 +211,7 @@ uint64_t k_lut[] PROGMEM = {
 */
 /* the same as above but precomputed to avoid compiler warnings */
 static
-uint64_t k_lut[] PROGMEM = {
+const uint64_t k_lut[] PROGMEM = {
 	0x5555555555555550LL, 0x5aaaaaaaaaaaaaa5LL, 0x5ffffffffffffffaLL,
 	0x655555555555554fLL, 0x6aaaaaaaaaaaaaa4LL, 0x6ffffffffffffff9LL,
 	0x755555555555554eLL, 0x7aaaaaaaaaaaaaa3LL, 0x7ffffffffffffff8LL,
@@ -308,8 +308,8 @@ uint64_t bmw_large_expand2(uint8_t j, const uint64_t* q, const void* m, const vo
 
 #if F0_HACK==2
 /* to understand this implementation take a look at f0-opt-table.txt */
-static uint16_t hack_table[5] PROGMEM = { 0x0311, 0xDDB3, 0x2A79, 0x07AA, 0x51C2 };
-static uint8_t  offset_table[5] PROGMEM = { 4+16, 6+16, 9+16, 12+16, 13+16 };
+static const uint16_t hack_table[5] PROGMEM = { 0x0311, 0xDDB3, 0x2A79, 0x07AA, 0x51C2 };
+static const uint8_t  offset_table[5] PROGMEM = { 4+16, 6+16, 9+16, 12+16, 13+16 };
 
 
 static
@@ -355,7 +355,7 @@ void bmw_large_f0(uint64_t* q, const uint64_t* h, const void* m){
 
 #if F0_HACK==1
 static
-uint8_t f0_lut[] PROGMEM ={
+const uint8_t f0_lut[] PROGMEM ={
 	 5<<1, ( 7<<1)+1, (10<<1)+0, (13<<1)+0, (14<<1)+0,
 	 6<<1, ( 8<<1)+1, (11<<1)+0, (14<<1)+0, (15<<1)+1,
 	 0<<1, ( 7<<1)+0, ( 9<<1)+0, (12<<1)+1, (15<<1)+0,

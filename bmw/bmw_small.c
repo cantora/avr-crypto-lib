@@ -195,7 +195,7 @@ uint32_t bmw_small_r7(uint32_t x){
 /*
 #define K 0x05555555L
 static
-uint32_t k_lut[] PROGMEM = {
+const uint32_t k_lut[] PROGMEM = {
 	16L*K, 17L*K, 18L*K, 19L*K, 20L*K, 21L*K, 22L*K, 23L*K,
 	24L*K, 25L*K, 26L*K, 27L*K, 28L*K, 29L*K, 30L*K, 31L*K
 };
@@ -203,7 +203,7 @@ uint32_t k_lut[] PROGMEM = {
 /* same as above but precomputed to avoid compiler warnings */
 
 static
-uint32_t k_lut[] PROGMEM = {
+const uint32_t k_lut[] PROGMEM = {
 	0x55555550L, 0x5aaaaaa5L, 0x5ffffffaL,
 	0x6555554fL, 0x6aaaaaa4L, 0x6ffffff9L,
 	0x7555554eL, 0x7aaaaaa3L, 0x7ffffff8L,
@@ -273,8 +273,8 @@ uint32_t bmw_small_expand2(uint8_t j, const uint32_t* q, const void* m, const vo
 
 #if F0_HACK==2
 /* to understand this implementation take a look at f0-opt-table.txt */
-static uint16_t hack_table[5] PROGMEM = { 0x0311, 0xDDB3, 0x2A79, 0x07AA, 0x51C2 };
-static uint8_t  offset_table[5] PROGMEM = { 4+16, 6+16, 9+16, 12+16, 13+16 };
+static const uint16_t hack_table[5] PROGMEM = { 0x0311, 0xDDB3, 0x2A79, 0x07AA, 0x51C2 };
+static const uint8_t  offset_table[5] PROGMEM = { 4+16, 6+16, 9+16, 12+16, 13+16 };
 
 static
 void bmw_small_f0(uint32_t* q, uint32_t* h, const void* m){
@@ -319,7 +319,7 @@ void bmw_small_f0(uint32_t* q, uint32_t* h, const void* m){
 
 #if F0_HACK==1
 static
-uint8_t f0_lut[] PROGMEM = {
+const uint8_t f0_lut[] PROGMEM = {
 	 5<<1, ( 7<<1)+1, (10<<1)+0, (13<<1)+0, (14<<1)+0,
 	 6<<1, ( 8<<1)+1, (11<<1)+0, (14<<1)+0, (15<<1)+1,
 	 0<<1, ( 7<<1)+0, ( 9<<1)+0, (12<<1)+1, (15<<1)+0,

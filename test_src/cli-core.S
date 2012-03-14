@@ -39,6 +39,7 @@
  */
 TMP_CNT_0 = 26
 TMP_CNT_1 = 27
+
 .global max_cmd_length
 max_cmd_length:
 	movw r30, r24
@@ -345,7 +346,7 @@ cli_auto_help:
 	movw TMP_0, r24
 	rcall cli_putstr_P
 	movw r24, TMP_0
-	call strlen_P
+	call strlen_PF
 	movw TMP_0, LEN_0
 	sub TMP_0, r24
 	sbc TMP_1, r25

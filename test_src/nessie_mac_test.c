@@ -43,7 +43,7 @@ nessie_mac_ctx_t nessie_mac_ctx;
 #define PRINTMAC nessie_print_item("MAC", mac, MACSIZE_B)
 
 
-static	uint8_t keyproto[] PROGMEM = {
+const uint8_t keyproto[] PROGMEM = {
 		                  0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77,
                           0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff,
                           0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef };
@@ -218,7 +218,7 @@ void nessie_mac_run(void){
 	nessie_print_header(nessie_mac_ctx.name, nessie_mac_ctx.keysize_b, 0, 0,
 	                    nessie_mac_ctx.macsize_b, 0);
 	/* test set 1 */
-	char* challange_dbz= PSTR(
+	const char* challange_dbz= PSTR(
 		  "\0"
 		"\"\" (empty string)\0"
 		  "a\0"

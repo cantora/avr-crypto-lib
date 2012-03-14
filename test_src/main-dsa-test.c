@@ -169,7 +169,7 @@ const char quick_test_str[]       PROGMEM = "quick-test";
 const char performance_str[]      PROGMEM = "performance";
 const char echo_str[]             PROGMEM = "echo";
 
-cmdlist_entry_t cmdlist[] PROGMEM = {
+const const cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ reset_prng_str,       NULL, reset_prng                    },
 	{ quick_test_str,       NULL, quick_test                    },
 	{ performance_str,      NULL, testrun_performance_bigint    },

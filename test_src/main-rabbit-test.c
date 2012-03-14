@@ -35,7 +35,9 @@
 #include <stdint.h>
 #include <string.h>
 
-char* algo_name = "Rabbit";
+#include <avr/pgmspace.h>
+
+const char* algo_name = "Rabbit";
 
 /*****************************************************************************
  *  additional validation-functions											 *
@@ -60,12 +62,14 @@ void test_vector(void* key, void* iv, const void* ref){
 		cli_hexdump(ctx.buffer, 16);
 	}
 	ctx.buffer_idx=16;
+	rabbit_gen(&ctx);
 	if(!ref || (memcmp_P(ctx.buffer, ref, 16))!=0){
 		fail = 1;
 		cli_putstr_P(PSTR("\r\n S[0]: "));
 		cli_hexdump(ctx.buffer, 16);
 	}
 	ctx.buffer_idx=16;
+	rabbit_gen(&ctx);
 	if(!ref || (memcmp_P(ctx.buffer, ref, 16))!=0){
 		fail = 1;
 		cli_putstr_P(PSTR("\r\n S[0]: "));
@@ -212,7 +216,7 @@ const char test_str[]        PROGMEM = "test";
 const char performance_str[] PROGMEM = "performance";
 const char echo_str[]        PROGMEM = "echo";
 
-cmdlist_entry_t cmdlist[] PROGMEM = {
+const cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ nessie_str,      NULL, testrun_nessie_rabbit},
 	{ performance_str, NULL, testrun_performance_rabbit},
 	{ first_str,       NULL, nessie_first},

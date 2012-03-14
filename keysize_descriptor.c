@@ -128,7 +128,7 @@ uint16_t get_keysizes(PGM_VOID_P ks_desc, uint16_t** list){
 			}
 		}
 		i=0;
-		while(min<max){
+		while(min<=max){
 			((uint16_t*)*list)[i++] = min;
 			min += distance;
 		}
@@ -151,7 +151,7 @@ uint16_t get_keysizes(PGM_VOID_P ks_desc, uint16_t** list){
 			}
 		}
 		i=0;
-		while(min<max){
+		while(min<=max){
 			((uint16_t*)*list)[i++] = min;
 			min += distance;
 		}

@@ -30,7 +30,7 @@ RP1[] and RP5[] of 160 uint8_ts.
 */
 
 
-static uint8_t a[9*9-1] PROGMEM =
+const uint8_t a[9*9-1] PROGMEM =
  { 171, 171, 165,  56, 121, 136,  79, 108,   2,
    255, 255, 165, 108,  45, 220,  79, 108,  88,
     54, 108, 103,  21,  74, 119, 141, 204, 221,
@@ -42,12 +42,12 @@ static uint8_t a[9*9-1] PROGMEM =
    225,  61,   8, 232, 235,  49,  22, 146 };
 
 
-static uint8_t cc1[9] PROGMEM = {  2,  88, 221, 173, 140,  48, 171,  45, 252 };
-static uint8_t cc2[9] PROGMEM = {225,  61,   8, 232, 235,  49,  22, 146, 252 };
+const uint8_t cc1[9] PROGMEM = {  2,  88, 221, 173, 140,  48, 171,  45, 252 };
+const uint8_t cc2[9] PROGMEM = {225,  61,   8, 232, 235,  49,  22, 146, 252 };
 
 /* The matrix SInv is stored in ROM as two onedimensional
 arrays RP1[] and RP5[] of 160 uint8_ts */
-static uint8_t rp1[160] PROGMEM = {
+const uint8_t rp1[160] PROGMEM = {
 	111, 137,  49, 134,   9, 116,  11,  52,  43,  55,
 	 74, 130, 119, 144,  31,   7,  72,  79, 105,  59,
 	 57, 120,  50,  94, 141, 135, 149,  44, 109, 100,
@@ -65,7 +65,7 @@ static uint8_t rp1[160] PROGMEM = {
 	 86, 140,  71, 136,  69,  99,  58,   6,  92,  90,
 	  8, 103, 128,  38,  46, 146,  89, 151,  51,  53 };
 
-static uint8_t rp5[160] PROGMEM = {
+const uint8_t rp5[160] PROGMEM = {
 	 90, 113, 130, 115, 132,  27,  46,  72,  33,  50,
 	 35, 136,  42, 148, 146, 143, 116, 158,  98,  41,
 	 39,   5,  54,  86, 106,  56,  30, 138,  80,  44,
@@ -83,7 +83,7 @@ static uint8_t rp5[160] PROGMEM = {
 	 22,  15, 151,  32,  84,  37,  77,  88,  16,  29,
 	  3, 128, 118,  18, 156,  19,  52,  45,  53,  63 };
 
-mqq160_sign_key_t testkey_P PROGMEM = {a, cc1, cc2, rp1, rp5 };
+const mqq160_sign_key_t testkey_P PROGMEM = {a, cc1, cc2, rp1, rp5 };
 
 void mqq_load_pgm_key(void* buffer, mqq160_sign_key_t* key, const mqq160_sign_key_t* key_P){
 	uint8_t *buf_ptr;

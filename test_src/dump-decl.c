@@ -48,7 +48,7 @@ const char flash_desc[]  PROGMEM = "flash";
 const char ram_desc[]    PROGMEM = "ram";
 const char eeprom_desc[] PROGMEM = "eeprom";
 
-typedef struct {
+typedef const struct {
 	PGM_P trigger;
 	PGM_P desc;
 	void (*fpt)(void*, uint32_t, uint8_t);

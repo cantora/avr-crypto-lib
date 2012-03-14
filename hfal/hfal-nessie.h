@@ -31,6 +31,6 @@
 #include "hashfunction_descriptor.h"
 
 void hfal_nessie(const hfdesc_t* hd);
-void hfal_nessie_multiple(const hfdesc_t** hd_list);
+void hfal_nessie_multiple(const hfdesc_t* const* hd_list);
 
 #endif /* HFAL_NESSIE_H_ */

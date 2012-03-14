@@ -203,7 +203,7 @@ void hfal_stacksize(const hfdesc_t* hd){
 	}
 }
 
-void hfal_performance_multiple(const hfdesc_t** hd_list){
+void hfal_performance_multiple(const hfdesc_t* const* hd_list){
 	const hfdesc_t* hd;
 	for(;;){
 		hd = (void*)pgm_read_word(hd_list);

@@ -34,7 +34,7 @@
 #include "memxor.h"
 #include "mqq160-sign.h"
 
-static uint8_t mod20_table[32] PROGMEM = {
+static const uint8_t mod20_table[32] PROGMEM = {
 		 4,  5,  6,  7,  8,  9, 10, 11,
 		12, 13, 14, 15, 16, 17, 18, 19,
 		 0,  1,  2,  3,  4,  5,  6,  7,
@@ -57,7 +57,7 @@ in the MQQ160-SIGN C Library.
 static void mqq_inv_affine_transformation(uint8_t* input_bytes, uint8_t* result, const mqq160_sign_key_t* key){
 	/* The matrix SInv is given as two permutations of 160 elements. */
 	uint8_t j, byteindex, bitindex, bitindex_d, byteindex_d, rp1, rp5;
-	uint8_t *r1_ptr, *r5_ptr;
+	const uint8_t *r1_ptr, *r5_ptr;
 	uint8_t h1[20];
 
 	/* Initialize H1 and H2 = 0 */
@@ -109,7 +109,7 @@ static uint8_t mqq_q(uint8_t i, uint8_t b1, uint8_t b2, const mqq160_sign_key_t*
 	uint8_t result, column, row, k;
 	int8_t j;
 	uint16_t temp;
-	uint8_t *tmp_ptr=key->a;
+	const uint8_t *tmp_ptr=key->a;
 	if(i&1){
 		memcpy_P(e, key->cc1, 9);
 		while(b1){

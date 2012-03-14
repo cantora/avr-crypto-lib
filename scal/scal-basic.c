@@ -127,10 +127,8 @@ uint8_t scal_cipher_gen_byte(scgen_ctx_t* ctx){
 
 void scal_cipher_gen_block(void* block, scgen_ctx_t* ctx){
 	uint8_t flags;
-	uint16_t blocksize_b;
 	void_fpt gen_fpt;
 	flags = pgm_read_byte(&(ctx->desc_ptr->flags));
-	blocksize_b = pgm_read_word(&(ctx->desc_ptr->gensize_b));
 	gen_fpt = (void_fpt)pgm_read_word(&(ctx->desc_ptr->gen));
 	if((flags&SC_GEN_TYPE)==SC_GEN_TYPE_1){
 		*((uint8_t*)block) = ((sc_gen1_fpt)gen_fpt)(ctx->ctx);

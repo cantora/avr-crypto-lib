@@ -47,7 +47,7 @@
 
 char* algo_name = "TWISTER";
 
-const hfdesc_t* algolist[] PROGMEM = {
+const hfdesc_t* const algolist[] PROGMEM = {
 	(hfdesc_t*)&twister224_desc,
 	(hfdesc_t*)&twister256_desc,
 	(hfdesc_t*)&twister384_desc,
@@ -127,7 +127,7 @@ const char shavs_list_str[]  PROGMEM = "shavs_list";
 const char shavs_set_str[]   PROGMEM = "shavs_set";
 const char shavs_test1_str[] PROGMEM = "shavs_test1";
 
-cmdlist_entry_t cmdlist[] PROGMEM = {
+const cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ nessie_str,          NULL, testrun_nessie_twister},
 	{ test_str,            NULL, testrun_twister},
 	{ performance_str,     NULL, testrun_performance_twister},

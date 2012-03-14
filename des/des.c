@@ -1,7 +1,7 @@
 /* des.c */
 /*
-    This file is part of the AVR-Crypto-Lib.
-    Copyright (C) 2008  Daniel Otte (daniel.otte@rub.de)
+    This file is part of the ARM-Crypto-Lib.
+    Copyright (C) 2006-2010  Daniel Otte (daniel.otte@rub.de)
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -25,15 +25,11 @@
  * \license	 GPLv3 or later
  * 
  */
-#include "config.h"
-#include "debug.h"
-#include "cli.h"
 #include <stdint.h>
 #include <string.h>
-#include <util/delay.h>
 #include <avr/pgmspace.h>
 
-prog_uint8_t sbox[256]  = {
+const uint8_t sbox[256] PROGMEM = {
   /* S-box 1 */
   0xE4, 0xD1, 0x2F, 0xB8, 0x3A, 0x6C, 0x59, 0x07,
   0x0F, 0x74, 0xE2, 0xD1, 0xA6, 0xCB, 0x95, 0x38,
@@ -76,7 +72,7 @@ prog_uint8_t sbox[256]  = {
   0x21, 0xE7, 0x4A, 0x8D, 0xFC, 0x90, 0x35, 0x6B
 };
 
-prog_uint8_t e_permtab[] ={ 
+const uint8_t e_permtab[] PROGMEM = {
 	 4,  6, 					/* 4 bytes in 6 bytes out*/
 	32,  1,  2,  3,  4,  5,
 	 4,  5,  6,  7,  8,  9,
@@ -88,7 +84,7 @@ prog_uint8_t e_permtab[] ={
 	28, 29, 30, 31, 32,  1
 };
 
-prog_uint8_t p_permtab[] ={ 
+const uint8_t p_permtab[] PROGMEM = {
 	 4,  4,						/* 32 bit -> 32 bit */
 	16,  7, 20, 21,
 	29, 12, 28, 17,
@@ -100,7 +96,7 @@ prog_uint8_t p_permtab[] ={
 	22, 11,  4, 25
 };
 
-prog_uint8_t ip_permtab[] ={ 
+const uint8_t ip_permtab[] PROGMEM = {
 	 8,  8,						/* 64 bit -> 64 bit */
 	58, 50, 42, 34, 26, 18, 10, 2,
 	60, 52, 44, 36, 28, 20, 12, 4,
@@ -112,7 +108,7 @@ prog_uint8_t ip_permtab[] ={
 	63, 55, 47, 39, 31, 23, 15, 7
 };
 
-prog_uint8_t inv_ip_permtab[] ={ 
+const uint8_t inv_ip_permtab[] PROGMEM = {
 	 8, 8,						/* 64 bit -> 64 bit */
 	40, 8, 48, 16, 56, 24, 64, 32,
 	39, 7, 47, 15, 55, 23, 63, 31,
@@ -124,7 +120,7 @@ prog_uint8_t inv_ip_permtab[] ={
 	33, 1, 41,  9, 49, 17, 57, 25
 };
 
-prog_uint8_t pc1_permtab[] ={ 
+const uint8_t pc1_permtab[] PROGMEM = {
 	 8,  7, 					/* 64 bit -> 56 bit*/
 	57, 49, 41, 33, 25, 17,  9,
 	 1, 58, 50, 42, 34, 26, 18,
@@ -136,7 +132,7 @@ prog_uint8_t pc1_permtab[] ={
 	21, 13,  5, 28, 20, 12,  4
 };
 
-prog_uint8_t pc2_permtab[] ={ 
+const uint8_t pc2_permtab[] PROGMEM = {
 	 7,	 6, 					/* 56 bit -> 48 bit */
 	14, 17, 11, 24,  1,  5,
 	 3, 28, 15,  6, 21, 10,
@@ -148,7 +144,7 @@ prog_uint8_t pc2_permtab[] ={
 	46, 42, 50, 36, 29, 32
 };
 
-prog_uint8_t splitin6bitword_permtab[] = {
+const uint8_t splitin6bitword_permtab[] PROGMEM = {
 	 8,  8, 					/* 64 bit -> 64 bit */
 	64, 64,  1,  6,  2,  3,  4,  5, 
 	64, 64,  7, 12,  8,  9, 10, 11, 
@@ -160,7 +156,7 @@ prog_uint8_t splitin6bitword_permtab[] = {
 	64, 64, 43, 48, 44, 45, 46, 47 
 };
 
-prog_uint8_t shiftkey_permtab[] = {
+const uint8_t shiftkey_permtab[] PROGMEM = {
 	 7,  7, 					/* 56 bit -> 56 bit */
 	 2,  3,  4,  5,  6,  7,  8,  9,
 	10, 11, 12, 13, 14, 15, 16, 17,
@@ -172,7 +168,7 @@ prog_uint8_t shiftkey_permtab[] = {
 	54, 55, 56, 29
 };
 
-prog_uint8_t shiftkeyinv_permtab[] = {
+const uint8_t shiftkeyinv_permtab[] PROGMEM = {
 	 7,  7,
 	28,  1,  2,  3,  4,  5,  6,  7,
 	 8,  9, 10, 11, 12, 13, 14, 15,
@@ -207,17 +203,16 @@ prog_uint8_t shiftkeyinv_permtab[] = {
 #define ROTTABLE_INV  0x3F7E
 /******************************************************************************/
 
-void permute(prog_uint8_t *ptable, const uint8_t *in, uint8_t *out){
-	uint8_t ib, ob; /* in-bytes and out-bytes */
+void permute(const uint8_t *ptable, const uint8_t *in, uint8_t *out){
+	uint8_t ob; /* in-bytes and out-bytes */
 	uint8_t byte, bit; /* counter for bit and byte */
-	ib = pgm_read_byte(&(ptable[0]));
-	ob = pgm_read_byte(&(ptable[1]));
+	ob = pgm_read_byte(&ptable[1]);
 	ptable = &(ptable[2]);
 	for(byte=0; byte<ob; ++byte){
 		uint8_t x,t=0;
 		for(bit=0; bit<8; ++bit){
-			x=pgm_read_byte(&(ptable[byte*8+bit])) -1 ;
-				t<<=1;
+			x = pgm_read_byte(ptable++) -1 ;
+				t <<= 1;
 			if((in[x/8]) & (0x80>>(x%8)) ){
 				t|=0x01;
 			}
@@ -240,7 +235,7 @@ static inline
 void shiftkey(uint8_t *key){
 	uint8_t k[7];
 	memcpy(k, key, 7);
-	permute((prog_uint8_t*)shiftkey_permtab, k, key);	
+	permute((uint8_t*)shiftkey_permtab, k, key);	
 }
 
 /******************************************************************************/
@@ -248,7 +243,7 @@ static inline
 void shiftkey_inv(uint8_t *key){
 	uint8_t k[7];
 	memcpy(k, key, 7);
-	permute((prog_uint8_t*)shiftkeyinv_permtab, k, key);
+	permute((uint8_t*)shiftkeyinv_permtab, k, key);
 	
 }
 
@@ -257,16 +252,16 @@ static inline
 uint64_t splitin6bitwords(uint64_t a){
 	uint64_t ret=0;
 	a &= 0x0000ffffffffffffLL;
-	permute((prog_uint8_t*)splitin6bitword_permtab, (uint8_t*)&a, (uint8_t*)&ret);	
+	permute((uint8_t*)splitin6bitword_permtab, (uint8_t*)&a, (uint8_t*)&ret);	
 	return ret;
 }
 
 /******************************************************************************/
 
 static inline
-uint8_t substitute(uint8_t a, prog_uint8_t * sbp){
+uint8_t substitute(uint8_t a, uint8_t * sbp){
 	uint8_t x;	
-	x = pgm_read_byte(&(sbp[a>>1]));
+	x = pgm_read_byte(&sbp[a>>1]);
 	x = (a&1)?x&0x0F:x>>4;
 	return x;
 	
@@ -278,24 +273,24 @@ uint32_t des_f(uint32_t r, uint8_t* kr){
 	uint8_t i;
 	uint32_t t=0,ret;
 	uint64_t data;
-	prog_uint8_t *sbp; /* sboxpointer */ 
-	permute((prog_uint8_t*)e_permtab, (uint8_t*)&r, (uint8_t*)&data);
+	uint8_t *sbp; /* sboxpointer */ 
+	permute((uint8_t*)e_permtab, (uint8_t*)&r, (uint8_t*)&data);
 	for(i=0; i<7; ++i)
 		((uint8_t*)&data)[i] ^= kr[i];
 	
 	/* Sbox substitution */
 	data = splitin6bitwords(data);
-	sbp=(prog_uint8_t*)sbox;
+	sbp=(uint8_t*)sbox;
 	for(i=0; i<8; ++i){
 		uint8_t x;
 		x = substitute(((uint8_t*)&data)[i], sbp);
-		t<<=4;
+		t <<= 4;
 		t |= x;
 		sbp += 32;
 	}
 	changeendian32(&t);
 		
-	permute((prog_uint8_t*)p_permtab,(uint8_t*)&t, (uint8_t*)&ret);
+	permute((uint8_t*)p_permtab,(uint8_t*)&t, (uint8_t*)&ret);
 
 	return ret;
 }
@@ -303,25 +298,29 @@ uint32_t des_f(uint32_t r, uint8_t* kr){
 /******************************************************************************/
 
 void des_enc(void* out, const void* in, const void* key){
-#define R *((uint32_t*)&(data[4]))
-#define L *((uint32_t*)&(data[0]))
+#define R (data.v32[1])
+#define L (data.v32[0])
 
-	uint8_t data[8],kr[6],k[7];
+	uint8_t kr[6],k[7];
 	uint8_t i;
+	union {
+		uint8_t v8[8];
+		uint32_t v32[2];
+	} data;
 	
-	permute((prog_uint8_t*)ip_permtab, (uint8_t*)in, data);
-	permute((prog_uint8_t*)pc1_permtab, (uint8_t*)key, k);
+	permute((uint8_t*)ip_permtab, (uint8_t*)in, data.v8);
+	permute((uint8_t*)pc1_permtab, (const uint8_t*)key, k);
 	for(i=0; i<8; ++i){
 		shiftkey(k);
 		if(ROTTABLE&((1<<((i<<1)+0))) )
 			shiftkey(k);
-		permute((prog_uint8_t*)pc2_permtab, k, kr);
+		permute((uint8_t*)pc2_permtab, k, kr);
 		L ^= des_f(R, kr);
 		
 		shiftkey(k);
 		if(ROTTABLE&((1<<((i<<1)+1))) )
 			shiftkey(k);
-		permute((prog_uint8_t*)pc2_permtab, k, kr);
+		permute((uint8_t*)pc2_permtab, k, kr);
 		R ^= des_f(L, kr);
 
 	}
@@ -329,31 +328,30 @@ void des_enc(void* out, const void* in, const void* key){
 	R ^= L;
 	L ^= R;
 	R ^= L;
-	
-	permute((prog_uint8_t*)inv_ip_permtab, data, (uint8_t*)out);
+	permute((uint8_t*)inv_ip_permtab, data.v8, (uint8_t*)out);
 }
 
 /******************************************************************************/
 
 void des_dec(void* out, const void* in, const uint8_t* key){
-#define R *((uint32_t*)&(data[4]))
-#define L *((uint32_t*)&(data[0]))
-
-	uint8_t data[8],kr[6],k[7];
+	uint8_t kr[6],k[7];
+	union {
+		uint8_t v8[8];
+		uint32_t v32[2];
+	} data;
 	int8_t i;
-	
-	permute((prog_uint8_t*)ip_permtab, (uint8_t*)in, data);
-	permute((prog_uint8_t*)pc1_permtab, (uint8_t*)key, k);
+	permute((uint8_t*)ip_permtab, (uint8_t*)in, data.v8);
+	permute((uint8_t*)pc1_permtab, (const uint8_t*)key, k);
 	for(i=7; i>=0; --i){
 		
-		permute((prog_uint8_t*)pc2_permtab, k, kr);
+		permute((uint8_t*)pc2_permtab, k, kr);
 		L ^= des_f(R, kr);
 		shiftkey_inv(k);
 		if(ROTTABLE&((1<<((i<<1)+1))) ){
 			shiftkey_inv(k);
 		}
 
-		permute((prog_uint8_t*)pc2_permtab, k, kr);
+		permute((uint8_t*)pc2_permtab, k, kr);
 		R ^= des_f(L, kr);
 		shiftkey_inv(k);
 		if(ROTTABLE&((1<<((i<<1)+0))) ){
@@ -365,8 +363,7 @@ void des_dec(void* out, const void* in, const uint8_t* key){
 	R ^= L;
 	L ^= R;
 	R ^= L;
-	
-	permute((prog_uint8_t*)inv_ip_permtab, data, (uint8_t*)out);
+	permute((uint8_t*)inv_ip_permtab, data.v8, (uint8_t*)out);
 }
 
 /******************************************************************************/

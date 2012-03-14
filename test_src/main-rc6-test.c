@@ -40,7 +40,7 @@
 #define RC6_ROUNDS 20
 char* algo_name = "RC6-32/20/16";
 
-const bcdesc_t* algolist[] PROGMEM = {
+const bcdesc_t* const algolist[] PROGMEM = {
 	(bcdesc_t*)&rc6_desc,
 	NULL
 };
@@ -68,7 +68,7 @@ const char test_str[]        PROGMEM = "test";
 const char performance_str[] PROGMEM = "performance";
 const char echo_str[]        PROGMEM = "echo";
 
-cmdlist_entry_t cmdlist[] PROGMEM = {
+const cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ nessie_str,      NULL, testrun_nessie_rc6},
 	{ test_str,        NULL, testrun_nessie_rc6},
 	{ performance_str, NULL, testrun_performance_rc6},

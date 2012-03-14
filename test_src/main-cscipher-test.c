@@ -39,7 +39,7 @@
 
 char* algo_name = "CS-Cipher";
 
-const bcdesc_t* algolist[] PROGMEM = {
+const bcdesc_t* const algolist[] PROGMEM = {
 	(bcdesc_t*)&cscipher_desc,
 	NULL
 };
@@ -138,7 +138,7 @@ const char longtest_str[]    PROGMEM = "longtest";
 const char performance_str[] PROGMEM = "performance";
 const char echo_str[]        PROGMEM = "echo";
 
-cmdlist_entry_t cmdlist[] PROGMEM = {
+const cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ nessie_str,      NULL, testrun_nessie_cscipher },
 	{ test_str,        NULL, testrun_cscipher},
 	{ longtest_str,    NULL, testrun_long_cscipher},

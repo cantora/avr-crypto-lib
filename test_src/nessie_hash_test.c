@@ -176,7 +176,7 @@ void tv4_hash(void){
 	NESSIE_PUTC('0' + nessie_hash_ctx.hashsize_b%10);
 
 	NESSIE_PUTSTR_P(PSTR(" zero bits"));
-	memset(block, 0, 256/8);
+	memset(block, 0, nessie_hash_ctx.hashsize_b/8);
 	
 	nessie_hash_ctx.hash_init(ctx);
 	while(n>=nessie_hash_ctx.blocksize_B*8){
@@ -215,7 +215,7 @@ void nessie_hash_run(void){
 	
 	nessie_print_header(nessie_hash_ctx.name, 0, 0, nessie_hash_ctx.hashsize_b, 0, 0);
 	/* test set 1 */
-	char* challange_dbz= PSTR(
+	const char* challange_dbz= PSTR(
 		  "\0"
 		"\"\" (empty string)\0"
 		  "a\0"

@@ -22,7 +22,7 @@
 
 char* algo_name = "CAST-256";
 
-const bcdesc_t* algolist[] PROGMEM = {
+const bcdesc_t* const algolist[] PROGMEM = {
 	(bcdesc_t*)&cast6_desc,
 	NULL
 };
@@ -108,7 +108,7 @@ const char test_str[]        PROGMEM = "test";
 const char performance_str[] PROGMEM = "performance";
 const char echo_str[]        PROGMEM = "echo";
 
-cmdlist_entry_t cmdlist[] PROGMEM = {
+const cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ nessie_str,      NULL, testrun_nessie_cast6 },
 	{ test_str,        NULL, testrun_rfc_cast6},
 	{ performance_str, NULL, testrun_performance_cast6},

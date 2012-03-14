@@ -37,7 +37,7 @@
 #define ALL_LEN_B (PRIV_LEN_B+PUB_LEN_B+P_LEN_B+Q_LEN_B+G_LEN_B)
 
 
-static uint8_t dsa_key_blob[] PROGMEM = {
+static const uint8_t dsa_key_blob[] PROGMEM = {
 
 //	priv:
 	0xac, 0xe6, 0xef, 0x99, 0x08, 0xe8, 0x5f, 0xc8,
@@ -87,7 +87,7 @@ static uint8_t dsa_key_blob[] PROGMEM = {
 #define G_LEN_B (16*8)
 #define ALL_LEN_B (PRIV_LEN_B+PUB_LEN_B+P_LEN_B+Q_LEN_B+G_LEN_B)
 
-static uint8_t dsa_key_blob[] PROGMEM = {
+static const uint8_t dsa_key_blob[] PROGMEM = {
 	// priv:
 	0x03, 0xad, 0x17, 0x81, 0x0f, 0x70, 0x7f, 0x89,
 	0xa2, 0x0a, 0x70, 0x1c, 0x3b, 0x24, 0xff, 0xd2,
@@ -159,7 +159,7 @@ static uint8_t dsa_key_blob[] PROGMEM = {
 #define G_LEN_B (32*8)
 #define ALL_LEN_B (PRIV_LEN_B+PUB_LEN_B+P_LEN_B+Q_LEN_B+G_LEN_B)
 
-static uint8_t dsa_key_blob[] PROGMEM = {
+static const uint8_t dsa_key_blob[] PROGMEM = {
 /* priv: */
 	0x1d, 0xe4, 0x81, 0x02, 0x52, 0x6b, 0x2b, 0x0e,
 	0x98, 0x08, 0xc8, 0xb9, 0x81, 0x40, 0xd1, 0x1e,

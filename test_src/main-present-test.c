@@ -39,7 +39,7 @@
 
 char* algo_name = "Present";
 
-const bcdesc_t* algolist[] PROGMEM = {
+const bcdesc_t* const algolist[] PROGMEM = {
 	(bcdesc_t*)&present_desc,
 	NULL
 };
@@ -105,7 +105,7 @@ const char test_str[]        PROGMEM = "test";
 const char performance_str[] PROGMEM = "performance";
 const char echo_str[]        PROGMEM = "echo";
 
-cmdlist_entry_t cmdlist[] PROGMEM = {
+const cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ nessie_str,      NULL, testrun_nessie_present},
 	{ test_str,        NULL, testrun_self_present},
 	{ performance_str, NULL, testrun_performance_present},

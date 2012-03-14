@@ -1,7 +1,7 @@
 #!/usr/bin/ruby
 # shavs_test.rb
 =begin
-    This file is part of the AVR-Crypto-Lib.
+    This file is part of the ARM-Crypto-Lib.
     Copyright (C) 2008, 2009  Daniel Otte (daniel.otte@rub.de)
 
     This program is free software: you can redistribute it and/or modify
@@ -24,7 +24,7 @@ require 'rubygems'
 require 'serialport'
 require 'getopt/std'
 
-$buffer_size = 0
+$buffer_size = 0 # set automatically in init_system
 $conffile_check = Hash.new
 $conffile_check.default = 0
 
@@ -48,7 +48,7 @@ def readconfigfile(fname, conf)
 	  conf[m[1]] = Hash.new
 	  next
 	end
-	next if not /=/.match(line)
+	next if ! /=/.match(line)
 	m=/[\s]*([^\s]*)[\s]*=[\s]*([^\s]*)/.match(line)
 	if m[1]=="include"
 	  Dir.glob(m[2]){ |fn| conf = readconfigfile(fn, conf) }
@@ -104,6 +104,7 @@ def init_system(algo_select)
     line=$sp.gets()
   end while not m=/buffer_size[\s]*=[\s]*0x([0-9A-Fa-f]*)/.match(line)
   $buffer_size = m[1].to_i(16)
+  printf("buffer_size = %d\n", $buffer_size)
 end
 
 ################################################################################
@@ -113,8 +114,9 @@ end
 def get_md
   begin
     line = $sp.gets()
+        puts("DBG got: " + line.inspect) if $debug
 	line = "" if line==nil
-	puts("DBG got: "+line) if $debug
+   #	puts("DBG got: "+line) if $debug
   end while not /[\s]*MD[\s]*=.*/.match(line)
   return line
 end
@@ -122,20 +124,47 @@ end
 ################################################################################
 # send_md                                                                      #
 ################################################################################
-
+=begin
 def send_md(md_string)
   $sp.print("Msg = ")
   for i in 0..md_string.length-1
     $sp.print(md_string[i].chr)
-#	print("DBG s: "+ md_string[i].chr) if $debug
-#   sleep(0.001)
-	if((i%($buffer_size*2)==0)&&(i!=0))
-	  begin
-		line=$sp.gets()
-	  end while not /\./.match(line)
-	end
+	  if((i%($buffer_size*2)==0)&&(i!=0))
+	    begin
+		    line=$sp.gets()
+	    end while not /\./.match(line)
+ 	  end
   end
 end
+=end
+def send_md(md_string)
+#  puts 'DBG: send_md; md_string.length = '+md_string.length.to_s+'; buffer_size = '+$buffer_size.to_s
+  bs = $buffer_size*2
+  $sp.print("Msg = ")
+  $sp.print(md_string[0])
+  md_string = md_string[1..-1]
+  for i in 0..((md_string.length)/bs)
+#    puts 'DBG bulk send'
+    if(md_string.length-i*bs<=bs)
+ #     puts "DBG: i="+i.to_s()
+      t = md_string[(i*bs)..-1]
+      printf("sending final %d chars: %s\n", t.length, t[-10..-1]) if $debug
+      $sp.print(t) 
+      return
+    end
+    t = md_string[(i*bs)..((i+1)*bs-1)]
+    printf("sending %d chars: %s\n", t.length, t[-10..-1]) if $debug
+    $sp.print(t)
+    sleep(0.1)
+    print("going to wait ... : ") if $debug
+    begin
+     line=$sp.gets()
+     puts(line.inspect) if $debug
+     line='' if !line
+    end while ! /\./.match(line) 
+  end
+end
+
 
 ################################################################################
 # run_test                                                                     #
@@ -169,14 +198,16 @@ def run_test(filename, skip=0)
 	$sp.print(lb.strip)
 	$sp.print("\r")
     begin
-	  lb=file.gets()
+	    lb=file.gets()
     end while not (file.eof or (m=/[\s]*Msg[\s]*=[\s]*([0-9a-fA-F]*)/.match(lb)))
     return if file.eof
     puts("DBG sending: "+lb) if $debug
 	send_md(m[1])
+    puts("DBG sending [done] getting...") if $debug
 	avr_md = get_md()
+    puts("DBG getting [done]") if $debug
     begin
-	  lb=file.gets()
+	    lb=file.gets()
     end while not /[\s]*MD[\s]*=.*/.match(lb)
 	a = (/[\s]*MD[\s]*=[\s]*([0-9a-fA-F]*).*/.match(lb))[1];
 	b = (/[\s]*MD[\s]*=[\s]*([0-9a-fA-F]*).*/.match(avr_md))[1];
@@ -204,8 +235,19 @@ end
 ################################################################################
 # MAIN                                                                         #
 ################################################################################
+#
+# Options:
+#  -s {algo_letter} run only specified algos
+#  -f <file>        also read config from <file>
+#  -i <n>           skip until test nr. <n>
+#  -j <n>           start with testfile <n>
+#  -o               use just one testfile
+#  -h ???
+#  -d               enable debug mode
+#  -c ???
+#  -a ???
 
-opts = Getopt::Std.getopts("s:f:i:j:hdca")
+opts = Getopt::Std.getopts("s:f:i:j:hdcao")
 
 conf = Hash.new
 conf = readconfigfile("/etc/testport.conf", conf)
@@ -265,16 +307,16 @@ algo_tasks.each do |algoa|
     puts("No test-set defined for #{algo} \r\n")
     next
   else
-	i=0
-	i = opts["j"] if opts["j"]
-	logfile=File.open(conf["PORT"]["testlogbase"]+algo+".txt", "a")
-	while conf[algo]["file_#{i}"] != nil
-	  puts("Testing #{algo} with #{conf[algo]["file_#{i}"]}")
-	  reset_system()
-	  init_system(algoa[1])
-	  skip=0
-	  skip=opts["i"].to_i if opts["i"]
-	  nerrors=run_test(conf[algo]["file_#{i}"], skip)
+    i=0
+    i = opts["j"].to_i if opts["j"]
+    logfile=File.open(conf["PORT"]["testlogbase"]+algo+".txt", "a")
+    while conf[algo]["file_#{i}"] != nil
+      puts("Testing #{algo} with #{conf[algo]["file_#{i}"]}")
+      reset_system()
+      init_system(algoa[1])
+      skip=0
+      skip=opts["i"].to_i if opts["i"]
+      nerrors=run_test(conf[algo]["file_#{i}"], skip)
       if nerrors == 0
         puts("\n[ok]")
         logfile.puts("[ok] "+conf[algo]["file_#{i}"]+ " ("+Time.now.to_s()+")")
@@ -282,7 +324,8 @@ algo_tasks.each do |algoa|
         puts("\n[errors: "+ nerrors.to_s() +"]")
         logfile.puts("[error] "+nerrors.to_s+" "+conf[algo]["file_#{i}"]+ " ("+Time.now.to_s()+")")
       end
-      i += 1
+      i = i+1
+      break if opts["o"]
     end
     logfile.close()
   end

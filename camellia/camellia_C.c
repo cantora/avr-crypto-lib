@@ -34,27 +34,36 @@
 #endif 
 /*****************************************************************************/
 
-uint8_t rol(uint8_t a, uint8_t n){return ((a<<n) | (a>>(8-n)));}
+static
+uint8_t rol(uint8_t a, uint8_t n){
+	return ((a<<n) | (a>>(8-n)));
+}
 
 /*****************************************************************************/
 
-uint8_t ror(uint8_t a, uint8_t n){return ((a<<(8-n)) | (a>>n));}
+static
+uint8_t ror(uint8_t a, uint8_t n){
+	return ((a<<(8-n)) | (a>>n));
+}
 
 /*****************************************************************************/
 
+static
 uint32_t rol32(uint32_t a, uint8_t n){
 	return ((a<<n)|(a>>(32-n)));
 }
 
 /*****************************************************************************/
-
+/*
+static
 uint64_t rol64(uint64_t a, uint8_t n){
 	return ((a<<n)|(a>>(64-n)));
 }
-
+*/
 /*****************************************************************************/
  
-uint8_t camellia_s1_table[256] PROGMEM = {
+static
+const uint8_t camellia_s1_table[256] PROGMEM = {
  112, 130,  44, 236, 179,  39, 192, 229, 228, 133,  87,  53, 234,  12, 174,  65,
   35, 239, 107, 147,  69,  25, 165,  33, 237,  14,  79,  78,  29, 101, 146, 189,
  134, 184, 175, 143, 124, 235,  31, 206,  62,  48, 220,  95,  94, 197,  11,  26,
@@ -75,30 +84,35 @@ uint8_t camellia_s1_table[256] PROGMEM = {
 
 /*****************************************************************************/
 
+static
 uint8_t camellia_s1(uint8_t b){
-	return pgm_read_byte_near(&(camellia_s1_table[b]));
+	return pgm_read_byte(&(camellia_s1_table[b]));
 }
 
 /*****************************************************************************/
 
+static
 uint8_t camellia_s2(uint8_t b){
-	return rol(pgm_read_byte_near(&(camellia_s1_table[b])),1);
+	return rol(pgm_read_byte(&(camellia_s1_table[b])),1);
 }
 
 /*****************************************************************************/
 
+static
 uint8_t camellia_s3(uint8_t b){
-	return ror(pgm_read_byte_near(&(camellia_s1_table[b])),1);
+	return ror(pgm_read_byte(&(camellia_s1_table[b])),1);
 }
 
 /*****************************************************************************/
 
+static
 uint8_t camellia_s4(uint8_t b){
-	return pgm_read_byte_near(&(camellia_s1_table[rol(b,1)]));
+	return pgm_read_byte(&(camellia_s1_table[rol(b,1)]));
 }
 
 /*****************************************************************************/
 
+static
 uint64_t camellia_s(uint64_t d){
 //	cli_putstr("\n\r S von "); cli_hexdump(&(d), 8);
 	#define D ((uint8_t*)(&d))
@@ -118,6 +132,7 @@ uint64_t camellia_s(uint64_t d){
 
 /*****************************************************************************/
 
+static
 uint64_t camellia_p(uint64_t d){
 	uint64_t z=0;
 	#define D ((uint8_t*)(&d))
@@ -153,6 +168,7 @@ uint64_t camellia_p(uint64_t d){
 
 /*****************************************************************************/
 
+static
 uint64_t camellia_f(uint64_t x, uint64_t k){
 	uint64_t y;
 	y = camellia_p(camellia_s(x ^ k));
@@ -161,6 +177,7 @@ uint64_t camellia_f(uint64_t x, uint64_t k){
 
 /*****************************************************************************/
 
+static
 uint64_t camellia_fl(uint64_t x, uint64_t k){
 //	uint64_t lx, lk, y;
 	uint32_t lx[2], lk[2], yr, yl;
@@ -191,6 +208,7 @@ uint64_t camellia_fl(uint64_t x, uint64_t k){
 
 /*****************************************************************************/
 
+static
 uint64_t camellia_fl_inv(uint64_t y, uint64_t k){
 //volatile	uint32_t xl, xr;
 	uint32_t ly[2], lk[2], x[2];
@@ -220,7 +238,8 @@ uint64_t camellia_fl_inv(uint64_t y, uint64_t k){
 
 /*****************************************************************************/
 
-uint64_t camellia_sigma[6]={
+static
+const uint64_t camellia_sigma_table[6] PROGMEM = {
 	0xA09E667F3BCC908BLL,
 	0xB67AE8584CAA73B2LL,
 	0xC6EF372FE94F82BELL,
@@ -240,6 +259,17 @@ void camellia128_ctx_dump(camellia128_ctx_t *s){
 	return;
 }
 #endif
+/*****************************************************************************/
+static
+uint64_t camellia_sigma(uint8_t idx){
+	union{
+		uint32_t v32[2];
+		uint64_t v64;
+	} r;
+	r.v32[0] = pgm_read_dword((uint8_t*)camellia_sigma_table + idx * 8);
+	r.v32[1] = pgm_read_dword((uint8_t*)camellia_sigma_table + idx * 8 + 4);
+	return r.v64;
+}
 /*****************************************************************************/
 
 void camellia128_init(const void* key, camellia128_ctx_t* s){
@@ -261,20 +291,21 @@ void camellia128_init(const void* key, camellia128_ctx_t* s){
 	s->kal = s->kll;
 	s->kar = s->klr;
 	
-	s->kar ^= camellia_f(s->kal, camellia_sigma[0]);
-	s->kal ^= camellia_f(s->kar, camellia_sigma[1]);
+	s->kar ^= camellia_f(s->kal, camellia_sigma(0));
+	s->kal ^= camellia_f(s->kar, camellia_sigma(1));
 	
 	s->kal ^= s->kll;
 	s->kar ^= s->klr;
 	
-	s->kar ^= camellia_f(s->kal, camellia_sigma[2]);
-	s->kal ^= camellia_f(s->kar, camellia_sigma[3]);
+	s->kar ^= camellia_f(s->kal, camellia_sigma(2));
+	s->kal ^= camellia_f(s->kar, camellia_sigma(3));
 	/**/
 //	cli_putstr("\n\r----------------init finished--------------------");
 }
 
 /*****************************************************************************/
 
+static
 void camellia128_keyop(camellia128_ctx_t* s, int8_t q){
 	/* first we do 16 bit left-rols for kl and ka (128bit each) */
 	uint32_t temp;
@@ -291,6 +322,7 @@ void camellia128_keyop(camellia128_ctx_t* s, int8_t q){
 
 /*****************************************************************************/
 
+static
 void camellia128_keyop_inv(camellia128_ctx_t* s, int8_t q){
 	/* first we do 16 bit right-rols for kl and ka (128bit each) */
 	uint32_t temp;
@@ -322,6 +354,7 @@ void camellia128_keyop_inv(camellia128_ctx_t* s, int8_t q){
 #define KEY_ROL17               0x08
 #define KEY_ROL15               0x00
 
+static
 void camellia_6rounds(const camellia128_ctx_t* s, uint64_t* bl, uint64_t* br, uint8_t roundop, uint8_t keychoice){
 	uint8_t i;
 	uint64_t* k[4];
@@ -350,6 +383,7 @@ void camellia_6rounds(const camellia128_ctx_t* s, uint64_t* bl, uint64_t* br, ui
 
 /*****************************************************************************/
 
+static
 void change_endian(void* data, uint8_t length){
 	uint8_t i,a;
 	for(i=0; i<length/2; ++i){

@@ -79,7 +79,7 @@ void print_rsa_ctx(rsa_ctx_t* ctx){
 	rsa_print_item(&(ctx->privexp), PSTR("private exponent"));
 }
 
-uint8_t testmsg[128] PROGMEM = {
+const uint8_t testmsg[128] PROGMEM = {
 		0x25, 0x11, 0x1e, 0x08, 0x1c, 0x72, 0x57, 0xbf,
 		0x46, 0xbb, 0x56, 0xe8, 0x0b, 0x24, 0x0d, 0x72,
 		0x77, 0x11, 0x12, 0x10, 0xec, 0xb9, 0xe4, 0x6f,
@@ -159,7 +159,7 @@ const char quick_test_str[]       PROGMEM = "quick-test";
 const char performance_str[]      PROGMEM = "performance";
 const char echo_str[]             PROGMEM = "echo";
 
-cmdlist_entry_t cmdlist[] PROGMEM = {
+const cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ reset_prng_str,       NULL, reset_prng                    },
 	{ quick_test_str,       NULL, quick_test                    },
 	{ performance_str,      NULL, testrun_performance_bigint    },

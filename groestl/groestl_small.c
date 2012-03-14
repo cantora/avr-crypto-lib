@@ -54,7 +54,7 @@
  #define dump_m(m)
 #endif
 
-static uint8_t matrix[] PROGMEM = {
+static const uint8_t matrix[] PROGMEM = {
  2, 2, 3, 4, 5, 3, 5, 7,
  7, 2, 2, 3, 4, 5, 3, 5,
  5, 7, 2, 2, 3, 4, 5, 3,

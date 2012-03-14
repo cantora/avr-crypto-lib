@@ -50,7 +50,7 @@ uint64_t PROGMEM camellia_sigma[6]={ / * 64 byte table * /
 	0xB05688C2B3E6C1FDLL
 };	
 */
-uint32_t PROGMEM camellia_sigma[12]={ /* 48 byte table */
+const uint32_t camellia_sigma[12] PROGMEM = { /* 48 byte table */
          0x3BCC908BL, 0xA09E667FL,
          0x4CAA73B2L, 0xB67AE858L,
          0xE94F82BEL, 0xC6EF372FL,
@@ -61,11 +61,11 @@ uint32_t PROGMEM camellia_sigma[12]={ /* 48 byte table */
 
 /* an ugly macro to load an entry form the table above */
 /*
-#define SIGMA(p) (( ((uint64_t)(pgm_read_dword((prog_uint32_t*)camellia_sigma+2*(p)+1)))<<32) | \
-                    ((uint64_t)(pgm_read_dword((prog_uint32_t*)camellia_sigma+2*(p)+0))) )
+#define SIGMA(p) (( ((uint64_t)(pgm_read_dword((uint32_t*)camellia_sigma+2*(p)+1)))<<32) | \
+                    ((uint64_t)(pgm_read_dword((uint32_t*)camellia_sigma+2*(p)+0))) )
 */
-#define SIGMA(p) (( ((uint64_t)(pgm_read_dword(&(((prog_uint32_t*)camellia_sigma)[2*(p)+1]))))<<32) | \
-                    ((uint64_t)(pgm_read_dword(&(((prog_uint32_t*)camellia_sigma)[2*(p)+0])))) )
+#define SIGMA(p) (( ((uint64_t)(pgm_read_dword(&(((uint32_t*)camellia_sigma)[2*(p)+1]))))<<32) | \
+                    ((uint64_t)(pgm_read_dword(&(((uint32_t*)camellia_sigma)[2*(p)+0])))) )
 
 
 
@@ -81,7 +81,7 @@ void camellia128_ctx_dump(camellia128_ctx_t *s){
 }
 */
 /*****************************************************************************/
-/* extern prog_uint64_t camellia_sigma[6]; */
+/* extern uint64_t camellia_sigma[6]; */
 
 void camellia128_init(const void* key, camellia128_ctx_t* s){
 	uint8_t i;

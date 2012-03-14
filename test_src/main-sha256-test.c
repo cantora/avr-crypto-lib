@@ -42,7 +42,7 @@
 
 char* algo_name = "SHA-256";
 
-const hfdesc_t* algolist[] PROGMEM = {
+const hfdesc_t* const algolist[] PROGMEM = {
 	(hfdesc_t*)&sha256_desc,
 	NULL
 };
@@ -138,7 +138,7 @@ const char shavs_test2_str[] PROGMEM = "shavs_test2";
 const char shavs_test3_str[] PROGMEM = "shavs_test3";
 const char dump_str[]        PROGMEM = "dump";
 
-cmdlist_entry_t cmdlist[] PROGMEM = {
+const cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ nessie_str,          NULL, testrun_nessie_sha256          },
 	{ test_str,            NULL, testrun_nessie_sha256          },
 	{ monte_str,           NULL, test_monte                     },

@@ -32,8 +32,12 @@
 #include "keysize_descriptor.h"
 
 const char serpent_str[]   PROGMEM = "serpent";
+/*
+const uint8_t serpent_keysize_desc[] PROGMEM = { KS_TYPE_RANGE, KS_INT(1), KS_INT(256),
+                                                 KS_TYPE_TERMINATOR    };
 
-const uint8_t serpent_keysize_desc[] PROGMEM = { KS_TYPE_RANGE, KS_INT(1), KS_INT(256), 
+*/
+const uint8_t serpent_keysize_desc[] PROGMEM = { KS_TYPE_LIST, 3, KS_INT(128), KS_INT(192), KS_INT(256),
                                                  KS_TYPE_TERMINATOR    };
 
 const bcdesc_t serpent_desc PROGMEM = {

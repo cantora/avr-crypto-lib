@@ -41,7 +41,7 @@
 
 char* algo_name = "Threefish";
 
-const bcdesc_t* algolist[] PROGMEM = {
+const bcdesc_t* const algolist[] PROGMEM = {
 	(bcdesc_t*)&threefish256_desc,
 	(bcdesc_t*)&threefish512_desc,
 	(bcdesc_t*)&threefish1024_desc,
@@ -254,7 +254,7 @@ const char inittest_str[]    PROGMEM = "inittest";
 const char performance_str[] PROGMEM = "performance";
 const char echo_str[]        PROGMEM = "echo";
 
-cmdlist_entry_t cmdlist[] PROGMEM = {
+const cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ nessie_str,      NULL, testrun_nessie_threefish},
 	{ test_str,        NULL, testrun_stdtest_threefish},
     { test256_str,     NULL, testrun_stdtest_threefish256},

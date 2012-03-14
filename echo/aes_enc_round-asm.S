@@ -69,8 +69,8 @@ CTR = 24
  * param state:  r24:r25
  * param ks:     r22:r23
  */
-.global aes_encrypt_round
-aes_encrypt_round:
+.global aes_enc_round
+aes_enc_round:
 	push_range 2, 17
 	push r28
 	push r29

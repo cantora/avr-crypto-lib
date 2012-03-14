@@ -33,7 +33,7 @@
 #include "blake_common.h"
 
 static
-uint64_t pgm_read_qword(void* p){
+uint64_t pgm_read_qword(const void* p){
 	union{
 		uint64_t v64;
 		uint32_t v32[2];
@@ -44,7 +44,7 @@ uint64_t pgm_read_qword(void* p){
 }
 
 static
-uint64_t blake_c[] PROGMEM = {
+const uint64_t blake_c[] PROGMEM = {
    0x243F6A8885A308D3LL, 0x13198A2E03707344LL,
    0xA4093822299F31D0LL, 0x082EFA98EC4E6C89LL,
    0x452821E638D01377LL, 0xBE5466CF34E90C6CLL,
@@ -176,7 +176,7 @@ void blake_large_lastBlock(blake_large_ctx_t* ctx, const void* msg, uint16_t len
 
 }
 
-uint64_t blake512_iv[] PROGMEM = {
+const uint64_t blake512_iv[] PROGMEM = {
     0x6A09E667F3BCC908LL, 0xBB67AE8584CAA73BLL,
     0x3C6EF372FE94F82BLL, 0xA54FF53A5F1D36F1LL,
     0x510E527FADE682D1LL, 0x9B05688C2B3E6C1FLL,
@@ -193,7 +193,7 @@ void blake512_init(blake512_ctx_t* ctx){
 	ctx->appendone = 1;
 }
 
-uint64_t blake384_iv[] PROGMEM = {
+const uint64_t blake384_iv[] PROGMEM = {
     0xCBBB9D5DC1059ED8LL, 0x629A292A367CD507LL,
     0x9159015A3070DD17LL, 0x152FECD8F70E5939LL,
     0x67332667FFC00B31LL, 0x8EB44A8768581511LL,

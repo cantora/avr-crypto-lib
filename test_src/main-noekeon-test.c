@@ -39,7 +39,7 @@
 
 char* algo_name = "Noekeon";
 
-const bcdesc_t* algolist[] PROGMEM = {
+const bcdesc_t* const algolist[] PROGMEM = {
 	(bcdesc_t*)&noekeon_direct_desc,
 	(bcdesc_t*)&noekeon_indirect_desc,
 	NULL
@@ -153,7 +153,7 @@ const char indirect_str[]    PROGMEM = "indirect";
 const char performance_str[] PROGMEM = "performance";
 const char echo_str[]        PROGMEM = "echo";
 
-cmdlist_entry_t cmdlist[] PROGMEM = {
+const cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ nessie_str,      NULL, testrun_nessie_noekeon},
 	{ test_str,        NULL, testrun_stdtest_noekeon},
 //	{ direct_str,      NULL, testrun_nessie_noekeon_direct},

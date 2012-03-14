@@ -144,7 +144,7 @@ const char test_str[]        PROGMEM = "test";
 const char performance_str[] PROGMEM = "performance";
 const char echo_str[]        PROGMEM = "echo";
 
-cmdlist_entry_t cmdlist[] PROGMEM = {
+const cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ test_str,        NULL, testrun_stdtest_base64},
 	{ performance_str, NULL, testrun_performance_base64},
 	{ echo_str,    (void*)1, (void_fpt)echo_ctrl},

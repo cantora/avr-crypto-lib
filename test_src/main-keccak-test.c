@@ -42,7 +42,7 @@
 char* algo_name = "Keccak";
 
 
-const hfdesc_t* algolist[] PROGMEM = {
+const hfdesc_t* const algolist[] PROGMEM = {
 	(hfdesc_t*)&keccak224_desc,
 	(hfdesc_t*)&keccak256_desc,
 	(hfdesc_t*)&keccak384_desc,
@@ -87,7 +87,7 @@ const char shavs_set_str[]   PROGMEM = "shavs_set";
 const char shavs_test1_str[] PROGMEM = "shavs_test1";
 const char shavs_test3_str[] PROGMEM = "shavs_test3";
 
-cmdlist_entry_t cmdlist[] PROGMEM = {
+const cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ nessie_str,                NULL, testrun_nessie_keccak     },
 	{ performance_str,           NULL, performance_keccak        },
 	{ test256_str,               NULL, test_256                  },

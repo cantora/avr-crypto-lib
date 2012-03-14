@@ -21,11 +21,11 @@
 #define MQQ160SIGN_H_
 
 typedef struct{
-	uint8_t *a;
-	uint8_t *cc1;
-	uint8_t *cc2;
-	uint8_t *rp1;
-	uint8_t *rp5;
+	const uint8_t *a;
+	const uint8_t *cc1;
+	const uint8_t *cc2;
+	const uint8_t *rp1;
+	const uint8_t *rp5;
 } mqq160_sign_key_t;
 
 void mqq160_sign(void* dest, const void* hash, const mqq160_sign_key_t* key);

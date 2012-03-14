@@ -50,7 +50,7 @@ const bcdesc_t des_desc PROGMEM = {
 	BC_INIT_TYPE_1,
 	des_str,
 	8,
-	128,
+	64,
 	{(void_fpt)NULL},
 	{(void_fpt)des_dummy_enc},
 	{(void_fpt)des_dummy_dec},

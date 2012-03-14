@@ -7,7 +7,7 @@ HASHES += $(ALGO_NAME)
 $(ALGO_NAME)_DIR      := sha256/
 $(ALGO_NAME)_INCDIR   := hfal/
 $(ALGO_NAME)_OBJ      := sha256.o
-$(ALGO_NAME)_TEST_BIN := main-sha256-test.o $(CLI_STD) $(HFAL_STD) hfal_sha256.o dump-asm.o dump-decl.o
+$(ALGO_NAME)_TESTBIN  := main-sha256-test.o $(CLI_STD) $(HFAL_STD) hfal_sha256.o dump-asm.o dump-decl.o
 $(ALGO_NAME)_NESSIE_TEST      := "nessie"
 $(ALGO_NAME)_PERFORMANCE_TEST := "performance"
 

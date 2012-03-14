@@ -30,12 +30,12 @@
 #include "cli.h"
 #endif
 
-static uint8_t sbox0[] PROGMEM =
+const static uint8_t sbox0[] PROGMEM =
 	{  9,  0,  4, 11, 13, 12,  3, 15,  1, 10,  2,  6,  7,  5,  8, 14 };
-static uint8_t sbox1[] PROGMEM =
+const static uint8_t sbox1[] PROGMEM =
 	{  3, 12,  6, 13,  5,  7,  1,  9, 15,  2,  0,  4, 11, 10, 14,  8 };
 
-static uint8_t round_const_0[] PROGMEM = {
+const static uint8_t round_const_0[] PROGMEM = {
   0x6a, 0x09, 0xe6, 0x67, 0xf3, 0xbc, 0xc9, 0x08,
   0xb2, 0xfb, 0x13, 0x66, 0xea, 0x95, 0x7d, 0x3e,
   0x3a, 0xde, 0xc1, 0x75, 0x12, 0x77, 0x50, 0x99,
@@ -52,7 +52,7 @@ uint8_t jh_l(uint8_t v, uint8_t w){
 static
 void jh_round(uint8_t* a, const uint8_t* rc){
 	uint8_t b[128];
-	uint8_t i,r,x,y;
+	uint8_t i,r=0,x,y;
 	for(i=0; i<128; ++i){
 		if(i%4==0){
 			r = rc[i/4];

@@ -44,7 +44,7 @@
 char* algo_name = "BlueMidnightWish";
 
 
-const hfdesc_t* algolist[] PROGMEM = {
+const hfdesc_t* const algolist[] PROGMEM = {
 	(hfdesc_t*)&bmw224_desc,
 	(hfdesc_t*)&bmw256_desc,
 	(hfdesc_t*)&bmw384_desc,
@@ -156,7 +156,7 @@ const char shavs_set_str[]   PROGMEM = "shavs_set";
 const char shavs_test1_str[] PROGMEM = "shavs_test1";
 const char shavs_test3_str[] PROGMEM = "shavs_test3";
 
-cmdlist_entry_t cmdlist[] PROGMEM = {
+const cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ nessie_str,                  NULL, testrun_nessie_bmw            },
 	{ test_str,                    NULL, testrun_stdtest_bmw           },
 	{ testshort_str,               NULL, testshort                     },

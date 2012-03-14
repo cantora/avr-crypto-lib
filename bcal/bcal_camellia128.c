@@ -38,7 +38,7 @@ const uint8_t camellia128_keysize_desc[] PROGMEM = { KS_TYPE_LIST, 1, KS_INT(128
 
 const bcdesc_t camellia128_desc PROGMEM = {
 	BCDESC_TYPE_BLOCKCIPHER,
-	BC_INIT_TYPE_2,
+	BC_INIT_TYPE_1,
 	camellia128_str,
 	sizeof(camellia128_ctx_t),
 	128,

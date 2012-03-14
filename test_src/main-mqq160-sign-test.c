@@ -42,7 +42,7 @@ char* algo_name = "MQQ160-sign";
 /*****************************************************************************
  *  additional validation-functions											 *
  *****************************************************************************/
-uint8_t test_hash[20] PROGMEM =
+const uint8_t test_hash[20] PROGMEM =
 {
 	(uint8_t)0x64, (uint8_t)0xFE, (uint8_t)0x2A, (uint8_t)0x85,
 	(uint8_t)0xBB, (uint8_t)0x8C, (uint8_t)0x54, (uint8_t)0x5C,
@@ -176,7 +176,7 @@ const char test_mem_str[]    PROGMEM = "mem";
 const char performance_str[] PROGMEM = "performance";
 const char echo_str[]        PROGMEM = "echo";
 
-cmdlist_entry_t cmdlist[] PROGMEM = {
+const cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ test_str,                    NULL, testrun_mqq                   },
 	{ test_flash_str,              NULL, testrun_mqq_flash             },
 	{ test_mem_str,                NULL, testrun_mqq_mem               },

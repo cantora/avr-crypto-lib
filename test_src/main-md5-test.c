@@ -39,7 +39,7 @@
 
 char* algo_name = "MD5";
 
-const hfdesc_t* algolist[] PROGMEM = {
+const hfdesc_t* const algolist[] PROGMEM = {
 	(hfdesc_t*)&md5_desc,
 	NULL
 };
@@ -131,7 +131,7 @@ const char test_str[]        PROGMEM = "test";
 const char performance_str[] PROGMEM = "performance";
 const char echo_str[]        PROGMEM = "echo";
 
-cmdlist_entry_t cmdlist[] PROGMEM = {
+const cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ nessie_str,      NULL, testrun_nessie_md5},
 	{ test_str,        NULL, testrun_md5},
 	{ performance_str, NULL, testrun_performance_md5},

@@ -41,7 +41,7 @@ const bcdesc_t cast5_desc PROGMEM = {
 	BC_INIT_TYPE_2,
 	cast5_str,
 	sizeof(cast5_ctx_t),
-	128,
+	64,
 	{(void_fpt)cast5_init},
 	{(void_fpt)cast5_enc},
 	{(void_fpt)cast5_dec},

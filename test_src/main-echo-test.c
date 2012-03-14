@@ -39,10 +39,10 @@
 #include <string.h>
 #include <stdlib.h>
 
-char* algo_name = "CubeHash";
+char* algo_name = "Echo";
 
 
-const hfdesc_t* algolist[] PROGMEM = {
+const hfdesc_t* const algolist[] PROGMEM = {
 	(hfdesc_t*)&echo224_desc,
 	(hfdesc_t*)&echo256_desc,
 	(hfdesc_t*)&echo384_desc,
@@ -54,7 +54,7 @@ const hfdesc_t* algolist[] PROGMEM = {
  *  additional validation-functions											 *
  *****************************************************************************/
 /* IntermediateKAT1_256.txt */
-uint8_t intermediate_data[] PROGMEM = {
+const uint8_t intermediate_data[] PROGMEM = {
 	0xDB, 0x11, 0xF6, 0x09, 0xBA, 0xBA, 0x7B, 0x0C,
 	0xA6, 0x34, 0x92, 0x6B, 0x1D, 0xD5, 0x39, 0xC8,
 	0xCB, 0xAD, 0xA2, 0x49, 0x67, 0xD7, 0xAD, 0xD4,
@@ -79,7 +79,7 @@ uint8_t intermediate_data[] PROGMEM = {
 	0xFD, 0x29, 0xD1, 0x04, 0xCE
 	};
 
-uint8_t intermediate_data2[] PROGMEM = {
+const uint8_t intermediate_data2[] PROGMEM = {
 	0x75, 0x8E, 0xA3, 0xFE, 0xA7, 0x38, 0x97, 0x3D,
 	0xB0, 0xB8, 0xBE, 0x7E, 0x59, 0x9B, 0xBE, 0xF4,
 	0x51, 0x93, 0x73, 0xD6, 0xE6, 0xDC, 0xD7, 0x19,
@@ -158,7 +158,7 @@ const char shavs_set_str[]   PROGMEM = "shavs_set";
 const char shavs_test1_str[] PROGMEM = "shavs_test1";
 const char shavs_test3_str[] PROGMEM = "shavs_test3";
 
-cmdlist_entry_t cmdlist[] PROGMEM = {
+const cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ nessie_str,                NULL, testrun_nessie_echo         },
 	{ interm_str,                NULL, echo256_interm              },
 	{ interm2_str,               NULL, echo512_interm              },

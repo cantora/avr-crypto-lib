@@ -42,7 +42,7 @@
 char* algo_name = "CubeHash";
 
 
-const hfdesc_t* algolist[] PROGMEM = {
+const hfdesc_t* const algolist[] PROGMEM = {
 	(hfdesc_t*)&cubehash224_desc,
 	(hfdesc_t*)&cubehash256_desc,
 	(hfdesc_t*)&cubehash384_desc,
@@ -86,7 +86,7 @@ const char shavs_set_str[]   PROGMEM = "shavs_set";
 const char shavs_test1_str[] PROGMEM = "shavs_test1";
 const char shavs_test3_str[] PROGMEM = "shavs_test3";
 
-cmdlist_entry_t cmdlist[] PROGMEM = {
+const cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ nessie_str,                NULL, testrun_nessie_cubehash     },
 	{ test256_str,               NULL, cubehash256_test0           },
 	{ performance_str,           NULL, performance_cubehash        },

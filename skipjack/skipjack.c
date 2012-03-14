@@ -30,9 +30,13 @@
 #include <avr/io.h>
 #include <avr/pgmspace.h>
 
-#define SKIPJACK_CNT_BIG
+#if NESSIE_COMPAT
+#define SKIPJACK_CNT_BIG 0
+#else
+#define SKIPJACK_CNT_BIG 1
+#endif
 
-#ifdef SKIPJACK_CNT_BIG
+#if SKIPJACK_CNT_BIG
   #define SKIPJACK_CNT_SHIFT <<8
 #else
   #define SKIPJACK_CNT_SHIFT
@@ -40,7 +44,7 @@
 
 /*****************************************************************************/
 
-uint8_t skipjack_ftable[] PROGMEM ={ 
+const uint8_t skipjack_ftable[] PROGMEM ={ 
 	0xa3, 0xd7, 0x09, 0x83, 0xf8, 0x48, 0xf6, 0xf4, 
 	0xb3, 0x21, 0x15, 0x78, 0x99, 0xb1, 0xaf, 0xf9, 
 	0xe7, 0x2d, 0x4d, 0x8a, 0xce, 0x4c, 0xca, 0x2e, 

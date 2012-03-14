@@ -35,7 +35,7 @@ quadratic quasigroup of order 2^8 given as 81 uint8_ts
 and one nonsingular matrix SInv given as two arrays
 RP1[] and RP5[] of 160 uint8_ts.
 */
-extern mqq160_sign_key_t testkey_P;
+extern const mqq160_sign_key_t testkey_P;
 
 void mqq_load_pgm_key(void* buffer, mqq160_sign_key_t* key, const mqq160_sign_key_t* key_P);
 

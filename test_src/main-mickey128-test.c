@@ -24,6 +24,7 @@ char* algo_name = "Mickey128";
  *****************************************************************************/
 
 void testrun_nessie_mickey128(void){
+	scal_nessie_set_estream(1);
 	scal_nessie_run(&mickey128_desc);
 }
 
@@ -118,7 +119,7 @@ const char test_str[]        PROGMEM = "test";
 const char performance_str[] PROGMEM = "performance";
 const char echo_str[]        PROGMEM = "echo";
 
-cmdlist_entry_t cmdlist[] PROGMEM = {
+const cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ nessie_str,      NULL, testrun_nessie_mickey128},
 	{ test_str,        NULL, testrun_ref_mickey128},
 	{ echo_str,    (void*)1, (void_fpt)echo_ctrl},

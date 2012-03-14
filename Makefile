@@ -38,13 +38,14 @@ GLOBAL_INCDIR := ./ $(TESTSRC_DIR)
 
 #-------------------------------------------------------------------------------
 # inclusion of make stubs
+include mkfiles/0*.mk
 include mkfiles/*.mk
 
 #-------------------------------------------------------------------------------
 ALGORITHMS = $(BLOCK_CIPHERS) $(STREAM_CIPHERS) $(HASHES) $(PRNGS) $(MACS) \
 			 $(ENCODINGS) $(SIGNATURE) $(PK_CIPHERS) $(AUX)
 ALGORITHMS_OBJ = $(patsubst %,%_OBJ, $(ALGORITHMS))
-ALGORITHMS_TEST_BIN = $(patsubst %,%_TEST_BIN, $(ALGORITHMS))
+ALGORITHMS_TESTBIN = $(patsubst %,%_TESTBIN, $(ALGORITHMS))
 
 #-------------------------------------------------------------------------------
 # define binary object in $(BIN_DIR)$(ALGO)/<obj>
@@ -59,7 +60,7 @@ $(foreach a, $(ALGORITHMS), $(eval $(call Assert_Template, \
 
 $(foreach a, $(ALGORITHMS), $(eval $(call Assert_Template, \
     $(a)_TESTBINOBJ, \
-    $(addprefix $(BIN_DIR)$(call lc,$(a))/$(TEST_DIR),$($(a)_TEST_BIN)) \
+    $(addprefix $(BIN_DIR)$(call lc,$(a))/$(TEST_DIR),$($(a)_TESTBIN)) \
 )))
 
 
@@ -71,6 +72,15 @@ $(1): $(2)
 	@echo "[cc]: $(1) <-- $(2)"
 	@mkdir -p $(dir $(1))
 	@$(CC) $(CFLAGS_A) $(addprefix -I./,$(3)) $(addprefix -D, $(4)) -c -o $(1) $(2)
+endef
+
+
+
+define TargetSourceList_Template
+$(1): $(2)
+	@echo "[cc]: $(1) <-- $(2)"
+	@mkdir -p $(dir $(1))
+	@$(CC) $(CFLAGS_A) $(addprefix -I./,$(3)) $(addprefix -D, $(4)) $(LIST_OPT) -c -o /dev/null $(2) > $(1)
 endef
 
 # ----------------------------------------------------------------------------
@@ -100,7 +110,7 @@ $(foreach a, $(ALGORITHMS), \
 )
 
 $(foreach a, $(ALGORITHMS), \
-  $(foreach b, $($(a)_TEST_BIN), \
+  $(foreach b, $($(a)_TESTBIN), \
     $(eval $(call TargetSource_Template, \
       $(BIN_DIR)$(call lc, $(a))/$(TEST_DIR)$(b), \
       $(call find_source_file, $(b), $($(a)_DIR) $($(a)_INCDIR) $(GLOBAL_INCDIR) ),\
@@ -110,10 +120,23 @@ $(foreach a, $(ALGORITHMS), \
   ) \
 )
 
+             
+$(foreach a, $(ALGORITHMS), \
+  $(foreach b, $($(a)_OBJ), \
+    $(eval $(call TargetSourceList_Template, \
+      $(LIST_DIR)$(call lc, $(a))/$(patsubst %.o,%.s,$(b)), \
+      $(call find_source_file, $(b), $($(a)_DIR) $($(a)_INCDIR) $(GLOBAL_INCDIR) ),\
+      $($(a)_DIR) $($(a)_INCDIR) $(GLOBAL_INCDIR), \
+      $($(a)_DEF), \
+    )) \
+  ) \
+)
+
 #-------------------------------------------------------------------------------
 
 define MainTestElf_Template
 $(1): $(2) $(3)
+	@mkdir -p $(dir $(1))
 	@echo "[ld]: $(1)"
 	@$(CC) $(CFLAGS_A) $(LDFLAGS)$(patsubst %.elf,%.map,$(1)) -o \
 	$(1) \
@@ -142,6 +165,17 @@ endef
 $(foreach algo, $(ALGORITHMS), $(eval $(call TestBin_TEMPLATE, \
     $(algo), \
     $(BIN_DIR)$(call lc, $(algo))/$(TEST_DIR)main-$(call lc, $(algo))-test.elf \
+)))
+
+#-------------------------------------------------------------------------------
+
+define Listing_TEMPLATE
+$(1)_LIST: $(2)
+endef
+
+$(foreach algo, $(ALGORITHMS), $(eval $(call Listing_TEMPLATE, \
+    $(algo), \
+    $(foreach obj,$($(algo)_OBJ), $(LIST_DIR)$(call lc, $(algo))/$(obj:.o=.s)) \
 )))
 
 #-------------------------------------------------------------------------------
@@ -201,12 +235,16 @@ blockcipher_size: $(foreach algo, $(BLOCK_CIPHERS), $(algo)_SIZE)
 #-------------------------------------------------------------------------------
 
 .PHONY: tests
-tests: $(foreach a, $(ALGORITHMS), $(a)_TEST_BIN)
+tests: $(foreach a, $(ALGORITHMS), $(a)_TESTBIN)
 
 #-------------------------------------------------------------------------------
 
 define TestRun_Template
 $(1)_TESTRUN: $(1)_FLASH
+	@echo "[reset]"
+	@sleep 3
+	@$(RESETCMD)
+	@sleep 1
 	@echo "[test]: $(1)"
 	$(RUBY) $(GET_TEST) $(TESTPORT) $(TESTPORTBAUDR) 8 1 nessie $(TESTLOG_DIR)$(TESTPREFIX) $(2)
 endef

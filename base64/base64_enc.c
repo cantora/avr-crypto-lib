@@ -32,7 +32,7 @@
 #if 1
 #include <avr/pgmspace.h>
 
-char base64_alphabet[64] PROGMEM = {
+const char base64_alphabet[64] PROGMEM = {
 	'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 
 	'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 
 	'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 

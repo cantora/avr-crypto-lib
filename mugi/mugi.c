@@ -65,16 +65,19 @@ void dump_mugi_ctx(mugi_ctx_t* ctx){
 #define GF256MUL_2(a) (gf256mul(2, (a), 0x1b))
 
 uint64_t changeendian64(uint64_t a){
-	uint8_t r[8];
-	r[0] = ((uint8_t*)&a)[7];
-	r[1] = ((uint8_t*)&a)[6];
-	r[2] = ((uint8_t*)&a)[5];
-	r[3] = ((uint8_t*)&a)[4];
-	r[4] = ((uint8_t*)&a)[3];
-	r[5] = ((uint8_t*)&a)[2];
-	r[6] = ((uint8_t*)&a)[1];
-	r[7] = ((uint8_t*)&a)[0];
-	return *((uint64_t*)r);
+	union {
+		uint8_t v8[8];
+		uint64_t v64;
+	} r;
+	r.v8[0] = ((uint8_t*)&a)[7];
+	r.v8[1] = ((uint8_t*)&a)[6];
+	r.v8[2] = ((uint8_t*)&a)[5];
+	r.v8[3] = ((uint8_t*)&a)[4];
+	r.v8[4] = ((uint8_t*)&a)[3];
+	r.v8[5] = ((uint8_t*)&a)[2];
+	r.v8[6] = ((uint8_t*)&a)[1];
+	r.v8[7] = ((uint8_t*)&a)[0];
+	return r.v64;
 }
 
 static

@@ -39,7 +39,7 @@
 
 char* algo_name = "Khazad";
 
-const bcdesc_t* algolist[] PROGMEM = {
+const bcdesc_t* const algolist[] PROGMEM = {
 	(bcdesc_t*)&khazad_desc,
 	NULL
 };
@@ -103,7 +103,7 @@ const char test_sbox_str[]   PROGMEM = "test_sbox";
 const char performance_str[] PROGMEM = "performance";
 const char echo_str[]        PROGMEM = "echo";
 
-cmdlist_entry_t cmdlist[] PROGMEM = {
+const cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ nessie_str,      NULL, testrun_nessie_khazad},
 	{ test_str,        NULL, test_khazad},
 	{ test_sbox_str,   NULL, test_sbox},

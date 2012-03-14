@@ -45,7 +45,7 @@
 char* algo_name = "Groestl";
 
 
-const hfdesc_t* algolist[] PROGMEM = {
+const hfdesc_t* const algolist[] PROGMEM = {
 	(hfdesc_t*)&groestl224_desc,
 	(hfdesc_t*)&groestl256_desc,
 	(hfdesc_t*)&groestl384_desc,
@@ -132,7 +132,7 @@ const char shavs_list_str[]   PROGMEM = "shavs_list";
 const char shavs_set_str[]    PROGMEM = "shavs_set";
 const char shavs_test1_str[]  PROGMEM = "shavs_test1";
 
-cmdlist_entry_t cmdlist[] PROGMEM = {
+const cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ nessie_str,          NULL, testrun_nessie_groestl},
 	{ test_str,            NULL, testrun_stdtest_groestl},
 	{ testshort_str,       NULL, testshort},

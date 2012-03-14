@@ -107,7 +107,7 @@ void twister_ctx2hash(void* dest, twister_state_t* ctx, uint16_t hashsize_b){
 		memxor(ctx->s, tmp, 64);
 		twister_blank_round(ctx);
 		for(j=0; j<4; ++j){
-			*((uint8_t*)dest) = ctx->s[3-j][0] ^ tmp[3-j][0];
+			*((uint8_t*)dest) = ctx->s[7-j][0] ^ tmp[7-j][0];
 			dest = (uint8_t*)dest + 1;
 		}
 	}

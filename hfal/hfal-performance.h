@@ -31,5 +31,5 @@
 #include "hashfunction_descriptor.h"
 
 void hfal_performance(const hfdesc_t* hd);
-void hfal_performance_multiple(const hfdesc_t** hd_list);
+void hfal_performance_multiple(const hfdesc_t* const* hd_list);
 #endif /* HFAL_PERFORMANCE_H_ */

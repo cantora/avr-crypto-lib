@@ -65,7 +65,7 @@ const char test_str[]        PROGMEM = "test";
 /* const char performance_str[] PROGMEM = "performance"; */
 const char echo_str[]        PROGMEM = "echo";
 
-cmdlist_entry_t cmdlist[] PROGMEM = {
+const cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ nessie_str,      NULL, testrun_nessie_hmacsha1},
 	{ test_str,        NULL, testrun_nessie_hmacsha1},
 /*	{ performance_str, NULL, testrun_performance_hmacsha1}, */

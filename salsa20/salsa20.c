@@ -69,8 +69,8 @@ void salsa20_hash(uint32_t* a){
 	}
 }
 
-uint8_t sigma[] PROGMEM = {'e','x','p','a','n','d',' ','3','2','-','b','y','t','e',' ','k'};
-uint8_t theta[] PROGMEM = {'e','x','p','a','n','d',' ','1','6','-','b','y','t','e',' ','k'};
+const uint8_t sigma[] PROGMEM = {'e','x','p','a','n','d',' ','3','2','-','b','y','t','e',' ','k'};
+const uint8_t theta[] PROGMEM = {'e','x','p','a','n','d',' ','1','6','-','b','y','t','e',' ','k'};
 
 void salsa_k32(uint32_t* dest, const uint32_t* k, const uint32_t* n){
 	memcpy_P(dest+ 0, sigma+ 0, 4);

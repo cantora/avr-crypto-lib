@@ -1,7 +1,7 @@
 /* ubi512.c */
 /*
-    This file is part of the AVR-Crypto-Lib.
-    Copyright (C) 2009  Daniel Otte (daniel.otte@rub.de)
+    This file is part of the ARM-Crypto-Lib.
+    Copyright (C) 2006-2010  Daniel Otte (daniel.otte@rub.de)
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -31,19 +31,19 @@
 #include "ubi.h"
 
 void ubi512_init(ubi512_ctx_t* ctx, const void* g, uint8_t type){
-	memset(ctx->tweak, 0, 15);
-	ctx->tweak[15] = 0x40+type;
+	memset(ctx->tweak.v8, 0, 15);
+	ctx->tweak.v8[15] = 0x40+type;
 	memcpy(ctx->g, g, UBI512_BLOCKSIZE_B);
 }
 
 void ubi512_nextBlock(ubi512_ctx_t* ctx, const void* block){
 	threefish512_ctx_t tfctx;
-	((uint64_t*)(ctx->tweak))[0] += UBI512_BLOCKSIZE_B;
-	threefish512_init(ctx->g, ctx->tweak, &tfctx);
+	ctx->tweak.v64[0] += UBI512_BLOCKSIZE_B;
+	threefish512_init(ctx->g, ctx->tweak.v8, &tfctx);
 	memcpy(ctx->g, block, UBI512_BLOCKSIZE_B);
 	threefish512_enc(ctx->g, &tfctx);
 	memxor(ctx->g, block, UBI512_BLOCKSIZE_B);
-	ctx->tweak[15] &= (uint8_t)~0x40;
+	ctx->tweak.v8[15] &= (uint8_t)~0x40;
 } 
 
 
@@ -54,11 +54,11 @@ void ubi512_lastBlock(ubi512_ctx_t* ctx, const void* block, uint16_t length_b){
 		block = (uint8_t*)block + UBI512_BLOCKSIZE_B;
 		length_b -= UBI512_BLOCKSIZE;
 	}
-	ctx->tweak[15] |= 0x80;
-	((uint64_t*)(ctx->tweak))[0] += (length_b+7)/8;
+	ctx->tweak.v8[15] |= 0x80;
+	ctx->tweak.v64[0] += (length_b+7)/8;
 	if(length_b & 0x07)
-		ctx->tweak[14] |= 0x80;
-	threefish512_init(ctx->g, ctx->tweak, &tfctx);
+		ctx->tweak.v8[14] |= 0x80;
+	threefish512_init(ctx->g, ctx->tweak.v8, &tfctx);
 	memset(ctx->g, 0, UBI512_BLOCKSIZE_B);
 	memcpy(ctx->g, block, (length_b+7)/8);
 	if(length_b & 0x07)

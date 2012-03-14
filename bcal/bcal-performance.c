@@ -210,7 +210,7 @@ void bcal_stacksize(const bcdesc_t* bcd){
 	}
 }
 
-void bcal_performance_multiple(const bcdesc_t** bcd_list){
+void bcal_performance_multiple(const bcdesc_t* const* bcd_list){
 	const bcdesc_t* bcd;
 	for(;;){
 		bcd = (void*)pgm_read_word(bcd_list);

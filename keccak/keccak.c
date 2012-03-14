@@ -62,7 +62,7 @@ void keccak_dump_ctx(keccak_ctx_t* ctx){
 #endif
 
 /*
-static uint64_t rc[] PROGMEM = {
+const uint64_t rc[] PROGMEM = {
        0x0000000000000001LL, 0x0000000000008082LL,
        0x800000000000808ALL, 0x8000000080008000LL,
        0x000000000000808BLL, 0x0000000080000001LL,
@@ -78,7 +78,7 @@ static uint64_t rc[] PROGMEM = {
 };
 */
 
-static uint8_t rc_comp[] PROGMEM = {
+const static uint8_t rc_comp[] PROGMEM = {
 		0x01, 0x92, 0xda, 0x70,
 		0x9b, 0x21, 0xf1, 0x59,
 		0x8a, 0x88, 0x39, 0x2a,
@@ -87,7 +87,7 @@ static uint8_t rc_comp[] PROGMEM = {
 		0xf1, 0xd0, 0x21, 0x78,
 };
 
-static uint8_t r[5][5] PROGMEM = {
+const static uint8_t r[5][5] PROGMEM = {
 		{ ROT_CODE( 0), ROT_CODE(36), ROT_CODE( 3), ROT_CODE(41), ROT_CODE(18) },
 		{ ROT_CODE( 1), ROT_CODE(44), ROT_CODE(10), ROT_CODE(45), ROT_CODE( 2) },
 		{ ROT_CODE(62), ROT_CODE( 6), ROT_CODE(43), ROT_CODE(15), ROT_CODE(61) },

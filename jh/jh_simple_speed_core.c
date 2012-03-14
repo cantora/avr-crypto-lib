@@ -34,7 +34,7 @@
 static
 void jh_round(uint8_t* a, uint8_t roundno){
 	uint8_t b[128];
-	uint8_t i,r,u,v,x,y;
+	uint8_t i,r=0,u,v,x,y;
 	uint8_t *pr;
 	pr = jh_round_const + 32*roundno;
 	for(i=0; i<128; ++i){
@@ -63,6 +63,7 @@ void jh_round(uint8_t* a, uint8_t roundno){
 	}
 }
 
+/*
 static
 uint8_t jh_l_inv(uint8_t a){
 	uint8_t v,w;
@@ -72,6 +73,7 @@ uint8_t jh_l_inv(uint8_t a){
 	w ^= ((v<<1)^(v>>3)^((v>>2)&2))&0xf;
 	return w|(v<<4);
 }
+*/
 
 static inline
 void group(uint8_t *a){

@@ -66,6 +66,7 @@ uint8_t grain_getbyte_dummy_rev(grain_ctx_t* ctx){
 }
 
 void testrun_nessie_grain(void){
+	scal_nessie_set_estream(1);
 	scal_nessie_run(&grain_desc);
 }
 
@@ -152,7 +153,7 @@ const char test_str[]        PROGMEM = "test";
 const char performance_str[] PROGMEM = "performance";
 const char echo_str[]        PROGMEM = "echo";
 
-cmdlist_entry_t cmdlist[] PROGMEM = {
+const cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ nessie_str,      NULL, testrun_nessie_grain },
 	{ test_str,        NULL, testrun_std_grain},
 	{ performance_str, NULL, testrun_performance_grain},

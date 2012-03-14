@@ -98,7 +98,7 @@ void noekeon_round(uint32_t* key, uint32_t* state, uint8_t const1, uint8_t const
 	pi2(state);
 }
 
-uint8_t rc_tab[]
+const uint8_t rc_tab[]
 #ifdef __AVR__
  PROGMEM 
 #endif

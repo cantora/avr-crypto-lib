@@ -33,7 +33,7 @@
 #include "blake_common.h"
 
 static
-uint32_t blake_c[] PROGMEM = {
+const uint32_t blake_c[] PROGMEM = {
    0x243F6A88, 0x85A308D3,
    0x13198A2E, 0x03707344,
    0xA4093822, 0x299F31D0,
@@ -179,7 +179,7 @@ void blake_small_lastBlock(blake_small_ctx_t* ctx, const void* msg, uint16_t len
 
 }
 
-uint32_t blake256_iv[] PROGMEM = {
+const uint32_t blake256_iv[] PROGMEM = {
 	0x6A09E667L, 0xBB67AE85,
 	0x3C6EF372L, 0xA54FF53A,
 	0x510E527FL, 0x9B05688C,
@@ -196,7 +196,7 @@ void blake256_init(blake256_ctx_t* ctx){
 	ctx->appendone = 1;
 }
 
-uint32_t blake224_iv[] PROGMEM = {
+const uint32_t blake224_iv[] PROGMEM = {
 	0xC1059ED8, 0x367CD507,
 	0x3070DD17, 0xF70E5939,
 	0xFFC00B31, 0x68581511,

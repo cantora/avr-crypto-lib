@@ -40,7 +40,7 @@
 
 char* algo_name = "AES-128";
 
-const bcdesc_t* algolist[] PROGMEM = {
+const bcdesc_t* const algolist[] PROGMEM = {
 	(bcdesc_t*)&aes128_desc,
 	NULL
 };
@@ -117,7 +117,7 @@ const char testkey_str[]     PROGMEM = "testkey";
 const char performance_str[] PROGMEM = "performance";
 const char echo_str[]        PROGMEM = "echo";
 
-cmdlist_entry_t cmdlist[] PROGMEM = {
+const cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ nessie_str,      NULL, testrun_nessie_aes },
 	{ test_str,        NULL, testrun_test_aes},
 	{ testkey_str,     NULL, testrun_testkey_aes},

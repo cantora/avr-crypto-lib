@@ -21,15 +21,19 @@
 def skip_header(file)
   begin
     l = file.gets().strip
+    l = '' if !l
   end until /[*]{10,}.*/.match(l)
   begin
     l = file.gets().strip
+    l = '' if !l
   end until /[*]{10,}.*/.match(l)
   begin
     l = file.gets().strip
+    l = '' if !l
   end until /[=]{5,}.*/.match(l)
   begin
     l = file.gets().strip
+    l = '' if !l
   end until /[=]{5,}.*/.match(l)
 end
 

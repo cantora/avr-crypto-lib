@@ -45,7 +45,7 @@
 
 char* algo_name = "Skein";
 
-const hfdesc_t* algolist[] PROGMEM = {
+const hfdesc_t* const algolist[] PROGMEM = {
 	(hfdesc_t*)&skein256_128_desc,
 	(hfdesc_t*)&skein256_160_desc,
 	(hfdesc_t*)&skein256_224_desc,
@@ -259,7 +259,7 @@ const char shavs_test1_str[] PROGMEM = "shavs_test1";
 const char shavs_test2_str[] PROGMEM = "shavs_test2";
 const char shavs_test3_str[] PROGMEM = "shavs_test3";
 
-cmdlist_entry_t cmdlist[] PROGMEM = {
+const cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ nessie_str,          NULL, testrun_nessie_skein            },
 	{ performance_str,     NULL, performance_skein               },
 	{ test_str,            NULL, testrun_stdtest_skein           },

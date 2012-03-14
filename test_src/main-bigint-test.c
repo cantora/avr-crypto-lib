@@ -400,7 +400,7 @@ void test_mul_simple(void){
 
 // f4 b86a 2220 0774 437d 70e6 **2 = e9f00f29ca1c876a7a682bd1e04f6925caffd6660ea4
 /*
-uint8_t square_test_data[] PROGMEM = {
+const uint8_t square_test_data[] PROGMEM = {
 	0xA0, 0x3C, 0x23, 0x9F, 0x7A, 0xFC, 0x60, 0xEB, 0x96, 0xC2, 0xA8, 0xAC, 0xC3, 0xC9, 0x9E, 0xEC,
 	0x4A, 0xF0, 0x1C, 0xB2, 0x36, 0x68, 0xD6, 0x4D, 0x3E, 0x4F, 0x8E, 0x55, 0xEA, 0x52, 0x46, 0x68,
 	0x6E, 0x18, 0x88, 0x37, 0x03, 0x70, 0xBD, 0x01, 0x60, 0xE2, 0xD6, 0x12, 0xA0, 0x0E, 0xD2, 0x72,
@@ -515,7 +515,7 @@ const char quick_test_str[]       PROGMEM = "quick-test";
 const char performance_str[]      PROGMEM = "performance";
 const char echo_str[]             PROGMEM = "echo";
 
-cmdlist_entry_t cmdlist[] PROGMEM = {
+const cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ add_test_str,         NULL, test_add_bigint               },
 	{ add_scale_test_str,   NULL, test_add_scale_bigint         },
 	{ mul_test_str,         NULL, test_mul_bigint               },

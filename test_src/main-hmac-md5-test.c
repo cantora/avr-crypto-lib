@@ -170,7 +170,7 @@ const char hmd5i_str[]       PROGMEM = "hmac-md5";
 const char md5i_str[]        PROGMEM = "md5";
 
 
-cmdlist_entry_t cmdlist[] PROGMEM = {
+const cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ nessie_str,      NULL, testrun_nessie_hmacmd5},
 	{ test_str,        NULL, testrun_test_hmacmd5},
 	{ hmd5i_str,       NULL, hmacmd5_interactive},

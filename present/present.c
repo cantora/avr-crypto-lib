@@ -72,26 +72,38 @@ static void p_inv(uint8_t* o, uint8_t* i){
 }
 
 void present_init(const uint8_t* key, uint8_t keysize_b, present_ctx_t* ctx){
-	uint8_t buffer[10], tmp[2];
+	uint8_t tmp[2];
+	union __attribute__((packed)) {
+		uint8_t  v8[10];
+		uint16_t v16[5];
+		uint64_t v64;
+		struct __attribute__((packed)) {
+			uint8_t padding;
+			union {
+				uint64_t v64;
+				uint16_t v16[4];
+			} y;
+		} x;	
+	} b;
 	uint8_t i;
-	memcpy(buffer, key, 10);
-	memcpy(&(ctx->k[0]), buffer+2, 8);
+	memcpy(b.v8, key, 10);
+	memcpy(&(ctx->k[0]), b.v8+2, 8);
 	for(i=1; i<32; ++i){
 		/* rotate buffer 19 right */
-		memcpy(tmp, buffer, 2);
-		memmove(buffer, buffer+2, 8);
-		memcpy(buffer+8, tmp, 2);
+		memcpy(tmp, b.v8, 2);
+		memmove(b.v8, b.v8+2, 8);
+		memcpy(b.v8+8, tmp, 2);
 		 /* three shifts to do*/
-		tmp[1]=buffer[0];
-		*((uint64_t*)buffer)>>=3;
-		*((uint16_t*)(buffer+8))>>=3;
-		buffer[9] |= tmp[1]<<5;
-		buffer[7] |= tmp[0]<<5;
+		tmp[1]=b.v8[0];
+		b.v64 >>= 3;
+		b.v16[4] >>= 3;
+		b.v8[9] |= tmp[1]<<5;
+		b.v8[7] |= tmp[0]<<5;
 		/* rotating done now substitution */
-		buffer[9] = (sbox(buffer[9])&0xF0) | ((buffer[9])&0x0F);
+		b.v8[9] = (sbox(b.v8[9])&0xF0) | ((b.v8[9])&0x0F);
 		/* xor with round counter */
-		*((uint16_t*)(buffer+1)) ^= (uint16_t)i<<7;
-		memcpy(&(ctx->k[i]), buffer+2, 8);
+		b.x.y.v16[0] ^= (uint16_t)i<<7;
+		memcpy(&(ctx->k[i]), b.v8+2, 8);
 	}
 }
 

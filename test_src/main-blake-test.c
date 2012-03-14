@@ -45,7 +45,7 @@
 char* algo_name = "Blake";
 
 
-const hfdesc_t* algolist[] PROGMEM = {
+const hfdesc_t* const algolist[] PROGMEM = {
 	(hfdesc_t*)&blake224_desc,
 	(hfdesc_t*)&blake256_desc,
 	(hfdesc_t*)&blake384_desc,
@@ -133,7 +133,7 @@ const char shavs_set_str[]    PROGMEM = "shavs_set";
 const char shavs_test1_str[]  PROGMEM = "shavs_test1";
 const char shavs_test3_str[]  PROGMEM = "shavs_test3";
 
-cmdlist_entry_t cmdlist[] PROGMEM = {
+const cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ nessie_str,          NULL, testrun_nessie_blake},
 	{ test_str,            NULL, testrun_stdtest_blake},
 	{ testshort_str,       NULL, testshort},

@@ -142,24 +142,28 @@ static
 void ivsetup(rabbit_ctx_t* ctx, const void* iv){
 	uint8_t i;
 	uint32_t t;
-	uint8_t t_iv[8];
+	union __attribute__((packed)){
+		uint8_t v8[8];
+		uint16_t v16[4];
+		uint32_t v32[2];
+	}t_iv;
 	i=0;
 #if ESTREAM
-	memcpy(t_iv, iv, 8);
+	memcpy(t_iv.v8, iv, 8);
 #else
 	do{
-		t_iv[i] = ((uint8_t*)iv)[7-i];
-		t_iv[7-i] = ((uint8_t*)iv)[i];
+		t_iv.v8[i] = ((uint8_t*)iv)[7-i];
+		t_iv.v8[7-i] = ((uint8_t*)iv)[i];
 	}while(++i<4);
 #endif
-	ctx->c[0] ^= *((uint32_t*)t_iv);
-	ctx->c[4] ^= *((uint32_t*)t_iv);
-	ctx->c[2] ^= ((uint32_t*)t_iv)[1];
-	ctx->c[6] ^= ((uint32_t*)t_iv)[1];
-	t = (( (uint32_t)((uint16_t*)t_iv)[3])<<16) | (((uint16_t*)t_iv)[1]);
+	ctx->c[0] ^= t_iv.v32[0];
+	ctx->c[4] ^= t_iv.v32[0];
+	ctx->c[2] ^= t_iv.v32[1];
+	ctx->c[6] ^= t_iv.v32[1];
+	t = ( ((uint32_t)(t_iv.v16[3]))<<16) | (t_iv.v16[1]);
 	ctx->c[1] ^= t;
 	ctx->c[5] ^= t;
-	t = (( (uint32_t)((uint16_t*)t_iv)[2])<<16) | (((uint16_t*)t_iv)[0]);
+	t = ( ((uint32_t)(t_iv.v16[2]))<<16) | (t_iv.v16[0]);
 	ctx->c[3] ^= t;
 	ctx->c[7] ^= t;
 	i=4;
