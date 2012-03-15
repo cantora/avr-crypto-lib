@@ -30,10 +30,12 @@
 #include <avr/io.h>
 #include <avr/pgmspace.h>
 
+#define NO_FIX 1
+
 #if NESSIE_COMPAT
-#define SKIPJACK_CNT_BIG 1
-#else
 #define SKIPJACK_CNT_BIG 0
+#else
+#define SKIPJACK_CNT_BIG 1
 #endif
 
 #if SKIPJACK_CNT_BIG
@@ -82,13 +84,13 @@ const uint8_t skipjack_ftable[] PROGMEM ={
 /*****************************************************************************/
 
 uint16_t skipjack_g(uint16_t g, uint8_t k, uint8_t *key){
-	#define G1 (((uint8_t*)&g)[1])
-	#define G2 (((uint8_t*)&g)[0])
+	#define G1 (((uint8_t*)&g)[0])
+	#define G2 (((uint8_t*)&g)[1])
 	/* this could also be rolled up */
-	G1 ^= pgm_read_byte_near(&(skipjack_ftable[G2 ^ key[9-(4*k+0)%10]]));
-	G2 ^= pgm_read_byte_near(&(skipjack_ftable[G1 ^ key[9-(4*k+1)%10]]));
-	G1 ^= pgm_read_byte_near(&(skipjack_ftable[G2 ^ key[9-(4*k+2)%10]]));
-	G2 ^= pgm_read_byte_near(&(skipjack_ftable[G1 ^ key[9-(4*k+3)%10]]));
+	G1 ^= pgm_read_byte_near(&(skipjack_ftable[G2 ^ key[(4*k+0)%10]]));
+	G2 ^= pgm_read_byte_near(&(skipjack_ftable[G1 ^ key[(4*k+1)%10]]));
+	G1 ^= pgm_read_byte_near(&(skipjack_ftable[G2 ^ key[(4*k+2)%10]]));
+	G2 ^= pgm_read_byte_near(&(skipjack_ftable[G1 ^ key[(4*k+3)%10]]));
 	return g;	
 }
 
@@ -98,10 +100,10 @@ uint16_t skipjack_g_inv(uint16_t g, uint8_t k, uint8_t *key){
 //	#define G1 (((uint8_t)&g)[1])
 //	#define G2 (((uint8_t)&g)[0])
 	/* this could also be rolled up */
-	G2 ^= pgm_read_byte_near(&(skipjack_ftable[G1 ^ key[9-(4*k+3)%10]]));
-	G1 ^= pgm_read_byte_near(&(skipjack_ftable[G2 ^ key[9-(4*k+2)%10]]));
-	G2 ^= pgm_read_byte_near(&(skipjack_ftable[G1 ^ key[9-(4*k+1)%10]]));
-	G1 ^= pgm_read_byte_near(&(skipjack_ftable[G2 ^ key[9-(4*k+0)%10]]));
+	G2 ^= pgm_read_byte_near(&(skipjack_ftable[G1 ^ key[(4*k+3)%10]]));
+	G1 ^= pgm_read_byte_near(&(skipjack_ftable[G2 ^ key[(4*k+2)%10]]));
+	G2 ^= pgm_read_byte_near(&(skipjack_ftable[G1 ^ key[(4*k+1)%10]]));
+	G1 ^= pgm_read_byte_near(&(skipjack_ftable[G2 ^ key[(4*k+0)%10]]));
 	return g;	
 }
 
@@ -109,44 +111,45 @@ uint16_t skipjack_g_inv(uint16_t g, uint8_t k, uint8_t *key){
 
 void skipjack_a(uint16_t* w, uint8_t k, uint8_t* key){
 	uint16_t t;
-	t = w[0];
-	w[0] = w[1];
-	w[1] = w[2];
-	w[2] = skipjack_g(w[3],k,key);
-	w[3] = t ^ w[2] ^ (((uint16_t)k+1)SKIPJACK_CNT_SHIFT);
+
+	t = w[3];
+	w[3] = w[2];
+	w[2] = w[1];
+	w[1] = skipjack_g(w[0],k,key);
+	w[0] = t ^ w[1] ^ (((uint16_t)k+1)SKIPJACK_CNT_SHIFT);
 }
 
 /*****************************************************************************/
 
 void skipjack_a_inv(uint16_t* w, uint8_t k, uint8_t* key){
 	uint16_t t;
-	t = w[3] ^ w[2];
-	w[3] = skipjack_g_inv(w[2],k,key);
-	w[2] = w[1];
-	w[1] = w[0];
-	w[0] = t ^ (((uint16_t)k+1)SKIPJACK_CNT_SHIFT);
+	t = w[0] ^ w[1];
+	w[0] = skipjack_g_inv(w[1],k,key);
+	w[1] = w[2];
+	w[2] = w[3];
+	w[3] = t ^ (((uint16_t)k+1)SKIPJACK_CNT_SHIFT);
 }
 
 /*****************************************************************************/
 
 void skipjack_b(uint16_t* w, uint8_t k, uint8_t* key){
 	uint16_t t;
-	t = w[3];
-	w[3] = w[0];
-	w[0] = w[1];
-	w[1] = t ^ (((uint16_t)k+1)SKIPJACK_CNT_SHIFT) ^ w[2];
-	w[2] = skipjack_g(t,k,key);
+	t = w[0];
+	w[0] = w[3];
+	w[3] = w[2];
+	w[2] = t ^ (((uint16_t)k+1)SKIPJACK_CNT_SHIFT) ^ w[1];
+	w[1] = skipjack_g(t,k,key);
 }
 
 /*****************************************************************************/
 
 void skipjack_b_inv(uint16_t* w, uint8_t k, uint8_t* key){
 	uint16_t t;
-	t = w[1];
-	w[1] = w[0];
-	w[0] = w[3];
-	w[3] = skipjack_g_inv(w[2],k,key);
-	w[2] = w[3] ^ t ^ (((uint16_t)k+1)SKIPJACK_CNT_SHIFT);
+	t = w[2];
+	w[2] = w[3];
+	w[3] = w[0];
+	w[0] = skipjack_g_inv(w[1],k,key);
+	w[1] = w[0] ^ t ^ (((uint16_t)k+1)SKIPJACK_CNT_SHIFT);
 }
 
 /*****************************************************************************/
@@ -154,6 +157,7 @@ void skipjack_b_inv(uint16_t* w, uint8_t k, uint8_t* key){
  * block is 64 bits (=8 bytes) in size, key is 80 bits (=10 bytes) in size.
  * 
  */
+#if NO_FIX
 void skipjack_enc(void* block, void* key){
 	uint8_t k;
 	for(k=0; k<32; ++k){
@@ -164,11 +168,34 @@ void skipjack_enc(void* block, void* key){
 		}
 	}
 }
+#else
+void skipjack_enc(void* block, void* key){
+	uint8_t k;
+	uint8_t buffer[8], local_key[10];
+	for(k=0; k<8; ++k){
+		buffer[k] = ((uint8_t*)block)[7-k];
+	}
+	for(k=0; k<10; ++k){
+		local_key[k] = ((uint8_t*)key)[9-k];
+	}
+	for(k=0; k<32; ++k){
+		if(k & 0x08){
+			skipjack_b((uint16_t*)buffer, k, local_key);
+		} else {
+			skipjack_a((uint16_t*)buffer, k, local_key);
+		}
+	}
+	for(k=0; k<8; ++k){
+		((uint8_t*)block)[7-k] = buffer[k];
+	}
+}
+#endif
 /*****************************************************************************/
 /**
  * block is 64 bits (=8 bytes) in size, key is 80 bits (=10 bytes) in size.
  * 
  */
+#if NO_FIX
 void skipjack_dec(void* block, void* key){
 	int8_t k;
 	for(k=31; k>=0; --k){
@@ -179,6 +206,29 @@ void skipjack_dec(void* block, void* key){
 		}
 	}
 }
+#else
+void skipjack_dec(void* block, void* key){
+	int8_t k;
+	uint8_t buffer[8], local_key[10];
+	for(k=0; k<8; ++k){
+		buffer[k] = ((uint8_t*)block)[7-k];
+	}
+	for(k=0; k<10; ++k){
+		local_key[k] = ((uint8_t*)key)[9-k];
+	}
+	for(k=31; k>=0; --k){
+		if(k & 0x08){
+			skipjack_b_inv((uint16_t*)buffer, k, local_key);
+		} else {
+			skipjack_a_inv((uint16_t*)buffer, k, local_key);
+		}
+	}
+	for(k=0; k<8; ++k){
+		((uint8_t*)block)[7-k] = buffer[k];
+	}
+}
+
+#endif
 
 
 
