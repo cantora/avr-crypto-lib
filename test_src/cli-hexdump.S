@@ -182,7 +182,7 @@ cli_hexdump_block:
 	brne 7f
 	cp WIDTH, LENG_0
 	breq 6f
-	brmi 7f
+	brcs 7f
 	mov r22, LENG_0
 6:	inc r4
 7:
@@ -190,7 +190,7 @@ cli_hexdump_block:
 	add DATA_0, WIDTH
 	adc DATA_1, r1
 	sub LENG_0, WIDTH
-	sbc LENG_0, r1
+	sbc LENG_1, r1
 	tst r4
 	breq 2b
 	pop r4

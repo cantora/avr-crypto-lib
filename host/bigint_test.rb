@@ -23,7 +23,7 @@ $debug = false
 require 'rubygems'
 require 'serialport'
 require 'getopt/std'
-require 'ftools'
+require 'fileutils'
 require 'date'
 $buffer_size = 0
 $conffile_check = Hash.new
@@ -37,7 +37,7 @@ def readconfigfile(fname, conf)
   return conf if $conffile_check[fname]==1
   $conffile_check[fname]=1
   section = "default"
-  if not File.exists?(fname)
+  if ! File.exists?(fname)
     return conf
   end
   file = File.open(fname, "r")
@@ -49,7 +49,7 @@ def readconfigfile(fname, conf)
 	  conf[m[1]] = Hash.new
 	  next
 	end
-	next if not /=/.match(line)
+	next if ! /=/.match(line)
 	m=/[\s]*([^\s]*)[\s]*=[\s]*([^\s]*)/.match(line)
 	if m[1]=="include"
 	  Dir.glob(m[2]){ |fn| conf = readconfigfile(fn, conf) }
@@ -158,7 +158,7 @@ def wait_for_prompt(prompt)
       return false
     end
   acc += line
-  end while not m=prompt.match(acc)
+  end while ! m=prompt.match(acc)
   return m
 end
 
@@ -187,7 +187,7 @@ def add_test(a,b)
       puts line
       return false
     end
-  end while not /[\s]*enter a:[\s]*/.match(line)
+  end while ! /[\s]*enter a:[\s]*/.match(line)
   $sp.print(a.to_s(16)+" ")
   begin
     line = $sp.gets()
@@ -197,7 +197,7 @@ def add_test(a,b)
       puts line
       return false
     end
-  end while not /[\s]*enter b:[\s]*/.match(line)
+  end while ! /[\s]*enter b:[\s]*/.match(line)
   $sp.print(b.to_s(16)+" ")
   begin
     line = $sp.gets()
@@ -207,7 +207,7 @@ def add_test(a,b)
       puts line
       return false
     end
-  end while not m=/[\s]*([-]?[0-9a-fA-F]*)[\s]+\+[\s]+([+-]?[0-9a-fA-F]*)[\s]*=[\s]*([+-]?[0-9a-fA-F]*)/.match(line)
+  end while ! m=/[\s]*([-]?[0-9a-fA-F]*)[\s]+\+[\s]+([+-]?[0-9a-fA-F]*)[\s]*=[\s]*([+-]?[0-9a-fA-F]*)/.match(line)
   a_ = m[1].to_i(16)
   b_ = m[2].to_i(16)
   c_ = m[3].to_i(16)
@@ -236,7 +236,7 @@ def mul_test(a,b)
       puts line
       return false
     end
-  end while not /[\s]*enter a:[\s]*/.match(line)
+  end while ! /[\s]*enter a:[\s]*/.match(line)
   $sp.print(a.to_s(16)+" ")
   begin
     line = $sp.gets()
@@ -246,7 +246,7 @@ def mul_test(a,b)
       puts line
       return false
     end
-  end while not /[\s]*enter b:[\s]*/.match(line)
+  end while ! /[\s]*enter b:[\s]*/.match(line)
   $sp.print(b.to_s(16)+" ")
   begin
     line = $sp.gets()
@@ -256,7 +256,7 @@ def mul_test(a,b)
       puts line
       return false
     end
-  end while not m=/[\s]*([+-]?[0-9a-fA-F]*)[\s]+\*[\s]+([+-]?[0-9a-fA-F]*)[\s]*=[\s]*([+-]?[0-9a-fA-F]*)/.match(line)
+  end while ! m=/[\s]*([+-]?[0-9a-fA-F]*)[\s]+\*[\s]+([+-]?[0-9a-fA-F]*)[\s]*=[\s]*([+-]?[0-9a-fA-F]*)/.match(line)
   a_ = m[1].to_i(16)
   b_ = m[2].to_i(16)
   c_ = m[3].to_i(16)
@@ -330,7 +330,7 @@ def square_test(a)
       puts line
       return false
     end
-  end while not /[\s]*enter a:[\s]*/.match(line)
+  end while ! /[\s]*enter a:[\s]*/.match(line)
   $sp.print(a.to_s(16)+" ")
   begin
     line = $sp.gets()
@@ -340,7 +340,7 @@ def square_test(a)
       puts line
       return false
     end
-  end while not m=/[\s]*([+-]?[0-9a-fA-F]*)[\s]*\*\*2[\s]*=[\s]*([+-]?[0-9a-fA-F]*)/.match(line)
+  end while ! m=/[\s]*([+-]?[0-9a-fA-F]*)[\s]*\*\*2[\s]*=[\s]*([+-]?[0-9a-fA-F]*)/.match(line)
   a_ = m[1].to_i(16)
   c_ = m[2].to_i(16)
   line.chomp!
@@ -368,7 +368,7 @@ def reduce_test(a,b)
       puts line
       return false
     end
-  end while not /[\s]*enter a:[\s]*/.match(line)
+  end while ! /[\s]*enter a:[\s]*/.match(line)
   $sp.print(a.to_s(16)+" ")
   begin
     line = $sp.gets()
@@ -378,7 +378,7 @@ def reduce_test(a,b)
       puts line
       return false
     end
-  end while not /[\s]*enter b:[\s]*/.match(line)
+  end while ! /[\s]*enter b:[\s]*/.match(line)
   $sp.print(b.to_s(16)+" ")
   line=''
   begin
@@ -390,7 +390,7 @@ def reduce_test(a,b)
       puts line
       return false
     end
-  end while not m=/[\s]*([+-]?[0-9a-fA-F]*)[\s]+%[\s]+([+-]?[0-9a-fA-F]*)[\s]*=[\s]*([+-]?[0-9a-fA-F]+)/.match(line)
+  end while ! m=/[\s]*([+-]?[0-9a-fA-F]*)[\s]+%[\s]+([+-]?[0-9a-fA-F]*)[\s]*=[\s]*([+-]?[0-9a-fA-F]+)/.match(line)
   a_ = m[1].to_i(16)
   b_ = m[2].to_i(16)
   c_ = m[3].to_i(16)
@@ -419,7 +419,7 @@ def expmod_test(a,b,c)
       puts line
       return false
     end
-  end while not /[\s]*enter a:[\s]*/.match(line)
+  end while ! /[\s]*enter a:[\s]*/.match(line)
   $sp.print(a.to_s(16)+" ")
   begin
     line = $sp.gets()
@@ -429,7 +429,7 @@ def expmod_test(a,b,c)
       puts line
       return false
     end
-  end while not /[\s]*enter b:[\s]*/.match(line)
+  end while ! /[\s]*enter b:[\s]*/.match(line)
   $sp.print(b.to_s(16)+" ")
   begin
     line = $sp.gets()
@@ -439,7 +439,7 @@ def expmod_test(a,b,c)
       puts line
       return false
     end
-  end while not /[\s]*enter c:[\s]*/.match(line)
+  end while ! /[\s]*enter c:[\s]*/.match(line)
   $sp.print(c.to_s(16)+" ")
   line=''
   begin
@@ -451,7 +451,7 @@ def expmod_test(a,b,c)
       puts line
       return false
     end
-  end while not m=/[\s]*([+-]?[0-9a-fA-F]*)\*\*([+-]?[0-9a-fA-F]*)[\s]+%[\s]+([+-]?[0-9a-fA-F]*)[\s]*=[\s]*([+-]?[0-9a-fA-F]+)/.match(line)
+  end while ! m=/[\s]*([+-]?[0-9a-fA-F]*)\*\*([+-]?[0-9a-fA-F]*)[\s]+%[\s]+([+-]?[0-9a-fA-F]*)[\s]*=[\s]*([+-]?[0-9a-fA-F]+)/.match(line)
   a_ = m[1].to_i(16)
   b_ = m[2].to_i(16)
   c_ = m[3].to_i(16)
@@ -481,7 +481,7 @@ def gcdext_test(a,b)
       puts line
       return false
     end
-  end while not /[\s]*enter a:[\s]*/.match(line)
+  end while ! /[\s]*enter a:[\s]*/.match(line)
   $sp.print(a.to_s(16)+" ")
   begin
     line = $sp.gets()
@@ -491,7 +491,7 @@ def gcdext_test(a,b)
       puts line
       return false
     end
-  end while not /[\s]*enter b:[\s]*/.match(line)
+  end while ! /[\s]*enter b:[\s]*/.match(line)
   $sp.print(b.to_s(16)+" ")
   line=''
   begin
@@ -504,7 +504,7 @@ def gcdext_test(a,b)
       puts line
       return false
     end
-  end while not m=/gcdext\([\s]*([+-]?[0-9a-fA-F]*)[\s]*,[\s]*([+-]?[0-9a-fA-F]*)[\s]*\)[\s]*=> a = ([+-]?[0-9a-fA-F]+); b = ([+-]?[0-9a-fA-F]+); gcd = ([+-]?[0-9a-fA-F]+)/.match(line)
+  end while ! m=/gcdext\([\s]*([+-]?[0-9a-fA-F]*)[\s]*,[\s]*([+-]?[0-9a-fA-F]*)[\s]*\)[\s]*=> a = ([+-]?[0-9a-fA-F]+); b = ([+-]?[0-9a-fA-F]+); gcd = ([+-]?[0-9a-fA-F]+)/.match(line)
   a_ = m[1].to_i(16)
   b_ = m[2].to_i(16)
   c_ = m[3].to_i(16)
@@ -834,12 +834,16 @@ if File.exists?(logfilename)
     i+=1
   end while(File.exists?(logfilename))
   while(i>2) do
-    File.move(sprintf('%s%04d%s', conf['PORT']['testlogbase']+'bigint_',i-2,'.txt'), 
-              sprintf('%s%04d%s', conf['PORT']['testlogbase']+'bigint_',i-1,'.txt'), true)
+    n1 = sprintf('%s%04d%s', conf['PORT']['testlogbase']+'bigint_',i-2,'.txt')
+    n2 = sprintf('%s%04d%s', conf['PORT']['testlogbase']+'bigint_',i-1,'.txt')
+    File.rename(n1, n2)
+    printf("%s -> %s\n", n1, n2) 
     i-=1
   end
-    File.move(sprintf('%s%s', conf['PORT']['testlogbase'],'bigint.txt'), 
-              sprintf('%s%04d%s', conf['PORT']['testlogbase']+'bigint_',1,'.txt'), true)
+  n1 = sprintf('%s%s', conf['PORT']['testlogbase'],'bigint.txt')
+  n2 = sprintf('%s%04d%s', conf['PORT']['testlogbase']+'bigint_',1,'.txt')
+  File.rename(n1, n2) 
+  printf("%s -> %s\n", n1, n2)  
   logfilename = conf['PORT']['testlogbase']+'bigint.txt' 
 end
 $logfile = File.open(logfilename, 'w')

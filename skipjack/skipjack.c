@@ -80,33 +80,40 @@ const uint8_t skipjack_ftable[] PROGMEM ={
 };
 
 /*****************************************************************************/
+static
+uint16_t skipjack_sub_g(uint8_t g, uint8_t k, uint8_t *key){
+	return pgm_read_byte(&(skipjack_ftable[g ^ key[9 - k % 10]]));
+}
 
+static
 uint16_t skipjack_g(uint16_t g, uint8_t k, uint8_t *key){
 	#define G1 (((uint8_t*)&g)[1])
 	#define G2 (((uint8_t*)&g)[0])
 	/* this could also be rolled up */
-	G1 ^= pgm_read_byte_near(&(skipjack_ftable[G2 ^ key[9-(4*k+0)%10]]));
-	G2 ^= pgm_read_byte_near(&(skipjack_ftable[G1 ^ key[9-(4*k+1)%10]]));
-	G1 ^= pgm_read_byte_near(&(skipjack_ftable[G2 ^ key[9-(4*k+2)%10]]));
-	G2 ^= pgm_read_byte_near(&(skipjack_ftable[G1 ^ key[9-(4*k+3)%10]]));
+	k *= 4;
+	G1 ^= skipjack_sub_g(G2, k + 0, key);
+	G2 ^= skipjack_sub_g(G1, k + 1, key);
+	G1 ^= skipjack_sub_g(G2, k + 2, key);
+	G2 ^= skipjack_sub_g(G1, k + 3, key);
 	return g;	
 }
 
 /*****************************************************************************/
-
+static
 uint16_t skipjack_g_inv(uint16_t g, uint8_t k, uint8_t *key){
 //	#define G1 (((uint8_t)&g)[1])
 //	#define G2 (((uint8_t)&g)[0])
 	/* this could also be rolled up */
-	G2 ^= pgm_read_byte_near(&(skipjack_ftable[G1 ^ key[9-(4*k+3)%10]]));
-	G1 ^= pgm_read_byte_near(&(skipjack_ftable[G2 ^ key[9-(4*k+2)%10]]));
-	G2 ^= pgm_read_byte_near(&(skipjack_ftable[G1 ^ key[9-(4*k+1)%10]]));
-	G1 ^= pgm_read_byte_near(&(skipjack_ftable[G2 ^ key[9-(4*k+0)%10]]));
-	return g;	
+	k *= 4;
+	G2 ^= skipjack_sub_g(G1, k + 3, key);
+	G1 ^= skipjack_sub_g(G2, k + 2, key);
+	G2 ^= skipjack_sub_g(G1, k + 1, key);
+	G1 ^= skipjack_sub_g(G2, k + 0, key);
+	return g;
 }
 
 /*****************************************************************************/
-
+static
 void skipjack_a(uint16_t* w, uint8_t k, uint8_t* key){
 	uint16_t t;
 	t = w[0];
@@ -117,7 +124,7 @@ void skipjack_a(uint16_t* w, uint8_t k, uint8_t* key){
 }
 
 /*****************************************************************************/
-
+static
 void skipjack_a_inv(uint16_t* w, uint8_t k, uint8_t* key){
 	uint16_t t;
 	t = w[3] ^ w[2];
@@ -128,7 +135,7 @@ void skipjack_a_inv(uint16_t* w, uint8_t k, uint8_t* key){
 }
 
 /*****************************************************************************/
-
+static
 void skipjack_b(uint16_t* w, uint8_t k, uint8_t* key){
 	uint16_t t;
 	t = w[3];
@@ -139,7 +146,7 @@ void skipjack_b(uint16_t* w, uint8_t k, uint8_t* key){
 }
 
 /*****************************************************************************/
-
+static
 void skipjack_b_inv(uint16_t* w, uint8_t k, uint8_t* key){
 	uint16_t t;
 	t = w[1];

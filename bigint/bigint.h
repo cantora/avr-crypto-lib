@@ -1,6 +1,6 @@
 /* bigint.h */
 /*
-    This file is part of the AVR-Crypto-Lib.
+    This file is part of the ARM-Crypto-Lib.
     Copyright (C) 2008  Daniel Otte (daniel.otte@rub.de)
 
     This program is free software: you can redistribute it and/or modify
@@ -30,18 +30,29 @@
 
 #include <stdint.h>
 
-#define BIGINT_FBS_MASK 0x07 /* the last three bits indicate which is the first bit set */
+typedef uint8_t bigint_word_t;
+typedef uint16_t bigint_wordplus_t;
+typedef int16_t  bigint_wordplus_signed_t;
+typedef uint16_t bigint_ptr_int_t; /* this must be an integer of the size of a pointer for the target architecture */
+#define BIGINT_WORD_SIZE 8
+
+#define BIGINT_FBS_MASK (BIGINT_WORD_SIZE-1) /* the last five bits indicate which is the first bit set */
 #define BIGINT_NEG_MASK 0x80 /* this bit indicates a negative value */
 typedef struct{
 	uint16_t length_B;
 	uint8_t info;
-	uint8_t *wordv; /* word vector, pointing to the LSB */
+	bigint_word_t *wordv; /* word vector, pointing to the LSB */
 }bigint_t;
+
 
 
 /******************************************************************************/
 
 void   bigint_adjust(bigint_t* a);
+uint32_t bigint_get_first_set_bit(bigint_t* a);
+uint32_t bigint_get_last_set_bit(bigint_t* a);
+uint16_t bigint_length_b(bigint_t* a);
+uint16_t bigint_length_B(bigint_t* a);
 void   bigint_copy(bigint_t* dest, const bigint_t* src);
 void   bigint_add_u(bigint_t* dest, const bigint_t* a, const bigint_t* b);
 void   bigint_add_scale_u(bigint_t* dest, const bigint_t* a, uint16_t scale);

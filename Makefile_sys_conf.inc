@@ -1,20 +1,14 @@
-
-MCU_TARGET     = atmega128
-F_CPU          = 14745600
-OPTIMIZE       = -Os # -Os
-EXTRALINK      = xram.o
 DEBUG          = -gdwarf-2
 WARNING        = -pedantic -Wall -Werror -Wstrict-prototypes
 PROGRAMMER     = jtagmkII
 PROG_PORT      = usb
-DEFS           = -D$(call uc, $(MCU_TARGET)) -DF_CPU=$(F_CPU)
 FLASHCMD       = avrdude -p $(MCU_TARGET) -P $(PROG_PORT) -c $(PROGRAMMER) -U flash:w:# no space at the end
 #FLASHCMD       = avrdude -p $(MCU_TARGET) -c usbasp -U flash:w:# no space at the end
 #RESETCMD       = avrdude -p $(MCU_TARGET) -P $(PROG_PORT) -c $(PROGRAMMER) 
 RESETCMD       = avarice -2 -R -j usb
-DEP_DIR        = deps/
-TEST_DIR       = test/
-BIN_DIR        = bin/
+DEP_DIR        = deps/$(BOARD_NAME)/#
+TEST_DIR       = test/#
+BIN_DIR        = bin/$(BOARD_NAME)/#
 TESTSRC_DIR    = test_src/
 #uisp -dprog=bsd -dlpt=/dev/parport1 --upload if=$(PRG).hex
 ERASECMD       =
@@ -23,23 +17,17 @@ TESTPORTBAUDR  = 115200
 TESTLOG_DIR    = testlog/#
 TESTPREFIX     = nessie-
 SPEEDTOOL      = host/get_performance.rb
-SPEEDLOG_DIR   = speed_log/
+SPEEDLOG_DIR   = speed_log/$(BOARD_NAME)/#
 SPEEDPREFIX    =
 SPEEDCMD       = performance
-SIZE_DIR       = size_log/#
-LIST_DIR       = listings/#
+SIZE_DIR       = size_log/$(BOARD_NAME)/#
+LIST_DIR       = listings/$(BOARD_NAME)/#
 LIST_OPT       = -Wa,-adhln -g
-STAT_DIR       = stats/#
-AUTOASM_DIR    = autoasm/#
+STAT_DIR       = stats/$(BOARD_NAME)/#
+AUTOASM_DIR    = autoasm/$(BOARD_NAME)/#
 AUTOASM_OPT    = -S
 CC	           = avr-gcc
 CSTD           = c99
-
-override CFLAGS_A	= -MMD -MF$(DEP_DIR)$(patsubst %.o,%.d,$(notdir $(1))) $(DEBUG) $(WARNING) -std=$(CSTD) $(OPTIMIZE) -mmcu=$(MCU_TARGET) $(DEFS)
-override CFLAGS 	= -MMD -MF$(DEP_DIR)$(patsubst %.o,%.d,$(notdir $@))   $(DEBUG) $(WARNING) -std=$(CSTD) $(OPTIMIZE) -mmcu=$(MCU_TARGET) $(DEFS)
-
-override LDFLAGS       = -gdwarf-2 -Wl,--section-start,.data=0x801100,--defsym=__heap_end=0x807fff -Wl,-Map,#
-override ASFLAGS	   = -mmcu=$(MCU_TARGET) -Wa,--gdwarf-2
 
 SIZESTAT_FILE = sizestats.txt
 

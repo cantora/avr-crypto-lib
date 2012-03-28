@@ -1,7 +1,7 @@
-/* bigint_io.h */
+/* random.h */
 /*
-    This file is part of the ARM-Crypto-Lib.
-    Copyright (C) 2010 Daniel Otte (daniel.otte@rub.de)
+    This file is part of the AVR-Crypto-Lib.
+    Copyright (C) 2011 Daniel Otte (daniel.otte@rub.de)
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,12 +17,11 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef BIGINT_IO_H_
-#define BIGINT_IO_H_
+#ifndef RANDOM_H_
+#define RANDOM_H_
 
-#include "bigint.h"
+#include <stdint.h>
 
-void    bigint_print_hex(const bigint_t* a);
-uint8_t bigint_read_hex_echo(bigint_t* a);
+extern uint8_t(*prng_get_byte)(void);
 
-#endif /* BIGINT_IO_H_ */
+#endif /* RANDOM_H_ */
