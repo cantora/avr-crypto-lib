@@ -26,7 +26,7 @@ void main_setup(void){
 }
 
 void welcome_msg(const char* algoname){
-	cli_putstr_P(PSTR("\r\n\r\nARM-Crypto-Lib VS ("));
+	cli_putstr_P(PSTR("\r\n\r\nAVR-Crypto-Lib VS ("));
 	cli_putstr(algoname);
 	cli_putstr_P(PSTR("; "));
 	cli_putstr(__DATE__);
