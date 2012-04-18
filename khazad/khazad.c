@@ -92,7 +92,7 @@ uint8_t khazad_sbox(uint8_t a){
 	return b|c;
 }
 
-static void gamma(uint8_t* a){
+static void gamma_1(uint8_t* a){
 	uint8_t i;
 	for(i=0; i<8; ++i){
 		*a = khazad_sbox(*a);
@@ -147,7 +147,7 @@ static void theta(uint8_t* a){
 /******************************************************************************/
 
 static void khazad_round(uint8_t* a, const uint8_t* k){
-	gamma(a);
+	gamma_1(a);
 	theta(a);
 	memxor(a, k, 8);
 }
@@ -188,7 +188,7 @@ void khazad_enc(void* buffer, const khazad_ctx_t* ctx){
 	for(r=1; r<8; ++r){
 		khazad_round(buffer, ctx->k[r]);
 	}
-	gamma(buffer);
+	gamma_1(buffer);
 	memxor(buffer, ctx->k[8], 8);
 }
 
@@ -197,11 +197,11 @@ void khazad_enc(void* buffer, const khazad_ctx_t* ctx){
 void khazad_dec(void* buffer, const khazad_ctx_t* ctx){
 	uint8_t r=7;
 	memxor(buffer, ctx->k[8], 8);
-	gamma(buffer);
+	gamma_1(buffer);
 	do{
 		memxor(buffer, ctx->k[r--], 8);
 		theta(buffer);
-		gamma(buffer);
+		gamma_1(buffer);
 	}while(r);
 	memxor(buffer, ctx->k[0], 8);
 }

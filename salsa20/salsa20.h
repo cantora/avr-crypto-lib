@@ -23,7 +23,10 @@
 #include <stdint.h>
 
 typedef struct{
-	uint8_t a[64];
+	union{
+		uint8_t   v8[64];
+		uint64_t v64[ 8];
+	} a;
 	uint8_t buffer[64];
 	uint8_t buffer_idx;
 } salsa20_ctx_t;

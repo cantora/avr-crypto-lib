@@ -25,7 +25,7 @@
 #include "mgf1.h"
 #include "bigint.h"
 #include "rsa_basic.h"
-#include "rsa_oaep.h"
+#include "rsaes_oaep.h"
 
 #include "random_dummy.h"
 

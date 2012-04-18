@@ -1,4 +1,4 @@
-/* rsa_pkcs15.c */
+/* rsa_pkcs1v15.c */
 /*
     This file is part of the ARM-Crypto-Lib.
     Copyright (C) 2006-2011 Daniel Otte (daniel.otte@rub.de)
@@ -22,6 +22,7 @@
 #include <string.h>
 #include "bigint.h"
 #include "rsa_basic.h"
+#include "rsaes_pkcs1v15.h"
 
 #define DEBUG 0
 
@@ -32,15 +33,15 @@
 
 #include "random_dummy.h"
 
-uint16_t rsa_pkcs15_compute_padlength_B(bigint_t* modulus, uint16_t msg_length_B){
+uint16_t rsa_pkcs1v15_compute_padlength_B(bigint_t* modulus, uint16_t msg_length_B){
 	return bigint_get_first_set_bit(modulus) / 8 + 1 - msg_length_B - 3;
 }
 
-uint8_t rsa_encrypt_pkcs15(void* dest, uint16_t* out_length, const void* src,
+uint8_t rsa_encrypt_pkcs1v15(void* dest, uint16_t* out_length, const void* src,
 	uint16_t length_B, rsa_publickey_t* key, const void* pad){
 	int16_t pad_length;
 	bigint_t x;
-	pad_length = rsa_pkcs15_compute_padlength_B(key->modulus, length_B);
+	pad_length = rsa_pkcs1v15_compute_padlength_B(key->modulus, length_B);
 	if(pad_length<8){
 #if DEBUG
 		cli_putstr_P(PSTR("\r\nERROR: pad_length<8; pad_length: "));
@@ -84,18 +85,20 @@ uint8_t rsa_encrypt_pkcs15(void* dest, uint16_t* out_length, const void* src,
 	return 0;
 }
 
-uint8_t rsa_decrypt_pkcs15(void* dest, uint16_t* out_length, const void* src,
+uint8_t rsa_decrypt_pkcs1v15(void* dest, uint16_t* out_length, const void* src,
 	uint16_t length_B, rsa_privatekey_t* key, void* pad){
 	bigint_t x;
 	uint16_t m_length, pad_length=0, idx=0;
 	x.wordv = dest;
 	rsa_os2ip(&x, src, length_B);
 #if DEBUG
-	cli_putstr_P(PSTR("\r\ncalling rsa_dec() ..."));
+	cli_putstr_P(PSTR("\r\ncalling rsa_dec() with bigint:"));
+	bigint_print_hex(&x);
 #endif
 	rsa_dec(&x, key);
 #if DEBUG
-	cli_putstr_P(PSTR("\r\nfinished rsa_dec() ..."));
+	cli_putstr_P(PSTR("\r\nfinished rsa_dec() bigint:"));
+	bigint_print_hex(&x);
 #endif
 	rsa_i2osp(NULL, &x, &m_length);
 #if DEBUG

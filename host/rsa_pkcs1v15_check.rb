@@ -1,5 +1,5 @@
 #!/usr/bin/ruby
-# rsa_pkcs15_check.rb
+# rsa_pkcs1v15_check.rb
 =begin
     This file is part of the AVR-Crypto-Lib.
     Copyright (C) 2008  Daniel Otte (daniel.otte@rub.de)
@@ -21,6 +21,7 @@
 require 'rubygems'
 require 'serialport'
 require 'getopt/std'
+require 'fileutils'
 
 $buffer_size = 0 # set automatically in init_system
 $conffile_check = Hash.new
@@ -94,10 +95,15 @@ end
 def read_block(f)
   d = Array.new
   begin
+    v = false
     l = f.gets
-    x = l.split.collect { |e| e.to_i(16) }
+ #   x = l.split.collect { |e| e.to_i(16) }
+    t = l.split
+    t.each { |e| v = true if e.length != 2 }
+    x = []
+    x = t.collect { |e| e.to_i(16) } if ! v
     d += x
-  end while x.length == 16
+  end while x.length == 16 && ! v
   return d
 end
 
@@ -300,7 +306,11 @@ def check_tv(tv)
   test_enc = ''
   loop do 
     l = read_line_from_device()
-    break if ! /([0-9A-Fa-f]{2}\s*)+/.match(l)
+    t = l.split
+    v = false
+    t.each { |e| v = true if e.length != 2 }
+    x = t.collect { |e| e.to_i(16) }
+    break if v
     test_enc += l if l
   end
   test_enc_a = Array.new
@@ -331,7 +341,7 @@ end
 ########################################
 
 
-opts = Getopt::Std.getopts('dc:f:il:s:')
+opts = Getopt::Std.getopts('dc:f:il:s:n:')
 
 conf = Hash.new
 conf = readconfigfile("/etc/testport.conf", conf)
@@ -367,14 +377,39 @@ $sp.flow_control = SerialPort::SOFT
 
 $debug = true if opts['d']
 
-if opts['l']
+if opts['l'] && ! opts['n']
   $logfile = File.open(opts['l'], 'w')
+end
+
+if opts['n']
+  logfilename = conf['PORT']['testlogbase']+'rsa_pkcs1v15_' + opts['n'] + '.txt'
+  if File.exists?(logfilename)
+    i=1
+    begin
+      logfilename = sprintf('%s%04d%s', conf['PORT']['testlogbase']+'rsa_pkcs1v15_'+opts['n']+'_',i,'.txt')
+      i+=1
+    end while(File.exists?(logfilename))
+    while(i>2) do
+      n1 = sprintf('%s%04d%s', conf['PORT']['testlogbase']+'rsa_pkcs1v15_'+opts['n']+'_',i-2,'.txt')
+      n2 = sprintf('%s%04d%s', conf['PORT']['testlogbase']+'rsa_pkcs1v15_'+opts['n']+'_',i-1,'.txt')
+      File.rename(n1, n2)
+      printf("%s -> %s\n", n1, n2)
+      i-=1
+    end
+    n1 = sprintf('%s%s', conf['PORT']['testlogbase'],'rsa_pkcs1v15_'+opts['n']+'.txt')
+    n2 = sprintf('%s%04d%s', conf['PORT']['testlogbase']+'rsa_pkcs1v15_'+opts['n']+'_',1,'.txt')
+    File.rename(n1, n2)
+    printf("%s -> %s\n", n1, n2)
+    logfilename = conf['PORT']['testlogbase']+'rsa_pkcs1v15_'+opts['n']+'.txt'
+  end
+  printf("logging to %s", logfilename)
+  $logfile = File.open(logfilename, 'w')
 end
 
 $logfile = STDOUT if ! $logfile
 reset_system()
 
-if opts['s'] && m = opts['s'].match(/([\d]+\.([\d]+))/)
+if opts['s'] && ( m = opts['s'].match(/([\d]+)\.([\d]+)/) )
   sk = m[1].to_i
   sv = m[2].to_i
 else

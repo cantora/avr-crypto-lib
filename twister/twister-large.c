@@ -109,7 +109,11 @@ void twister_large_nextBlock(twister_large_ctx_t* ctx, const void* msg){
 /*********************************************************************/
 
 void twister_inject_chksum(twister_large_ctx_t* ctx, uint8_t col){
-	*((uint64_t*)(&ctx->state.s[7][0])) ^= *((uint64_t*)(&ctx->checksum[col][0]));
+	uint8_t i=7;
+	do{
+		ctx->state.s[7][i] ^= ctx->checksum[col][i];
+
+	}while(i--);
 	twister_blank_round(&ctx->state);
 }
 

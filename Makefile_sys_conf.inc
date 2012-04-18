@@ -27,7 +27,7 @@ STAT_DIR       = stats/$(BOARD_NAME)/#
 AUTOASM_DIR    = autoasm/$(BOARD_NAME)/#
 AUTOASM_OPT    = -S
 CC	           = avr-gcc
-CSTD           = c99
+CSTD           = gnu99
 
 SIZESTAT_FILE = sizestats.txt
 

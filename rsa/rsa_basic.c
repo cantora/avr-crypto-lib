@@ -52,50 +52,111 @@ m = m2 + q * h
 
 uint8_t rsa_dec_crt_mono(bigint_t* data, rsa_privatekey_t* key){
 	bigint_t m1, m2;
-	m1.wordv = malloc((key->modulus->length_B + 1) * sizeof(bigint_word_t));
-	m2.wordv = malloc(key->components[1]->length_B * sizeof(bigint_word_t));
+	m1.wordv = malloc((key->components[0]->length_B + 1) * sizeof(bigint_word_t));
+	m2.wordv = malloc((key->components[1]->length_B + 1) * sizeof(bigint_word_t));
 	if(!m1.wordv || !m2.wordv){
 #if DEBUG
-		cli_putstr_P(PSTR("\r\nERROR: OOM! (" __FILE__ ")"));
+		cli_putstr_P(PSTR("\r\nERROR: OOM!"));
 #endif
 		free(m1.wordv);
 		free(m2.wordv);
 		return 1;
 	}
 #if DEBUG
-		cli_putstr_P(PSTR("\r\nexp_mod a + b "));
+	cli_putstr_P(PSTR("\r\nDBG: expmod m1 ..."));
+	cli_putstr_P(PSTR("\r\nexpmod("));
+	bigint_print_hex(data);
+	cli_putc(',');
+	bigint_print_hex(key->components[2]);
+	cli_putc(',');
+	bigint_print_hex(key->components[0]);
+	cli_putstr_P(PSTR(") = "));
 #endif
 	bigint_expmod_u(&m1, data, key->components[2], key->components[0]);
+#if DEBUG
+	bigint_print_hex(&m1);
+	cli_putstr_P(PSTR("expmod m2 ..."));
+	cli_putstr_P(PSTR("\r\nexpmod("));
+	bigint_print_hex(data);
+	cli_putc(',');
+	bigint_print_hex(key->components[3]);
+	cli_putc(',');
+	bigint_print_hex(key->components[1]);
+	cli_putstr_P(PSTR(") = "));
+#endif
 	bigint_expmod_u(&m2, data, key->components[3], key->components[1]);
 #if DEBUG
-	cli_putstr_P(PSTR("[done] "));
+	bigint_print_hex(&m2);
+	cli_putstr_P(PSTR("\r\nDBG: sub ..."));
+	cli_putstr_P(PSTR("\r\nsub("));
+	bigint_print_hex(&m1);
+	cli_putc(',');
+	bigint_print_hex(&m2);
+	cli_putstr_P(PSTR(") = "));
 #endif
 	bigint_sub_s(&m1, &m1, &m2);
 #if DEBUG
-	cli_putstr_P(PSTR("[done2] "));
+	bigint_print_hex(&m1);
 #endif
 	while(BIGINT_NEG_MASK & m1.info){
 #if DEBUG
-		cli_putc(',');
+	cli_putstr_P(PSTR("\r\nDBG: adding "));
+	bigint_print_hex(key->components[0]);
+	cli_putstr_P(PSTR("\r\nDBG: to "));
+	bigint_print_hex(&m1);
 #endif
 		bigint_add_s(&m1, &m1, key->components[0]);
 	}
 #if DEBUG
-		cli_putstr_P(PSTR("\r\nreduce_mul "));
+	cli_putstr_P(PSTR("\r\nDBG: reduce-mul ..."));
+	cli_putstr_P(PSTR("\r\nreduce("));
+	bigint_print_hex(&m1);
+	cli_putc(',');
+	bigint_print_hex(key->components[0]);
+	cli_putstr_P(PSTR(") = "));
 #endif
 	bigint_reduce(&m1, key->components[0]);
-	bigint_mul_u(&m1, &m1, key->components[4]);
 #if DEBUG
-		cli_putstr_P(PSTR("[done]"));
+	bigint_print_hex(&m1);
+	cli_putstr_P(PSTR("\r\nmul("));
+	bigint_print_hex(&m1);
+	cli_putc(',');
+	bigint_print_hex(key->components[4]);
+	cli_putstr_P(PSTR(") = "));
 #endif
-	bigint_reduce(&m1, key->components[0]);
-	bigint_mul_u(&m1, &m1, key->components[1]);
+	bigint_mul_u(data, &m1, key->components[4]);
 #if DEBUG
-		cli_putstr_P(PSTR(" [done]"));
+	bigint_print_hex(data);
+	cli_putstr_P(PSTR("\r\nreduce("));
+	bigint_print_hex(data);
+	cli_putc(',');
+	bigint_print_hex(key->components[0]);
+	cli_putstr_P(PSTR(") = "));
 #endif
-	bigint_add_u(data, &m1, &m2);
-	free(m1.wordv);
+	bigint_reduce(data, key->components[0]);
+#if DEBUG
+	bigint_print_hex(data);
+	cli_putstr_P(PSTR("\r\nmul("));
+	bigint_print_hex(data);
+	cli_putc(',');
+	bigint_print_hex(key->components[1]);
+	cli_putstr_P(PSTR(") = "));
+#endif
+	bigint_mul_u(data, data, key->components[1]);
+#if DEBUG
+	bigint_print_hex(data);
+	cli_putstr_P(PSTR("\r\nadd("));
+	bigint_print_hex(data);
+	cli_putc(',');
+	bigint_print_hex(&m2);
+	cli_putstr_P(PSTR(") = "));
+#endif
+	bigint_add_u(data, data, &m2);
+#if DEBUG
+	bigint_print_hex(data);
+#endif
 	free(m2.wordv);
+	free(m1.wordv);
 	return 0;
 }
 
@@ -118,8 +179,18 @@ uint8_t rsa_dec(bigint_t* data, rsa_privatekey_t* key){
 }
 
 void rsa_os2ip(bigint_t* dest, const void* data, uint32_t length_B){
+#if BIGINT_WORD_SIZE == 8
+	if(data){
+		memcpy(dest->wordv, data, length_B);
+	}
+	dest->length_B = length_B;
+#else
 	uint8_t off;
-	off = length_B % sizeof(bigint_word_t);
+	off = (sizeof(bigint_word_t) - length_B % sizeof(bigint_word_t)) % sizeof(bigint_word_t);
+#if DEBUG
+	cli_putstr_P(PSTR("\r\nDBG: off = 0x"));
+	cli_hexdump_byte(off);
+#endif
 	if(!data){
 		if(off){
 			dest->wordv = realloc(dest->wordv, length_B + sizeof(bigint_word_t) - off);
@@ -127,19 +198,37 @@ void rsa_os2ip(bigint_t* dest, const void* data, uint32_t length_B){
 			memset(dest->wordv, 0, off);
 		}
 	}else{
+		memcpy((uint8_t*)dest->wordv + off, data, length_B);
 		if(off){
-			memcpy((uint8_t*)dest->wordv + off, data, length_B);
-			memset(dest, 0, off);
-		}else{
-			memcpy(dest->wordv, data, length_B);
+			memset(dest->wordv, 0, off);
 		}
 	}
-	dest->length_B = (length_B + sizeof(bigint_word_t) - 1) / sizeof(bigint_word_t);
+	dest->length_B = (length_B + off) / sizeof(bigint_word_t);
+#if DEBUG
+	cli_putstr_P(PSTR("\r\nDBG: dest->length_B = 0x"));
+	cli_hexdump_rev(&(dest->length_B), 2);
+#endif
+#endif
+	dest->info = 0;
 	bigint_changeendianess(dest);
 	bigint_adjust(dest);
 }
 
 void rsa_i2osp(void* dest, bigint_t* src, uint16_t* out_length_B){
+#if BIGINT_WORD_SIZE == 8
+	if(dest){
+		uint8_t *e = src->wordv + src->length_B;
+		uint16_t i;
+		for(i=src->length_B; i>0; --i){
+			*((uint8_t*)dest) = *--e;
+			dest = (uint8_t*)dest + 1;
+		}
+	}else{
+		bigint_changeendianess(src);
+	}
+
+	*out_length_B = src->length_B;
+#else
 	*out_length_B = bigint_get_first_set_bit(src) / 8 + 1;
 	if(dest){
 		uint16_t i;
@@ -157,5 +246,6 @@ void rsa_i2osp(void* dest, bigint_t* src, uint16_t* out_length_B){
 			memmove(src->wordv, (uint8_t*)src->wordv+off, *out_length_B);
 		}
 	}
+#endif
 }
 

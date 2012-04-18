@@ -523,33 +523,36 @@ void bmw_large_nextBlock(bmw_large_ctx_t* ctx, const void* block){
 }
 
 void bmw_large_lastBlock(bmw_large_ctx_t* ctx, const void* block, uint16_t length_b){
-	uint8_t buffer[128];
+	union {
+		uint8_t   v8[128];
+		uint64_t v64[ 16];
+	} buffer;
 	while(length_b >= BMW_LARGE_BLOCKSIZE){
 		bmw_large_nextBlock(ctx, block);
 		length_b -= BMW_LARGE_BLOCKSIZE;
 		block = (uint8_t*)block + BMW_LARGE_BLOCKSIZE_B;
 	}
-	memset(buffer, 0, 128);
-	memcpy(buffer, block, (length_b+7)/8);
-	buffer[length_b>>3] |= 0x80 >> (length_b&0x07);
+	memset(buffer.v8, 0, 128);
+	memcpy(buffer.v8, block, (length_b+7)/8);
+	buffer.v8[length_b>>3] |= 0x80 >> (length_b&0x07);
 	if(length_b+1>128*8-64){
-		bmw_large_nextBlock(ctx, buffer);
-		memset(buffer, 0, 128-8);
+		bmw_large_nextBlock(ctx, buffer.v8);
+		memset(buffer.v8, 0, 128-8);
 		ctx->counter -= 1;
 	}
-	*((uint64_t*)&(buffer[128-8])) = (uint64_t)(ctx->counter*1024LL)+(uint64_t)length_b;
-	bmw_large_nextBlock(ctx, buffer);
+	buffer.v64[15] = (uint64_t)(ctx->counter*1024LL)+(uint64_t)length_b;
+	bmw_large_nextBlock(ctx, buffer.v8);
 #if TWEAK
 	uint8_t i;
 	uint64_t q[32];
-	memset(buffer, 0xaa, 128);
+	memset(buffer.v8, 0xaa, 128);
 	for(i=0; i<16; ++i){
-		buffer[8*i] = i + 0xa0;
+		buffer.v8[8*i] = i + 0xa0;
 	}
-	bmw_large_f0(q, (uint64_t*)buffer, ctx->h);
-	bmw_large_f1(q, ctx->h, (uint64_t*)buffer);
-	bmw_large_f2((uint64_t*)buffer, q, ctx->h);
-	memcpy(ctx->h, buffer, 128);
+	bmw_large_f0(q, buffer.v64, ctx->h);
+	bmw_large_f1(q, ctx->h, buffer.v64);
+	bmw_large_f2(buffer.v64, q, ctx->h);
+	memcpy(ctx->h, buffer.v8, 128);
 #endif
 }
 

@@ -111,31 +111,31 @@ void salsa20_genBlock128(void* dest, const void* k, const void* iv, uint64_t i){
 
 void salsa20_init(void* key, uint16_t keylength_b, void* iv, salsa20_ctx_t* ctx){
 	if(keylength_b==256){
-		memcpy_P((ctx->a+ 0), sigma+ 0, 4);
-		memcpy_P((ctx->a+20), sigma+ 4, 4);
-		memcpy_P((ctx->a+40), sigma+ 8, 4);
-		memcpy(  (ctx->a+44), (uint8_t*)key+16, 16);
-		memcpy_P((ctx->a+60), sigma+12, 4);
+		memcpy_P((ctx->a.v8+ 0), sigma+ 0, 4);
+		memcpy_P((ctx->a.v8+20), sigma+ 4, 4);
+		memcpy_P((ctx->a.v8+40), sigma+ 8, 4);
+		memcpy(  (ctx->a.v8+44), (uint8_t*)key+16, 16);
+		memcpy_P((ctx->a.v8+60), sigma+12, 4);
 	}else{
-		memcpy_P((ctx->a+ 0), theta+ 0, 4);
-		memcpy_P((ctx->a+20), theta+ 4, 4);
-		memcpy_P((ctx->a+40), theta+ 8, 4);
-		memcpy(  (ctx->a+44), (uint8_t*)key+ 0, 16);
-		memcpy_P((ctx->a+60), theta+12, 4);
+		memcpy_P((ctx->a.v8+ 0), theta+ 0, 4);
+		memcpy_P((ctx->a.v8+20), theta+ 4, 4);
+		memcpy_P((ctx->a.v8+40), theta+ 8, 4);
+		memcpy(  (ctx->a.v8+44), (uint8_t*)key+ 0, 16);
+		memcpy_P((ctx->a.v8+60), theta+12, 4);
 	}
-	memcpy(  (ctx->a+ 4), key, 16);
-	memset(  (ctx->a+24), 0, 16);
+	memcpy(  (ctx->a.v8+ 4), key, 16);
+	memset(  (ctx->a.v8+24), 0, 16);
 	if(iv){
-		memcpy(  (ctx->a+24), iv, 8);
+		memcpy(  (ctx->a.v8+24), iv, 8);
 	}
 	ctx->buffer_idx=64;
 }
 
 uint8_t salsa20_gen(salsa20_ctx_t* ctx){
 	if(ctx->buffer_idx==64){
-		memcpy(ctx->buffer, ctx->a, 64);
+		memcpy(ctx->buffer, ctx->a.v8, 64);
 		salsa20_hash((uint32_t*)(ctx->buffer));
-		*((uint64_t*)(ctx->a+32)) += 1;
+		ctx->a.v64[4] += 1;
 		ctx->buffer_idx = 0;
 	}
 	return ctx->buffer[ctx->buffer_idx++];

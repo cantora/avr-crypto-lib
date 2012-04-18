@@ -28,7 +28,9 @@
 #include "uart_defs.h"
 
 #define UART0_I 1
+#ifndef UART0_BAUD_RATE
 #define UART0_BAUD_RATE  115200
+#endif
 #define UART0_PARATY     UART_PARATY_NONE
 #define UART0_STOPBITS   UART_STOPBITS_1
 #define UART0_DATABITS   UART_DATABITS_8

@@ -111,7 +111,7 @@ static const uint8_t sbox[256] PROGMEM = {
 
 #endif
 
-static void gamma(uint8_t* a){
+static void gamma_1(uint8_t* a){
 	uint8_t i;
 	for(i=0; i<64; ++i){
 		*a = whirlpool_sbox(*a);
@@ -161,7 +161,7 @@ static void theta(uint8_t* a){
 }
 
 static void w_round(uint8_t* a, const uint8_t* k){
-	gamma(a);
+	gamma_1(a);
 #if DEBUG
 	cli_putstr_P(PSTR("\r\n pre-pi:"));
 	cli_hexdump_block(a, 64, 4, 8);

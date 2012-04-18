@@ -291,25 +291,33 @@ int8_t bigint_cmp_u(const bigint_t* a, const bigint_t* b){
 
 void bigint_add_s(bigint_t* dest, const bigint_t* a, const bigint_t* b){
 	uint8_t s;
+	int8_t d = 0;
 	s  = GET_SIGN(a)?2:0;
 	s |= GET_SIGN(b)?1:0;
 	switch(s){
 		case 0: /* both positive */
+			d = 1;
 			bigint_add_u(dest, a,b);
-			SET_POS(dest);
 			break;
 		case 1: /* a positive, b negative */
+			d = bigint_cmp_u(a,b);
 			bigint_sub_u(dest, a, b);
 			break;
 		case 2: /* a negative, b positive */
+			d = bigint_cmp_u(b,a);
 			bigint_sub_u(dest, b, a);
 			break;
 		case 3: /* both negative */
+			d = -1;
 			bigint_add_u(dest, a, b);
-			SET_NEG(dest);
 			break;
 		default: /* how can this happen?*/
 			break;
+	}
+	if(d<0){
+		SET_NEG(dest);
+	}else{
+		SET_POS(dest);
 	}
 }
 

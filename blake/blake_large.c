@@ -146,21 +146,24 @@ void blake_large_lastBlock(blake_large_ctx_t* ctx, const void* msg, uint16_t len
 		msg = (uint8_t*)msg + BLAKE_LARGE_BLOCKSIZE_B;
 		length_b -= BLAKE_LARGE_BLOCKSIZE;
 	}
-	uint8_t buffer[128];
+	union {
+		uint8_t   v8[128];
+		uint64_t v64[ 16];
+	} buffer;
 	uint64_t v[16];
 	uint64_t ctr;
 	ctr = ctx->counter*1024+length_b;
-	memset(buffer, 0, 128);
-	memcpy(buffer, msg, (length_b+7)/8);
-	buffer[length_b/8] |= 0x80 >> (length_b&0x7);
-	blake_large_changeendian(buffer, buffer);
+	memset(buffer.v8, 0, 128);
+	memcpy(buffer.v8, msg, (length_b+7)/8);
+	buffer.v8[length_b/8] |= 0x80 >> (length_b&0x7);
+	blake_large_changeendian(buffer.v8, buffer.v8);
 	blake_large_expand(v, ctx);
 	if(length_b>1024-128-2){
 		v[12] ^= ctr;
 		v[13] ^= ctr;
-		blake_large_compress(v, buffer);
+		blake_large_compress(v, buffer.v8);
 		blake_large_collapse(ctx, v);
-		memset(buffer, 0, 128-8);
+		memset(buffer.v8, 0, 128-8);
 		blake_large_expand(v, ctx);
 	} else {
 		if(length_b){
@@ -169,9 +172,9 @@ void blake_large_lastBlock(blake_large_ctx_t* ctx, const void* msg, uint16_t len
 		}
 	}
 	if(ctx->appendone)
-		buffer[128-16-8] |= 0x01;
-	*((uint64_t*)(&(buffer[128-8]))) = ctr;
-	blake_large_compress(v, buffer);
+		buffer.v8[128-16-8] |= 0x01;
+	buffer.v64[15] = ctr;
+	blake_large_compress(v, buffer.v8);
 	blake_large_collapse(ctx, v);
 
 }

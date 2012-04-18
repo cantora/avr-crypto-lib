@@ -34,8 +34,7 @@ GLOBAL_INCDIR := ./ $(TESTSRC_DIR)
 
 #-------------------------------------------------------------------------------
 # inclusion of make stubs
-include mkfiles/0*.mk
-include mkfiles/*.mk
+include $(sort $(wildcard mkfiles/*.mk))
 
 #-------------------------------------------------------------------------------
 ALGORITHMS = $(BLOCK_CIPHERS) $(STREAM_CIPHERS) $(HASHES) $(PRNGS) $(MACS) \
