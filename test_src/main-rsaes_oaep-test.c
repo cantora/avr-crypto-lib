@@ -430,48 +430,24 @@ uint8_t read_bigint(bigint_t* a, char* prompt){
 }
 
 uint8_t pre_alloc_key_crt(void){
-	uint8_t c;
-	pub_key.modulus = malloc(sizeof(bigint_t));
-	if(!pub_key.modulus){
-		cli_putstr_P(PSTR("\r\nERROR: OOM!"));
-		return 2;
-	}
-	priv_key.modulus = pub_key.modulus;
 	priv_key.n = 5;
-	priv_key.components = malloc(5 * sizeof(bigint_t*));
+	priv_key.components = malloc(5 * sizeof(bigint_t));
 	if(!priv_key.components){
 		cli_putstr_P(PSTR("\r\nERROR: OOM!"));
 		return 2;
-	}
-	pub_key.exponent = malloc(sizeof(bigint_t));
-	if(!pub_key.exponent){
-		cli_putstr_P(PSTR("\r\nERROR: OOM!"));
-		return 2;
-	}
-	for(c=0; c<5; ++c){
-		priv_key.components[c] = malloc(sizeof(bigint_t));
-		if(!priv_key.components[c]){
-			cli_putstr_P(PSTR("\r\nERROR: OOM!"));
-			return 2;
-		}
 	}
 	return 0;
 }
 
 void free_key(void){
 	uint8_t c;
-	free(pub_key.modulus->wordv);
-	free(pub_key.exponent->wordv);
-	free(pub_key.modulus);
-	pub_key.modulus = priv_key.modulus = NULL;
-	free(pub_key.exponent);
-	pub_key.exponent = NULL;
+	free(pub_key.modulus.wordv);
+	free(pub_key.exponent.wordv);
 	for(c = 0; c < priv_key.n; ++c){
-		free(priv_key.components[c]->wordv);
-		free(priv_key.components[c]);
+		free(priv_key.components[c].wordv);
 	}
 	free(priv_key.components);
-	priv_key.components = NULL;
+	keys_allocated = 0;
 }
 
 uint8_t read_key_crt(void){
@@ -479,107 +455,39 @@ uint8_t read_key_crt(void){
 	cli_putstr_P(PSTR("\r\n== reading key (crt) =="));
 	r = pre_alloc_key_crt();
 	if(r) return r;
-	r = read_bigint(pub_key.modulus,"\r\n = module =");
+	r = read_bigint(&pub_key.modulus,"\r\n = module =");
 	if(r) return r;
-	r = read_bigint(pub_key.exponent,"\r\n = public exponent =");
+	memcpy(&priv_key.modulus, &pub_key.modulus, sizeof(bigint_t));
+	r = read_bigint(&pub_key.exponent,"\r\n = public exponent =");
 	if(r) return r;
-	r = read_bigint(priv_key.components[0],"\r\n = p (first prime) =");
+	r = read_bigint(&(priv_key.components[0]),"\r\n = p (first prime) =");
 	if(r) return r;
-	r = read_bigint(priv_key.components[1],"\r\n = q (second prime) =");
+	r = read_bigint(&(priv_key.components[1]),"\r\n = q (second prime) =");
 	if(r) return r;
-	r = read_bigint(priv_key.components[2],"\r\n = dp (p's exponent) =");
+	r = read_bigint(&(priv_key.components[2]),"\r\n = dp (p's exponent) =");
 	if(r) return r;
-	r = read_bigint(priv_key.components[3],"\r\n = dq (q's exponent) =");
+	r = read_bigint(&(priv_key.components[3]),"\r\n = dq (q's exponent) =");
 	if(r) return r;
-	r = read_bigint(priv_key.components[4],"\r\n = qInv (q' coefficient) =");
+	r = read_bigint(&(priv_key.components[4]),"\r\n = qInv (q' coefficient) =");
 	return r;
 }
 
 uint8_t read_key_conv(void){
 	uint8_t r;
-	cli_putstr_P(PSTR("\r\n== reading key (crt) =="));
-	pub_key.modulus = malloc(sizeof(bigint_t));
-	if(!pub_key.modulus){
-		cli_putstr_P(PSTR("\r\nERROR: OOM!"));
-		return 2;
-	}
-	r = read_bigint(pub_key.modulus,"\r\n = module =");
-	if(r) return r;
-	priv_key.modulus = pub_key.modulus;
-	priv_key.n = 1;
-	pub_key.exponent = malloc(sizeof(bigint_t));
-	if(!pub_key.exponent){
-		cli_putstr_P(PSTR("\r\nERROR: OOM!"));
-		return 2;
-	}
-	priv_key.components = malloc(sizeof(bigint_t*));
+	priv_key.components = malloc(sizeof(bigint_t));
 	if(!priv_key.components){
 		cli_putstr_P(PSTR("\r\nERROR: OOM!"));
 		return 2;
 	}
-	priv_key.components[0] = malloc(sizeof(bigint_t));
-	if(!priv_key.components[0]){
-		cli_putstr_P(PSTR("\r\nERROR: OOM!"));
-		return 2;
-	}
-	r = read_bigint(pub_key.exponent,"\r\n = public exponent =");
+	cli_putstr_P(PSTR("\r\n== reading key (conv) =="));
+	r = read_bigint(&pub_key.modulus,"\r\n = module =");
 	if(r) return r;
-	r = read_bigint(priv_key.components[0],"\r\n = private exponent =");
+	memcpy(&priv_key.modulus, &pub_key.modulus, sizeof(bigint_t));
+	priv_key.n = 1;
+	r = read_bigint(&pub_key.exponent,"\r\n = public exponent =");
+	if(r) return r;
+	r = read_bigint(priv_key.components,"\r\n = private exponent =");
 	return r;
-}
-
-void load_priv_conventional(void){
-	bigint_t *epriv;
-	epriv = malloc(sizeof(bigint_t));
-	if(!epriv){
-		cli_putstr_P(PSTR("\r\nERROR: OOM!"));
-		return;
-	}
-	epriv->length_B = (sizeof(PRIV_EXPONENT) + sizeof(bigint_word_t) - 1) / sizeof(bigint_word_t);
-	epriv->wordv =  malloc(epriv->length_B * sizeof(bigint_word_t));
-	if(!epriv->wordv){
-		cli_putstr_P(PSTR("\r\nERROR: OOM!"));
-		return;
-	}
-	memcpy(epriv->wordv, PRIV_EXPONENT, sizeof(PRIV_EXPONENT));
-	priv_key.components = malloc(sizeof(bigint_t*));
-	priv_key.components[0] = epriv;
-	priv_key.n = 1;
-	bigint_changeendianess(epriv);
-	bigint_adjust(epriv);
-}
-
-
-void load_priv_crt_mono(void){
-	bigint_t **v;
-	const uint8_t *bv[5] = {P,Q,DP,DQ,QINV};
-	uint16_t sv[5] = {sizeof(P), sizeof(Q), sizeof(DP), sizeof(DQ), sizeof(QINV)};
-	uint8_t i;
-	v = malloc(5 * sizeof(bigint_t));
-	if(!v){
-		cli_putstr_P(PSTR("\r\nERROR: OOM!"));
-		return;
-	}
-	priv_key.components = malloc(5*sizeof(bigint_t*));
-	if(!priv_key.components){
-		cli_putstr_P(PSTR("\r\nERROR: OOM!"));
-		return;
-	}
-	priv_key.n = 5;
-	for(i=0; i<5; ++i){
-		v[i] = malloc(sizeof(bigint_t));
-		v[i]->info = 0;
-		v[i]->length_B = (sv[i] + sizeof(bigint_word_t) - 1) / sizeof(bigint_word_t);
-		v[i]->wordv = calloc(v[i]->length_B , sizeof(bigint_word_t));
-		if(!v[i]->wordv){
-			cli_putstr_P(PSTR("\r\nERROR: OOM!"));
-			return;
-		}
-		memcpy(v[i]->wordv, bv[i], sv[i]);
-		bigint_changeendianess(v[i]);
-		bigint_adjust(v[i]);
-		priv_key.components[i] = v[i];
-	}
 }
 
 uint8_t load_bigint_from_os(bigint_t* a, PGM_VOID_P os, uint16_t length_B){
@@ -608,25 +516,23 @@ void load_fix_rsa(void){
 		return;
 	}
 
-	load_bigint_from_os(pub_key.modulus, MODULUS, sizeof(MODULUS));
-	load_bigint_from_os(pub_key.exponent, PUB_EXPONENT, sizeof(PUB_EXPONENT));
+	load_bigint_from_os(&pub_key.modulus, MODULUS, sizeof(MODULUS));
+	memcpy(&priv_key.modulus, &pub_key.modulus, sizeof(bigint_t));
+	load_bigint_from_os(&pub_key.exponent, PUB_EXPONENT, sizeof(PUB_EXPONENT));
 	priv_key.n = 5;
-	load_bigint_from_os(priv_key.components[0], P, sizeof(P));
-	load_bigint_from_os(priv_key.components[1], Q, sizeof(Q));
-	load_bigint_from_os(priv_key.components[2], DP, sizeof(DP));
-	load_bigint_from_os(priv_key.components[3], DQ, sizeof(DQ));
-	load_bigint_from_os(priv_key.components[4], QINV, sizeof(QINV));
-
-//	load_priv_conventional();
-//	load_priv_crt_mono();
+	load_bigint_from_os(&(priv_key.components[0]), P, sizeof(P));
+	load_bigint_from_os(&(priv_key.components[1]), Q, sizeof(Q));
+	load_bigint_from_os(&(priv_key.components[2]), DP, sizeof(DP));
+	load_bigint_from_os(&(priv_key.components[3]), DQ, sizeof(DQ));
+	load_bigint_from_os(&(priv_key.components[4]), QINV, sizeof(QINV));
 }
 
 void quick_test(void){
 	uint8_t *ciphertext, *plaintext, rc;
 	uint8_t seed[sizeof(SEED)];
 	uint16_t clen, plen;
-	ciphertext = malloc(clen = pub_key.modulus->length_B * sizeof(bigint_word_t));
-	plaintext = malloc(pub_key.modulus->length_B * sizeof(bigint_word_t));
+	ciphertext = malloc(clen = pub_key.modulus.length_B * sizeof(bigint_word_t));
+	plaintext = malloc(pub_key.modulus.length_B * sizeof(bigint_word_t));
 	memcpy_P(plaintext, MSG, sizeof(MSG));
 	memcpy_P(seed, SEED, sizeof(SEED));
 	cli_putstr_P(PSTR("\r\nplaintext:"));
@@ -681,12 +587,12 @@ void run_seed_test(void){
 		cli_putstr_P(PSTR("\r\nERROR: OOM!"));
 		return;
 	}
-	ciph = malloc(bigint_length_B(pub_key.modulus));
+	ciph = malloc(bigint_length_B(&pub_key.modulus));
 	if(!ciph){
 		cli_putstr_P(PSTR("\r\nERROR: OOM!"));
 		return;
 	}
-	msg_ = malloc(bigint_length_B(pub_key.modulus) + sizeof(bigint_word_t));
+	msg_ = malloc(bigint_length_B(&pub_key.modulus) + sizeof(bigint_word_t));
 	if(!msg_){
 		cli_putstr_P(PSTR("\r\nERROR: OOM!"));
 		return;
@@ -764,7 +670,7 @@ void test_dump(void){
 	cli_putstr_P(PSTR("\r\ndumping 0x"));
 	cli_hexdump_rev(&len, 2);
 	cli_putstr_P(PSTR(" byte:"));
-	cli_hexdump_block(pub_key.modulus->wordv, len, 4, 8);
+	cli_hexdump_block(pub_key.modulus.wordv, len, 4, 8);
 }
 
 /*****************************************************************************

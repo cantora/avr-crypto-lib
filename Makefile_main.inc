@@ -36,6 +36,8 @@ GLOBAL_INCDIR := ./ $(TESTSRC_DIR)
 # inclusion of make stubs
 include $(sort $(wildcard mkfiles/*.mk))
 
+default: info
+
 #-------------------------------------------------------------------------------
 ALGORITHMS = $(BLOCK_CIPHERS) $(STREAM_CIPHERS) $(HASHES) $(PRNGS) $(MACS) \
 			 $(ENCODINGS) $(SIGNATURE) $(PK_CIPHERS) $(AUX)
@@ -62,7 +64,9 @@ $(foreach a, $(ALGORITHMS), $(eval $(call Assert_Template, \
 
 #-------------------------------------------------------------------------------
 
-
+define GenericTarget_Template
+$(1): $(2)
+endef
 
 define TargetSource_Template
 $(1): $(2)
@@ -173,7 +177,7 @@ $(1):
 	@mkdir -p $(1)
 endef
 
-$(foreach d, DEP_DIR BIN_DIR TESTSRC_DIR TESTLOG_DIR SPEEDLOG_DIR SIZE_DIR LIST_DIR STAT_DIR AUTOASM_DIR, $(eval $(call MakeDir_TEMPLATE, \
+$(foreach d, DEP_DIR BIN_DIR TESTSRC_DIR TESTLOG_DIR SPEEDLOG_DIR SIZE_DIR LIST_DIR STAT_DIR, $(eval $(call MakeDir_TEMPLATE, \
    $($(d)) \
 )))
 
@@ -238,15 +242,26 @@ hash_speed: $(foreach algo, $(HASHES), $(algo)_SPEED)
 blockcipher_speed: $(foreach algo, $(BLOCK_CIPHERS), $(algo)_SPEED)
 #-------------------------------------------------------------------------------
 
+define Size_Template
+$(1):  $(2)
+	@echo "[size] $(3)"
+	@mkdir -p $(dir $(1))
+	@$(SIZE) $(2) > $(1)
+endef
+
+$(foreach algo, $(ALGORITHMS), $(eval $(call Size_Template, \
+    $(strip $(SIZE_DIR))$(strip $(call lc, $(algo))).size,$($(algo)_BINOBJ),$(algo) \
+)))
 
 define Size_Template
 $(1)_SIZE:  $(2)
 	@echo "[size] $(1)"
-	$(SIZE) $(2) > $(strip $(SIZE_DIR))$(strip $(call lc, $(1))).size
+	@mkdir -p $(dir $(strip $(SIZE_DIR))$(strip $(call lc, $(1))).size)
+	@$(SIZE) $(2) > $(strip $(SIZE_DIR))$(strip $(call lc, $(1))).size
 endef
 
-$(foreach algo, $(ALGORITHMS), $(eval $(call Size_Template, \
-    $(strip $(algo)), $($(algo)_BINOBJ) \
+$(foreach algo, $(ALGORITHMS), $(eval $(call GenericTarget_Template, \
+    $(strip $(algo))_SIZE,$(strip $(SIZE_DIR))$(strip $(call lc, $(algo))).size \
 )))
 
 .PHONY: hash_size
@@ -254,6 +269,13 @@ hash_size: $(foreach algo, $(HASHES), $(algo)_SIZE)
 
 .PHONY: blockcipher_size
 blockcipher_size: $(foreach algo, $(BLOCK_CIPHERS), $(algo)_SIZE)
+
+.PHONY: size
+size: $(foreach algo, $(ALGORITHMS), $(algo)_SIZE)
+
+.PHONY: size_clean
+size_clean:
+	rm -vf $(strip $(SIZE_DIR))*.size
 
 #-------------------------------------------------------------------------------
 
@@ -352,7 +374,7 @@ info:
 	@echo "  cores              - all algorithm cores"
 	@echo "  listings           - all algorithm core listings"
 	@echo "  tests              - all algorithm test programs"
-	@echo "  stats              - all algorithm size statistics"
+	@echo "  size               - all algorithm size statistics"
 	@echo "  blockciphers       - all blockcipher cores"
 	@echo "  streamciphers      - all streamcipher cores"
 	@echo "  hashes             - all hash cores"

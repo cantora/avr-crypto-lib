@@ -1,4 +1,4 @@
-# Makefile for HMAC-SHA256
+# Makefile for HMAC-MD5
 ALGO_NAME := HMAC-MD5
 
 # comment out the following line for removement of HMAC-MD5 from the build process

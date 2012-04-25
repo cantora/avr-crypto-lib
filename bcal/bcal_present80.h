@@ -27,7 +27,7 @@
 
 #include <avr/pgmspace.h>
 #include "blockcipher_descriptor.h"
-#include "present.h"
+#include "present80.h"
 #include "keysize_descriptor.h"
 
-extern const bcdesc_t present_desc;
+extern const bcdesc_t present80_desc;

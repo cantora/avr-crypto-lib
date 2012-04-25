@@ -26,12 +26,14 @@
 #include "uart_i.h"
 #include "debug.h"
 
-#include <present.h>
+#include <present80.h>
+#include <present128.h>
 #include "cli.h"
 #include "performance_test.h"
 #include "bcal-performance.h"
 #include "bcal-nessie.h"
-#include "bcal_present.h"
+#include "bcal_present80.h"
+#include "bcal_present128.h"
 
 #include <stdlib.h>
 #include <stdint.h>
@@ -40,56 +42,85 @@
 char* algo_name = "Present";
 
 const bcdesc_t* const algolist[] PROGMEM = {
-	(bcdesc_t*)&present_desc,
+	(bcdesc_t*)&present80_desc,
+	(bcdesc_t*)&present128_desc,
 	NULL
 };
 /*****************************************************************************
  *  additional validation-functions											 *
  *****************************************************************************/
-void present_genctx_dummy(uint8_t* key, uint16_t keysize_b, present_ctx_t* ctx){
-	present_init(key, keysize_b, ctx);
-}
-
 void testrun_nessie_present(void){
 	bcal_nessie_multiple(algolist);
 }
 
 void testrun_selfenc(uint8_t* key, uint8_t* buffer){
-	present_ctx_t ctx;
+
+	present80_ctx_t ctx;
 	cli_putstr_P(PSTR("\r\nkey   : "));
 	cli_hexdump(key, 10);
 	cli_putstr_P(PSTR("\r\nplain : "));
 	cli_hexdump(buffer, 8);
-	present_init(key, 80, &ctx);
-	present_enc(buffer, &ctx);
+	present80_init(key, 80, &ctx);
+	present80_enc(buffer, &ctx);
 	cli_putstr_P(PSTR("\r\ncipher: "));
 	cli_hexdump(buffer, 8);
-	present_dec(buffer, &ctx);
+	present80_dec(buffer, &ctx);
 	cli_putstr_P(PSTR("\r\nplain : "));
 	cli_hexdump(buffer, 8);
 	cli_putstr_P(PSTR("\r\n"));
 }
 
+void testrun_selfenc_128(uint8_t* key, uint8_t* buffer){
+
+	present128_ctx_t ctx;
+	cli_putstr_P(PSTR("\r\nkey   : "));
+	cli_hexdump(key, 16);
+	cli_putstr_P(PSTR("\r\nplain : "));
+	cli_hexdump(buffer, 8);
+	present128_init(key, 128, &ctx);
+	present128_enc(buffer, &ctx);
+	cli_putstr_P(PSTR("\r\ncipher: "));
+	cli_hexdump(buffer, 8);
+	present128_dec(buffer, &ctx);
+	cli_putstr_P(PSTR("\r\nplain : "));
+	cli_hexdump(buffer, 8);
+	cli_putstr_P(PSTR("\r\n"));
+}
+// void present_key_test(const uint8_t* key);
+
+
 void testrun_self_present(void){
-	uint8_t buffer[8], key[10];
+	uint8_t buffer[8], key[10], i;
 	cli_putstr_P(PSTR("\r\n\r\n=== Testvectors from the paper ===\r\n"));
-	
-	memset(buffer, 0, 8);
-	memset(key, 0, 10);
+	for(i=0; i<4; ++i){
+		memset(buffer, (i&2)?0xff:0x00,  8);
+		memset(key,    (i&1)?0xff:0x00, 10);
+		testrun_selfenc(key, buffer);
+	}
+	memset(buffer, 0x00,  8);
+	memset(key,    0x00, 10);
+	key[0] = 0x80;
 	testrun_selfenc(key, buffer);
-	
-	memset(buffer, 0, 8);
-	memset(key, 0xFF, 10);
-	testrun_selfenc(key, buffer);
-	
-	memset(buffer, 0xFF, 8);
-	memset(key, 0, 10);
-	testrun_selfenc(key, buffer);
-	
-	memset(buffer, 0xFF, 8);
-	memset(key, 0xFF, 10);
-	testrun_selfenc(key, buffer);
-	
+
+//	present_key_test(key);
+
+}
+
+void testrun_self_present_128(void){
+	uint8_t buffer[8], key[16], i;
+	cli_putstr_P(PSTR("\r\n\r\n=== Testvectors from the paper ===\r\n"));
+	for(i=0; i<4; ++i){
+		memset(buffer, (i&2)?0xff:0x00,  8);
+		memset(key,    (i&1)?0xff:0x00, 16);
+		testrun_selfenc_128(key, buffer);
+	}
+	memset(buffer, 0x00,  8);
+	memset(key,    0x00, 16);
+	key[0] = 0x80;
+	testrun_selfenc_128(key, buffer);
+
+//	present_key_test(key);
+
 }
 
 void testrun_performance_present(void){
@@ -102,12 +133,14 @@ void testrun_performance_present(void){
 
 const char nessie_str[]      PROGMEM = "nessie";
 const char test_str[]        PROGMEM = "test";
+const char test_128_str[]    PROGMEM = "test-128";
 const char performance_str[] PROGMEM = "performance";
 const char echo_str[]        PROGMEM = "echo";
 
 const cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ nessie_str,      NULL, testrun_nessie_present},
 	{ test_str,        NULL, testrun_self_present},
+	{ test_128_str,    NULL, testrun_self_present_128},
 	{ performance_str, NULL, testrun_performance_present},
 	{ echo_str,    (void*)1, (void_fpt)echo_ctrl},
 	{ NULL,            NULL, NULL}

@@ -407,6 +407,7 @@ if opts['n']
 end
 
 $logfile = STDOUT if ! $logfile
+$logfile.sync = true
 reset_system()
 
 if opts['s'] && ( m = opts['s'].match(/([\d]+)\.([\d]+)/) )

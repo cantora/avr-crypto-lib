@@ -248,6 +248,106 @@ uint8_t read_bigint(bigint_t* a, char* prompt){
 }
 
 uint8_t pre_alloc_key_crt(void){
+	priv_key.n = 5;
+	priv_key.components = malloc(5 * sizeof(bigint_t));
+	if(!priv_key.components){
+		cli_putstr_P(PSTR("\r\nERROR: OOM!"));
+		return 2;
+	}
+	return 0;
+}
+
+void free_key(void){
+	uint8_t c;
+	free(pub_key.modulus.wordv);
+	free(pub_key.exponent.wordv);
+	for(c = 0; c < priv_key.n; ++c){
+		free(priv_key.components[c].wordv);
+	}
+	free(priv_key.components);
+	keys_allocated = 0;
+}
+
+uint8_t read_key_crt(void){
+	uint8_t r;
+	cli_putstr_P(PSTR("\r\n== reading key (crt) =="));
+	r = pre_alloc_key_crt();
+	if(r) return r;
+	r = read_bigint(&pub_key.modulus,"\r\n = module =");
+	if(r) return r;
+	memcpy(&priv_key.modulus, &pub_key.modulus, sizeof(bigint_t));
+	r = read_bigint(&pub_key.exponent,"\r\n = public exponent =");
+	if(r) return r;
+	r = read_bigint(&(priv_key.components[0]),"\r\n = p (first prime) =");
+	if(r) return r;
+	r = read_bigint(&(priv_key.components[1]),"\r\n = q (second prime) =");
+	if(r) return r;
+	r = read_bigint(&(priv_key.components[2]),"\r\n = dp (p's exponent) =");
+	if(r) return r;
+	r = read_bigint(&(priv_key.components[3]),"\r\n = dq (q's exponent) =");
+	if(r) return r;
+	r = read_bigint(&(priv_key.components[4]),"\r\n = qInv (q' coefficient) =");
+	return r;
+}
+
+uint8_t read_key_conv(void){
+	uint8_t r;
+	priv_key.components = malloc(sizeof(bigint_t));
+	if(!priv_key.components){
+		cli_putstr_P(PSTR("\r\nERROR: OOM!"));
+		return 2;
+	}
+	cli_putstr_P(PSTR("\r\n== reading key (conv) =="));
+	r = read_bigint(&pub_key.modulus,"\r\n = module =");
+	if(r) return r;
+	memcpy(&priv_key.modulus, &pub_key.modulus, sizeof(bigint_t));
+	priv_key.n = 1;
+	r = read_bigint(&pub_key.exponent,"\r\n = public exponent =");
+	if(r) return r;
+	r = read_bigint(priv_key.components,"\r\n = private exponent =");
+	return r;
+}
+
+uint8_t load_bigint_from_os(bigint_t* a, PGM_VOID_P os, uint16_t length_B){
+	a->length_B = BIGINT_CEIL(length_B) / sizeof(bigint_word_t);
+	a->wordv = malloc(BIGINT_CEIL(length_B));
+	if(!a->wordv){
+		cli_putstr_P(PSTR("\r\nOOM!\r\n"));
+		return 1;
+	}
+	memset(a->wordv, 0, sizeof(bigint_word_t));
+	memcpy_P((uint8_t*)a->wordv + BIGINT_OFF(length_B), os, length_B);
+	a->info = 0;
+	bigint_changeendianess(a);
+	bigint_adjust(a);
+	return 0;
+}
+
+void load_fix_rsa(void){
+	if(keys_allocated){
+		free_key();
+	}
+	keys_allocated = 1;
+
+	if(pre_alloc_key_crt()){
+		cli_putstr_P(PSTR("\r\nOOM!\r\n"));
+		return;
+	}
+
+	load_bigint_from_os(&pub_key.modulus, MODULUS, sizeof(MODULUS));
+	memcpy(&priv_key.modulus, &pub_key.modulus, sizeof(bigint_t));
+	load_bigint_from_os(&pub_key.exponent, PUB_EXPONENT, sizeof(PUB_EXPONENT));
+	priv_key.n = 5;
+	load_bigint_from_os(&(priv_key.components[0]), P, sizeof(P));
+	load_bigint_from_os(&(priv_key.components[1]), Q, sizeof(Q));
+	load_bigint_from_os(&(priv_key.components[2]), DP, sizeof(DP));
+	load_bigint_from_os(&(priv_key.components[3]), DQ, sizeof(DQ));
+	load_bigint_from_os(&(priv_key.components[4]), QINV, sizeof(QINV));
+}
+
+/*
+
+uint8_t pre_alloc_key_crt(void){
 	uint8_t c;
 	pub_key.modulus = malloc(sizeof(bigint_t));
 	if(!pub_key.modulus){
@@ -459,6 +559,7 @@ void load_fix_rsa(void){
 //	load_priv_conventional();
 //	load_priv_crt_mono();
 }
+*/
 
 void quick_test(void){
 	uint8_t *ciphertext, *plaintext, rc;
@@ -467,8 +568,8 @@ void quick_test(void){
 	if(!keys_allocated){
 		load_fix_rsa();
 	}
-	ciphertext = malloc(clen = pub_key.modulus->length_B * sizeof(bigint_word_t));
-	plaintext = malloc(pub_key.modulus->length_B * sizeof(bigint_word_t));
+	ciphertext = malloc(clen = bigint_length_B(&pub_key.modulus));
+	plaintext = malloc(clen);
 	memcpy_P(plaintext, MSG, sizeof(MSG));
 	memcpy_P(seed, SEED, sizeof(SEED));
 	cli_putstr_P(PSTR("\r\nplaintext:"));
@@ -525,7 +626,7 @@ void run_seed_test(void){
 	cli_putstr_P(PSTR("\r\n  length: "));
 	cli_getsn(read_int_str, 16);
 	msg_len = own_atou(read_int_str);
-	seed_len = rsa_pkcs1v15_compute_padlength_B(pub_key.modulus, msg_len);
+	seed_len = rsa_pkcs1v15_compute_padlength_B(&pub_key.modulus, msg_len);
 	seed = malloc(seed_len);
 #if DEBUG
 	cli_putstr_P(PSTR("\r\nDBG: @seed: 0x"));
@@ -553,7 +654,7 @@ void run_seed_test(void){
 		cli_putstr_P(PSTR("\r\nERROR: OOM!"));
 		return;
 	}
-	ciph = malloc(bigint_length_B(pub_key.modulus));
+	ciph = malloc(bigint_length_B(&pub_key.modulus));
 #if DEBUG
 	cli_putstr_P(PSTR("\r\nDBG: @ciph: 0x"));
 	cli_hexdump_rev(&ciph, 2);
@@ -562,7 +663,7 @@ void run_seed_test(void){
 		cli_putstr_P(PSTR("\r\nERROR: OOM!"));
 		return;
 	}
-	msg_ = malloc(bigint_length_B(pub_key.modulus) + sizeof(bigint_word_t));
+	msg_ = malloc(bigint_length_B(&pub_key.modulus) + sizeof(bigint_word_t));
 #if DEBUG
 	cli_putstr_P(PSTR("\r\nDBG: @msg_: 0x"));
 	cli_hexdump_rev(&msg_, 2);
@@ -587,14 +688,14 @@ void run_seed_test(void){
 */
 #if DEBUG
 	cli_putstr_P(PSTR("\r\n  first prime:"));
-	bigint_print_hex(priv_key.components[0]);
+	bigint_print_hex(&priv_key.components[0]);
 #endif
 	rsa_encrypt_pkcs1v15(ciph, &ciph_len, msg, msg_len, &pub_key, seed);
 	cli_putstr_P(PSTR("\r\n  ciphertext:"));
 	cli_hexdump_block(ciph, ciph_len, 4, 16);
 #if DEBUG
 	cli_putstr_P(PSTR("\r\n  first prime:"));
-	bigint_print_hex(priv_key.components[0]);
+	bigint_print_hex(&priv_key.components[0]);
 #endif
 	cli_putstr_P(PSTR("\r\n  decrypting ... "));
 
@@ -671,7 +772,7 @@ void test_dump(void){
 	cli_putstr_P(PSTR("\r\ndumping 0x"));
 	cli_hexdump_rev(&len, 2);
 	cli_putstr_P(PSTR(" byte:"));
-	cli_hexdump_block(pub_key.modulus->wordv, len, 4, 8);
+	cli_hexdump_block(pub_key.modulus.wordv, len, 4, 8);
 }
 
 /*****************************************************************************

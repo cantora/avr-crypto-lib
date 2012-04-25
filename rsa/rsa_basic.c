@@ -39,7 +39,7 @@ void rsa_enc(bigint_t* data, rsa_publickey_t* key){
 	cli_putstr_P(PSTR("\r\n n = "));
 	bigint_print_hex(key->modulus);
 */
-	bigint_expmod_u(data, data, key->exponent, key->modulus);
+	bigint_expmod_u(data, data, &key->exponent, &key->modulus);
 }
 
 /*
@@ -52,8 +52,8 @@ m = m2 + q * h
 
 uint8_t rsa_dec_crt_mono(bigint_t* data, rsa_privatekey_t* key){
 	bigint_t m1, m2;
-	m1.wordv = malloc((key->components[0]->length_B + 1) * sizeof(bigint_word_t));
-	m2.wordv = malloc((key->components[1]->length_B + 1) * sizeof(bigint_word_t));
+	m1.wordv = malloc((key->components[0].length_B + 1) * sizeof(bigint_word_t));
+	m2.wordv = malloc((key->components[1].length_B + 1) * sizeof(bigint_word_t));
 	if(!m1.wordv || !m2.wordv){
 #if DEBUG
 		cli_putstr_P(PSTR("\r\nERROR: OOM!"));
@@ -67,24 +67,24 @@ uint8_t rsa_dec_crt_mono(bigint_t* data, rsa_privatekey_t* key){
 	cli_putstr_P(PSTR("\r\nexpmod("));
 	bigint_print_hex(data);
 	cli_putc(',');
-	bigint_print_hex(key->components[2]);
+	bigint_print_hex(&(key->components[2]));
 	cli_putc(',');
-	bigint_print_hex(key->components[0]);
+	bigint_print_hex(&(key->components[0]));
 	cli_putstr_P(PSTR(") = "));
 #endif
-	bigint_expmod_u(&m1, data, key->components[2], key->components[0]);
+	bigint_expmod_u(&m1, data, &(key->components[2]), &(key->components[0]));
 #if DEBUG
 	bigint_print_hex(&m1);
 	cli_putstr_P(PSTR("expmod m2 ..."));
 	cli_putstr_P(PSTR("\r\nexpmod("));
 	bigint_print_hex(data);
 	cli_putc(',');
-	bigint_print_hex(key->components[3]);
+	bigint_print_hex(&(key->components[3]));
 	cli_putc(',');
-	bigint_print_hex(key->components[1]);
+	bigint_print_hex(&(key->components[1]));
 	cli_putstr_P(PSTR(") = "));
 #endif
-	bigint_expmod_u(&m2, data, key->components[3], key->components[1]);
+	bigint_expmod_u(&m2, data, &(key->components[3]), &(key->components[1]));
 #if DEBUG
 	bigint_print_hex(&m2);
 	cli_putstr_P(PSTR("\r\nDBG: sub ..."));
@@ -105,44 +105,44 @@ uint8_t rsa_dec_crt_mono(bigint_t* data, rsa_privatekey_t* key){
 	cli_putstr_P(PSTR("\r\nDBG: to "));
 	bigint_print_hex(&m1);
 #endif
-		bigint_add_s(&m1, &m1, key->components[0]);
+		bigint_add_s(&m1, &m1, &(key->components[0]));
 	}
 #if DEBUG
 	cli_putstr_P(PSTR("\r\nDBG: reduce-mul ..."));
 	cli_putstr_P(PSTR("\r\nreduce("));
 	bigint_print_hex(&m1);
 	cli_putc(',');
-	bigint_print_hex(key->components[0]);
+	bigint_print_hex(&(key->components[0]));
 	cli_putstr_P(PSTR(") = "));
 #endif
-	bigint_reduce(&m1, key->components[0]);
+	bigint_reduce(&m1, &(key->components[0]));
 #if DEBUG
 	bigint_print_hex(&m1);
 	cli_putstr_P(PSTR("\r\nmul("));
 	bigint_print_hex(&m1);
 	cli_putc(',');
-	bigint_print_hex(key->components[4]);
+	bigint_print_hex(&(key->components[4]));
 	cli_putstr_P(PSTR(") = "));
 #endif
-	bigint_mul_u(data, &m1, key->components[4]);
+	bigint_mul_u(data, &m1, &(key->components[4]));
 #if DEBUG
 	bigint_print_hex(data);
 	cli_putstr_P(PSTR("\r\nreduce("));
 	bigint_print_hex(data);
 	cli_putc(',');
-	bigint_print_hex(key->components[0]);
+	bigint_print_hex(&(key->components[0]));
 	cli_putstr_P(PSTR(") = "));
 #endif
-	bigint_reduce(data, key->components[0]);
+	bigint_reduce(data, &(key->components[0]));
 #if DEBUG
 	bigint_print_hex(data);
 	cli_putstr_P(PSTR("\r\nmul("));
 	bigint_print_hex(data);
 	cli_putc(',');
-	bigint_print_hex(key->components[1]);
+	bigint_print_hex(&(key->components[1]));
 	cli_putstr_P(PSTR(") = "));
 #endif
-	bigint_mul_u(data, data, key->components[1]);
+	bigint_mul_u(data, data, &(key->components[1]));
 #if DEBUG
 	bigint_print_hex(data);
 	cli_putstr_P(PSTR("\r\nadd("));
@@ -162,7 +162,7 @@ uint8_t rsa_dec_crt_mono(bigint_t* data, rsa_privatekey_t* key){
 
 uint8_t rsa_dec(bigint_t* data, rsa_privatekey_t* key){
 	if(key->n == 1){
-		bigint_expmod_u(data, data, key->components[0], key->modulus);
+		bigint_expmod_u(data, data, &(key->components[0]), &key->modulus);
 		return 0;
 	}
 	if(key->n == 5){

@@ -1,4 +1,4 @@
-# Makefile for HMAC-SHA256
+# Makefile for HMAC-SHA1
 ALGO_NAME := HMAC-SHA1
 
 # comment out the following line for removement of HMAC-SHA1 from the build process

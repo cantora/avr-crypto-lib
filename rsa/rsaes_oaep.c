@@ -63,16 +63,16 @@ uint8_t rsa_encrypt_oaep(void* dest, uint16_t* out_length,
 		label = &rsa_oaep_default_label;
 	}
 	uint16_t hv_len = (hfal_hash_getHashsize(p->hf)+7)/8;
-	if(length_B > bigint_length_B(key->modulus) - 2*hv_len - 2){
+	if(length_B > bigint_length_B(&key->modulus) - 2*hv_len - 2){
 		/* message too long */
 		return 1;
 	}
-	uint16_t buffer_len = bigint_length_B(key->modulus);
+	uint16_t buffer_len = bigint_length_B(&key->modulus);
 #if DEBUG
 	cli_putstr("\r\n buffer_len = ");
 	cli_hexdump_rev(&buffer_len, 2);
 	cli_putstr("\r\n modulus_len = ");
-	cli_hexdump_rev(&key->modulus->length_B, 2);
+	cli_hexdump_rev(&key->modulus.length_B, 2);
 #endif
 	uint8_t* buffer = (uint8_t*)dest;
 	uint8_t off;
@@ -80,7 +80,7 @@ uint8_t rsa_encrypt_oaep(void* dest, uint16_t* out_length,
 	 * off is the offset which is used for compensating the effect of
 	 * changeendian() when it operates on multi-byte words.
 	 * */
-	off = (sizeof(bigint_word_t) - (bigint_get_first_set_bit(key->modulus)/8+1) % sizeof(bigint_word_t))
+	off = (sizeof(bigint_word_t) - (bigint_get_first_set_bit(&key->modulus)/8+1) % sizeof(bigint_word_t))
 			% (sizeof(bigint_word_t));
 	buffer += off;
     buffer_len -= off;
@@ -110,7 +110,7 @@ uint8_t rsa_encrypt_oaep(void* dest, uint16_t* out_length,
 	}
 #if DEBUG
 	cli_putstr("\r\n  msg (raw, pre-feistel):\r\n");
-	cli_hexdump_block(dest, bigint_length_B(key->modulus), 4, 16);
+	cli_hexdump_block(dest, bigint_length_B(&key->modulus), 4, 16);
 #endif
 	p->mgf(maskbuffer, seed_buffer, hv_len, db_len, p->mgf_parameter);
 	memxor(db, maskbuffer, db_len);
@@ -118,13 +118,13 @@ uint8_t rsa_encrypt_oaep(void* dest, uint16_t* out_length,
 	memxor(seed_buffer, maskbuffer, hv_len);
 #if DEBUG
 	cli_putstr("\r\n  msg (raw, post-feistel):\r\n");
-	cli_hexdump_block(dest, bigint_length_B(key->modulus), 4, 16);
+	cli_hexdump_block(dest, bigint_length_B(&key->modulus), 4, 16);
 #endif
 	x.info = 0;
-	x.length_B = key->modulus->length_B;
+	x.length_B = key->modulus.length_B;
 	x.wordv = dest;
 	bigint_adjust(&x);
-	rsa_os2ip(&x, NULL, bigint_length_B(key->modulus));
+	rsa_os2ip(&x, NULL, bigint_length_B(&key->modulus));
 #if DEBUG
 	cli_putstr("\r\ninput-msg (pre enc):\r\n");
 	cli_hexdump_rev(&src, 2);
@@ -156,27 +156,27 @@ uint8_t rsa_decrypt_oaep(void* dest, uint16_t* out_length,
 	bigint_t x;
 	uint16_t hv_len = hfal_hash_getHashsize(p->hf)/8;
 	uint8_t label_hv[hv_len];
-	uint16_t msg_len = bigint_get_first_set_bit(key->modulus) / 8 + 1;
+	uint16_t msg_len = bigint_get_first_set_bit(&key->modulus) / 8 + 1;
 	uint16_t db_len = msg_len - hv_len - 1;
 	uint8_t maskbuffer[db_len>hv_len?db_len:hv_len];
 
 	uint8_t *seed_buffer = dest;
 	uint8_t *db_buffer = seed_buffer + hv_len;
 
-	x_len = bigint_get_first_set_bit(key->modulus)/8;
-	memset(dest, 0, bigint_length_B(key->modulus) - length_B);
-	memcpy((uint8_t*)dest + bigint_length_B(key->modulus) - length_B, src, length_B);
+	x_len = bigint_get_first_set_bit(&key->modulus)/8;
+	memset(dest, 0, bigint_length_B(&key->modulus) - length_B);
+	memcpy((uint8_t*)dest + bigint_length_B(&key->modulus) - length_B, src, length_B);
 
 //	cli_putc('a'); uart_flush(0);
 
 	x.wordv = dest;
-	x.length_B = key->modulus->length_B;
+	x.length_B = key->modulus.length_B;
 	x.info = 0;
 	bigint_adjust(&x);
 
 
 //	cli_putc('b'); uart_flush(0);
-	rsa_os2ip(&x, NULL, bigint_length_B(key->modulus));
+	rsa_os2ip(&x, NULL, bigint_length_B(&key->modulus));
 #if DEBUG
 	cli_putstr_P(PSTR("\r\n rsa decrypting ..."));
 #endif

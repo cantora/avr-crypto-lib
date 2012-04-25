@@ -41,7 +41,7 @@ uint8_t rsa_encrypt_pkcs1v15(void* dest, uint16_t* out_length, const void* src,
 	uint16_t length_B, rsa_publickey_t* key, const void* pad){
 	int16_t pad_length;
 	bigint_t x;
-	pad_length = rsa_pkcs1v15_compute_padlength_B(key->modulus, length_B);
+	pad_length = rsa_pkcs1v15_compute_padlength_B(&key->modulus, length_B);
 	if(pad_length<8){
 #if DEBUG
 		cli_putstr_P(PSTR("\r\nERROR: pad_length<8; pad_length: "));

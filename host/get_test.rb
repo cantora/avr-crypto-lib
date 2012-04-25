@@ -80,6 +80,7 @@ def readTestVector(param)
   end
   puts("-> "+fname+"txt");
   file=File.new(fname+"txt", "w");
+  file.sync = true
     buffer+=lb;
     file.write(buffer);
     begin

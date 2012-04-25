@@ -24,9 +24,7 @@ SIZE_DIR       = size_log/$(BOARD_NAME)/#
 LIST_DIR       = listings/$(BOARD_NAME)/#
 LIST_OPT       = -Wa,-adhln -g
 STAT_DIR       = stats/$(BOARD_NAME)/#
-AUTOASM_DIR    = autoasm/$(BOARD_NAME)/#
-AUTOASM_OPT    = -S
-CC	           = avr-gcc
+CC	       = avr-gcc
 CSTD           = gnu99
 
 SIZESTAT_FILE = sizestats.txt
