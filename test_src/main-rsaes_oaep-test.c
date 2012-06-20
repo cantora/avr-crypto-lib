@@ -531,12 +531,15 @@ void quick_test(void){
 	uint8_t *ciphertext, *plaintext, rc;
 	uint8_t seed[sizeof(SEED)];
 	uint16_t clen, plen;
+	if(!keys_allocated){
+		load_fix_rsa();
+	}
 	ciphertext = malloc(clen = pub_key.modulus.length_B * sizeof(bigint_word_t));
 	plaintext = malloc(pub_key.modulus.length_B * sizeof(bigint_word_t));
 	memcpy_P(plaintext, MSG, sizeof(MSG));
 	memcpy_P(seed, SEED, sizeof(SEED));
 	cli_putstr_P(PSTR("\r\nplaintext:"));
-	cli_hexdump_block(plaintext, sizeof(MSG), 4, 8);
+	cli_hexdump_block(plaintext, sizeof(MSG), 4, 16);
 	cli_putstr_P(PSTR("\r\nencrypting: ..."));
 	rc = rsa_encrypt_oaep(ciphertext, &clen, plaintext, sizeof(MSG), &pub_key, NULL, NULL, seed);
 	if(rc){

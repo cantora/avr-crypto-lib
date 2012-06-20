@@ -22,6 +22,7 @@ require 'rubygems'
 require 'serialport'
 
 $debug = false
+$progress_dots = false
 
 def read_line(error_msg=true)
   begin
@@ -34,7 +35,7 @@ def read_line(error_msg=true)
       puts("ERROR: read timeout!\n") if error_msg
       return nil
     end
-  putc('.') if s.include?(6.chr)	
+  putc('.') if s.include?(6.chr) && $progress_dots	
   puts(s.inspect) if $debug
   end while s == 6.chr
   s.gsub(/\006/, '')
@@ -124,7 +125,7 @@ puts("\nPort: "+ARGV[0]+ "@"+ARGV[1]+" "+ARGV[2]+"N"+ARGV[3]+"\n");
 $linewidth = 16
 $sp = SerialPort.new(ARGV[0], ARGV[1].to_i, ARGV[2].to_i, ARGV[3].to_i, SerialPort::NONE);
 $sp.read_timeout=1000; # 1 second
-$extended_wait=10;
+$extended_wait=100000;
 $sp.write(command);
 
 if(readTestVector(param)==false)

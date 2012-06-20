@@ -5,6 +5,8 @@ OPTIMIZE       = -Os # -Os
 EXTRALINK      = xram.o
 DEFS           = -D$(call uc, $(MCU_TARGET)) -DF_CPU=$(F_CPU)
 BOARD_NAME     = ethernut2.1
+FLASHCMD       = /bin/bash openocd_flash.sh #
+RESETCMD       = 
 
 override CFLAGS_A	= -MMD -MF$(DEP_DIR)$(patsubst %.o,%.d,$(notdir $(1))) $(DEBUG) $(WARNING) -std=$(CSTD) $(OPTIMIZE) -mmcu=$(MCU_TARGET) $(DEFS)
 override CFLAGS 	= -MMD -MF$(DEP_DIR)$(patsubst %.o,%.d,$(notdir $@))   $(DEBUG) $(WARNING) -std=$(CSTD) $(OPTIMIZE) -mmcu=$(MCU_TARGET) $(DEFS)

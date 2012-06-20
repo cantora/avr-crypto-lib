@@ -30,7 +30,7 @@
 #include "cli.h"
 #endif
 
-void rsa_enc(bigint_t* data, rsa_publickey_t* key){
+void rsa_enc(bigint_t* data, const rsa_publickey_t* key){
 /*
 	cli_putstr_P(PSTR("\r\n -->rsa_enc()\r\n m = "));
 	bigint_print_hex(data);
@@ -50,10 +50,10 @@ h = (m1 - m2) * qinv % p
 m = m2 + q * h
 */
 
-uint8_t rsa_dec_crt_mono(bigint_t* data, rsa_privatekey_t* key){
+uint8_t rsa_dec_crt_mono(bigint_t* data, const rsa_privatekey_t* key){
 	bigint_t m1, m2;
-	m1.wordv = malloc((key->components[0].length_B + 1) * sizeof(bigint_word_t));
-	m2.wordv = malloc((key->components[1].length_B + 1) * sizeof(bigint_word_t));
+	m1.wordv = malloc((key->components[0].length_B /* + 1 */) * sizeof(bigint_word_t));
+	m2.wordv = malloc((key->components[1].length_B /* + 1 */) * sizeof(bigint_word_t));
 	if(!m1.wordv || !m2.wordv){
 #if DEBUG
 		cli_putstr_P(PSTR("\r\nERROR: OOM!"));
@@ -160,7 +160,7 @@ uint8_t rsa_dec_crt_mono(bigint_t* data, rsa_privatekey_t* key){
 	return 0;
 }
 
-uint8_t rsa_dec(bigint_t* data, rsa_privatekey_t* key){
+uint8_t rsa_dec(bigint_t* data, const rsa_privatekey_t* key){
 	if(key->n == 1){
 		bigint_expmod_u(data, data, &(key->components[0]), &key->modulus);
 		return 0;

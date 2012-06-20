@@ -20,15 +20,9 @@
  * AES test-suit
  *
 */
-
-#include "config.h"
-
-#include "uart_i.h"
-#include "debug.h"
-
+#include "main-test-common.h"
 #include "aes.h"
 
-#include "cli.h"
 #include "performance_test.h"
 #include "dump.h"
 
@@ -45,11 +39,6 @@
 #include "cmacvs.h"
 #include "bcal-performance.h"
 #include "bcal-nessie.h"
-
-#include <stdint.h>
-#include <string.h>
-#include <stdlib.h>
-#include <avr/pgmspace.h>
 
 const char* algo_name = "AES";
 
@@ -717,5 +706,17 @@ int main (void){
 		cli_putstr_P(PSTR(")\r\nloaded and running\r\n"));
 		cmd_interface(cmdlist);
 	}
+}
+int main(void) {
+	main_setup();
+
+	cmacvs_algolist=(bcdesc_t**)algolist;
+	cmacvs_algo=(bcdesc_t*)&aes128_desc;
+
+	for(;;){
+		welcome_msg(algo_name);
+		cmd_interface(cmdlist);
+    }
+
 }
 

@@ -294,10 +294,7 @@ uart0_putc:
 	ldi r26, lo8(uart0_ctx+UART0_CBB_TX_OFFSET)
 	ldi r27, hi8(uart0_ctx+UART0_CBB_TX_OFFSET)
 20:
-;	sei
 	movw r24, r26
-;	nop
-;	nop
 	cli
 	rcall circularbytebuffer_cnt
 	sei
@@ -308,9 +305,8 @@ uart0_putc:
 	clr r25
 	cli
 	rcall circularbytebuffer_append
-	sei
 	SET_BIT_IO UCSR0B, UDRIE0, r24
-	ret
+	reti
 
 /******************************************************************************/
 /*
@@ -364,19 +360,48 @@ uart0_putc:
 	clr r1
 	LOAD_IO r24, UDR0
 #if UART0_SWFLOWCTRL
-	ldi r26, lo8(uart0_ctx+UART0_TXON_OFFSET)
+    ldi r26, lo8(uart0_ctx+UART0_TXON_OFFSET)
 	ldi r27, hi8(uart0_ctx+UART0_TXON_OFFSET)
 	cpi r24, XON_VALUE
-	brne 10f
-	ldi r24, 1
-	st X, r24
-	rjmp 99f
-10:	
+	breq 11f
 	cpi r24, XOFF_VALUE
-	brne 20f
+	brne 12f
 	clr r24
-	st X, r24
+11:	st X, r24
 	rjmp 99f
+12:
+	push r24
+/* now the "sending" part*/
+	ldi r24, lo8(uart0_ctx+UART0_CBB_RX_OFFSET)
+	ldi r25, hi8(uart0_ctx+UART0_CBB_RX_OFFSET)
+	rcall circularbytebuffer_cnt
+	ldi r30, lo8(uart0_ctx+UART0_RXON_OFFSET)
+	ldi r31, hi8(uart0_ctx+UART0_RXON_OFFSET)
+	ld r18, Z
+	tst r18
+	breq 15f/* branch if rxon inactive -> we had send an XOFF earlier */
+	/* ok, we did not have send an XOFF, should we? */
+	cpi r24, UART0_THRESH_HIGH
+	brlo 90f /* ok, nothing critical, go on */
+	st Z, r1
+	ldi r24, XOFF_VALUE
+;	sbi _SFR_IO_ADDR(PORTD), 5
+	rjmp 16f
+15:
+	cpi r24, UART0_THRESH_LOW
+	brsh 90f /* nothing has changed */
+	/* if we get here, we had send an XOFF and are now below threshold */
+	/* so we sen an XON */
+	ldi r24, XON_VALUE
+	cbi _SFR_IO_ADDR(PORTD), 5
+	st Z, r24
+16:
+	ldi r22, lo8(uart0_ctx+UART0_CBB_TX_OFFSET)
+	ldi r23, hi8(uart0_ctx+UART0_CBB_TX_OFFSET)
+	rcall circularbytebuffer_push
+	SET_BIT_IO UCSR0B, UDRIE0, r24
+90:
+	pop r24
 #endif /* UART0_SWFLOWCTRL */	
 20:	
 #if UART0_HOOK
@@ -409,33 +434,8 @@ uart0_putc:
 	ldi r22, lo8(uart0_ctx+UART0_CBB_RX_OFFSET)
 	ldi r23, hi8(uart0_ctx+UART0_CBB_RX_OFFSET)
 	clr r25
+;	sbi _SFR_IO_ADDR(PORTD), 6
 	rcall circularbytebuffer_append
-#if UART0_SWFLOWCTRL
-	ldi r24, lo8(uart0_ctx+UART0_CBB_RX_OFFSET)
-	ldi r25, hi8(uart0_ctx+UART0_CBB_RX_OFFSET)
-	rcall circularbytebuffer_cnt
-	ldi r22, lo8(uart0_ctx+UART0_CBB_TX_OFFSET)
-	ldi r23, hi8(uart0_ctx+UART0_CBB_TX_OFFSET)
-	ldi r30, lo8(uart0_ctx+UART0_RXON_OFFSET)
-	ldi r31, hi8(uart0_ctx+UART0_RXON_OFFSET)
-	ld r18, Z
-	tst r18
-	breq 60f
-	cpi r24, UART0_THRESH_HIGH+1
-	brlo 99f
-	clr r25
-	ldi r24, XOFF_VALUE
-	rcall circularbytebuffer_push
-	SET_BIT_IO UCSR0B, UDRIE0, r24
-	rjmp 99f
-60:
-	cpi r24, UART0_THRESH_LOW
-	brge 99f
-	clr r25
-	ldi r24, XON_VALUE
-	rcall circularbytebuffer_push
-	SET_BIT_IO UCSR0B, UDRIE0, r24
-#endif /* UART0_SWFLOWCTRL */
 99:	
 	out _SFR_IO_ADDR(SREG), r16
 	pop_range 16, 31

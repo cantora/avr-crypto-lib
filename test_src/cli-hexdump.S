@@ -142,11 +142,9 @@ LENG_1 = 17
 
 .global cli_hexdump_block
 cli_hexdump_block:
-	tst r22
-	brne 1f
-	tst r23
-	brne 1f
-	ret
+	movw r26, r22
+	adiw r26, 0
+	breq simple_ret
 1:
  	push WIDTH
 	push INDENT
@@ -160,16 +158,16 @@ cli_hexdump_block:
 	movw DATA_0, r24
 	movw LENG_0, r22
 2:
-	clr r25
+;	clr r25
 	ldi r24, '\r'
 	rcall cli_putc
-	clr r25
+;	clr r25
 	ldi r24, '\n'
 	rcall cli_putc
 	mov r4, INDENT
 	tst r4
 	breq 4f
-3:	clr r25
+3:;	clr r25
 	ldi r24, ' '
 	rcall cli_putc
 	dec r4
@@ -181,8 +179,7 @@ cli_hexdump_block:
 	tst LENG_1
 	brne 7f
 	cp WIDTH, LENG_0
-	breq 6f
-	brcs 7f
+	brlo 7f
 	mov r22, LENG_0
 6:	inc r4
 7:
@@ -200,6 +197,7 @@ cli_hexdump_block:
 	pop DATA_0
 	pop INDENT
 	pop WIDTH
+simple_ret:
 	ret
 
 

@@ -287,6 +287,7 @@ circularbytebuffer_append:
 	ldd r23, Z+BUFFER_SIZE_OFFSET
 	cp r22, r23
 	brne 10f
+5:
 	ldi r24, 1
 	ret
 10:
@@ -343,14 +344,15 @@ circularbytebuffer_push:
 	ldd r22, Z+FILLCOUNT_OFFSET
 	ldd r23, Z+BUFFER_SIZE_OFFSET
 	cp r22, r23
-	brne 10f
-	ldi r24, 1
-	ret
+	brlo 10f
+	rjmp 5b
+;	ldi r24, 1
+;	ret
 10:
-	clt
-	tst r22
-	brne 11f
-	set
+;	clt
+;	tst r22
+;	brne 11f
+;	set
 11:	
 	inc r22
 	std Z+FILLCOUNT_OFFSET, r22
@@ -368,7 +370,7 @@ circularbytebuffer_push:
 20:
 	std Z+HEAD_OFFSET, r26
 	std Z+HEAD_OFFSET+1, r27
-	brtc 30b
-	std Z+TAIL_OFFSET, r26
-	std Z+TAIL_OFFSET+1, r27
+;	brtc 30b
+;	std Z+TAIL_OFFSET, r26
+;	std Z+TAIL_OFFSET+1, r27
 	rjmp 30b

@@ -18,6 +18,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
+$debug = true
+
 def skip_header(file)
   begin
     l = file.gets().strip
@@ -89,8 +91,8 @@ def compare(fname1, fname2)
 	end
 	if(a!=b and a!=nil and b!=nil)
 	  $error += 1
-#	  puts("a key: "+a[0]+" value: "+a[1])
-#	  puts("b key: "+b[0]+" value: "+b[1])
+	  puts("a key: "+a[0]+" value: "+a[1]) if $debug
+	  puts("b key: "+b[0]+" value: "+b[1]) if $debug
 	end
   end until a==nil or b==nil
 end

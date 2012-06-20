@@ -21,23 +21,15 @@
  * 
 */
 
-#include "config.h"
-
-#include "uart_i.h"
-#include "debug.h"
+#include "main-test-common.h"
 
 #include "des.h"
-#include "cli.h"
 #include "performance_test.h"
 #include "bcal-performance.h"
 #include "bcal-nessie.h"
 #include "bcal_des.h"
 #include "bcal_tdes.h"
 #include "bcal_tdes2.h"
-
-#include <stdint.h>
-#include <string.h>
-#include <stdlib.h>
 
 char* algo_name = "DES";
 
@@ -51,8 +43,31 @@ const bcdesc_t* const algolist[] PROGMEM = {
  *  additional validation-functions											 *
  *****************************************************************************/
 
-void testrun_nessie_des(void){
-	bcal_nessie_multiple(algolist);
+void testrun_nessie_des(const char* param){
+	if(!param){
+		bcal_nessie_multiple(algolist);
+	}else{
+		uint8_t i=0;
+		bcdesc_t* ptr;
+		for(;;){
+			ptr = (bcdesc_t*)pgm_read_word(&algolist[i++]);
+			if(ptr == NULL){
+				cli_putstr_P(PSTR("\r\nunknown algorithm: "));
+				cli_putstr(param);
+				cli_putstr_P(PSTR("\r\navailable algorithms are:"));
+				i = 0;
+				while((ptr = (bcdesc_t*)pgm_read_word(&algolist[i++]))){
+					cli_putstr_P(PSTR("\r\n\t"));
+					cli_putstr_P((const char*)pgm_read_word(&ptr->name));
+				}
+				return;
+			}
+			if(!strcmp_P(param, (const char*)pgm_read_word(&ptr->name))){
+				bcal_nessie(ptr);
+				return;
+			}
+		}
+	}
 }
 
 void testrun_performance_des(void){
@@ -68,22 +83,20 @@ const char performance_str[] PROGMEM = "performance";
 const char echo_str[]        PROGMEM = "echo";
 
 const cmdlist_entry_t cmdlist[] PROGMEM = {
-	{ nessie_str,      NULL, testrun_nessie_des },
-	{ test_str,        NULL, testrun_nessie_des },
+	{ nessie_str,  (void*)1, (void_fpt)testrun_nessie_des },
+	{ test_str,    (void*)1, (void_fpt)testrun_nessie_des },
 	{ performance_str, NULL, testrun_performance_des},
 	{ echo_str,    (void*)1, (void_fpt)echo_ctrl},
 	{ NULL,            NULL, NULL}
 };
 
-int main (void){
-	DEBUG_INIT();
-	
-	cli_rx = (cli_rx_fpt)uart0_getc;
-	cli_tx = (cli_tx_fpt)uart0_putc;	 	
+int main(void) {
+	main_setup();
+
 	for(;;){
-		cli_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
-		cli_putstr(algo_name);
-		cli_putstr_P(PSTR(")\r\nloaded and running\r\n"));
+		welcome_msg(algo_name);
 		cmd_interface(cmdlist);
-	}
+    }
+
 }
+

@@ -74,17 +74,17 @@ void hmac_sha1_nextBlock(hmac_sha1_ctx_t *s, const void* block){
 }
 void hmac_sha1_lastBlock(hmac_sha1_ctx_t *s, const void* block, uint16_t length_b){
 	while(length_b>=SHA1_BLOCK_BITS){
-		sha1_nextBlock(&(s->a), block);
+		sha1_nextBlock(&s->a, block);
 		block = (uint8_t*)block + SHA1_BLOCK_BYTES;
 		length_b -= SHA1_BLOCK_BITS;
 	}
-	sha1_lastBlock(&(s->a), block, length_b);
+	sha1_lastBlock(&s->a, block, length_b);
 }
 
 void hmac_sha1_final(void* dest, hmac_sha1_ctx_t *s){
-	sha1_ctx2hash((sha1_hash_t*)dest, &(s->a));
-	sha1_lastBlock(&(s->b), dest, SHA1_HASH_BITS);
-	sha1_ctx2hash((sha1_hash_t*)dest, &(s->b));
+	sha1_ctx2hash(dest, &s->a);
+	sha1_lastBlock(&s->b, dest, SHA1_HASH_BITS);
+	sha1_ctx2hash(dest, &(s->b));
 }
 
 #endif

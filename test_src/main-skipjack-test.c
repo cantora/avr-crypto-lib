@@ -61,6 +61,54 @@ void testrun_performance_skipjack(void){
 	bcal_performance_multiple(algolist);
 }
 
+int test_enc(const void* buffer, void* key){
+	uint8_t data[8];
+	int r;
+	memcpy(data, buffer, 8);
+	skipjack_enc(data, key);
+	cli_putstr_P(PSTR("  key = "));
+	cli_hexdump(key, 10);
+	cli_putstr_P(PSTR(" plaintext = "));
+	cli_hexdump(buffer, 8);
+	cli_putstr_P(PSTR(" ciphertext = "));
+	cli_hexdump(data, 8);
+	skipjack_dec(data, key);
+	r = memcmp(data, buffer, 8);
+	cli_putstr_P(PSTR(" decrypt: "));
+	if(r){
+		cli_putstr_P(PSTR("fail"));
+	}else{
+		cli_putstr_P(PSTR("ok"));
+	}
+	return r;
+}
+
+void testrun_nist_vectors(void){
+	uint8_t key[10];
+	uint8_t data[8];
+	uint8_t i;
+
+	cli_putstr_P(PSTR("\r\n\r\n=== NIST vectors run 1 ==="));
+	memset(key, 0, 10);
+	for(i=0; i<64; ++i){
+		memset(data, 0, 8);
+		data[i>>3] |= 0x80 >> (i & 7);
+		cli_putstr_P(PSTR("\r\n round: 0x"));
+		cli_hexdump_byte(i);
+		test_enc(data, key);
+	}
+
+	cli_putstr_P(PSTR("\r\n\r\n=== NIST vectors run 2 ==="));
+	memset(data, 0, 8);
+	for(i=0; i<80; ++i){
+                memset(key, 0, 10);
+                key[i>>3] |= 0x80 >> (i & 7);
+                cli_putstr_P(PSTR("\r\n round: 0x"));
+                cli_hexdump_byte(i);
+                test_enc(data, key);
+        }
+}
+
 /*****************************************************************************
  *  self tests																 *
  *****************************************************************************/
@@ -113,12 +161,14 @@ void testrun_skipjack(void){
 
 const char nessie_str[]      PROGMEM = "nessie";
 const char test_str[]        PROGMEM = "test";
+const char nist_str[]        PROGMEM = "nist";
 const char performance_str[] PROGMEM = "performance";
 const char echo_str[]        PROGMEM = "echo";
 
 const cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ nessie_str,      NULL, testrun_nessie_skipjack},
 	{ test_str,        NULL, testrun_skipjack},
+	{ nist_str,        NULL, testrun_nist_vectors},
 	{ performance_str, NULL, testrun_performance_skipjack},
 	{ echo_str,    (void*)1, (void_fpt)echo_ctrl},
 	{ NULL,            NULL, NULL}

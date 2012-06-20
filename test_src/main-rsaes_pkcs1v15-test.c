@@ -32,7 +32,7 @@
 
 #include "performance_test.h"
 
-#define DEBUG 0
+#define DEBUG 1
 
 const char* algo_name = "RSAES-PKCS1V15";
 
@@ -663,7 +663,7 @@ void run_seed_test(void){
 		cli_putstr_P(PSTR("\r\nERROR: OOM!"));
 		return;
 	}
-	msg_ = malloc(bigint_length_B(&pub_key.modulus) + sizeof(bigint_word_t));
+	msg_ = malloc(bigint_length_B(&pub_key.modulus) /* + sizeof(bigint_word_t) */ );
 #if DEBUG
 	cli_putstr_P(PSTR("\r\nDBG: @msg_: 0x"));
 	cli_hexdump_rev(&msg_, 2);

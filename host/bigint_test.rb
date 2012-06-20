@@ -412,6 +412,7 @@ end
 
 def expmod_test(a,b,c)
   begin
+    printf("[testing] expmod(%#x, %#x, %#x)\n",a,b,c) if $debug
     line = $sp.gets()
     line = "" if line==nil
     puts("DBG got: "+line) if $debug
@@ -848,7 +849,7 @@ if File.exists?(logfilename)
 end
 $logfile = File.open(logfilename, 'w')
 printf("logfile: %s\n", logfilename)
-
+$logfile.sync = true
 $logfile.printf("bigint test from: %s\n", Time.now.to_s)
 $logfile.printf("skip = %s\n", opts['s']) if opts['s']
 $logfile.printf("seed = 0x%X\n", 0xdeadbeef)

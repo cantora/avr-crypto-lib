@@ -21,22 +21,15 @@
  * 
 */
 
-#include "config.h"
 
-#include "uart_i.h"
-#include "debug.h"
+#include "main-test-common.h"
 
 #include <arcfour.h>
-#include "cli.h"
 #include "performance_test.h"
 
 #include "scal_arcfour.h"
 #include "scal-basic.h"
 #include "scal-nessie.h"
-
-#include <stdlib.h>
-#include <stdint.h>
-#include <string.h>
 
 char* algo_name = "Arcfour";
 
@@ -97,16 +90,17 @@ const cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ NULL,            NULL, NULL}
 };
 
-int main (void){
-	DEBUG_INIT();
-	
-	cli_rx = (cli_rx_fpt)uart0_getc;
-	cli_tx = (cli_tx_fpt)uart0_putc;	 	
+int main(void) {
+	main_setup();
+
+	shavs_algolist=(hfdesc_t**)algolist;
+	shavs_algo=(hfdesc_t*)&sha256_desc;
+
 	for(;;){
-		cli_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
-		cli_putstr(algo_name);
-		cli_putstr_P(PSTR(")\r\nloaded and running\r\n"));
+		welcome_msg(algo_name);
 		cmd_interface(cmdlist);
-	}
+    }
+
 }
+
 

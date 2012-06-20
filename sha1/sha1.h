@@ -65,7 +65,9 @@ typedef struct {
  * \brief hash value type
  * A variable of this type may hold a SHA-1 hash value 
  */
+/*
 typedef uint8_t sha1_hash_t[SHA1_HASH_BITS/8];
+*/
 
 /** \fn sha1_init(sha1_ctx_t *state)
  * \brief initializes a SHA-1 context
@@ -100,7 +102,7 @@ void sha1_lastBlock (sha1_ctx_t *state, const void* block, uint16_t length_b);
  * \param dest pointer to the hash value destination
  * \param state pointer to the hash context
  */ 
-void sha1_ctx2hash (sha1_hash_t *dest, sha1_ctx_t *state);
+void sha1_ctx2hash (void *dest, sha1_ctx_t *state);
 
 /** \fn sha1(sha1_hash_t *dest, const void* msg, uint32_t length_b)
  * \brief hashing a message which in located entirely in RAM
@@ -110,7 +112,7 @@ void sha1_ctx2hash (sha1_hash_t *dest, sha1_ctx_t *state);
  * \param msg  pointer to the message which should be hashed
  * \param length_b length of the message in bits
  */ 
-void sha1(sha1_hash_t *dest, const void* msg, uint32_t length_b);
+void sha1(void *dest, const void* msg, uint32_t length_b);
 
 
 
