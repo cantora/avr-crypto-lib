@@ -692,21 +692,6 @@ const const cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ NULL,                NULL, NULL                            }
 };
 
-
-int main (void){
-	DEBUG_INIT();
-
-	cli_rx = (cli_rx_fpt)uart0_getc;
-	cli_tx = (cli_tx_fpt)uart0_putc;
-	cmacvs_algolist=(bcdesc_t**)algolist;
-	cmacvs_algo=(bcdesc_t*)&aes128_desc;
-	for(;;){
-		cli_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
-		cli_putstr(algo_name);
-		cli_putstr_P(PSTR(")\r\nloaded and running\r\n"));
-		cmd_interface(cmdlist);
-	}
-}
 int main(void) {
 	main_setup();
 
