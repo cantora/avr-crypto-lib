@@ -12,8 +12,10 @@ override CFLAGS 	= -MMD -MF$(DEP_DIR)$(patsubst %.o,%.d,$(notdir $@))   $(DEBUG)
 override LDFLAGS       = -gdwarf-2 -Wl,-Map,
 override ASFLAGS	   = -mmcu=$(MCU_TARGET) -Wa,--gdwarf-2
 
-PROGRAMMER     = avr911
-PROG_PORT      = /dev/ttyUSB1
+#PROGRAMMER     = avr911
+#PROG_PORT      = /dev/ttyUSB1
+PROGRAMMER     = usbasp
+PROG_PORT      = usb
 DEFS           = -D$(call uc, $(MCU_TARGET)) -DF_CPU=$(F_CPU)
 FLASHCMD       = avrdude -p $(MCU_TARGET) -P $(PROG_PORT) -c $(PROGRAMMER) -U flash:w:# no space at the end
 #FLASHCMD       = avrdude -p $(MCU_TARGET) -c usbasp -U flash:w:# no space at the end
