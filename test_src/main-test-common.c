@@ -19,18 +19,38 @@
 
 #include "main-test-common.h"
 
+static
+int std_stream_put(char c, FILE* f){
+    static uint8_t did_r = 0;
+    if(!did_r && c == '\n'){
+        uart0_putc('\r');
+    }
+    uart0_putc((char)c);
+    did_r = (c == '\r');
+    return 0;
+}
+
+static
+int std_stream_get(FILE* f){
+    return (int)uart0_getc();
+}
+
 void main_setup(void){
 	DEBUG_INIT();
 	cli_rx = (cli_rx_fpt)uart0_getc;
 	cli_tx = (cli_tx_fpt)uart0_putc;
+	fdevopen(std_stream_put, std_stream_get);
 }
 
 void welcome_msg(const char* algoname){
-	cli_putstr_P(PSTR("\r\n\r\nAVR-Crypto-Lib VS ("));
+/*
+    cli_putstr_P(PSTR("\r\n\r\nAVR-Crypto-Lib VS ("));
 	cli_putstr(algoname);
 	cli_putstr_P(PSTR("; "));
 	cli_putstr(__DATE__);
 	cli_putc(' ');
 	cli_putstr(__TIME__);
 	cli_putstr_P(PSTR(")\r\nloaded and running\r\n"));
+*/
+	printf_P(PSTR("\n\nAVR-Crypto-Lib VS(%s; %s %s)\nloaded and running\n"), algoname, __DATE__, __TIME__);
 }
