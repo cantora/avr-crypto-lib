@@ -166,20 +166,12 @@ const cmdlist_entry_t cmdlist[] PROGMEM = {
 };
 
 int main (void){
-	DEBUG_INIT();
+    main_setup();
 
-	cli_rx = (cli_rx_fpt)uart0_getc;
-	cli_tx = (cli_tx_fpt)uart0_putc;
-	shavs_algolist=(hfdesc_t**)algolist;
+    shavs_algolist=(hfdesc_t**)algolist;
 	shavs_algo=(hfdesc_t*)&echo256_desc;
 	for(;;){
-		cli_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
-		cli_putstr(algo_name);
-		cli_putstr_P(PSTR("; "));
-		cli_putstr(__DATE__);
-		cli_putstr_P(PSTR(" "));
-		cli_putstr(__TIME__);
-		cli_putstr_P(PSTR(")\r\nloaded and running\r\n"));
+	    welcome_msg(algo_name);
 
 		cmd_interface(cmdlist);
 	}
