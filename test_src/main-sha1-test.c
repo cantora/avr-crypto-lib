@@ -21,20 +21,14 @@
  *
 */
 
-#include "config.h"
 
-#include "uart_i.h"
-#include "debug.h"
+#include "main-test-common.h"
 
 #include "sha1.h"
 #include "nessie_hash_test.h"
 #include "hfal_sha1.h"
 #include "hfal-performance.h"
 
-#include <stdint.h>
-#include <string.h>
-#include <stdlib.h>
-#include "cli.h"
 #include "shavs.h"
 #include "hfal_sha1.h"
 #include "dump.h"
@@ -210,16 +204,12 @@ const cmdlist_entry_t cmdlist[] PROGMEM = {
 };
 
 int main (void){
-	DEBUG_INIT();
+    main_setup();
 
-	cli_rx = (cli_rx_fpt)uart0_getc;
-	cli_tx = (cli_tx_fpt)uart0_putc;
-	shavs_algolist=(hfdesc_t**)algolist;
+    shavs_algolist=(hfdesc_t**)algolist;
 	shavs_algo=(hfdesc_t*)&sha1_desc;
 	for(;;){
-		cli_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
-		cli_putstr(algo_name);
-		cli_putstr_P(PSTR(")\r\nloaded and running\r\n"));
-		cmd_interface(cmdlist);
+	    welcome_msg(algo_name);
+	    cmd_interface(cmdlist);
 	}
 }

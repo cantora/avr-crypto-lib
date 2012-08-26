@@ -28,6 +28,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 #include <ctype.h>
 #include "hashfunction_descriptor.h"
 #include "hfal-basic.h"
@@ -50,19 +51,17 @@
 hfdesc_t*  shavs_algo=NULL;
 hfdesc_t** shavs_algolist=NULL;
 
+#define shavs_out_file stdout
+
 void shavs_listalgos(void){
 	char option = 'a';
 
 	hfdesc_t* t;
 	uint8_t i=0;
-	cli_putstr_P(PSTR("\r\nthe following algorithms are available:\r\n"));
-	while(option<='z' && (t=(hfdesc_t*)pgm_read_word(&(shavs_algolist[i])))){
-		cli_putc('\t');
-		cli_putc((t==shavs_algo)?'*':' ');
-		cli_putc(option++);
-		cli_putstr_P(PSTR(":\t"));
-		cli_putstr_P((void*)(pgm_read_word(&(t->name))));
-		cli_putstr_P(PSTR("\r\n"));
+	fputs_P(PSTR("\nthe following algorithms are available:\n"), shavs_out_file);
+	while(option <= 'z' && (t = (hfdesc_t*)pgm_read_word(&(shavs_algolist[i])))){
+	    fprintf_P(shavs_out_file, PSTR("\t%c%c:\t%S\n"),
+	        (t == shavs_algo) ? '*' : ' ', option++, pgm_read_word(&(t->name)));
 		i++;
 	}
 }
@@ -70,15 +69,15 @@ void shavs_listalgos(void){
 void shavs_setalgo(char* param){
 	param = strstrip(param);
 	if(param[1]=='\0'){ /* single letter specified */
-		uint8_t i,option = param[0]-'a';
+		uint8_t i, option = param[0] - 'a';
 
 		if(!shavs_algolist){
-			cli_putstr_P(PSTR("\r\nERROR: shavs_algolist not set!"));
+			fputs_P(PSTR("\nERROR: shavs_algolist not set!"), shavs_out_file);
 			return;
 		}
 		for(i=0; i<=option; ++i){
 			if((void*)pgm_read_word(&(shavs_algolist[i]))==NULL){
-				cli_putstr_P(PSTR("\r\nERROR: invalid selection!"));
+				fputs_P(PSTR("\r\nERROR: invalid selection!"), shavs_out_file);
 				return;
 			}
 		}
@@ -92,6 +91,7 @@ void shavs_setalgo(char* param){
 		if(t){
 			shavs_algo=t;
 		}else{
+		    fprintf_P(shavs_out_file, PSTR("\nERROR: could not find \"%s\"!"), param);
 			cli_putstr_P(PSTR("\r\nERROR: could not find \""));
 			cli_putstr(param);
 			cli_putstr_P(PSTR("\"!"));
@@ -184,6 +184,7 @@ int32_t getLength(void){
 			}
 		}
 	}
+	return -1;
 }
 
 void shavs_test1(void){ /* KAT tests */
@@ -191,7 +192,7 @@ void shavs_test1(void){ /* KAT tests */
 	int32_t expect_input=0;
 
 	if(!shavs_algo){
-			cli_putstr_P(PSTR("\r\nERROR: select algorithm first!"));
+			fputs_P(PSTR("\r\nERROR: select algorithm first!"), shavs_out_file);
 		return;
 	}
 	char c;
@@ -199,9 +200,7 @@ void shavs_test1(void){ /* KAT tests */
 	shavs_ctx.buffersize_B=pgm_read_word(&(shavs_algo->blocksize_b))/8;
 	uint8_t buffer[shavs_ctx.buffersize_B+5];
 	shavs_ctx.buffer = buffer;
-	cli_putstr_P(PSTR("\r\nbuffer_size = 0x"));
-	cli_hexdump_rev(&(shavs_ctx.buffersize_B), 2);
-	cli_putstr_P(PSTR(" bytes"));
+	fprintf_P(shavs_out_file, PSTR("\nbuffer_size = 0x%04"PRIx16" bytes"));
 	for(;;){
 		shavs_ctx.blocks = 0;
 		memset(buffer, 0, shavs_ctx.buffersize_B);
@@ -211,8 +210,7 @@ void shavs_test1(void){ /* KAT tests */
 		}
 
 #if DEBUG
-		cli_putstr_P(PSTR("\r\nLen == "));
-		cli_hexdump_rev(&length, 4);
+		fprintf_P(shavs_out_file, PSTR("\nLen == %"PRIu32), length)
 #endif
 		if(length==0){
 			expect_input=2;
@@ -220,59 +218,49 @@ void shavs_test1(void){ /* KAT tests */
 			expect_input=((length + 7) >> 2) & (~1L);
 		}
 #if DEBUG
-		cli_putstr_P(PSTR("\r\nexpected_input == "));
-		cli_hexdump_rev(&expect_input, 4);
-		if(expect_input==0)
-			cli_putstr_P(PSTR("\r\nexpected_input == 0 !!!"));
+		fprintf_P(shavs_out_file, PSTR("\r\nexpected_input == %"PRId32), expected_input);
 #endif
 		shavs_ctx.buffer_idx = 0;
 		shavs_ctx.in_byte    = 0;
 		shavs_ctx.blocks     = 0;
 		uint8_t ret;
 #if DEBUG
-		cli_putstr_P(PSTR("\r\n HFAL init"));
-		cli_putstr_P(PSTR("\r\n (2) expected_input == "));
-		cli_hexdump_rev(&expect_input, 4);
+		fprintf_P(shavs_out_file, PSTR("\n HFAL init\n (2) expected_input == "), expected_input);
 #endif
 		ret = hfal_hash_init(shavs_algo, &(shavs_ctx.ctx));
 		if(ret){
-			cli_putstr_P(PSTR("\r\n HFAL init returned with: "));
-			cli_hexdump(&ret, 1);
+			fprintf_P(shavs_out_file, PSTR("\r\n HFAL init returned with: %"PRIx8), ret);
 			return;
 		}
 #if DEBUG
-		cli_putstr_P(PSTR("\r\n (3) expected_input == "));
-		cli_hexdump_rev(&expect_input, 4);
-		cli_putstr_P(PSTR("\r\n"));
+		fprintf_P(shavs_out_file, PSTR("\r\n (3) expected_input == %"PRId32"\n"), expected_input)
 #endif
 		while((c=cli_getc_cecho())!='M' && c!='m'){
 			if(!isblank(c)){
-				cli_putstr_P(PSTR("\r\nERROR: wrong input (1) [0x"));
-				cli_hexdump(&c, 1);
-				cli_putstr_P(PSTR("]!\r\n"));
+			    fprintf_P(shavs_out_file, PSTR("\nERROR: wrong input (1) [0x%"PRIx8"]!\n"), c);
 				hfal_hash_free(&(shavs_ctx.ctx));
 				return;
 			}
 		}
 		if((c=cli_getc_cecho())!='s' && c!='S'){
-				cli_putstr_P(PSTR("\r\nERROR: wrong input (2)!\r\n"));
-				hfal_hash_free(&(shavs_ctx.ctx));
-				return;
+            fputs_P(PSTR("\nERROR: wrong input (2)!\n"), shavs_out_file);
+            hfal_hash_free(&(shavs_ctx.ctx));
+            return;
 		}
 		if((c=cli_getc_cecho())!='g' && c!='G'){
-				cli_putstr_P(PSTR("\r\nERROR: wrong input (3)!\r\n"));
-				hfal_hash_free(&(shavs_ctx.ctx));
-				return;
+            fputs_P(PSTR("\nERROR: wrong input (3)!\n"), shavs_out_file);
+            hfal_hash_free(&(shavs_ctx.ctx));
+            return;
 		}
 		while((c=cli_getc_cecho())!='='){
 			if(!isblank(c)){
-				cli_putstr_P(PSTR("\r\nERROR: wrong input (4)!\r\n"));
+                fputs_P(PSTR("\nERROR: wrong input (4)!\n"), shavs_out_file);
 				hfal_hash_free(&(shavs_ctx.ctx));
 				return;
 			}
 		}
 #if DEBUG
-		cli_putstr_P(PSTR("\r\nparsing started"));
+		fputs_P(PSTR("\r\nparsing started"), shavs_out_file);
 #endif
 		shavs_ctx.buffer_idx = 0;
 		shavs_ctx.in_byte    = 0;
@@ -280,18 +268,14 @@ void shavs_test1(void){ /* KAT tests */
 		while(expect_input>0){
 			c=cli_getc_cecho();
 #if DEBUG
-			cli_putstr_P(PSTR("\r\n\t("));
-			cli_hexdump_rev(&expect_input, 4);
-			cli_putstr_P(PSTR(") "));
+			fprintf_P(shavs_out_file, PSTR("\n\t(%"PRId32") "), expected_input);
 			_delay_ms(500);
 #endif
 			if(buffer_add(c)==0){
 				--expect_input;
 			}else{
 				if(!isblank((uint16_t)c)){
-					cli_putstr_P(PSTR("\r\nERROR: wrong input (5) ("));
-					cli_putc(c);
-					cli_putstr_P(PSTR(")!\r\n"));
+				    fprintf_P(shavs_out_file, PSTR("\nERROR: wrong input (5) (%c)!\n"), c);
 					hfal_hash_free(&(shavs_ctx.ctx));
 					return;
 				}

@@ -28,6 +28,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <avr/pgmspace.h>
 #include "nessie_mac_test.h"
 #include "nessie_common.h"
@@ -55,8 +56,8 @@ void ascii_mac_P(PGM_P data, PGM_P desc, uint8_t* key){
 	uint16_t sl;
 	uint8_t buffer[BLOCKSIZE_B];
 	
-	NESSIE_PUTSTR_P(PSTR("\r\n                       message="));
-	NESSIE_PUTSTR_P(desc);
+	fputs_P(PSTR("\r\n                       message="), stdout);
+	fputs_P(desc, stdout);
 	PRINTKEY;
 	nessie_mac_ctx.mac_init(ctx, key, nessie_mac_ctx.keysize_b);
 	sl = strlen_P(data);
@@ -82,8 +83,8 @@ void amillion_mac(uint8_t* key){
 	uint32_t n=1000000LL;
 	uint16_t i=0;
 	
-	NESSIE_PUTSTR_P(PSTR("\r\n                       message="));
-	NESSIE_PUTSTR_P(PSTR("1 million times \"a\""));
+	fputs_P(PSTR("\r\n                       message="), stdout);
+	fputs_P(PSTR("1 million times \"a\""), stdout);
 	PRINTKEY;
 	
 	memset(block, 'a', nessie_mac_ctx.blocksize_B);
@@ -105,17 +106,8 @@ void zero_mac(uint16_t n, uint8_t* key){
 	uint8_t mac[MACSIZE_B];
 	uint8_t block[nessie_mac_ctx.blocksize_B];
 	
-	NESSIE_PUTSTR_P(PSTR("\r\n                       message="));
-	if(n>=10000)
-		NESSIE_PUTC('0'+n/10000);
-	if(n>=1000)
-		NESSIE_PUTC('0'+(n/1000)%10);
-	if(n>=100)
-		NESSIE_PUTC('0'+(n/100)%10);
-	if(n>=10)
-		NESSIE_PUTC('0'+(n/10)%10);
-	NESSIE_PUTC('0'+n%10);
-	NESSIE_PUTSTR_P(PSTR(" zero bits"));
+	fputs_P(PSTR("\r\n                       message="), stdout);
+	fprintf_P(stdout, PSTR("%"PRIu16" zero bits"), n);
 	PRINTKEY;
 	
 	memset(block, 0, nessie_mac_ctx.blocksize_B); 
@@ -135,28 +127,14 @@ void one_in512_mac(uint16_t pos, uint8_t* key){
 	uint8_t mac[MACSIZE_B];
 	uint8_t block[nessie_mac_ctx.blocksize_B];
 	uint16_t n=512;
-	char* tab[8]={"80", "40", "20", "10", 
-	              "08", "04", "02", "01" };
+	char* tab[8] = { "80", "40", "20", "10",
+	                 "08", "04", "02", "01" };
 
 	pos&=511;
-	NESSIE_PUTSTR_P(PSTR("\r\n                       message="));
-	NESSIE_PUTSTR_P(PSTR("512-bit string: "));
-	if((pos/8) >=10){
-		NESSIE_PUTC('0'+(pos/8/10)%10);
-	} else {
-		NESSIE_PUTC(' ');
-	}
-	NESSIE_PUTC('0'+(pos/8)%10);
-	NESSIE_PUTSTR_P(PSTR("*00,"));
-	NESSIE_PUTSTR(tab[pos&7]);
-	NESSIE_PUTC(',');
-	if(63-(pos/8) >=10){
-		NESSIE_PUTC('0'+((63-pos/8)/10)%10);
-	} else {
-		NESSIE_PUTC(' ');
-	}
-	NESSIE_PUTC('0'+(63-pos/8)%10);
-	NESSIE_PUTSTR_P(PSTR("*00"));
+	fputs_P(PSTR("\r\n                       message="), stdout);
+	fputs_P(PSTR("512-bit string: "), stdout);
+
+    fprintf_P(stdout, PSTR("%2"PRIu16"*00,%s,%2"PRIu16"*00"), pos / 8, tab[pos & 7], 63 - pos / 8);
 	PRINTKEY;
 	
 	/* now the real stuff */
@@ -183,12 +161,10 @@ void tv4_mac(void){
 	uint8_t key[KEYSIZE_B];
 	uint16_t n=MACSIZE_B*8;
 	uint32_t i;
-	char str[6];
 	
-	NESSIE_PUTSTR_P(PSTR("\r\n                       message="));
-	utoa(MACSIZE_B*8, str, 10);
-	NESSIE_PUTSTR(str);
-	NESSIE_PUTSTR_P(PSTR(" zero bits"));
+	fputs_P(PSTR("\r\n                       message="), stdout);
+	fprintf_P(stdout, PSTR("%"PRIu16" zero bits"), nessie_mac_ctx.macsize_b);
+
 	memset(block, 0, MACSIZE_B);
 	for(i=0; i<KEYSIZE_B; ++i)
 		key[i] = pgm_read_byte(&(keyproto[i%(3*8)]));

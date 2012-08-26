@@ -34,6 +34,7 @@
 #define NESSIE_USE_CLI
 
 #include <stdint.h>
+#include <stdio.h>
 
 #ifdef NESSIE_ALIVE
 #define NESSIE_SEND_ALIVE nessie_send_alive()
@@ -45,7 +46,7 @@ void nessie_send_alive_a(uint16_t i);
 #define NESSIE_SEND_ALIVE_A(i)  
 #endif
 
-
+/*
 #ifdef NESSIE_USE_CLI
 #include "cli.h"
 #define NESSIE_PUTC cli_putc
@@ -54,12 +55,15 @@ void nessie_send_alive_a(uint16_t i);
 #else
 # error "direct uart output removed for nessie"
 #endif
+*/
+
+void nessie_set_output_stream(FILE* out_stream);
 
 void nessie_print_block(uint8_t* block, uint16_t blocksize_bit);
-void nessie_print_item(char* name, uint8_t* buffer, uint16_t size_B);
+void nessie_print_item(const char* name, uint8_t* buffer, uint16_t size_B);
 void nessie_print_set_vector(uint8_t set, uint16_t vector);
 void nessie_print_setheader(uint8_t set);
-void nessie_print_header(char* name,
+void nessie_print_header(const char* name,
                          uint16_t keysize_b, 
                          uint16_t blocksize_b,
                          uint16_t hashsize_b, 

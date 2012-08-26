@@ -1,3 +1,5 @@
+MAKE_DEBUG     = 1
+
 DEBUG          = -gdwarf-2
 WARNING        = -pedantic -Wall -Werror -Wstrict-prototypes
 PROGRAMMER     = jtagmkII

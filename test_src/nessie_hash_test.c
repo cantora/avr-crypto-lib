@@ -27,6 +27,7 @@
  * */
 #include <stdint.h>
 #include <string.h>
+#include <stdio.h>
 #include "nessie_hash_test.h"
 #include "nessie_common.h"
 #include "dbz_strings.h"
@@ -44,8 +45,8 @@ void ascii_hash_P(PGM_P data, PGM_P desc){
 	uint16_t sl;
 	uint8_t buffer[BLOCKSIZE_B];
 	
-	NESSIE_PUTSTR_P(PSTR("\r\n                       message="));
-	NESSIE_PUTSTR_P(desc);
+	fputs_P(PSTR("\n                       message="), stdout);
+	fputs_P(desc, stdout);
 	nessie_hash_ctx.hash_init(ctx);
 	sl = strlen_P(data);
 	while(sl>=BLOCKSIZE_B){
@@ -70,8 +71,8 @@ void amillion_hash(void){
 	uint32_t n=1000000LL;
 	uint16_t i=0;
 	
-	NESSIE_PUTSTR_P(PSTR("\r\n                       message="));
-	NESSIE_PUTSTR_P(PSTR("1 million times \"a\""));
+	fputs_P(PSTR("\n                       message="), stdout);
+	fputs_P(PSTR("1 million times \"a\""), stdout);
 	memset(block, 'a', nessie_hash_ctx.blocksize_B);
 	nessie_hash_ctx.hash_init(ctx);
 	while(n>=nessie_hash_ctx.blocksize_B){
@@ -91,17 +92,8 @@ void zero_hash(uint16_t n){
 	uint8_t hash[(nessie_hash_ctx.hashsize_b+7)/8];
 	uint8_t block[nessie_hash_ctx.blocksize_B];
 	
-	NESSIE_PUTSTR_P(PSTR("\r\n                       message="));
-	if(n>=10000)
-		NESSIE_PUTC('0'+n/10000);
-	if(n>=1000)
-		NESSIE_PUTC('0'+(n/1000)%10);
-	if(n>=100)
-		NESSIE_PUTC('0'+(n/100)%10);
-	if(n>=10)
-		NESSIE_PUTC('0'+(n/10)%10);
-	NESSIE_PUTC('0'+n%10);
-	NESSIE_PUTSTR_P(PSTR(" zero bits"));
+	fputs_P(PSTR("\n                       message="), stdout);
+	fprintf_P(stdout, PSTR("%"PRIu16" zero bits"));
 	
 	memset(block, 0, nessie_hash_ctx.blocksize_B); 
 	nessie_hash_ctx.hash_init(ctx);
@@ -120,28 +112,14 @@ void one_in512_hash(uint16_t pos){
 	uint8_t hash[(nessie_hash_ctx.hashsize_b+7)/8];
 	uint8_t block[nessie_hash_ctx.blocksize_B];
 	uint16_t n=512;
-	char* tab[8]={"80", "40", "20", "10", 
-	              "08", "04", "02", "01" };
+	char* tab[8] = { "80", "40", "20", "10",
+	                 "08", "04", "02", "01" };
 
 	pos&=511;
-	NESSIE_PUTSTR_P(PSTR("\r\n                       message="));
-	NESSIE_PUTSTR_P(PSTR("512-bit string: "));
-	if((pos/8) >=10){
-		NESSIE_PUTC('0'+(pos/8/10)%10);
-	} else {
-		NESSIE_PUTC(' ');
-	}
-	NESSIE_PUTC('0'+(pos/8)%10);
-	NESSIE_PUTSTR_P(PSTR("*00,"));
-	NESSIE_PUTSTR(tab[pos&7]);
-	NESSIE_PUTC(',');
-	if(63-(pos/8) >=10){
-		NESSIE_PUTC('0'+((63-pos/8)/10)%10);
-	} else {
-		NESSIE_PUTC(' ');
-	}
-	NESSIE_PUTC('0'+(63-pos/8)%10);
-	NESSIE_PUTSTR_P(PSTR("*00"));
+	fputs_P(PSTR("\n                       message="), stdout);
+	fputs_P(PSTR("512-bit string: "), stdout);
+
+	fprintf_P(stdout, PSTR("%2"PRIu16"*00,%s,%2"PRIu16"*00"), pos / 8, tab[pos & 7], 63 - pos / 8);
 	
 	/* now the real stuff */
 	memset(block, 0, 512/8);
@@ -164,18 +142,9 @@ void tv4_hash(void){
 	uint16_t n=nessie_hash_ctx.hashsize_b;
 	uint32_t i;
 	
-	NESSIE_PUTSTR_P(PSTR("\r\n                       message="));
-	if(nessie_hash_ctx.hashsize_b>=10000)
-		NESSIE_PUTC('0' + (nessie_hash_ctx.hashsize_b/10000)%10);
-	if(nessie_hash_ctx.hashsize_b>=1000)
-		NESSIE_PUTC('0' + (nessie_hash_ctx.hashsize_b/1000)%10);
-	if(nessie_hash_ctx.hashsize_b>=100)
-		NESSIE_PUTC('0' + (nessie_hash_ctx.hashsize_b/100)%10);
-	if(nessie_hash_ctx.hashsize_b>=10)
-		NESSIE_PUTC('0' + (nessie_hash_ctx.hashsize_b/10)%10);
-	NESSIE_PUTC('0' + nessie_hash_ctx.hashsize_b%10);
+	fputs_P(PSTR("\r\n                       message="), stdout);
+	fprintf_P(stdout, PSTR("%"PRIu16" zero bits"), nessie_hash_ctx.hashsize_b);
 
-	NESSIE_PUTSTR_P(PSTR(" zero bits"));
 	memset(block, 0, nessie_hash_ctx.hashsize_b/8);
 	
 	nessie_hash_ctx.hash_init(ctx);

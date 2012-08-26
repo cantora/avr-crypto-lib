@@ -21,12 +21,9 @@
  *
 */
 
-#include "config.h"
-#include "uart_i.h"
-#include "debug.h"
+#include "main-test-common.h"
 
 #include "echo.h"
-#include "cli.h"
 #include "hfal_echo.h"
 #include "shavs.h"
 #include "nessie_hash_test.h"
@@ -34,10 +31,6 @@
 #include "hfal-nessie.h"
 #include "hfal-performance.h"
 #include "hfal-test.h"
-
-#include <stdint.h>
-#include <string.h>
-#include <stdlib.h>
 
 char* algo_name = "Echo";
 

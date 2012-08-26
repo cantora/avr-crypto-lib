@@ -21,21 +21,13 @@
  * 
 */
 
-#include "config.h"
-
-#include "uart_i.h"
-#include "debug.h"
+#include "main-test-common.h"
 
 #include "cscipher.h"
 #include "bcal-nessie.h"
-#include "cli.h"
 #include "performance_test.h"
 #include "bcal-performance.h"
 #include "bcal_cscipher.h"
-
-#include <stdint.h>
-#include <string.h>
-#include <stdlib.h>
 
 char* algo_name = "CS-Cipher";
 
@@ -148,14 +140,10 @@ const cmdlist_entry_t cmdlist[] PROGMEM = {
 };
 
 int main (void){
-	DEBUG_INIT();
-	
-	cli_rx = (cli_rx_fpt)uart0_getc;
-	cli_tx = (cli_tx_fpt)uart0_putc;	 	
-	for(;;){
-		cli_putstr_P(PSTR("\r\n\r\nCrypto-VS ("));
-		cli_putstr(algo_name);
-		cli_putstr_P(PSTR(")\r\nloaded and running\r\n"));
-		cmd_interface(cmdlist);
+    main_setup();
+
+    for(;;){
+        welcome_msg(algo_name);
+        cmd_interface(cmdlist);
 	}
 }
