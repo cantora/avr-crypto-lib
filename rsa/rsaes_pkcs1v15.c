@@ -73,10 +73,10 @@ uint8_t rsa_encrypt_pkcs1v15(void* dest, uint16_t* out_length, const void* src,
 	((uint8_t*)dest)[2+pad_length] = 0x00;
 	memcpy((uint8_t*)dest+3+pad_length, src, length_B);
 	x.wordv = dest;
-	x.length_B = (length_B+pad_length+3+sizeof(bigint_word_t)-1)/sizeof(bigint_word_t);
+	x.length_W = (length_B+pad_length+3+sizeof(bigint_word_t)-1)/sizeof(bigint_word_t);
 #if DEBUG
 	cli_putstr_P(PSTR("\r\nx-data: "));
-	cli_hexdump_block(x.wordv, x.length_B * sizeof(bigint_word_t), 4, 16);
+	cli_hexdump_block(x.wordv, x.length_W * sizeof(bigint_word_t), 4, 16);
 #endif
 	bigint_adjust(&x);
 	rsa_os2ip(&x, NULL, length_B+pad_length+3);

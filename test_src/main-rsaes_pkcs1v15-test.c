@@ -240,7 +240,7 @@ uint8_t read_bigint(bigint_t* a, char* prompt){
 		return 1;
 	}
 	a->wordv = (bigint_word_t*)buffer;
-	a->length_B = (read_length + sizeof(bigint_word_t) - 1) / sizeof(bigint_word_t);
+	a->length_W = (read_length + sizeof(bigint_word_t) - 1) / sizeof(bigint_word_t);
 	a->info = 0;
 	bigint_changeendianess(a);
 	bigint_adjust(a);
@@ -309,7 +309,7 @@ uint8_t read_key_conv(void){
 }
 
 uint8_t load_bigint_from_os(bigint_t* a, PGM_VOID_P os, uint16_t length_B){
-	a->length_B = BIGINT_CEIL(length_B) / sizeof(bigint_word_t);
+	a->length_W = BIGINT_CEIL(length_B) / sizeof(bigint_word_t);
 	a->wordv = malloc(BIGINT_CEIL(length_B));
 	if(!a->wordv){
 		cli_putstr_P(PSTR("\r\nOOM!\r\n"));
@@ -474,8 +474,8 @@ void load_priv_conventional(void){
 		cli_putstr_P(PSTR("\r\nERROR: OOM!"));
 		return;
 	}
-	epriv->length_B = (sizeof(PRIV_EXPONENT) + sizeof(bigint_word_t) - 1) / sizeof(bigint_word_t);
-	epriv->wordv =  malloc(epriv->length_B * sizeof(bigint_word_t));
+	epriv->length_W = (sizeof(PRIV_EXPONENT) + sizeof(bigint_word_t) - 1) / sizeof(bigint_word_t);
+	epriv->wordv =  malloc(epriv->length_W * sizeof(bigint_word_t));
 	if(!epriv->wordv){
 		cli_putstr_P(PSTR("\r\nERROR: OOM!"));
 		return;
@@ -508,8 +508,8 @@ void load_priv_crt_mono(void){
 	for(i=0; i<5; ++i){
 		v[i] = malloc(sizeof(bigint_t));
 		v[i]->info = 0;
-		v[i]->length_B = (sv[i] + sizeof(bigint_word_t) - 1) / sizeof(bigint_word_t);
-		v[i]->wordv = calloc(v[i]->length_B , sizeof(bigint_word_t));
+		v[i]->length_W = (sv[i] + sizeof(bigint_word_t) - 1) / sizeof(bigint_word_t);
+		v[i]->wordv = calloc(v[i]->length_W , sizeof(bigint_word_t));
 		if(!v[i]->wordv){
 			cli_putstr_P(PSTR("\r\nERROR: OOM!"));
 			return;
@@ -522,7 +522,7 @@ void load_priv_crt_mono(void){
 }
 
 uint8_t load_bigint_from_os(bigint_t* a, PGM_VOID_P os, uint16_t length_B){
-	a->length_B = BIGINT_CEIL(length_B) / sizeof(bigint_word_t);
+	a->length_W = BIGINT_CEIL(length_B) / sizeof(bigint_word_t);
 	a->wordv = malloc(BIGINT_CEIL(length_B));
 	if(!a->wordv){
 		cli_putstr_P(PSTR("\r\nOOM!\r\n"));

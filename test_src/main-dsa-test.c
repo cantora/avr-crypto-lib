@@ -53,8 +53,8 @@ void dsa_print_item(bigint_t* a, PGM_P pstr){
 	cli_putstr_P(pstr);
 	cli_putstr_P(PSTR(": "));
 	uint16_t i;
-	p = a->wordv + a->length_B -1;
-	for(i=0; i<a->length_B-1; ++i){
+	p = a->wordv + a->length_W -1;
+	for(i=0; i<a->length_W-1; ++i){
 		if(i%16==0){
 			cli_putstr_P(PSTR("\r\n    "));
 		}
@@ -70,8 +70,8 @@ void dsa_print_item(bigint_t* a, PGM_P pstr){
 
 void dsa_print_signature_b64(dsa_signature_t* s){
 	uint16_t size_r, size_s, size_o, i,j;
-	size_r = s->r.length_B +2;
-	size_s = s->s.length_B +2;
+	size_r = s->r.length_W +2;
+	size_s = s->s.length_W +2;
 	size_o = size_r + size_s +2;
 	uint8_t bin_b[size_o];
 	bin_b[0] = 0x30;
@@ -79,12 +79,12 @@ void dsa_print_signature_b64(dsa_signature_t* s){
 	bin_b[2] = 0x02;
 	bin_b[3] = size_r-2;
 	j=4;
-	for(i=s->r.length_B; i>0;  --i){
+	for(i=s->r.length_W; i>0;  --i){
 		bin_b[j++] = s->r.wordv[i-1];
 	}
 	bin_b[j++] = 0x02;
 	bin_b[j++] = size_s -2;
-	for(i=s->s.length_B; i>0;  --i){
+	for(i=s->s.length_W; i>0;  --i){
 		bin_b[j++] = s->s.wordv[i-1];
 	}
 	char b64_b[size_o*4/3+5];
@@ -111,8 +111,8 @@ void quick_test(void){
 	dsa_signature_t dsa_sig;
 	uint8_t i, t=0, message[] = {0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef};
 	load_fix_dsa();
-	uint8_t dsa_sig_s_b[dsa_ctx.domain.q.length_B],
-	        dsa_sig_r_b[dsa_ctx.domain.q.length_B];
+	uint8_t dsa_sig_s_b[dsa_ctx.domain.q.length_W],
+	        dsa_sig_r_b[dsa_ctx.domain.q.length_W];
 	dsa_print_ctx(&dsa_ctx);
 	dsa_sig.r.wordv = dsa_sig_r_b;
 	dsa_sig.s.wordv = dsa_sig_s_b;

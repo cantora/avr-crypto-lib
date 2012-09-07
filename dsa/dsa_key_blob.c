@@ -280,15 +280,15 @@ void load_dsa_key_blob(dsa_ctx_t* ctx){
 		return;
 	}
 	memcpy_P(ctx->priv.wordv, dsa_key_blob, ALL_LEN_B);
-	ctx->priv.length_B=PRIV_LEN_B;
+	ctx->priv.length_W=PRIV_LEN_B;
 	ctx->pub.wordv = ctx->priv.wordv+PRIV_LEN_B;
-	ctx->pub.length_B = PUB_LEN_B;
+	ctx->pub.length_W = PUB_LEN_B;
 	ctx->domain.p.wordv = ctx->priv.wordv+PRIV_LEN_B+PUB_LEN_B;
-	ctx->domain.p.length_B = P_LEN_B;
+	ctx->domain.p.length_W = P_LEN_B;
 	ctx->domain.q.wordv = ctx->priv.wordv+PRIV_LEN_B+PUB_LEN_B+P_LEN_B;
-	ctx->domain.q.length_B = Q_LEN_B;
+	ctx->domain.q.length_W = Q_LEN_B;
 	ctx->domain.g.wordv = ctx->priv.wordv+PRIV_LEN_B+PUB_LEN_B+P_LEN_B+Q_LEN_B;
-	ctx->domain.g.length_B = G_LEN_B;
+	ctx->domain.g.length_W = G_LEN_B;
 
 	bigint_changeendianess(&(ctx->priv));
 	bigint_changeendianess(&(ctx->pub));

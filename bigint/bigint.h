@@ -38,7 +38,7 @@ typedef int16_t  bigint_wordplus_signed_t;
 #define BIGINT_FBS_MASK (BIGINT_WORD_SIZE-1) /* the last five bits indicate which is the first bit set */
 #define BIGINT_NEG_MASK 0x80 /* this bit indicates a negative value */
 typedef struct{
-	uint16_t length_B;
+	uint16_t length_W;
 	uint8_t info;
 	bigint_word_t *wordv; /* word vector, pointing to the LSB */
 }bigint_t;

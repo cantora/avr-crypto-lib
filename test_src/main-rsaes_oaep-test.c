@@ -422,7 +422,7 @@ uint8_t read_bigint(bigint_t* a, char* prompt){
 		return 1;
 	}
 	a->wordv = (bigint_word_t*)buffer;
-	a->length_B = (read_length + sizeof(bigint_word_t) - 1) / sizeof(bigint_word_t);
+	a->length_W = (read_length + sizeof(bigint_word_t) - 1) / sizeof(bigint_word_t);
 	a->info = 0;
 	bigint_changeendianess(a);
 	bigint_adjust(a);
@@ -491,7 +491,7 @@ uint8_t read_key_conv(void){
 }
 
 uint8_t load_bigint_from_os(bigint_t* a, PGM_VOID_P os, uint16_t length_B){
-	a->length_B = BIGINT_CEIL(length_B) / sizeof(bigint_word_t);
+	a->length_W = BIGINT_CEIL(length_B) / sizeof(bigint_word_t);
 	a->wordv = malloc(BIGINT_CEIL(length_B));
 	if(!a->wordv){
 		cli_putstr_P(PSTR("\r\nOOM!\r\n"));
@@ -534,8 +534,8 @@ void quick_test(void){
 	if(!keys_allocated){
 		load_fix_rsa();
 	}
-	ciphertext = malloc(clen = pub_key.modulus.length_B * sizeof(bigint_word_t));
-	plaintext = malloc(pub_key.modulus.length_B * sizeof(bigint_word_t));
+	ciphertext = malloc(clen = pub_key.modulus.length_W * sizeof(bigint_word_t));
+	plaintext = malloc(pub_key.modulus.length_W * sizeof(bigint_word_t));
 	memcpy_P(plaintext, MSG, sizeof(MSG));
 	memcpy_P(seed, SEED, sizeof(SEED));
 	cli_putstr_P(PSTR("\r\nplaintext:"));

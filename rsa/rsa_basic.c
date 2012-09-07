@@ -52,8 +52,8 @@ m = m2 + q * h
 
 uint8_t rsa_dec_crt_mono(bigint_t* data, const rsa_privatekey_t* key){
 	bigint_t m1, m2;
-	m1.wordv = malloc((key->components[0].length_B /* + 1 */) * sizeof(bigint_word_t));
-	m2.wordv = malloc((key->components[1].length_B /* + 1 */) * sizeof(bigint_word_t));
+	m1.wordv = malloc((key->components[0].length_W /* + 1 */) * sizeof(bigint_word_t));
+	m2.wordv = malloc((key->components[1].length_W /* + 1 */) * sizeof(bigint_word_t));
 	if(!m1.wordv || !m2.wordv){
 #if DEBUG
 		cli_putstr_P(PSTR("\r\nERROR: OOM!"));
@@ -183,7 +183,7 @@ void rsa_os2ip(bigint_t* dest, const void* data, uint32_t length_B){
 	if(data){
 		memcpy(dest->wordv, data, length_B);
 	}
-	dest->length_B = length_B;
+	dest->length_W = length_B;
 #else
 	uint8_t off;
 	off = (sizeof(bigint_word_t) - length_B % sizeof(bigint_word_t)) % sizeof(bigint_word_t);
@@ -203,10 +203,10 @@ void rsa_os2ip(bigint_t* dest, const void* data, uint32_t length_B){
 			memset(dest->wordv, 0, off);
 		}
 	}
-	dest->length_B = (length_B + off) / sizeof(bigint_word_t);
+	dest->length_W = (length_B + off) / sizeof(bigint_word_t);
 #if DEBUG
-	cli_putstr_P(PSTR("\r\nDBG: dest->length_B = 0x"));
-	cli_hexdump_rev(&(dest->length_B), 2);
+	cli_putstr_P(PSTR("\r\nDBG: dest->length_W = 0x"));
+	cli_hexdump_rev(&(dest->length_W), 2);
 #endif
 #endif
 	dest->info = 0;
@@ -217,9 +217,9 @@ void rsa_os2ip(bigint_t* dest, const void* data, uint32_t length_B){
 void rsa_i2osp(void* dest, bigint_t* src, uint16_t* out_length_B){
 #if BIGINT_WORD_SIZE == 8
 	if(dest){
-		uint8_t *e = src->wordv + src->length_B;
+		uint8_t *e = src->wordv + src->length_W;
 		uint16_t i;
-		for(i=src->length_B; i>0; --i){
+		for(i=src->length_W; i>0; --i){
 			*((uint8_t*)dest) = *--e;
 			dest = (uint8_t*)dest + 1;
 		}
@@ -227,7 +227,7 @@ void rsa_i2osp(void* dest, bigint_t* src, uint16_t* out_length_B){
 		bigint_changeendianess(src);
 	}
 
-	*out_length_B = src->length_B;
+	*out_length_B = src->length_W;
 #else
 	*out_length_B = bigint_get_first_set_bit(src) / 8 + 1;
 	if(dest){

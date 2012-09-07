@@ -72,7 +72,7 @@ uint8_t rsa_encrypt_oaep(void* dest, uint16_t* out_length,
 	cli_putstr("\r\n buffer_len = ");
 	cli_hexdump_rev(&buffer_len, 2);
 	cli_putstr("\r\n modulus_len = ");
-	cli_hexdump_rev(&key->modulus.length_B, 2);
+	cli_hexdump_rev(&key->modulus.length_W, 2);
 #endif
 	uint8_t* buffer = (uint8_t*)dest;
 	uint8_t off;
@@ -121,7 +121,7 @@ uint8_t rsa_encrypt_oaep(void* dest, uint16_t* out_length,
 	cli_hexdump_block(dest, bigint_length_B(&key->modulus), 4, 16);
 #endif
 	x.info = 0;
-	x.length_B = key->modulus.length_B;
+	x.length_W = key->modulus.length_W;
 	x.wordv = dest;
 	bigint_adjust(&x);
 	rsa_os2ip(&x, NULL, bigint_length_B(&key->modulus));
@@ -170,7 +170,7 @@ uint8_t rsa_decrypt_oaep(void* dest, uint16_t* out_length,
 //	cli_putc('a'); uart_flush(0);
 
 	x.wordv = dest;
-	x.length_B = key->modulus.length_B;
+	x.length_W = key->modulus.length_W;
 	x.info = 0;
 	bigint_adjust(&x);
 

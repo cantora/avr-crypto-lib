@@ -72,7 +72,7 @@ void test_add_bigint(void){
 		bigint_print_hex(&b);
 		cli_putstr_P(PSTR(" = "));
 		uint8_t *c_b;
-		c_b = malloc(((a.length_B>b.length_B)?a.length_B:b.length_B)+2);
+		c_b = malloc(((a.length_W>b.length_W)?a.length_W:b.length_W)+2);
 		if(c_b==NULL){
 			cli_putstr_P(PSTR("\n\rERROR: Out of memory!"));
 			free(a.wordv);
@@ -118,7 +118,7 @@ void test_add_scale_bigint(void){
 		}
 	*/
 		uint8_t *c_b;
-		c_b = malloc(((a.length_B>(b.length_B+scale))?a.length_B:(b.length_B+scale))+2);
+		c_b = malloc(((a.length_W>(b.length_W+scale))?a.length_W:(b.length_W+scale))+2);
 		if(c_b==NULL){
 			cli_putstr_P(PSTR("\n\rERROR: Out of memory!"));
 			free(a.wordv);
@@ -164,7 +164,7 @@ void test_mul_bigint(void){
 		bigint_print_hex(&b);
 		cli_putstr_P(PSTR(" = "));
 		uint8_t *c_b;
-		c_b = malloc((((a.length_B>b.length_B)?a.length_B:b.length_B)+1)*2);
+		c_b = malloc((((a.length_W>b.length_W)?a.length_W:b.length_W)+1)*2);
 		if(c_b==NULL){
 			cli_putstr_P(PSTR("\n\rERROR: Out of memory!"));
 			free(a.wordv);
@@ -194,7 +194,7 @@ void test_square_bigint(void){
 		bigint_print_hex(&a);
 		cli_putstr_P(PSTR("**2 = "));
 		uint8_t *c_b;
-		c_b = malloc(a.length_B*2);
+		c_b = malloc(a.length_W*2);
 		if(c_b==NULL){
 			cli_putstr_P(PSTR("\n\rERROR: Out of memory!"));
 			free(a.wordv);
@@ -260,7 +260,7 @@ void test_expmod_bigint(void){
 			cli_putstr_P(PSTR("\r\n end expmod test"));
 			return;
 		}
-		d_b = malloc(c.length_B);
+		d_b = malloc(c.length_W);
 		if(d_b==NULL){
 			cli_putstr_P(PSTR("\n\rERROR: Out of memory!"));
 			free(a.wordv);
@@ -302,9 +302,9 @@ void test_gcdext_bigint(void){
 			cli_putstr_P(PSTR("\r\n end gcdext test"));
 			return;
 		}
-		c.wordv = malloc((a.length_B<b.length_B)?a.length_B:b.length_B);
-		d.wordv = malloc(1+(a.length_B>b.length_B)?a.length_B:b.length_B);
-		e.wordv = malloc(1+(a.length_B>b.length_B)?a.length_B:b.length_B);
+		c.wordv = malloc((a.length_W<b.length_W)?a.length_W:b.length_W);
+		d.wordv = malloc(1+(a.length_W>b.length_W)?a.length_W:b.length_W);
+		e.wordv = malloc(1+(a.length_W>b.length_W)?a.length_W:b.length_W);
 
 		cli_putstr_P(PSTR("\r\n gcdext( "));
 		bigint_print_hex(&a);
@@ -334,8 +334,8 @@ void test_simple(void){
 	a.wordv=a_b;
 	b.wordv=b_b;
 	c.wordv=c_b;
-	a.length_B = 1;
-	b.length_B = 1;
+	a.length_W = 1;
+	b.length_W = 1;
 	a_b[0] = 1;
 	b_b[0] = 2;
 	bigint_add_u(&c, &a, &b);
@@ -351,8 +351,8 @@ void test_mul_simple(void){
 	a.wordv=a_b;
 	b.wordv=b_b;
 	c.wordv=c_b;
-	a.length_B = 5;
-	b.length_B = 5;
+	a.length_W = 5;
+	b.length_W = 5;
 	bigint_adjust(&a);
 	bigint_adjust(&b);
 	bigint_mul_s(&c, &a, &b);
@@ -376,8 +376,8 @@ void test_mul_simple(void){
 	a.wordv=a_b;
 	b.wordv=b_b;
 	c.wordv=c_b;
-	a.length_B = 8;
-	b.length_B = 8;
+	a.length_W = 8;
+	b.length_W = 8;
 	a.info=0x80;
 	bigint_adjust(&a);
 	bigint_adjust(&b);
@@ -418,7 +418,7 @@ void test_square_simple(void){
 	uint8_t c_b[22];
 	a.wordv=a_b;
 	c.wordv=c_b;
-	a.length_B = 11;
+	a.length_W = 11;
 	a.info=0x00;
 	bigint_adjust(&a);
 	bigint_square(&c, &a);
@@ -436,11 +436,11 @@ void test_reduce_simple(void){
 	uint8_t b_b[2] = {0x52, 0x27};
 	uint8_t c_b[2];
 	a.wordv=a_b;
-	a.length_B = 2;
+	a.length_W = 2;
 	a.info=0x00;
 	bigint_adjust(&a);
 	b.wordv=b_b;
-	b.length_B = 2;
+	b.length_W = 2;
 	b.info=0x00;
 	bigint_adjust(&b);
 	c.wordv = c_b;
@@ -465,11 +465,11 @@ void test_gcdext_simple(void){
 	uint8_t b_b[5] = {0x72, 0x7D, 0x57, 0xAC, 0X6F};
 	uint8_t c_b[6], d_b[6], e_b[6];
 	a.wordv=a_b;
-	a.length_B = 5;
+	a.length_W = 5;
 	a.info=0x00;
 	bigint_adjust(&a);
 	b.wordv=b_b;
-	b.length_B = 5;
+	b.length_W = 5;
 	b.info=0x00;
 	bigint_adjust(&b);
 	c.wordv = c_b;

@@ -27,7 +27,7 @@
 uint8_t dsa_sign_bigint(dsa_signature_t* s, const bigint_t* m,
 		                const dsa_ctx_t* ctx, const bigint_t* k){
 	bigint_t tmp, tmp2;
-	uint8_t tmp_b[ctx->domain.p.length_B+5], tmp2_b[ctx->domain.q.length_B+5];
+	uint8_t tmp_b[ctx->domain.p.length_W+5], tmp2_b[ctx->domain.q.length_W+5];
 	tmp.wordv= tmp_b;
 	tmp2.wordv = tmp2_b;
 	bigint_expmod_u(&tmp, &(ctx->domain.g), k, &(ctx->domain.p));
@@ -40,7 +40,7 @@ uint8_t dsa_sign_bigint(dsa_signature_t* s, const bigint_t* m,
 	bigint_reduce(&tmp, &(ctx->domain.q));
 	bigint_copy(&(s->s), &tmp);
 
-	if(s->s.length_B==0 || s->r.length_B==0){
+	if(s->s.length_W==0 || s->r.length_W==0){
 		return 1;
 	}
 
@@ -51,20 +51,20 @@ uint8_t dsa_sign_message(dsa_signature_t* s, const void* m, uint16_t m_len_b,
 		                const hfdesc_t* hash_desc, const dsa_ctx_t* ctx,
 		                const rand_func_ptr_t rand_in){
 	bigint_t z, k;
-	uint8_t i, n_B = ctx->domain.q.length_B;
+	uint8_t i, n_B = ctx->domain.q.length_W;
 	uint8_t hash_value[(n_B>(hfal_hash_getHashsize(hash_desc)+7)/8)?n_B:(hfal_hash_getHashsize(hash_desc)+7)/8];
 	uint8_t k_b[n_B];
 	hfal_hash_mem(hash_desc, hash_value, m, m_len_b);
 	z.wordv = hash_value;
-	z.length_B = n_B;
+	z.length_W = n_B;
 	bigint_changeendianess(&z);
 	k.wordv = k_b;
-	k.length_B = n_B;
+	k.length_W = n_B;
 	do{
 		for(i=0; i<n_B; ++i){
 			k_b[i] = rand_in();
 		}
-		k.length_B = n_B;
+		k.length_W = n_B;
 		bigint_adjust(&k);
 	}while(dsa_sign_bigint(s, &z, ctx, &k));
 	cli_putstr_P(PSTR("\r\nsignature computed"));

@@ -24,7 +24,7 @@
 #include <string.h>
 
 void bigint_print_hex(const bigint_t* a){
-	if(a->length_B==0){
+	if(a->length_W==0){
 		cli_putc('0');
 		return;
 	}
@@ -32,18 +32,18 @@ void bigint_print_hex(const bigint_t* a){
 		cli_putc('-');
 	}
 //	cli_putc((a->info&BIGINT_NEG_MASK)?'-':'+'); /* print sign */
-/*	if(a->wordv[a->length_B-1]<0x10){
-		cli_putc(hexdigit_tab_uc[a->wordv[a->length_B-1]]);
-		cli_hexdump_rev(a->wordv, a->length_B-1);
+/*	if(a->wordv[a->length_W-1]<0x10){
+		cli_putc(hexdigit_tab_uc[a->wordv[a->length_W-1]]);
+		cli_hexdump_rev(a->wordv, a->length_W-1);
 	} else {
 */
-	//	cli_hexdump_rev(a->wordv, a->length_B*sizeof(bigint_word_t));
+	//	cli_hexdump_rev(a->wordv, a->length_W*sizeof(bigint_word_t));
 //	}
 	uint32_t idx;
 	uint8_t print_zero=0;
 	uint8_t *p,x,y;
-	p = (uint8_t*)&(a->wordv[a->length_B-1])+sizeof(bigint_word_t)-1;
-	for(idx = a->length_B * sizeof(bigint_word_t); idx > 0; --idx){
+	p = (uint8_t*)&(a->wordv[a->length_W-1])+sizeof(bigint_word_t)-1;
+	for(idx = a->length_W * sizeof(bigint_word_t); idx > 0; --idx){
 		x = *p >> 4;
 		y = *p & 0xf;
 		if(x!=0 || print_zero!=0){
@@ -98,7 +98,7 @@ uint8_t bigint_read_hex_echo(bigint_t* a){
 	uint16_t allocated=0;
 	uint8_t  shift4=0;
 	uint16_t  t, idx = 0;
-	a->length_B = 0;
+	a->length_W = 0;
 	a->wordv = NULL;
 	a->info = 0;
 	for(;;){
@@ -140,9 +140,9 @@ uint8_t bigint_read_hex_echo(bigint_t* a){
 	/* we have to reverse the byte array */
 	uint8_t tmp;
 	uint8_t *p, *q;
-	a->length_B = (idx + sizeof(bigint_word_t)-1)/sizeof(bigint_word_t);
+	a->length_W = (idx + sizeof(bigint_word_t)-1)/sizeof(bigint_word_t);
 	p = (uint8_t*)(a->wordv);
-	q = (uint8_t*)a->wordv + a->length_B * sizeof(bigint_word_t) - 1;
+	q = (uint8_t*)a->wordv + a->length_W * sizeof(bigint_word_t) - 1;
 	while(q>p){
 		tmp = *p;
 		*p = *q;
