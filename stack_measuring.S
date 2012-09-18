@@ -25,12 +25,23 @@
 stack_measure_init:
 	movw r30, r24
 	lds r20, __brkval
-	lds r21, __brkval+1
+	lds r21, __brkval + 1
 	in r0, _SFR_IO_ADDR(SREG)
 	cli
 	in r26, _SFR_IO_ADDR(SPL)
 	out _SFR_IO_ADDR(SREG), r0
 	in r27, _SFR_IO_ADDR(SPH)
+	cp r20, r26
+	cpc r21, r27
+	brlo 10f
+	ldi r20, lo8(__bss_end)
+	ldi r21, hi8(__bss_end)
+	cp r20, r26
+	cpc r21, r27
+	brlo 10f
+	ldi r21, 1
+	clr r20
+10:
 	st Z+, r20
 	st Z+, r21
 	st Z+, r26
@@ -41,23 +52,31 @@ stack_measure_init:
 	sbc r25, r21
 	sbiw r24, 1
 	st X, r22
-1:  st -X, r22
+50: st -X, r22
 	sbiw r24, 1
-	brne 1b
+	brne 50b
 	ret
 
 .global stack_measure_final
 stack_measure_final:
 	movw r30, r24
 	lds r20, __brkval
-	lds r21, __brkval+1
+	lds r21, __brkval + 1
 	ld r26, Z+
 	ld r27, Z+
+
 	cp r20, r26
 	cpc r21, r27
-	brlo 1f
-	movw r26, r20
-1:
+	brlo 10f
+	ldi r20, lo8(__bss_end)
+	ldi r21, hi8(__bss_end)
+	cp r20, r26
+	cpc r21, r27
+	brlo 10f
+	ldi r21, 1
+	clr r20
+10:
+
 	adiw r26, 1
 	ld r24, Z+
 	ld r25, Z+

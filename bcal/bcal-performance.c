@@ -32,15 +32,17 @@
 #include "performance_test.h"
 #include "stack_measuring.h"
 #include "cli.h"
+#include "uart_i.h"
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 #include <avr/pgmspace.h>
 
 #define PATTERN_A 0xAA
 #define PATTERN_B 0x55
 
-
+/*
 static
 void printvalue(unsigned long v){
 	char str[20];
@@ -51,6 +53,7 @@ void printvalue(unsigned long v){
 	}
 	cli_putstr(str);
 }
+*/
 
 void bcal_performance(const bcdesc_t* bcd){
 	bcdesc_t bc;
@@ -62,30 +65,22 @@ void bcal_performance(const bcdesc_t* bcd){
 	uint64_t t;
 	uint8_t i;
 
-	if(bc.type!=BCDESC_TYPE_BLOCKCIPHER)
+	if(bc.type != BCDESC_TYPE_BLOCKCIPHER)
 		return;
 	calibrateTimer();
 	print_overhead();
-	cli_putstr_P(PSTR("\r\n\r\n === "));
-	cli_putstr_P(bc.name);
-	cli_putstr_P(PSTR(" performance === "
-	                  "\r\n    type:             blockcipher"
-	                  "\r\n    keysize (bits):     "));
-	printvalue(keysize);
-
-	cli_putstr_P(PSTR("\r\n    ctxsize (bytes):    "));
-	printvalue(bc.ctxsize_B);
-
-	cli_putstr_P(PSTR("\r\n    blocksize (bits):   "));
-	printvalue(bc.blocksize_b);
-
-
-
+	printf_P(PSTR("\n\n === %S"), bc.name);
+	printf_P(PSTR(" performance === \n"
+	              "    type:             blockcipher\n"
+	              "    keysize (bits):     %5"PRIu16"\n"), keysize);
+	printf_P(PSTR("    ctxsize (bytes):    %5"PRIu16"\n"), bc.ctxsize_B);
+	printf_P(PSTR("    blocksize (bits):   %5"PRIu16"\n"), bc.blocksize_b);
+	uart0_flush();
 	t=0;
 	if(bc.init.init1){
-		if((bc.flags&BC_INIT_TYPE)==BC_INIT_TYPE_1){
+		if((bc.flags & BC_INIT_TYPE) == BC_INIT_TYPE_1){
 			for(i=0; i<32; ++i){
-				startTimer(0);
+				startTimer(1);
 				START_TIMER;
 				(bc.init.init1)(key, &ctx);
 				STOP_TIMER;
@@ -96,7 +91,7 @@ void bcal_performance(const bcdesc_t* bcd){
 			}
 		} else {
 			for(i=0; i<32; ++i){
-				startTimer(0);
+				startTimer(1);
 				START_TIMER;
 				(bc.init.init2)(key, keysize, &ctx);
 				STOP_TIMER;
@@ -107,9 +102,10 @@ void bcal_performance(const bcdesc_t* bcd){
 			}
 		}
 		t>>=5;
-		cli_putstr_P(PSTR("\r\n    init (cycles):      "));
-		printvalue(t);
+		printf_P(PSTR("    init (cycles):      %5"PRIu16"\n"), t);
 	}
+
+    uart0_flush();
 	t=0;
 	for(i=0; i<32; ++i){
 		startTimer(0);
@@ -119,9 +115,9 @@ void bcal_performance(const bcdesc_t* bcd){
 		t += stopTimer();
 	}
 	t>>=5;
-	cli_putstr_P(PSTR("\r\n    encrypt (cycles):   "));
-	printvalue(t);
+	printf_P(PSTR("    encrypt (cycles):   %5"PRIu16"\n"), t);
 
+    uart0_flush();
 	t=0;
 	for(i=0; i<32; ++i){
 		startTimer(0);
@@ -131,10 +127,11 @@ void bcal_performance(const bcdesc_t* bcd){
 		t += stopTimer();
 	}
 	t>>=5;
-	cli_putstr_P(PSTR("\r\n    decrypt (cycles):   "));
-	printvalue(t);
+	printf_P(PSTR("    decrypt (cycles):   %5"PRIu16"\n"), t);
+    uart0_flush();
 
 	if(bc.free){
+	    uart0_flush();
 		bc.free(&ctx);
 	}
 }
@@ -147,17 +144,17 @@ void bcal_stacksize(const bcdesc_t* bcd){
 	uint8_t data[(bc.blocksize_b+7)/8];
 	uint16_t keysize = get_keysize(bc.valid_keysize_desc);
 	uint8_t key[(keysize+7)/8];
-	uint16_t t1, t2;
+	uint16_t t1 = 0, t2 = 0;
 
-	if(bc.type!=BCDESC_TYPE_BLOCKCIPHER)
+	if(bc.type != BCDESC_TYPE_BLOCKCIPHER)
 		return;
-	cli_putstr_P(PSTR("\r\n\r\n === "));
-	cli_putstr_P(bc.name);
-	cli_putstr_P(PSTR(" stack-usage === "));
+	printf_P(PSTR("\n === %S stack-usage ===\n"),bc.name);
+
+	uart0_flush();
 
 	if(bc.init.init1){
-		if((bc.flags&BC_INIT_TYPE)==BC_INIT_TYPE_1){
-			cli();
+		if((bc.flags & BC_INIT_TYPE) == BC_INIT_TYPE_1){
+	    	cli();
 			stack_measure_init(&smctx, PATTERN_A);
 			bc.init.init1(&ctx, key);
 			t1 = stack_measure_final(&smctx);
@@ -166,18 +163,18 @@ void bcal_stacksize(const bcdesc_t* bcd){
 			t2 = stack_measure_final(&smctx);
 			sei();
 		} else {
-			cli();
+	    	cli();
 			stack_measure_init(&smctx, PATTERN_A);
 			bc.init.init2(&ctx, keysize, key);
 			t1 = stack_measure_final(&smctx);
 			stack_measure_init(&smctx, PATTERN_B);
 			bc.init.init2(&ctx, keysize, key);
-			t2 = stack_measure_final(&smctx);
-			sei();
-		}
+            t2 = stack_measure_final(&smctx);
+            sei();
+        }
+
 		t1 = (t1>t2)?t1:t2;
-		cli_putstr_P(PSTR("\r\n    init (bytes):       "));
-		printvalue((unsigned long)t1);
+		printf_P(PSTR("    init (bytes):       %5"PRIu16"\n"), t1);
 	}
 	cli();
 	stack_measure_init(&smctx, PATTERN_A);
@@ -189,8 +186,7 @@ void bcal_stacksize(const bcdesc_t* bcd){
 	sei();
 
 	t1 = (t1>t2)?t1:t2;
-	cli_putstr_P(PSTR("\r\n    encBlock (bytes):   "));
-	printvalue((unsigned long)t1);
+	printf_P(PSTR("    encBlock (bytes):   %5"PRIu16"\n"), t1);
 
 	cli();
 	stack_measure_init(&smctx, PATTERN_A);
@@ -202,8 +198,7 @@ void bcal_stacksize(const bcdesc_t* bcd){
 	sei();
 
 	t1 = (t1>t2)?t1:t2;
-	cli_putstr_P(PSTR("\r\n    decBlock (bytes):   "));
-	printvalue((unsigned long)t1);
+	printf_P(PSTR("    decBlock (bytes):   %5"PRIu16"\n"), t1);
 
 	if(bc.free){
 		bc.free(&ctx);
@@ -215,7 +210,7 @@ void bcal_performance_multiple(const bcdesc_t* const* bcd_list){
 	for(;;){
 		bcd = (void*)pgm_read_word(bcd_list);
 		if(!bcd){
-			cli_putstr_P(PSTR("\r\n\r\n End of performance figures\r\n"));
+			puts_P(PSTR("\n End of performance figures\n"));
 			return;
 		}
 		bcal_performance(bcd);

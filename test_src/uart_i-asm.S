@@ -192,6 +192,11 @@ uart0_init:
 	std Z+UART0_TXON_OFFSET, r24
 	std Z+UART0_RXON_OFFSET, r24
 #endif	
+#if UART0_HOOK
+	std Z+UART0_HOOK_OFFSET,   r1
+	std Z+UART0_HOOK_OFFSET+1, r1
+	std Z+UART0_HOOKR_OFFSET,  r1
+#endif
 	ldi r24, UBRRH_VALUE
 	STORE_IO UBRR0H, r24
 	ldi r24, UBRRL_VALUE
@@ -496,5 +501,16 @@ uart0_sethook:
 	st X+, r25
 	ret
 #endif
+
+.global uart0_flush
+uart0_flush:
+10:
+ 	ldi r24, lo8(uart0_ctx+UART0_CBB_TX_OFFSET)
+ 	ldi r25, hi8(uart0_ctx+UART0_CBB_TX_OFFSET)
+	rcall circularbytebuffer_cnt
+	tst r24
+	brne 10b
+	ret
+
 	
 #endif /* UART0_I */

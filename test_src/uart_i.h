@@ -115,7 +115,7 @@ typedef struct{
 #endif
 #if UART1_SWFLOWCTRL
 	volatile uint8_t txon;  /**< flag indicating if we are allowed to send data */
-	volatile uint8_t rxon;  /**< flag indicating if we have send an \a XOFF */
+	volatile uint8_t rxon;  /**< flag indicating if we have send a XOFF */
 #endif
 } uart1_ctx_t;
 
@@ -155,6 +155,15 @@ uint16_t uart0_getc(void);
  * \return zero if no data is available else a value different from zero is returned
  */
 uint8_t uart0_dataavail(void);
+
+/**
+ * \brief flushes the internal transmit buffer.
+ *
+ * This function function waits until all data was send (the transmit-buffer
+ * does not contain any data).
+ */
+void uart0_flush(void);
+
 
 #if	UART0_HOOK
 /**

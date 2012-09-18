@@ -98,7 +98,7 @@ int8_t cmd_interface(PGM_VOID_P cmd_desc){
 		c = cli_rx();
 		switch (c){
 		case CLI_ENTER:
-			if((exit_code=search_and_call(cli_buffer, maxcmdlength, cmd_desc))<=0){
+			if((exit_code = search_and_call(cli_buffer, maxcmdlength, cmd_desc)) <=0 ){
 				free(cli_buffer);
 				return exit_code;
 			}

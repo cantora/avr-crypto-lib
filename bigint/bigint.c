@@ -315,7 +315,7 @@ int8_t bigint_cmp_u(const bigint_t* a, const bigint_t* b){
 	if(a->length_W < b->length_W){
 		return -1;
 	}
-	if(a->length_W==0){
+	if(a->length_W == 0){
 		return 0;
 	}
 	uint16_t i;

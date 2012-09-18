@@ -392,6 +392,7 @@ cli_auto_help:
 99:
 	pop_range 28, 29
 	pop_range 14, 17
+	ori r24, 1
 	ret
 ahelphead_str:
 .asciz "\r\n[auto help] available commands:\r\n <command> - <params> - <address>\r\n"

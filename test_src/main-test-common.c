@@ -52,5 +52,5 @@ void welcome_msg(const char* algoname){
 	cli_putstr(__TIME__);
 	cli_putstr_P(PSTR(")\r\nloaded and running\r\n"));
 */
-    printf_P(PSTR("\n\nAVR-Crypto-Lib VS(%s; %s %s)\nloaded and running\n"), algoname, __DATE__, __TIME__);
+    printf_P(PSTR("\n\nAVR-Crypto-Lib VS (%s; %s %s)\nloaded and running\n"), algoname, __DATE__, __TIME__);
 }
