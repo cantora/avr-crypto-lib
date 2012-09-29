@@ -153,5 +153,9 @@ uint8_t bigint_read_hex_echo(bigint_t* a){
 	if(shift4){
 		bigint_shiftright(a, 4);
 	}
+	if(a->length_W == 1 && a->wordv[0] == 0){
+	    a->length_W = 0;
+	    a->info = 0;
+	}
 	return 0;
 }

@@ -80,6 +80,7 @@ end
 ################################################################################
 
 def gcdext(x,y)
+  return  [0, 0, 0] if(x == 0 || y == 0)
   g=1
   while(x&1==0 && y&1==0) do
     x>>=1
@@ -474,6 +475,7 @@ end
 ################################################################################
 
 def gcdext_test(a,b)
+  $logfile.printf("[testing] gcdext(%s, %s)\n", a.to_s(16), b.to_s(16))
   begin
     line = $sp.gets()
     line = "" if line==nil
