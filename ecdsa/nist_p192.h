@@ -21,8 +21,16 @@
 #define NIST_P192_H_
 
 #include "bigint.h"
+#include "ecc.h"
 
 extern bigint_t nist_curve_p192_p;
+
+extern bigint_t nist_curve_p192_b;
+
+extern ecc_combi_point_t nist_curve_p192_basepoint;
+
+extern ecc_curve_sp_t nist_curve_p192;
+
 int bigint_reduce_p192(bigint_t *a);
 
 #endif /* NIST_P192_H_ */
