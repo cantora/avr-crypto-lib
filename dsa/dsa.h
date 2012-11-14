@@ -32,6 +32,7 @@ typedef struct{
 
 typedef bigint_t dsa_pubkey_t;
 typedef bigint_t dsa_privkey_t;
+
 typedef struct{
 	bigint_t r;
 	bigint_t s;

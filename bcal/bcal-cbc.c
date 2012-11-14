@@ -28,7 +28,7 @@ uint8_t bcal_cbc_init(const bcdesc_t* desc, const void* key, uint16_t keysize_b,
 	ctx->blocksize_B = (bcal_cipher_getBlocksize_b(desc)+7)/8;
 	ctx->prev_block = malloc(ctx->blocksize_B);
 
-	if(ctx->prev_block==NULL){
+	if(ctx->prev_block == NULL){
 		return 0x11;
 	}
 	return bcal_cipher_init(desc, key, keysize_b, &(ctx->cctx));

@@ -98,18 +98,18 @@ const static uint8_t r[5][5] PROGMEM = {
 static inline
 void keccak_round(uint64_t a[5][5], uint8_t rci){
 	uint64_t b[5][5];
-	uint8_t i,j;
+	uint8_t i, j;
 	union {
 			uint64_t v64;
 			uint8_t v8[8];
 		} t;
 	/* theta */
-	for(i=0; i<5; ++i){
+	for(i = 0; i < 5; ++i){
 		b[i][0] = a[0][i] ^ a[1][i] ^ a[2][i] ^ a[3][i] ^ a[4][i];
 	}
-	for(i=0; i<5; ++i){
-		t.v64 = b[(4+i)%5][0] ^ rotate64_1bit_left(b[(i+1)%5][0]);
-		for(j=0; j<5; ++j){
+	for(i = 0; i < 5; ++i){
+		t.v64 = b[(4 + i) % 5][0] ^ rotate64_1bit_left(b[(i + 1) % 5][0]);
+		for(j = 0; j < 5; ++j){
 			a[j][i] ^= t.v64;
 		}
 	}
@@ -118,10 +118,9 @@ void keccak_round(uint64_t a[5][5], uint8_t rci){
 	keccak_dump_state(a);
 #endif
 	/* rho & pi */
-	for(i=0; i<5; ++i){
-		for(j=0; j<5; ++j){
-//			b[(2*i+3*j)%5][j] = rotl64(a[j][i], pgm_read_byte(&(r[i][j])));
-			b[(2*i+3*j)%5][j] = rotate64left_code(a[j][i], pgm_read_byte(&(r[i][j])));
+	for(i = 0; i < 5; ++i){
+		for(j = 0; j < 5; ++j){
+			b[(2 * i + 3 * j) % 5][j] = rotate64left_code(a[j][i], pgm_read_byte(&(r[i][j])));
 		}
 	}
 #if DEBUG
@@ -129,9 +128,9 @@ void keccak_round(uint64_t a[5][5], uint8_t rci){
 	keccak_dump_state(a);
 #endif
 	/* chi */
-	for(i=0; i<5; ++i){
-		for(j=0; j<5; ++j){
-			a[j][i] =  b[j][i] ^ ((~(b[j][(i+1)%5]))&(b[j][(i+2)%5]));
+	for(i = 0; i < 5; ++i){
+		for(j = 0; j < 5; ++j){
+			a[j][i] =  b[j][i] ^ ((~(b[j][(i + 1) % 5])) & (b[j][(i + 2) % 5]));
 		}
 	}
 #if DEBUG
@@ -143,13 +142,13 @@ void keccak_round(uint64_t a[5][5], uint8_t rci){
 //	memcpy_P(&t, &(rc_comp[rci]), 8);
 	t.v64 = 0;
 	t.v8[0] = pgm_read_byte(&(rc_comp[rci]));
-	if(t.v8[0]&0x40){
+	if(t.v8[0] & 0x40){
 		t.v8[7] = 0x80;
 	}
-	if(t.v8[0]&0x20){
+	if(t.v8[0] & 0x20){
 		t.v8[3] = 0x80;
 	}
-	if(t.v8[0]&0x10){
+	if(t.v8[0] & 0x10){
 		t.v8[1] = 0x80;
 	}
 	t.v8[0] &= 0x8F;
@@ -162,15 +161,15 @@ void keccak_round(uint64_t a[5][5], uint8_t rci){
 }
 
 void keccak_f1600(uint64_t a[5][5]){
-	uint8_t i=0;
-	do{
+	uint8_t i = 0;
+	do {
 #if DEBUG
 		cli_putstr_P(PSTR("\r\n\r\n--- Round "));
 		cli_hexdump(&i, 1);
 		cli_putstr_P(PSTR(" ---"));
 #endif
 		keccak_round(a, i);
-	}while(++i<24);
+	} while (++i < 24);
 }
 
 void keccak_nextBlock(keccak_ctx_t* ctx, const void* block){
@@ -189,29 +188,29 @@ void keccak_lastBlock(keccak_ctx_t* ctx, const void* block, uint16_t length_b){
 	memset(tmp, 0x00, ctx->bs);
 	memcpy(tmp, block, (length_b+7)/8);
 	/* appand 1 */
-	if(length_b&7){
+	if(length_b & 7){
 		/* we have some single bits */
 		uint8_t t;
-		t = tmp[length_b/8]>>(8-(length_b&7));
-		t |= 0x01<<(length_b&7);
-		tmp[length_b/8] = t;
+		t = tmp[length_b / 8] >> (8 - (length_b & 7));
+		t |= 0x01 << (length_b & 7);
+		tmp[length_b / 8] = t;
 	}else{
-		tmp[length_b/8] = 0x01;
+		tmp[length_b / 8] = 0x01;
 	}
 	pad[0] = ctx->d;
 	pad[1] = ctx->bs;
 	pad[2] = 0x01;
-	if(length_b/8+1+3<=ctx->bs){
-		memcpy(tmp+length_b/8+1, pad, 3);
+	if(length_b / 8 + 1 + 3 <= ctx->bs){
+		memcpy(tmp + length_b / 8 + 1, pad, 3);
 	}else{
-		if(length_b/8+1+2<=ctx->bs){
+		if(length_b / 8 + 1 + 2 <= ctx->bs){
 			memcpy(tmp+length_b/8+1, pad, 2);
 			keccak_nextBlock(ctx, tmp);
 			memset(tmp, 0x00, ctx->bs);
-			tmp[0]=0x01;
+			tmp[0] = 0x01;
 		}else{
-			if(length_b/8+1+1<=ctx->bs){
-				memcpy(tmp+length_b/8+1, pad, 1);
+			if(length_b/8+1+1 <= ctx->bs){
+				memcpy(tmp + length_b / 8 + 1, pad, 1);
 				keccak_nextBlock(ctx, tmp);
 				memset(tmp, 0x00, ctx->bs);
 				tmp[0] = ctx->bs;
@@ -255,17 +254,17 @@ void keccak512_ctx2hash(void* dest, keccak_ctx_t* ctx){
 }
 
 /*
-1. SHA3-224: ⌊Keccak[r = 1152, c = 448, d = 28]⌋224
-2. SHA3-256: ⌊Keccak[r = 1088, c = 512, d = 32]⌋256
-3. SHA3-384: ⌊Keccak[r = 832, c = 768, d = 48]⌋384
-4. SHA3-512: ⌊Keccak[r = 576, c = 1024, d = 64]⌋512
+  1. SHA3-224: ⌊Keccak[r = 1152, c =  448, d = 28]⌋224
+  2. SHA3-256: ⌊Keccak[r = 1088, c =  512, d = 32]⌋256
+  3. SHA3-384: ⌊Keccak[r =  832, c =  768, d = 48]⌋384
+  4. SHA3-512: ⌊Keccak[r =  576, c = 1024, d = 64]⌋512
 */
 void keccak_init(uint16_t r, uint16_t c, uint8_t d, keccak_ctx_t* ctx){
-	memset(ctx->a, 0x00, 5*5*8);
+	memset(ctx->a, 0x00, 5 * 5 * 8);
 	ctx->r = r;
 	ctx->c = c;
 	ctx->d = d;
-	ctx->bs = (uint8_t)(r/8);
+	ctx->bs = (uint8_t)(r / 8);
 }
 
 void keccak224_init(keccak_ctx_t* ctx){
