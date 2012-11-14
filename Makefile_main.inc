@@ -191,7 +191,7 @@ endef
 
 $(foreach algo, $(ALGORITHMS), $(eval $(call TestBin_TEMPLATE, \
     $(algo), \
-    $(BIN_DIR)$(call lc, $(algo))/$(TEST_DIR)main-$(call lc, $(algo))-test.elf \
+    $(BIN_DIR)$(call lc, $(algo))/$(TEST_DIR)main-$(call lc, $(algo))-test.hex \
 )))
 
 #-------------------------------------------------------------------------------
@@ -210,6 +210,12 @@ $(foreach algo, $(ALGORITHMS), $(eval $(call Listing_TEMPLATE, \
 %.hex: %.elf
 	@echo "[objcopy]: $@"
 	@$(OBJCOPY) -j .text -j .data -O ihex $< $@
+ifdef HASH_TOOL
+ifneq ($(HASH_TOOL),)
+	@echo -n "[$(HASH_TOOL)]: "
+	@$(HASH_TOOL) $<
+endif
+endif
 
 #-------------------------------------------------------------------------------
 

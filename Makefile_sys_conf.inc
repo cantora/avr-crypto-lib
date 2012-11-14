@@ -35,6 +35,7 @@ OBJCOPY         = avr-objcopy
 OBJDUMP         = avr-objdump
 SIZE            = avr-size
 READELF         = readelf
+HASH_TOOL       = sha256sum
 RUBY            = ruby
 GET_TEST        = host/get_test.rb
 MAKE            = make
