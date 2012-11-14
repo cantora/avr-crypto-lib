@@ -28,6 +28,14 @@
 #include "bigint.h"
 #include "bigint_io.h"
 #include "nist_p192.h"
+#include "ecc.h"
+#include "ecdsa_sign.h"
+
+#include "hfal_sha1.h"
+#include "hfal_sha224.h"
+#include "hfal_sha256.h"
+#include "hfal_sha384.h"
+#include "hfal_sha512.h"
 
 #include "performance_test.h"
 #include "hfal_sha1.h"
@@ -39,6 +47,10 @@ char* algo_name = "ECDSA";
 /*****************************************************************************
  *  additional validation-functions											 *
  *****************************************************************************/
+
+uint8_t prng_get_byte(void){
+    return random8();
+}
 
 void testrun_performance_invert_bigint(void){
     printf_P(PSTR("\n=== performance measurement (invert) ===\n"));
@@ -220,43 +232,6 @@ void ecc_affine_point_free(ecc_affine_point_t *p){
     free(p->y.wordv);
 }
 
-uint8_t ecc_chudnovsky_point_alloc(ecc_chudnovsky_point_t *p, uint16_t length_b){
-    size_t len = (length_b + BIGINT_WORD_SIZE - 1)/ BIGINT_WORD_SIZE;
-    if (! (p->x.wordv = malloc(len))){
-        return 1;
-    }
-    if (! (p->y.wordv = malloc(len))){
-        free(p->x.wordv);
-        return 2;
-    }
-    if (! (p->z1.wordv = malloc(len))){
-        free(p->x.wordv);
-        free(p->y.wordv);
-        return 3;
-    }
-    if (! (p->z2.wordv = malloc(len))){
-        free(p->x.wordv);
-        free(p->y.wordv);
-        free(p->z1.wordv);
-        return 4;
-    }
-    if (! (p->z3.wordv = malloc(len))){
-        free(p->x.wordv);
-        free(p->y.wordv);
-        free(p->z1.wordv);
-        free(p->z2.wordv);
-        return 5;
-    }
-    return 0;
-}
-
-void ecc_chudnovsky_point_free(ecc_chudnovsky_point_t *p){
-    free(p->x.wordv);
-    free(p->y.wordv);
-    free(p->z1.wordv);
-    free(p->z2.wordv);
-    free(p->z3.wordv);
-}
 
 void testrun_square(void){
     bigint_word_t a_w[] = {
@@ -473,7 +448,7 @@ void testrun_genkey3(void){
 void testrun_genkey(void){
     ecc_chudnovsky_point_t q;
     ecc_affine_point_t qa;
-
+    uint32_t time;
     bigint_t k;
 
     printf_P(PSTR("\n== testing key generation ==\n"));
@@ -487,24 +462,129 @@ void testrun_genkey(void){
         return;
     }
     if(ecc_affine_point_alloc(&qa, 192)){
+        ecc_chudnovsky_point_free(&q);
         printf_P(PSTR("ERROR: OOM! <%s %s %d>\n"), __FILE__, __func__, __LINE__);
         return;
     }
 
-    printf_P(PSTR("  k:  "));
+    printf_P(PSTR("(naf)  k:  "));
     bigint_print_hex(&k);
-    ecc_chudnovsky_multiplication(&q, &k, &nist_curve_p192_basepoint.chudnovsky, &nist_curve_p192);
+    startTimer(1);
+    START_TIMER;
+    ecc_chudnovsky_naf_multiplication(&q, &k, &nist_curve_p192_basepoint.chudnovsky, &nist_curve_p192);
+    STOP_TIMER;
+    time = stopTimer();
     ecc_chudnovsky_to_affine_point(&qa, &q, &nist_curve_p192);
 
     printf_P(PSTR("\n  Qx: "));
     bigint_print_hex(&qa.x);
     printf_P(PSTR("\n  Qy: "));
     bigint_print_hex(&qa.y);
-    puts("\n");
+    printf_P(PSTR("\n time: %"PRIu32" cycles\n"), time);
+
+    printf_P(PSTR("(d&a)  k:  "));
+    bigint_print_hex(&k);
+    startTimer(1);
+    START_TIMER;
+    ecc_chudnovsky_double_and_add(&q, &k, &nist_curve_p192_basepoint.chudnovsky, &nist_curve_p192);
+    STOP_TIMER;
+    time = stopTimer();
+    ecc_chudnovsky_to_affine_point(&qa, &q, &nist_curve_p192);
+
+    printf_P(PSTR("\n  Qx: "));
+    bigint_print_hex(&qa.x);
+    printf_P(PSTR("\n  Qy: "));
+    bigint_print_hex(&qa.y);
+    printf_P(PSTR("\n time: %"PRIu32" cycles\n"), time);
+    free(k.wordv);
+    ecc_chudnovsky_point_free(&q);
+    ecc_affine_point_free(&qa);
 }
 
 
 #endif
+
+const uint8_t ecdsa_test_1_msg[] PROGMEM = {
+    0xcf, 0x71, 0xa0, 0xe4, 0xce, 0x59, 0x43, 0x11,
+    0x77, 0x88, 0x50, 0x87, 0x53, 0x78, 0xd0, 0xee,
+    0xa3, 0xc0, 0x32, 0xa4, 0xbc, 0xc0, 0xdc, 0x1c,
+    0xf2, 0x9d, 0x01, 0xb9, 0xc5, 0x10, 0x78, 0x9c,
+    0xd5, 0x2f, 0xc3, 0x8c, 0x74, 0xe6, 0xa4, 0x27,
+    0x87, 0xd0, 0xf2, 0x7c, 0xe2, 0x93, 0x20, 0x7a,
+    0xfd, 0xd0, 0x11, 0x7a, 0xcc, 0x71, 0xb9, 0x16,
+    0x63, 0x06, 0xce, 0x56, 0xf1, 0xa7, 0xf1, 0xc6,
+    0x0a, 0x9d, 0x68, 0x7d, 0x12, 0x5e, 0xb0, 0x7e,
+    0x26, 0xe5, 0x51, 0xdc, 0x14, 0x0e, 0x8a, 0x04,
+    0xaf, 0xa2, 0xa1, 0x6f, 0x98, 0xb5, 0x1b, 0xa9,
+    0x18, 0x96, 0xbf, 0x32, 0x0f, 0xd4, 0xd6, 0xf1,
+    0xa4, 0x4b, 0x46, 0xf3, 0x3d, 0xae, 0x39, 0xcc,
+    0x24, 0xf0, 0x4a, 0x5d, 0x86, 0x0c, 0xb1, 0x4f,
+    0x6b, 0x6e, 0x8a, 0x69, 0x73, 0xb4, 0x9f, 0xd2,
+    0xa7, 0xbc, 0xeb, 0x48, 0xd7, 0x48, 0xf7, 0xeb
+};
+
+const uint8_t ecdsa_test_1_d[] PROGMEM = {
+    0xf3, 0xd7, 0x60, 0xd6, 0x75, 0xf2, 0xcc, 0xeb,
+    0xf0, 0xd2, 0xfd, 0xb3, 0xb9, 0x41, 0x3f, 0xb0,
+    0xf8, 0x4f, 0x37, 0xd1, 0xb3, 0x37, 0x4f, 0xe1
+};
+
+const uint8_t ecdsa_test_1_k[] PROGMEM = {
+    0x25, 0x5f, 0x68, 0x89, 0xa2, 0x31, 0xbc, 0x57,
+    0x4d, 0x15, 0xc4, 0x12, 0xfb, 0x56, 0x45, 0x68,
+    0x83, 0x07, 0xa1, 0x43, 0x70, 0xbc, 0x0a, 0xcb
+};
+
+void test_sign1(void){
+    bigint_word_t d_w[sizeof(ecdsa_test_1_d)];
+    uint8_t msg[sizeof(ecdsa_test_1_msg)];
+    uint8_t rnd[sizeof(ecdsa_test_1_k)];
+    bigint_t d;
+    ecc_combi_point_t q;
+    ecdsa_signature_t sign;
+    ecdsa_ctx_t ctx;
+    d.wordv = d_w;
+    memcpy_P(msg, ecdsa_test_1_msg, sizeof(ecdsa_test_1_msg));
+    memcpy_P(rnd, ecdsa_test_1_k, sizeof(ecdsa_test_1_k));
+    memcpy_P(d_w, ecdsa_test_1_d, sizeof(ecdsa_test_1_d) * sizeof(bigint_word_t));
+    d.length_W = sizeof(ecdsa_test_1_d) / sizeof(bigint_word_t);
+    d.info = 0;
+    bigint_adjust(&d);
+
+    ecc_chudnovsky_point_alloc(&q.chudnovsky, nist_curve_p192_p.length_W * sizeof(bigint_word_t));
+    ctx.basepoint = &nist_curve_p192_basepoint.chudnovsky;
+    ctx.priv = &d;
+    ctx.curve = &nist_curve_p192;
+
+    printf("\n  d:");
+    bigint_print_hex(&d);
+    printf_P(PSTR("\n  Gx: "));
+    bigint_print_hex(&nist_curve_p192_basepoint.affine.x);
+    printf_P(PSTR("\n  Gy: "));
+    bigint_print_hex(&nist_curve_p192_basepoint.affine.y);
+
+    ecc_chudnovsky_multiplication(&q.chudnovsky, &d, &nist_curve_p192_basepoint.chudnovsky, &nist_curve_p192);
+    ecc_chudnovsky_to_affine_point(&q.affine, &q.chudnovsky, &nist_curve_p192);
+    printf_P(PSTR("\n  Qx: "));
+    bigint_print_hex(&q.affine.x);
+    printf_P(PSTR("\n  Qy: "));
+    bigint_print_hex(&q.affine.y);
+
+    ctx.pub = &q.affine;
+
+    ecdsa_signature_alloc(&sign, sizeof(ecdsa_test_1_d) * sizeof(bigint_word_t));
+
+    ecdsa_sign_message(&sign, msg, sizeof(msg) * 8, &sha1_desc, &ctx, rnd);
+
+    printf_P(PSTR("\n  r: "));
+    bigint_print_hex(&sign.r);
+    printf_P(PSTR("\n  r: "));
+    bigint_print_hex(&sign.s);
+
+
+    ecdsa_signature_free(&sign);
+    ecc_chudnovsky_point_free(&q.chudnovsky);
+}
 
 /*****************************************************************************
  *  main																	 *
@@ -520,6 +600,7 @@ const char genkey1_str[]                 PROGMEM = "genkey1";
 const char genkey2_str[]                 PROGMEM = "genkey2";
 const char genkey3_str[]                 PROGMEM = "genkey3";
 const char genkey_str[]                  PROGMEM = "genkey";
+const char testsign1_str[]               PROGMEM = "testsign1";
 const char square_str[]                  PROGMEM = "square";
 const char echo_str[]                    PROGMEM = "echo";
 
@@ -531,6 +612,7 @@ const const cmdlist_entry_t cmdlist[] PROGMEM = {
     { genkey1_str,                 NULL, testrun_genkey1                      },
     { genkey2_str,                 NULL, testrun_genkey2                      },
     { genkey3_str,                 NULL, testrun_genkey3                      },
+    { testsign1_str,               NULL, test_sign1                           },
 	{ performance_reduce_str,      NULL, testrun_performance_reduce_bigint    },
     { performance_invert_str,      NULL, testrun_performance_invert_bigint    },
     { performance_multiply_str,    NULL, testrun_performance_multiply_bigint  },
@@ -541,7 +623,7 @@ const const cmdlist_entry_t cmdlist[] PROGMEM = {
 int main (void){
     int8_t r;
     main_setup();
-
+    calibrateTimer();
     for(;;){
         welcome_msg(algo_name);
         r = cmd_interface(cmdlist);

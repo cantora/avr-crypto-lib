@@ -20,6 +20,8 @@
 #ifndef ECC_H_
 #define ECC_H_
 
+#include <stddef.h>
+
 typedef struct {
     bigint_t x;
     bigint_t y;
@@ -43,6 +45,11 @@ typedef struct {
     bigint_t* b;
     int (*reduce_p)(bigint_t*);
 } ecc_curve_sp_t;
+
+
+uint8_t ecc_chudnovsky_point_alloc(ecc_chudnovsky_point_t* p, size_t length_B);
+
+void ecc_chudnovsky_point_free(ecc_chudnovsky_point_t* p);
 
 void ecc_chudnovsky_point_print(const ecc_chudnovsky_point_t *p);
 
