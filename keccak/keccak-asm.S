@@ -37,18 +37,45 @@
   	}
 */
 
+theta_2a:
+/*
+	input:
+		r24:r25 = a ; uint64_t a[5][5]
+		X = b       ; uint64_t *b
+	output:
+		a[0..4][0] ^= b
+		r20 = 0
+		r21 = XX
+		r22 = XX
+		r24:r25 += 8
+		X += 8
+		Z = r24:r25 + 7 + 4 * 40
+*/
+	ldi r20, 8
+10:
+	movw ZL, r24
+	ld  r21, X+
+	.irp r, 0, 1, 2, 3, 4
+		ld  r22, Z
+		eor r22, r21
+		st  Z, r22
+	.if \r != 4
+		adiw ZL, 40
+	.endif
+	.endr
+	adiw r24, 1
+	dec r20
+	brne 10b
+	ret
+
 .global keccak_theta
 keccak_theta:
-	movw r30, r24
-	movw r26, r22
-
-;	.irp offset, 0, 1, 2, 3, 4
-
+	movw r30, r24 ; Z = a
+	movw r26, r22 ; X = b
 	ldi r19, 5
 10:
 	ldi r20, 8
 20:
-
 	ld  r22, Z
 	adiw ZL, 40
 	ld  r21, Z
@@ -62,10 +89,8 @@ keccak_theta:
 	adiw ZL, 40
 	ld  r21, Z
 	eor r22, r21
-
 	adiw r24, 1
 	movw r30, r24
-
 	st X+, r22
 	dec r20
 	brne 20b
@@ -73,6 +98,56 @@ keccak_theta:
 	adiw XL, 8 * 4
 	dec r19
 	brne 10b
-;	.endr
+/*
+	for(i = 0; i < 5; ++i){
+		for(j = 0; j < 5; ++j){
+			a[j][i] ^= b[(4 + i) % 5][0];
+		}
+	}
+	for(i = 0; i < 5; ++i){
+        for(j = 0; j < 5; ++j){
+            a[j][i] ^= rotate64_1bit_left(b[(i + 1) % 5][0]);
+        }
+    }
+
+*/
+	sbiw XL, 5 * 8
+
+	sbiw r24, 40
+/* a[0..4][0]{0..7} ^= b[4][0]{0..7} */
+	rcall theta_2a
+/* a[0..4][1]{0..7} ^= b[0][0]{0..7} */
+	subi XL, lo8(4 * 5 * 8 + 8)
+	sbci XH, hi8(4 * 5 * 8 + 8)
+	rcall theta_2a
+/* a[0..4][2]{0..7} ^= b[1][0]{0..7} */
+	adiw XL, 4 * 8
+	rcall theta_2a
+/* a[0..4][3]{0..7} ^= b[2][0]{0..7} */
+	adiw XL, 4 * 8
+	rcall theta_2a
+/* a[0..4][4]{0..7} ^= b[3][0]{0..7} */
+	adiw XL, 4 * 8
+	rcall theta_2a
+
+	ret
+
+	ldi r20, 8
+
+10:
+	movw ZL, r24
+	ld  r21, X+
+	.irp r, 0, 1, 2, 3, 4
+		ld  r22, Z
+		eor r22, r21
+		st  Z, r22
+	.if \r != 4
+		adiw ZL, 40
+	.endif
+	.endr
+	adiw r24, 1
+	dec r20
+	brne 10b
+
 
 	ret
