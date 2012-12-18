@@ -30,7 +30,7 @@
 #  undef DEBUG
 #endif
 
-#define DEBUG 1
+#define DEBUG 0
 
 #if DEBUG
 #include "cli.h"
@@ -107,20 +107,7 @@ void keccak_round(uint64_t a[5][5], uint8_t rci){
 			uint8_t v8[8];
 		} t;
 	/* theta */
-#if DEBUG & 0
-    printf_P(PSTR("\npre-theta(1):"));
-    keccak_dump_state(b);
-#endif
 	keccak_theta((uint64_t*)a, (uint64_t*)b);
-#if DEBUG
-    printf_P(PSTR("\npost-theta(1):"));
-	keccak_dump_state(b);
-#endif
-	for(i = 0; i < 5; ++i){
-        for(j = 0; j < 5; ++j){
-            a[j][i] ^= rotate64_1bit_left(b[(i + 1) % 5][0]);
-        }
-    }
 #if DEBUG
 	cli_putstr_P(PSTR("\r\nAfter theta:"));
 	keccak_dump_state(a);
