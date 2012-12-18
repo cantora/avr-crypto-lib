@@ -33,11 +33,11 @@
 #define ROTR_3 (8+3)
 
 
-#define ROT_BIT(a) (((a)<=4)?((a)<<1):(0x01|((8-(a))<<1)))
+#define ROT_BIT(a) (((a) <= 4) ? ((a) << 1) : (0x01 | ((8 - (a)) << 1)))
 
 //#define ROT_CODE(a,b) (((a)<<4) | ((b)&0x0f))
 
-#define ROT_CODE(a) ((((a)/8+((((a)%8)>4)?1:0))<<4) | ROT_BIT(((a)%8)))
+#define ROT_CODE(a) ((((a) / 8 + ((((a) % 8) > 4) ? 1 : 0)) << 4) | ROT_BIT(((a) % 8)))
 //#define ROT_CODE(a) ((((a)/8)<<4) | ((a)%8)) /* rotations only to the left */
 
 uint64_t rotate64_1bit_left(uint64_t a);
