@@ -166,14 +166,18 @@ chi_step:
 	brne 10b
 	ret
 
-.global keccak_theta
-keccak_theta:
-	push_range 2, 8
+.global keccak_f1600
+keccak_f1600:
+	push_range 2, 9
 	push r16
 	push_range 28, 29
 
+	stack_alloc_large 200, r26, r27
+	adiw XL, 1
+
+	clr r9
+5:
 	movw r30, r24 ; Z = a
-	movw r26, r22 ; X = b
 
 	ldi r19, 5
 10:
@@ -350,6 +354,7 @@ keccak_theta:
 
 	; Z points at b
 	movw XL, ZL
+	movw r4, ZL
 	adiw XL, 8
 	adiw ZL, 16
 	movw YL, r2
@@ -366,8 +371,51 @@ keccak_theta:
 	adiw ZL, 5 * 8
 	dec r18
 	brne 10b
+
+	/* -- iota -- */
+	ldi r30, lo8(keccak_rc_comp)
+	ldi r31, hi8(keccak_rc_comp)
+	add r30, r9
+	adc r31, __zero_reg__
+	lpm r20, Z+
+	movw YL, r2
+	ldi r21, 0x80
+	bst r20, 6
+	brtc 10f
+	ldd r22, Y+7
+	eor r22, r21
+	std Y+7, r22
+10:
+	bst r20, 5
+	brtc 10f
+	ldd r22, Y+3
+	eor r22, r21
+	std Y+3, r22
+10:
+	bst r20, 4
+	brtc 10f
+	ldd r22, Y+1
+	eor r22, r21
+	std Y+1, r22
+10:
+	andi r20, 0x8f
+	ld r22, Y
+	eor r22, r20
+	st Y, r22
+
+	inc r9
+	mov r16, r9
+	cpi r16, 24
+	breq 20f
+	movw r24, YL
+	movw r26, r4
+	rjmp 5b
+20:
+
+	stack_free_large3 200
+
 	pop_range 28, 29
 	pop r16
-	pop_range 2, 8
+	pop_range 2, 9
 
 	ret

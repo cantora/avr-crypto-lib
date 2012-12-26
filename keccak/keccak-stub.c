@@ -79,7 +79,7 @@ const uint64_t rc[] PROGMEM = {
 };
 */
 
-const static uint8_t rc_comp[] PROGMEM = {
+const uint8_t keccak_rc_comp[] PROGMEM = {
 		0x01, 0x92, 0xda, 0x70,
 		0x9b, 0x21, 0xf1, 0x59,
 		0x8a, 0x88, 0x39, 0x2a,
@@ -104,96 +104,7 @@ const uint8_t keccak_rotate_codes[5][5] PROGMEM = {
         { ROT_CODE(18), ROT_CODE( 2), ROT_CODE(61), ROT_CODE(56), ROT_CODE(14) }
 };
 
-void keccak_theta(uint64_t *a, uint64_t *b);
-extern const uint8_t rho_pi_idx_table[25] PROGMEM;
-
-static inline
-void keccak_round(uint64_t a[5][5], uint8_t rci){
-	uint64_t b[5][5];
-//	uint8_t i, j;
-	union {
-			uint64_t v64;
-			uint8_t v8[8];
-		} t;
-	/* theta */
-	keccak_theta((uint64_t*)a, (uint64_t*)b);
-#if DEBUG
-	cli_putstr_P(PSTR("\r\nAfter theta:"));
-	keccak_dump_state(a);
-#endif
-	/* rho & pi */
-/*
-	const uint8_t* rot_code = (const uint8_t*)keccak_rotate_codes;
-    const uint8_t* idx_idx = (const uint8_t*)rho_pi_idx_table;
-    uint64_t *a_tmp = (uint64_t*)a;
-	for(i = 0; i < 25; ++i){
-		    *((uint64_t*)(((uint8_t*)b) + pgm_read_byte(idx_idx++))) =
-                rotate64left_code(*a_tmp++, pgm_read_byte(rot_code++));
-
-	}
-*/
-#if DEBUG & 0
-	cli_putstr_P(PSTR("\r\n--- after rho & pi ---"));
-	keccak_dump_state(a);
-#endif
-	/* chi */
-//	memcpy(a, b, 5 * 5 * 8);
-//	for(i = 1; i < 5; ++i){
-/*
-		for(j = 0; j < 5; ++j){
-			a[i][j] =  b[i][j] ^ ((~(b[i][(j + 1) % 5])) & (b[i][(j + 2) % 5]));
-		}
-* /
-//	      a[i][0] ^= ((~(b[i][1])) & (b[i][2]));
-//        a[i][1] ^= ((~(b[i][2])) & (b[i][3]));
-//        a[i][2] ^= ((~(b[i][3])) & (b[i][4]));
-        for(j = 0; j < 3 * 8; ++j){
-            ((uint8_t*)a)[i * 5 * 8 + j] ^=
-                (~((uint8_t*)b)[i * 5 * 8 + j + 8]) & ((uint8_t*)a)[i * 5 * 8 + j + 16];
-        }
-        a[i][3] ^= ((~(b[i][4])) & (b[i][0]));
-        a[i][4] ^= ((~(b[i][0])) & (b[i][1]));
-
-	}
-*/
-#if DEBUG & 0
-	cli_putstr_P(PSTR("\r\nAfter chi:"));
-	keccak_dump_state(a);
-#endif
-	/* iota */
-
-//	memcpy_P(&t, &(rc_comp[rci]), 8);
-	t.v64 = 0;
-	t.v8[0] = pgm_read_byte(&(rc_comp[rci]));
-	if(t.v8[0] & 0x40){
-		t.v8[7] = 0x80;
-	}
-	if(t.v8[0] & 0x20){
-		t.v8[3] = 0x80;
-	}
-	if(t.v8[0] & 0x10){
-		t.v8[1] = 0x80;
-	}
-	t.v8[0] &= 0x8F;
-
-	a[0][0] ^= t.v64;
-#if DEBUG & 0
-	cli_putstr_P(PSTR("\r\nAfter iota:"));
-	keccak_dump_state(a);
-#endif
-}
-
-void keccak_f1600(uint64_t a[5][5]){
-	uint8_t i = 0;
-	do {
-#if DEBUG
-		cli_putstr_P(PSTR("\r\n\r\n--- Round "));
-		cli_hexdump(&i, 1);
-		cli_putstr_P(PSTR(" ---"));
-#endif
-		keccak_round(a, i);
-	} while (++i < 24);
-}
+void keccak_f1600(uint64_t a[5][5]);
 
 void keccak_nextBlock(keccak_ctx_t* ctx, const void* block){
 	memxor(ctx->a, block, ctx->bs);
