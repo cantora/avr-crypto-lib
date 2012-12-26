@@ -87,21 +87,30 @@ const static uint8_t rc_comp[] PROGMEM = {
 		0x52, 0xc0, 0x1a, 0x6a,
 		0xf1, 0xd0, 0x21, 0x78,
 };
-
-const static uint8_t r[5][5] PROGMEM = {
+/*
+const uint8_t keccak_rotate_codes[5][5] PROGMEM = {
 		{ ROT_CODE( 0), ROT_CODE(36), ROT_CODE( 3), ROT_CODE(41), ROT_CODE(18) },
 		{ ROT_CODE( 1), ROT_CODE(44), ROT_CODE(10), ROT_CODE(45), ROT_CODE( 2) },
 		{ ROT_CODE(62), ROT_CODE( 6), ROT_CODE(43), ROT_CODE(15), ROT_CODE(61) },
 		{ ROT_CODE(28), ROT_CODE(55), ROT_CODE(25), ROT_CODE(21), ROT_CODE(56) },
 		{ ROT_CODE(27), ROT_CODE(20), ROT_CODE(39), ROT_CODE( 8), ROT_CODE(14) }
 };
+*/
+const uint8_t keccak_rotate_codes[5][5] PROGMEM = {
+        { ROT_CODE( 0), ROT_CODE( 1), ROT_CODE(62), ROT_CODE(28), ROT_CODE(27) },
+        { ROT_CODE(36), ROT_CODE(44), ROT_CODE( 6), ROT_CODE(55), ROT_CODE(20) },
+        { ROT_CODE( 3), ROT_CODE(10), ROT_CODE(43), ROT_CODE(25), ROT_CODE(39) },
+        { ROT_CODE(41), ROT_CODE(45), ROT_CODE(15), ROT_CODE(21), ROT_CODE( 8) },
+        { ROT_CODE(18), ROT_CODE( 2), ROT_CODE(61), ROT_CODE(56), ROT_CODE(14) }
+};
 
 void keccak_theta(uint64_t *a, uint64_t *b);
+extern const uint8_t rho_pi_idx_table[25] PROGMEM;
 
 static inline
 void keccak_round(uint64_t a[5][5], uint8_t rci){
 	uint64_t b[5][5];
-	uint8_t i, j;
+	uint8_t i; // j;
 	union {
 			uint64_t v64;
 			uint8_t v8[8];
@@ -113,20 +122,34 @@ void keccak_round(uint64_t a[5][5], uint8_t rci){
 	keccak_dump_state(a);
 #endif
 	/* rho & pi */
-	for(i = 0; i < 5; ++i){
-		for(j = 0; j < 5; ++j){
-			b[(2 * i + 3 * j) % 5][j] = rotate64left_code(a[j][i], pgm_read_byte(&(r[i][j])));
-		}
+/*
+	const uint8_t* rot_code = (const uint8_t*)keccak_rotate_codes;
+    const uint8_t* idx_idx = (const uint8_t*)rho_pi_idx_table;
+    uint64_t *a_tmp = (uint64_t*)a;
+	for(i = 0; i < 25; ++i){
+		    *((uint64_t*)(((uint8_t*)b) + pgm_read_byte(idx_idx++))) =
+                rotate64left_code(*a_tmp++, pgm_read_byte(rot_code++));
+
 	}
+*/
 #if DEBUG & 0
 	cli_putstr_P(PSTR("\r\n--- after rho & pi ---"));
 	keccak_dump_state(a);
 #endif
 	/* chi */
+	memcpy(a, b, 5 * 5 * 8);
 	for(i = 0; i < 5; ++i){
+/*
 		for(j = 0; j < 5; ++j){
-			a[j][i] =  b[j][i] ^ ((~(b[j][(i + 1) % 5])) & (b[j][(i + 2) % 5]));
+			a[i][j] =  b[i][j] ^ ((~(b[i][(j + 1) % 5])) & (b[i][(j + 2) % 5]));
 		}
+*/
+	    a[i][0] ^= ((~(b[i][1])) & (b[i][2]));
+        a[i][1] ^= ((~(b[i][2])) & (b[i][3]));
+        a[i][2] ^= ((~(b[i][3])) & (b[i][4]));
+        a[i][3] ^= ((~(b[i][4])) & (b[i][0]));
+        a[i][4] ^= ((~(b[i][0])) & (b[i][1]));
+
 	}
 #if DEBUG & 0
 	cli_putstr_P(PSTR("\r\nAfter chi:"));

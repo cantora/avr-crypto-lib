@@ -30,6 +30,16 @@
 .list
 
 .equ __zero_reg__, 1
+
+.global rho_pi_idx_table
+rho_pi_idx_table:
+	.irp i, 0, 1, 2, 3, 4
+		.irp j, 0, 1, 2, 3, 4
+			.byte (((2 * \j + 3 * \i) % 5) * 5 + \i) * 8
+		.endr
+	.endr
+
+.align 2
 /*
 	void keccak_theta (uint64_t *a, uint64_t *b){
 	// uint64_t b[5][5];
@@ -128,8 +138,14 @@ theta_2b:
 
 .global keccak_theta
 keccak_theta:
+	push_range 2, 8
+	push r16
+	push_range 28, 29
+
 	movw r30, r24 ; Z = a
 	movw r26, r22 ; X = b
+	push_range 22, 25
+
 	ldi r19, 5
 10:
 	ldi r20, 8
@@ -208,5 +224,79 @@ keccak_theta:
 	sbci XH, hi8(4 * 5 * 8 + 8)
 	rcall theta_2b
 
+;	ret
+/*
+  rho & pi
+	for(i = 0; i < 5; ++i){
+		for(j = 0; j < 5; ++j){
+			b[(2 * i + 3 * j) % 5][j] =
+              rotate64left_code(a[j][i], pgm_read_byte(&(keccak_rotate_codes[i][j])));
+		}
+	}
+
+   -- or --
+
+	const uint8_t* rot_code = (const uint8_t*)keccak_rotate_codes;
+    const uint8_t* idx_idx = (const uint8_t*)rho_pi_idx_table;
+    uint64_t *a_tmp = (uint64_t*)a;
+	for(i = 0; i < 25; ++i){
+		    *((uint64_t*)(((uint8_t*)b) + pgm_read_byte(idx_idx++))) =
+                rotate64left_code(*a_tmp++, pgm_read_byte(rot_code++));
+
+	}
+
+*/
+
+.equ B_REG_L, 6
+.equ B_REG_H, 7
+
+	ldi r18, lo8(keccak_rotate_codes)
+	ldi r19, hi8(keccak_rotate_codes)
+	movw r2, r18
+	ldi r18, lo8(rho_pi_idx_table)
+	ldi r19, hi8(rho_pi_idx_table)
+	movw r4, r18
+	ldi r16, 25
+	mov r8, r16
+
+	pop YH
+	pop YL
+	pop B_REG_H
+	pop B_REG_L
+
+10:
+	ld r18, Y+
+	ld r19, Y+
+	ld r20, Y+
+	ld r21, Y+
+	ld r22, Y+
+	ld r23, Y+
+	ld r24, Y+
+	ld r25, Y+
+	movw ZL, r2
+	lpm r16, Z+
+	movw r2, ZL
+	call rotate64left_code
+	movw ZL, r4
+	lpm r16, Z+
+	movw r4, ZL
+	movw XL, B_REG_L
+	add XL, r16
+	adc XH, __zero_reg__
+	st X+, r18
+	st X+, r19
+	st X+, r20
+	st X+, r21
+	st X+, r22
+	st X+, r23
+	st X+, r24
+	st X+, r25
+
+	dec r8
+	brne 10b
+
+	pop_range 28, 29
+	pop r16
+	pop_range 2, 8
 
 	ret
