@@ -135,6 +135,36 @@ theta_2b:
 	clr __zero_reg__
 	ret
 
+;	a[i][j] =  b[i][j] ^ ((~(b[i][(j + 1) % 5])) & (b[i][(j + 2) % 5]));
+
+/*********************************************
+ * chi_step
+ *********************************************
+	input:
+		Y = a; uint8t *a;
+		X = b; uint8t *b;
+		Z = c; uint8t *c;
+	output:
+		a[0..7] ^= ~b[0..7] & c[0..7]
+		X += 8
+		Y += 8
+		Z += 8
+		r16 = 0
+		trash r21, r22, r23
+*/
+chi_step:
+	ldi r16, 8
+10:
+	ld r21, Y
+	ld r22, X+
+	ld r23, Z+
+	com r22
+	and r22, r23
+	eor r21, r22
+	st Y+, r21
+	dec r16
+	brne 10b
+	ret
 
 .global keccak_theta
 keccak_theta:
@@ -144,7 +174,6 @@ keccak_theta:
 
 	movw r30, r24 ; Z = a
 	movw r26, r22 ; X = b
-	push_range 22, 25
 
 	ldi r19, 5
 10:
@@ -259,10 +288,10 @@ keccak_theta:
 	ldi r16, 25
 	mov r8, r16
 
-	pop YH
-	pop YL
-	pop B_REG_H
-	pop B_REG_L
+	sbiw r24, 5 * 8 + 1
+	movw YL, r24
+	sbiw XL, 8
+	movw B_REG_L, XL
 
 10:
 	ld r18, Y+
@@ -294,7 +323,49 @@ keccak_theta:
 
 	dec r8
 	brne 10b
+/*
+	-- chi --
+	for(i = 0; i < 5; ++i){
+        a[i][0] ^= ((~(b[i][1])) & (b[i][2]));
+        a[i][1] ^= ((~(b[i][2])) & (b[i][3]));
+        a[i][2] ^= ((~(b[i][3])) & (b[i][4]));
+        a[i][3] ^= ((~(b[i][4])) & (b[i][0]));
+        a[i][4] ^= ((~(b[i][0])) & (b[i][1]));
 
+	}
+*/
+	; memcpy(a, b, 200)
+	; X points at b + 32 + 8 = b + 40 = b[1][0] has to point to b[0][0]
+	ldi r16, 200
+	sbiw XL, 5 * 8
+	movw ZL, XL
+	subi YL, lo8(5 * 5 * 8)
+	sbci YH, hi8(5 * 5 * 8)
+	movw r2, YL
+10:
+	ld r22, X+
+	st Y+, r22
+	dec r16
+	brne 10b
+
+	; Z points at b
+	movw XL, ZL
+	adiw XL, 8
+	adiw ZL, 16
+	movw YL, r2
+	ldi r18, 5
+10:
+	rcall chi_step
+	rcall chi_step
+	rcall chi_step
+	sbiw ZL, 5 * 8
+	rcall chi_step
+	sbiw XL, 5 * 8
+	rcall chi_step
+	adiw XL, 5 * 8
+	adiw ZL, 5 * 8
+	dec r18
+	brne 10b
 	pop_range 28, 29
 	pop r16
 	pop_range 2, 8

@@ -110,7 +110,7 @@ extern const uint8_t rho_pi_idx_table[25] PROGMEM;
 static inline
 void keccak_round(uint64_t a[5][5], uint8_t rci){
 	uint64_t b[5][5];
-	uint8_t i; // j;
+//	uint8_t i, j;
 	union {
 			uint64_t v64;
 			uint8_t v8[8];
@@ -137,20 +137,25 @@ void keccak_round(uint64_t a[5][5], uint8_t rci){
 	keccak_dump_state(a);
 #endif
 	/* chi */
-	memcpy(a, b, 5 * 5 * 8);
-	for(i = 0; i < 5; ++i){
+//	memcpy(a, b, 5 * 5 * 8);
+//	for(i = 1; i < 5; ++i){
 /*
 		for(j = 0; j < 5; ++j){
 			a[i][j] =  b[i][j] ^ ((~(b[i][(j + 1) % 5])) & (b[i][(j + 2) % 5]));
 		}
-*/
-	    a[i][0] ^= ((~(b[i][1])) & (b[i][2]));
-        a[i][1] ^= ((~(b[i][2])) & (b[i][3]));
-        a[i][2] ^= ((~(b[i][3])) & (b[i][4]));
+* /
+//	      a[i][0] ^= ((~(b[i][1])) & (b[i][2]));
+//        a[i][1] ^= ((~(b[i][2])) & (b[i][3]));
+//        a[i][2] ^= ((~(b[i][3])) & (b[i][4]));
+        for(j = 0; j < 3 * 8; ++j){
+            ((uint8_t*)a)[i * 5 * 8 + j] ^=
+                (~((uint8_t*)b)[i * 5 * 8 + j + 8]) & ((uint8_t*)a)[i * 5 * 8 + j + 16];
+        }
         a[i][3] ^= ((~(b[i][4])) & (b[i][0]));
         a[i][4] ^= ((~(b[i][0])) & (b[i][1]));
 
 	}
+*/
 #if DEBUG & 0
 	cli_putstr_P(PSTR("\r\nAfter chi:"));
 	keccak_dump_state(a);
