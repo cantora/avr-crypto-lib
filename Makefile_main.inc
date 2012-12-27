@@ -213,7 +213,7 @@ $(foreach algo, $(ALGORITHMS), $(eval $(call Listing_TEMPLATE, \
 ifdef HASH_TOOL
 ifneq ($(HASH_TOOL),)
 	@echo -n "[$(HASH_TOOL)]: "
-	@$(HASH_TOOL) $<
+	@$(HASH_TOOL) $@
 endif
 endif
 
