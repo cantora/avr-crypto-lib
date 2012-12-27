@@ -409,7 +409,7 @@ keccak_f1600:
 
 ;	ret
 /*
-  rho & pi
+   -- rho & pi --
 	for(i = 0; i < 5; ++i){
 		for(j = 0; j < 5; ++j){
 			b[(2 * i + 3 * j) % 5][j] =

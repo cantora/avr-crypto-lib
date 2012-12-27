@@ -88,53 +88,50 @@ void keccak_nextBlock(keccak_ctx_t* ctx, const void* block){
 }
 
 void keccak_lastBlock(keccak_ctx_t* ctx, const void* block, uint16_t length_b){
-	while(length_b>=ctx->r){
+	while(length_b >= ctx->r){
 		keccak_nextBlock(ctx, block);
 		block = (uint8_t*)block + ctx->bs;
 		length_b -=  ctx->r;
 	}
-	uint8_t tmp[ctx->bs];
+//	uint8_t tmp[ctx->bs];
 	uint8_t pad[3];
-	memset(tmp, 0x00, ctx->bs);
-	memcpy(tmp, block, (length_b+7)/8);
+//	memset(tmp, 0x00, ctx->bs);
+	memxor(ctx->a, block, (length_b)/8);
 	/* appand 1 */
 	if(length_b & 7){
 		/* we have some single bits */
 		uint8_t t;
-		t = tmp[length_b / 8] >> (8 - (length_b & 7));
+		t = ((uint8_t*)block)[length_b / 8] >> (8 - (length_b & 7));
 		t |= 0x01 << (length_b & 7);
-		tmp[length_b / 8] = t;
+		((uint8_t*)ctx->a)[length_b / 8] ^= t;
 	}else{
-		tmp[length_b / 8] = 0x01;
+	    ((uint8_t*)ctx->a)[length_b / 8] ^= 0x01;
 	}
 	pad[0] = ctx->d;
 	pad[1] = ctx->bs;
 	pad[2] = 0x01;
 	if(length_b / 8 + 1 + 3 <= ctx->bs){
-		memcpy(tmp + length_b / 8 + 1, pad, 3);
+		memxor((uint8_t*)ctx->a + length_b / 8 + 1, pad, 3);
 	}else{
 		if(length_b / 8 + 1 + 2 <= ctx->bs){
-			memcpy(tmp+length_b/8+1, pad, 2);
-			keccak_nextBlock(ctx, tmp);
-			memset(tmp, 0x00, ctx->bs);
-			tmp[0] = 0x01;
+			memxor((uint8_t*)ctx->a + length_b / 8 + 1, pad, 2);
+			keccak_f1600(ctx->a);
+			((uint8_t*)ctx->a)[0] ^= 0x01;
 		}else{
 			if(length_b/8+1+1 <= ctx->bs){
-				memcpy(tmp + length_b / 8 + 1, pad, 1);
-				keccak_nextBlock(ctx, tmp);
-				memset(tmp, 0x00, ctx->bs);
-				tmp[0] = ctx->bs;
-				tmp[1] = 0x01;
+				memxor((uint8_t*)ctx->a + length_b / 8 + 1, pad, 1);
+				keccak_f1600(ctx->a);
+				((uint8_t*)ctx->a)[0] ^= ctx->bs;
+				((uint8_t*)ctx->a)[1] ^= 0x01;
 			}else{
-				keccak_nextBlock(ctx, tmp);
-				memset(tmp, 0x00, ctx->bs);
-				tmp[0] = ctx->d;
-				tmp[1] = ctx->bs;
-				tmp[2] = 0x01;
+				keccak_f1600(ctx->a);
+				((uint8_t*)ctx->a)[0] ^= ctx->d;
+				((uint8_t*)ctx->a)[1] ^= ctx->bs;
+				((uint8_t*)ctx->a)[2] ^= 0x01;
 			}
 		}
 	}
-	keccak_nextBlock(ctx, tmp);
+	keccak_f1600(ctx->a);
 }
 
 void keccak_ctx2hash(void* dest, uint16_t length_b, keccak_ctx_t* ctx){
