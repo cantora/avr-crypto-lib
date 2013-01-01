@@ -31,7 +31,27 @@
 
 .equ __zero_reg__, 1
 
-.global rho_pi_idx_table
+/*
+typedef struct{
+	uint64_t a[5][5];
+	uint16_t r, c;
+	uint8_t  d, bs;
+} keccak_ctx_t;
+*/
+	.struct 0
+ctx_a:
+	.struct ctx_a + 8 * 5 * 5
+ctx_r:
+	.struct ctx_r + 2
+ctx_c:
+	.struct ctx_c + 2
+ctx_d:
+	.struct ctx_d + 1
+ctx_bs:
+
+	.section .text
+
+	.global rho_pi_idx_table
 rho_pi_idx_table:
 	.irp i, 0, 1, 2, 3, 4
 		.irp j, 0, 1, 2, 3, 4
@@ -39,9 +59,36 @@ rho_pi_idx_table:
 		.endr
 	.endr
 
-.align 2
+/*
+#define ROT_BIT(a) (( (a) <= 4) ? ((a) << 1) : (0x01 | ((8 - (a)) << 1)))
+#define ROT_CODE(a) ((((a) / 8 + ((((a) % 8) > 4) ? 1 : 0)) << 4) | ROT_BIT(((a) % 8)))
 
-.global rotate64_1bit_left
+const uint8_t keccak_rotate_codes[5][5] PROGMEM = {
+        { ROT_CODE( 0), ROT_CODE( 1), ROT_CODE(62), ROT_CODE(28), ROT_CODE(27) },
+        { ROT_CODE(36), ROT_CODE(44), ROT_CODE( 6), ROT_CODE(55), ROT_CODE(20) },
+        { ROT_CODE( 3), ROT_CODE(10), ROT_CODE(43), ROT_CODE(25), ROT_CODE(39) },
+        { ROT_CODE(41), ROT_CODE(45), ROT_CODE(15), ROT_CODE(21), ROT_CODE( 8) },
+        { ROT_CODE(18), ROT_CODE( 2), ROT_CODE(61), ROT_CODE(56), ROT_CODE(14) }
+};
+*/
+
+keccak_rotate_codes:
+.byte	0x00, 0x02, 0x85, 0x38, 0x36
+.byte	0x48, 0x58, 0x15, 0x73, 0x28
+.byte	0x06, 0x14, 0x56, 0x32, 0x53
+.byte	0x52, 0x67, 0x23, 0x37, 0x10
+.byte	0x24, 0x04, 0x87, 0x70, 0x25
+
+keccak_rc_comp:
+.byte	0x01, 0x92, 0xda, 0x70
+.byte	0x9b, 0x21, 0xf1, 0x59
+.byte	0x8a, 0x88, 0x39, 0x2a
+.byte	0xbb, 0xcb, 0xd9, 0x53
+.byte	0x52, 0xc0, 0x1a, 0x6a
+.byte	0xf1, 0xd0, 0x21, 0x78
+
+	.align 2
+
 rotate64_1bit_left:
 	bst r25, 7
 	rol r18
@@ -55,7 +102,6 @@ rotate64_1bit_left:
 	bld r18, 0
 	ret
 
-.global rotate64_1bit_right
 rotate64_1bit_right:
 	bst r18, 0
 	ror r25
@@ -68,27 +114,6 @@ rotate64_1bit_right:
 	ror r18
 	bld r25, 7
 	ret
-
-.global rotate64_nbit_autodir
-rotate64_nbit_autodir:
-	lsr r16
-	brcc rotate64_nbit_left
-.global rotate64_nbit_right
-rotate64_nbit_right:
-	ldi r30, pm_lo8(rotate64_1bit_right)
-	ldi r31, pm_hi8(rotate64_1bit_right)
-	rjmp icall_r16_times
-.global rotate64_nbit_left
-rotate64_nbit_left:
-	ldi r30, pm_lo8(rotate64_1bit_left)
-	ldi r31, pm_hi8(rotate64_1bit_left)
-icall_r16_times:
-1:	dec r16
-	brmi 2f
-	icall
-	rjmp 1b
-2:
-    ret
 
 rotate64_1byte_left:
 	mov r0, r25
@@ -161,8 +186,6 @@ rotate64_7byte_left:
 	mov r23, r24
 	mov r24, r25
 	mov r25, r0
-	ret
-
 
 byte_rot_jmp_table:
 	ret
@@ -173,21 +196,6 @@ byte_rot_jmp_table:
 	rjmp rotate64_5byte_left
 	rjmp rotate64_6byte_left
 	rjmp rotate64_7byte_left
-
-.global rotate64left_code
-rotate64left_code:
-	ldi r30, pm_lo8(byte_rot_jmp_table)
-	ldi r31, pm_hi8(byte_rot_jmp_table)
-	mov r0, r16
-	andi r16, 0x70
-	swap r16
-	add r30, r16
-	adc r31, r1
-	mov r16, r0
-	andi r16, 0x0f
-	icall
-	clr r1
-	rjmp rotate64_nbit_autodir
 
 
 /*
@@ -316,7 +324,24 @@ chi_step:
 	brne 10b
 	ret
 
-.global keccak_f1600
+	.global keccak_nextBlock
+	.func keccak_nextBlock
+keccak_nextBlock:
+	movw ZL, r24
+	subi ZL, lo8(-ctx_bs)
+	sbci ZL, hi8(-ctx_bs)
+	ld r20, Z
+	movw XL, r24
+	movw ZL, r22
+10:
+	ld r22, X
+	ld r23, Z+
+	eor r22, r23
+	st X+, r22
+	dec r20
+	brne 10b
+
+	.global keccak_f1600
 keccak_f1600:
 	push_range 2, 9
 	push r16
@@ -459,7 +484,34 @@ keccak_f1600:
 	movw ZL, r2
 	lpm r16, Z+
 	movw r2, ZL
-	rcall rotate64left_code
+rotate64left_code:
+	ldi r30, pm_lo8(byte_rot_jmp_table)
+	ldi r31, pm_hi8(byte_rot_jmp_table)
+	mov r0, r16
+	andi r16, 0x70
+	swap r16
+	add r30, r16
+	adc r31, r1
+	mov r16, r0
+	andi r16, 0x0f
+	icall
+	clr r1
+rotate64_nbit_autodir:
+	lsr r16
+	brcc rotate64_nbit_left
+rotate64_nbit_right:
+	ldi r30, pm_lo8(rotate64_1bit_right)
+	ldi r31, pm_hi8(rotate64_1bit_right)
+	rjmp icall_r16_times
+rotate64_nbit_left:
+	ldi r30, pm_lo8(rotate64_1bit_left)
+	ldi r31, pm_hi8(rotate64_1bit_left)
+icall_r16_times:
+1:	dec r16
+	brmi 2f
+	icall
+	rjmp 1b
+2:
 	movw ZL, r4
 	lpm r16, Z+
 	movw r4, ZL

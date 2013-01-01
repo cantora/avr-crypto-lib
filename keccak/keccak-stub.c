@@ -20,11 +20,8 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
-#include <avr/pgmspace.h>
 #include "memxor.h"
-#include "rotate64.h"
 #include "keccak.h"
-#include "stdio.h"
 
 #ifdef DEBUG
 #  undef DEBUG
@@ -34,6 +31,7 @@
 
 #if DEBUG
 #include "cli.h"
+#include "stdio.h"
 
 void keccak_dump_state(uint64_t a[5][5]){
 	uint8_t i,j;
@@ -62,30 +60,7 @@ void keccak_dump_ctx(keccak_ctx_t* ctx){
 
 #endif
 
-
-const uint8_t keccak_rc_comp[] PROGMEM = {
-		0x01, 0x92, 0xda, 0x70,
-		0x9b, 0x21, 0xf1, 0x59,
-		0x8a, 0x88, 0x39, 0x2a,
-		0xbb, 0xcb, 0xd9, 0x53,
-		0x52, 0xc0, 0x1a, 0x6a,
-		0xf1, 0xd0, 0x21, 0x78,
-};
-
-const uint8_t keccak_rotate_codes[5][5] PROGMEM = {
-        { ROT_CODE( 0), ROT_CODE( 1), ROT_CODE(62), ROT_CODE(28), ROT_CODE(27) },
-        { ROT_CODE(36), ROT_CODE(44), ROT_CODE( 6), ROT_CODE(55), ROT_CODE(20) },
-        { ROT_CODE( 3), ROT_CODE(10), ROT_CODE(43), ROT_CODE(25), ROT_CODE(39) },
-        { ROT_CODE(41), ROT_CODE(45), ROT_CODE(15), ROT_CODE(21), ROT_CODE( 8) },
-        { ROT_CODE(18), ROT_CODE( 2), ROT_CODE(61), ROT_CODE(56), ROT_CODE(14) }
-};
-
 void keccak_f1600(uint64_t a[5][5]);
-
-void keccak_nextBlock(keccak_ctx_t* ctx, const void* block){
-	memxor(ctx->a, block, ctx->bs);
-	keccak_f1600(ctx->a);
-}
 
 void keccak_lastBlock(keccak_ctx_t* ctx, const void* block, uint16_t length_b){
 	while(length_b >= ctx->r){
@@ -94,7 +69,7 @@ void keccak_lastBlock(keccak_ctx_t* ctx, const void* block, uint16_t length_b){
 		length_b -=  ctx->r;
 	}
 	memxor(ctx->a, block, (length_b)/8);
-	/* appand 1 */
+	/* append 1 */
 	if(length_b & 7){
 		/* we have some single bits */
 		uint8_t t;
