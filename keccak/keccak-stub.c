@@ -106,16 +106,6 @@ void keccak_lastBlock(keccak_ctx_t* ctx, const void* block, uint16_t length_b){
 	keccak_f1600(ctx->a);
 }
 
-void keccak_ctx2hash(void* dest, uint16_t length_b, keccak_ctx_t* ctx){
-	while(length_b>=ctx->r){
-		memcpy(dest, ctx->a, ctx->bs);
-		dest = (uint8_t*)dest + ctx->bs;
-		length_b -= ctx->r;
-		keccak_f1600(ctx->a);
-	}
-	memcpy(dest, ctx->a, (length_b+7)/8);
-}
-
 void keccak224_ctx2hash(void* dest, keccak_ctx_t* ctx){
 	keccak_ctx2hash(dest, 224, ctx);
 }

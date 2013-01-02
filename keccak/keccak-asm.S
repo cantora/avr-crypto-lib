@@ -329,7 +329,7 @@ chi_step:
 keccak_nextBlock:
 	movw ZL, r24
 	subi ZL, lo8(-ctx_bs)
-	sbci ZL, hi8(-ctx_bs)
+	sbci ZH, hi8(-ctx_bs)
 	ld r20, Z
 	movw XL, r24
 	movw ZL, r22
@@ -340,8 +340,10 @@ keccak_nextBlock:
 	st X+, r22
 	dec r20
 	brne 10b
+	.endfunc
 
 	.global keccak_f1600
+	.func keccak_f1600
 keccak_f1600:
 	push_range 2, 9
 	push r16
@@ -619,5 +621,71 @@ icall_r16_times:
 	pop_range 28, 29
 	pop r16
 	pop_range 2, 9
-
 	ret
+	.endfunc
+
+/*
+void keccak_ctx2hash(void* dest, uint16_t length_b, keccak_ctx_t* ctx){
+	while(length_b>=ctx->r){
+		memcpy(dest, ctx->a, ctx->bs);
+		dest = (uint8_t*)dest + ctx->bs;
+		length_b -= ctx->r;
+		keccak_f1600(ctx->a);
+	}
+	memcpy(dest, ctx->a, (length_b+7)/8);
+}
+*/
+	.global keccak_ctx2hash
+	.func keccak_ctx2hash
+keccak_ctx2hash:
+	push_range 2, 10
+	movw r4, r20
+	movw r6, r24
+	movw ZL, r24
+	movw r8, r22
+	subi ZL, lo8(-ctx_r)
+	subi ZH, hi8(-ctx_r)
+	ld r2, Z+
+	ld r3, Z+
+	ldd r10, Z+3 ; load blocksize (in bytes)
+10:
+	cp  r8, r2
+	cpc r9, r3
+	brcc 40f
+	movw XL, r4
+	movw ZL, r6
+	mov r24, r10
+20:
+	ld r22, X+
+	st Z+, r22
+	dec r24
+	brne 20b
+	movw r6, ZL
+	sub r8, r2
+	sbc r9, r3
+	movw r24, r4
+	rcall keccak_f1600
+	rjmp 10b
+40:
+	movw XL, r4
+	movw ZL, r6
+	movw r24, r8
+	adiw r24, 7
+	lsr r25
+	ror r24
+	lsr r25
+	ror r24
+	lsr r25
+	ror r24
+	adiw r24, 0
+	breq 99f
+10:
+	ld r22, X+
+	st Z+, r22
+	sbiw r24, 1
+	brne 10b
+99:
+	pop_range 2, 10
+	ret
+	.endfunc
+
