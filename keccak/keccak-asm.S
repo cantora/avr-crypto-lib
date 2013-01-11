@@ -43,10 +43,6 @@ ctx_a:
 	.struct ctx_a + 8 * 5 * 5
 ctx_r:
 	.struct ctx_r + 2
-ctx_c:
-	.struct ctx_c + 2
-ctx_d:
-	.struct ctx_d + 1
 ctx_bs:
 
 	.section .text
@@ -544,15 +540,17 @@ icall_r16_times:
 */
 	; memcpy(a, b, 200)
 	; X points at b + 32 + 8 = b + 40 = b[1][0] has to point to b[0][0]
-	ldi r16, 200
+	ldi r16, 200 / 8
 	sbiw XL, 5 * 8
 	movw ZL, XL
 	subi YL, lo8(5 * 5 * 8)
 	sbci YH, hi8(5 * 5 * 8)
 	movw r2, YL
 10:
+	.rept 8
 	ld r22, X+
 	st Y+, r22
+	.endr
 	dec r16
 	brne 10b
 
@@ -635,23 +633,25 @@ void keccak_ctx2hash(void* dest, uint16_t length_b, keccak_ctx_t* ctx){
 	memcpy(dest, ctx->a, (length_b+7)/8);
 }
 */
-	.global keccak_ctx2hash
-	.func keccak_ctx2hash
-keccak_ctx2hash:
+;	.global keccak_ctx2hash
+;	.func keccak_ctx2hash
+;keccak_ctx2hash:
 	push_range 2, 10
 	movw r4, r20
 	movw r6, r24
 	movw ZL, r24
 	movw r8, r22
 	subi ZL, lo8(-ctx_r)
-	subi ZH, hi8(-ctx_r)
+	sbci ZH, hi8(-ctx_r)
 	ld r2, Z+
 	ld r3, Z+
 	ldd r10, Z+3 ; load blocksize (in bytes)
 10:
-	cp  r8, r2
-	cpc r9, r3
-	brcc 40f
+	; length_b = (r9:r8) ; r = (r3:r2) ; (H:L)
+	cp  r2, r8
+	cpc r3, r9
+	rjmp 40f
+	brsh 40f
 	movw XL, r4
 	movw ZL, r6
 	mov r24, r10
@@ -687,5 +687,5 @@ keccak_ctx2hash:
 99:
 	pop_range 2, 10
 	ret
-	.endfunc
+;	.endfunc
 

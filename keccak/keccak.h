@@ -32,9 +32,9 @@
 #define KECCAK512_BLOCKSIZE_B (KECCAK512_BLOCKSIZE / 8)
 
 typedef struct{
-	uint64_t a[5][5];
-	uint16_t r, c;
-	uint8_t  d, bs;
+	uint8_t a[200];
+	uint16_t r;
+	uint8_t  bs;
 } keccak_ctx_t;
 
 

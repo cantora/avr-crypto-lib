@@ -60,50 +60,91 @@ void keccak_dump_ctx(keccak_ctx_t* ctx){
 
 #endif
 
-void keccak_f1600(uint64_t a[5][5]);
+void keccak_f1600(uint8_t a[200]);
 
 void keccak_lastBlock(keccak_ctx_t* ctx, const void* block, uint16_t length_b){
-	while(length_b >= ctx->r){
+    uint8_t length_B;
+    while(length_b >= ctx->r){
+        keccak_nextBlock(ctx, block);
+        block = (uint8_t*)block + ctx->bs;
+        length_b -=  ctx->r;
+    }
+    length_B = length_b / 8;
+    memxor(ctx->a, block, length_B);
+    /* append 1 */
+    if(length_b & 7){
+        /* we have some single bits */
+        uint8_t t;
+        t = ((uint8_t*)block)[length_B] >> (8 - (length_b & 7));
+        t |= 0x01 << (length_b & 7);
+        ctx->a[length_B] ^= t;
+    }else{
+        ctx->a[length_B] ^= 0x01;
+    }
+    if(length_b == ctx->r - 1){
+        keccak_f1600(ctx->a);
+    }
+    ctx->a[ctx->bs - 1] ^= 0x80;
+    keccak_f1600(ctx->a);
+}
+
+#if 0
+void keccak_lastBlock(keccak_ctx_t* ctx, const void* block, uint16_t length_b){
+    uint8_t length_B;
+    while(length_b >= ctx->r){
 		keccak_nextBlock(ctx, block);
 		block = (uint8_t*)block + ctx->bs;
 		length_b -=  ctx->r;
 	}
-	memxor(ctx->a, block, (length_b)/8);
+    length_B = length_b / 8;
+	memxor(ctx->a, block, length_B);
 	/* append 1 */
 	if(length_b & 7){
 		/* we have some single bits */
 		uint8_t t;
-		t = ((uint8_t*)block)[length_b / 8] >> (8 - (length_b & 7));
+		t = ((uint8_t*)block)[length_B] >> (8 - (length_b & 7));
 		t |= 0x01 << (length_b & 7);
-		((uint8_t*)ctx->a)[length_b / 8] ^= t;
+		ctx->a[length_B] ^= t;
 	}else{
-	    ((uint8_t*)ctx->a)[length_b / 8] ^= 0x01;
+	    ctx->a[length_B] ^= 0x01;
 	}
-	if(length_b / 8 + 1 + 3 <= ctx->bs){
-        *((uint8_t*)ctx->a + length_b / 8 + 1) ^= ctx->d;
-        *((uint8_t*)ctx->a + length_b / 8 + 2) ^= ctx->bs;
-        *((uint8_t*)ctx->a + length_b / 8 + 3) ^= 1;
+	if(length_B + 1 + 3 <= ctx->bs){
+        ctx->a[length_B + 1] ^= ctx->d;
+        ctx->a[length_B + 2] ^= ctx->bs;
+        ctx->a[length_B + 3] ^= 1;
 	}else{
-		if(length_b / 8 + 1 + 2 <= ctx->bs){
-            *((uint8_t*)ctx->a + length_b / 8 + 1) ^= ctx->d;
-            *((uint8_t*)ctx->a + length_b / 8 + 2) ^= ctx->bs;
+		if(length_B + 1 + 2 <= ctx->bs){
+            ctx->a[length_B + 1] ^= ctx->d;
+            ctx->a[length_B + 2] ^= ctx->bs;
 			keccak_f1600(ctx->a);
 			((uint8_t*)ctx->a)[0] ^= 0x01;
 		}else{
-			if(length_b/8+1+1 <= ctx->bs){
-				*((uint8_t*)ctx->a + length_b / 8 + 1) ^= ctx->d;
+			if(length_B + 1 + 1 <= ctx->bs){
+				ctx->a[length_B + 1] ^= ctx->d;
 				keccak_f1600(ctx->a);
-				((uint8_t*)ctx->a)[0] ^= ctx->bs;
-				((uint8_t*)ctx->a)[1] ^= 0x01;
+				ctx->a[0] ^= ctx->bs;
+				ctx->a[1] ^= 0x01;
 			}else{
 				keccak_f1600(ctx->a);
-				((uint8_t*)ctx->a)[0] ^= ctx->d;
-				((uint8_t*)ctx->a)[1] ^= ctx->bs;
-				((uint8_t*)ctx->a)[2] ^= 0x01;
+				ctx->a[0] ^= ctx->d;
+				ctx->a[1] ^= ctx->bs;
+				ctx->a[2] ^= 0x01;
 			}
 		}
 	}
 	keccak_f1600(ctx->a);
+}
+#endif
+
+
+void keccak_ctx2hash(void* dest, uint16_t length_b, keccak_ctx_t* ctx){
+    while(length_b>=ctx->r){
+        memcpy(dest, ctx->a, ctx->bs);
+        dest = (uint8_t*)dest + ctx->bs;
+        length_b -= ctx->r;
+        keccak_f1600(ctx->a);
+    }
+    memcpy(dest, ctx->a, (length_b+7)/8);
 }
 
 void keccak224_ctx2hash(void* dest, keccak_ctx_t* ctx){
@@ -128,26 +169,24 @@ void keccak512_ctx2hash(void* dest, keccak_ctx_t* ctx){
   3. SHA3-384: ⌊Keccak[r =  832, c =  768, d = 48]⌋384
   4. SHA3-512: ⌊Keccak[r =  576, c = 1024, d = 64]⌋512
 */
-void keccak_init(uint16_t r, uint16_t c, uint8_t d, keccak_ctx_t* ctx){
+void keccak_init(uint16_t r, keccak_ctx_t* ctx){
 	memset(ctx->a, 0x00, 5 * 5 * 8);
 	ctx->r = r;
-	ctx->c = c;
-	ctx->d = d;
 	ctx->bs = (uint8_t)(r / 8);
 }
 
 void keccak224_init(keccak_ctx_t* ctx){
-	keccak_init(1152, 448, 28, ctx);
+	keccak_init(1152, ctx);
 }
 
 void keccak256_init(keccak_ctx_t* ctx){
-	keccak_init(1088, 512, 32, ctx);
+	keccak_init(1088, ctx);
 }
 
 void keccak384_init(keccak_ctx_t* ctx){
-	keccak_init( 832, 768, 48, ctx);
+	keccak_init( 832, ctx);
 }
 
 void keccak512_init(keccak_ctx_t* ctx){
-	keccak_init( 576, 1024, 64, ctx);
+	keccak_init( 576, ctx);
 }
