@@ -725,3 +725,67 @@ keccak_ctx2hash:
 	ret
 	.endfunc
 
+
+	.global keccak224_init
+	.func keccak224_init
+keccak224_init:
+	movw XL, r24
+	ldi r24, lo8(1152)
+	ldi r25, hi8(1152)
+	rjmp keccak_init_1
+	.endfunc
+
+	.global keccak384_init
+	.func keccak384_init
+keccak384_init:
+	movw XL, r24
+	ldi r24, lo8( 832)
+	ldi r25, hi8( 832)
+	rjmp keccak_init_1
+	.endfunc
+
+	.global keccak512_init
+	.func keccak512_init
+keccak512_init:
+	movw XL, r24
+	ldi r24, lo8( 576)
+	ldi r25, hi8( 576)
+	rjmp keccak_init_1
+	.endfunc
+
+	.global keccak256_init
+	.func keccak256_init
+keccak256_init:
+	movw r22, r24
+	ldi r24, lo8(1088)
+	ldi r25, hi8(1088)
+	.endfunc
+/*
+void keccak_init(uint16_t r, keccak_ctx_t* ctx){
+	memset(ctx->a, 0x00, 5 * 5 * 8);
+	ctx->r = r;
+	ctx->bs = (uint8_t)(r / 8);
+}
+*/
+	.global keccak_init
+	.func keccak_init
+keccak_init:
+	movw XL, r22
+keccak_init_1:
+	ldi r22, 200
+10:
+	st X+, __zero_reg__
+	dec r22
+	brne 10b
+	st X+, r24
+	st X+, r25
+	lsr r25
+	ror r24
+	lsr r25
+	ror r24
+	lsr r25
+	ror r24
+	st X+, r24
+	ret
+	.endfunc
+

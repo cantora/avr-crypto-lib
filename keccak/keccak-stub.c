@@ -170,6 +170,7 @@ void keccak512_ctx2hash(void* dest, keccak_ctx_t* ctx){
   3. SHA3-384: ⌊Keccak[r =  832, c =  768, d = 48]⌋384
   4. SHA3-512: ⌊Keccak[r =  576, c = 1024, d = 64]⌋512
 */
+/*
 void keccak_init(uint16_t r, keccak_ctx_t* ctx){
 	memset(ctx->a, 0x00, 5 * 5 * 8);
 	ctx->r = r;
@@ -191,3 +192,5 @@ void keccak384_init(keccak_ctx_t* ctx){
 void keccak512_init(keccak_ctx_t* ctx){
 	keccak_init( 576, ctx);
 }
+
+*/
