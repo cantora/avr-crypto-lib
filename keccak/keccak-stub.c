@@ -136,7 +136,7 @@ void keccak_lastBlock(keccak_ctx_t* ctx, const void* block, uint16_t length_b){
 }
 #endif
 
-
+/*
 void keccak_ctx2hash(void* dest, uint16_t length_b, keccak_ctx_t* ctx){
     while(length_b>=ctx->r){
         memcpy(dest, ctx->a, ctx->bs);
@@ -146,7 +146,8 @@ void keccak_ctx2hash(void* dest, uint16_t length_b, keccak_ctx_t* ctx){
     }
     memcpy(dest, ctx->a, (length_b+7)/8);
 }
-
+*/
+/*
 void keccak224_ctx2hash(void* dest, keccak_ctx_t* ctx){
 	keccak_ctx2hash(dest, 224, ctx);
 }
@@ -162,7 +163,7 @@ void keccak384_ctx2hash(void* dest, keccak_ctx_t* ctx){
 void keccak512_ctx2hash(void* dest, keccak_ctx_t* ctx){
 	keccak_ctx2hash(dest, 512, ctx);
 }
-
+*/
 /*
   1. SHA3-224: ⌊Keccak[r = 1152, c =  448, d = 28]⌋224
   2. SHA3-256: ⌊Keccak[r = 1088, c =  512, d = 32]⌋256

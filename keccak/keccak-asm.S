@@ -622,6 +622,42 @@ icall_r16_times:
 	ret
 	.endfunc
 
+
+	.global keccak224_ctx2hash
+	.func keccak224_ctx2hash
+keccak224_ctx2hash:
+	movw r20, r22
+	ldi r22, lo8(224)
+	ldi r23, hi8(224)
+	rjmp keccak_ctx2hash
+	.endfunc
+
+	.global keccak384_ctx2hash
+	.func keccak384_ctx2hash
+keccak384_ctx2hash:
+	movw r20, r22
+	ldi r22, lo8(384)
+	ldi r23, hi8(384)
+	rjmp keccak_ctx2hash
+	.endfunc
+
+	.global keccak512_ctx2hash
+	.func keccak512_ctx2hash
+keccak512_ctx2hash:
+	movw r20, r22
+	ldi r22, lo8(512)
+	ldi r23, hi8(512)
+	rjmp keccak_ctx2hash
+	.endfunc
+
+	.global keccak256_ctx2hash
+	.func keccak256_ctx2hash
+keccak256_ctx2hash:
+	movw r20, r22
+	ldi r22, lo8(256)
+	ldi r23, hi8(256)
+	.endfunc
+
 /*
 void keccak_ctx2hash(void* dest, uint16_t length_b, keccak_ctx_t* ctx){
 	while(length_b>=ctx->r){
@@ -633,13 +669,13 @@ void keccak_ctx2hash(void* dest, uint16_t length_b, keccak_ctx_t* ctx){
 	memcpy(dest, ctx->a, (length_b+7)/8);
 }
 */
-;	.global keccak_ctx2hash
-;	.func keccak_ctx2hash
-;keccak_ctx2hash:
+	.global keccak_ctx2hash
+	.func keccak_ctx2hash
+keccak_ctx2hash:
 	push_range 2, 10
 	movw r4, r20
 	movw r6, r24
-	movw ZL, r24
+	movw ZL, r20
 	movw r8, r22
 	subi ZL, lo8(-ctx_r)
 	sbci ZH, hi8(-ctx_r)
@@ -650,7 +686,7 @@ void keccak_ctx2hash(void* dest, uint16_t length_b, keccak_ctx_t* ctx){
 	; length_b = (r9:r8) ; r = (r3:r2) ; (H:L)
 	cp  r2, r8
 	cpc r3, r9
-	rjmp 40f
+;	rjmp 40f
 	brsh 40f
 	movw XL, r4
 	movw ZL, r6
@@ -687,5 +723,5 @@ void keccak_ctx2hash(void* dest, uint16_t length_b, keccak_ctx_t* ctx){
 99:
 	pop_range 2, 10
 	ret
-;	.endfunc
+	.endfunc
 
