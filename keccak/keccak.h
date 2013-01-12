@@ -38,7 +38,7 @@ typedef struct{
 } keccak_ctx_t;
 
 
-void keccak_init(uint16_t r, uint16_t c, uint8_t d, keccak_ctx_t* ctx);
+void keccak_init(uint16_t r, keccak_ctx_t* ctx);
 void keccak224_init(keccak_ctx_t* ctx);
 void keccak256_init(keccak_ctx_t* ctx);
 void keccak384_init(keccak_ctx_t* ctx);
