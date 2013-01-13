@@ -179,6 +179,7 @@ void keccak_nextBlock(keccak_ctx_t* ctx, const void* block){
 
 void keccak_lastBlock(keccak_ctx_t* ctx, const void* block, uint16_t length_b){
     uint8_t length_B;
+    uint8_t t;
     while(length_b >= ctx->r){
         keccak_nextBlock(ctx, block);
         block = (uint8_t*)block + ctx->bs;
@@ -189,13 +190,12 @@ void keccak_lastBlock(keccak_ctx_t* ctx, const void* block, uint16_t length_b){
     /* append 1 */
     if(length_b & 7){
         /* we have some single bits */
-        uint8_t t;
         t = ((uint8_t*)block)[length_B] >> (8 - (length_b & 7));
-        t |= 0x01 << (length_b & 7);
-        ctx->a[length_B] ^= t;
+        t |= 0x01 << (length_b & 7);;
     }else{
-        ctx->a[length_B] ^= 0x01;
+        t = 0x01;
     }
+    ctx->a[length_B] ^= t
     if(length_b == ctx->r - 1){
         keccak_f1600(ctx->a);
     }

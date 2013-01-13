@@ -23,32 +23,13 @@
 #include "memxor.h"
 #include "keccak.h"
 
-void keccak_f1600(uint8_t a[200]);
-
+/*
+//void keccak_f1600(uint8_t a[200]);
+void keccak_lastBlock_f1(keccak_ctx_t* ctx, const void* block, uint16_t length_b);
 void keccak_lastBlock(keccak_ctx_t* ctx, const void* block, uint16_t length_b){
-    uint8_t length_B;
-    while(length_b >= ctx->r){
-        keccak_nextBlock(ctx, block);
-        block = (uint8_t*)block + ctx->bs;
-        length_b -=  ctx->r;
-    }
-    length_B = length_b / 8;
-    memxor(ctx->a, block, length_B);
-    /* append 1 */
-    if(length_b & 7){
-        /* we have some single bits */
-        uint8_t t;
-        t = ((uint8_t*)block)[length_B] >> (8 - (length_b & 7));
-        t |= 0x01 << (length_b & 7);
-        ctx->a[length_B] ^= t;
-    }else{
-        ctx->a[length_B] ^= 0x01;
-    }
-    if(length_b == ctx->r - 1){
-        keccak_f1600(ctx->a);
-    }
-    ctx->a[ctx->bs - 1] ^= 0x80;
-    keccak_f1600(ctx->a);
+    keccak_lastBlock_f1(ctx, block, length_b);
+ //   ctx->a[ctx->bs - 1] ^= 0x80;
+ //   keccak_f1600(ctx->a);
 }
 
-
+*/

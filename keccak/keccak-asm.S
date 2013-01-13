@@ -789,3 +789,125 @@ keccak_init_1:
 	ret
 	.endfunc
 
+/*
+void keccak_lastBlock(keccak_ctx_t* ctx, const void* block, uint16_t length_b){
+    uint8_t length_B;
+    uint8_t t;
+    while(length_b >= ctx->r){
+        keccak_nextBlock(ctx, block);
+        block = (uint8_t*)block + ctx->bs;
+        length_b -=  ctx->r;
+    }
+    length_B = length_b / 8;
+    memxor(ctx->a, block, length_B);
+    / * append 1 * /
+    if(length_b & 7){
+        / * we have some single bits * /
+        t = ((uint8_t*)block)[length_B] >> (8 - (length_b & 7));
+        t |= 0x01 << (length_b & 7);
+    }else{
+        t = 0x01;
+    }
+    ctx->a[length_B] ^= t;
+    if(length_b == ctx->r - 1){
+        keccak_f1600(ctx->a);
+    }
+
+*/
+.set length_b_l,  2
+.set length_b_h,  3
+.set pbs,     10
+.set pr_l,     8
+.set pr_h,      9
+.set ctx_l,       6
+.set ctx_h,       7
+
+	.global keccak_lastBlock
+	.func keccak_lastBlock
+keccak_lastBlock:
+	push_range 2, 10
+	movw r2, r20
+	movw r4, r22
+	movw r6, r24
+	movw XL, r24
+	subi XL, lo8(-ctx_r)
+	sbci XH, hi8(-ctx_r)
+	ld  pr_l, X+
+	ld  pr_h, X+
+	ld  pbs, X
+10:
+	cp  length_b_l, pr_l
+	cpc length_b_h, pr_h
+	brlo 20f
+	movw r24, ctx_l
+	movw r22, r4
+	rcall keccak_nextBlock
+	sub r4, pbs
+	sbc r5, __zero_reg__
+	sub length_b_l, pr_l
+	sbc length_b_l, pr_h
+	rjmp 10b
+20:
+	movw XL, r4
+	movw ZL, ctx_l
+	movw r22, length_b_l
+	lsr r23
+	ror r22
+	lsr r23
+	ror r22
+	lsr r23
+	ror r22
+	mov r23, r22
+	breq 20f
+10:
+	ld r25, X+
+	ld r24, Z
+	eor r24, r25
+	st Z+, r24
+	dec r23
+	brne 10b
+20:
+	mov r18, length_b_l
+	andi r18, 7
+	mov r19, r18
+	ldi r25, 1
+	breq 30f
+	/* we have trailing bits */
+	ld r24, X+
+	subi r18, 8
+	neg r18
+10:
+	lsr r24
+	dec r18
+	brne 10b
+10:
+	lsl r25
+	dec r19
+	brne 10b
+	or r25, r24
+30:
+	ld r24, Z
+	eor r24, r25
+	st Z, r24
+
+	movw r24, pr_l
+	sbiw r24, 1
+	cp  length_b_l, r24
+	cpc length_b_h, r25
+	brne 20f
+	movw r24, ctx_l
+	rcall keccak_f1600
+20:
+	movw XL, ctx_l
+	dec pbs
+	add XL, pbs
+	adc XH, __zero_reg__
+	ld r24, X
+	ldi r25, 0x80
+	eor r24, r25
+	st X, r24
+	movw r24, ctx_l
+	pop_range 2, 10
+	rjmp keccak_f1600
+	.endfunc
+
