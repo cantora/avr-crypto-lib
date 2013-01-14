@@ -195,7 +195,7 @@ void keccak_lastBlock(keccak_ctx_t* ctx, const void* block, uint16_t length_b){
     }else{
         t = 0x01;
     }
-    ctx->a[length_B] ^= t
+    ctx->a[length_B] ^= t;
     if(length_b == ctx->r - 1){
         keccak_f1600(ctx->a);
     }

@@ -842,14 +842,14 @@ keccak_lastBlock:
 	movw r24, ctx_l
 	movw r22, r4
 	rcall keccak_nextBlock
-	sub r4, pbs
-	sbc r5, __zero_reg__
+	add r4, pbs
+	adc r5, __zero_reg__
 	sub length_b_l, pr_l
-	sbc length_b_l, pr_h
+	sbc length_b_h, pr_h
 	rjmp 10b
 20:
-	movw XL, r4
 	movw ZL, ctx_l
+	movw XL, r4
 	movw r22, length_b_l
 	lsr r23
 	ror r22
@@ -867,12 +867,12 @@ keccak_lastBlock:
 	dec r23
 	brne 10b
 20:
+	ldi r25, 1
 	mov r18, length_b_l
 	andi r18, 7
-	mov r19, r18
-	ldi r25, 1
 	breq 30f
 	/* we have trailing bits */
+	mov r19, r18
 	ld r24, X+
 	subi r18, 8
 	neg r18
