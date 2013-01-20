@@ -284,8 +284,8 @@ sha1_lastBlock:
 	pop r25
 	subi r21, 2
 	ldi r19, 64
-	sub r22, r19
-	sbc r23, r1
+	add r22, r19
+	adc r23, r1
 	rjmp sha1_lastBlock
 sha1_lastBlock_prolog:
 	/* allocate space on stack */
