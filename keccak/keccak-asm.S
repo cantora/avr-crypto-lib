@@ -429,8 +429,6 @@ keccak_f1600:
 	subi XL, lo8(4 * 5 * 8 + 8)
 	sbci XH, hi8(4 * 5 * 8 + 8)
 	rcall theta_2b
-
-;	ret
 /*
    -- rho & pi --
 	for(i = 0; i < 5; ++i){
@@ -686,7 +684,6 @@ keccak_ctx2hash:
 	; length_b = (r9:r8) ; r = (r3:r2) ; (H:L)
 	cp  r2, r8
 	cpc r3, r9
-;	rjmp 40f
 	brsh 40f
 	movw XL, r4
 	movw ZL, r6
