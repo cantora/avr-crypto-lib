@@ -1,0 +1,5 @@
+# MonteCarlo.txt
+# Algorithm Name: Keccak
+# Principal Submitter: The Keccak Team (Guido Bertoni, Joan Daemen, Michaël Peeters and Gilles Van Assche)
+
+Seed = 6cd4c0c5cb2ca2a0f1d1aecebac03b52e64ea03d1a1654372936545b92bbc5484a59db74bb60f9c40ceb1a5aa35a6fafe80349e14c253a4e8b1d77612ddd81ace926ae8b0af6e53176dbffcc2a6b88c6bd765f939d3d178a9bde9ef3aa131c61e31c1e42cdfaf4b4dcde579a37e150efbef5555b4c1cb40439d835a724e2fae7
