@@ -53,7 +53,7 @@ void test_256(void){
 	keccak_ctx_t ctx;
 	keccak256_init(&ctx);
 	keccak_nextBlock(&ctx, null);
-	//	keccak_lastBlock(&ctx, data, 29);
+	keccak_lastBlock(&ctx, null, 29);
 	keccak256_ctx2hash(hash, &ctx);
 	cli_putstr_P(PSTR("\r\n testhash: "));
 	cli_hexdump(hash, 32);
@@ -92,7 +92,7 @@ const cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ NULL,                      NULL, NULL                      }
 };
 
-int main (void){
+int main(void){
     main_setup();
 
     shavs_algolist=(hfdesc_t**)algolist;

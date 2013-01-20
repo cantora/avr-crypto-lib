@@ -200,7 +200,7 @@ void shavs_test1(void){ /* KAT tests */
 	shavs_ctx.buffersize_B=pgm_read_word(&(shavs_algo->blocksize_b))/8;
 	uint8_t buffer[shavs_ctx.buffersize_B+5];
 	shavs_ctx.buffer = buffer;
-	fprintf_P(shavs_out_file, PSTR("\nbuffer_size = 0x%04"PRIx16" bytes"));
+	fprintf_P(shavs_out_file, PSTR("\nbuffer_size = 0x%04"PRIx16" bytes"), shavs_ctx.buffersize_B);
 	for(;;){
 		shavs_ctx.blocks = 0;
 		memset(buffer, 0, shavs_ctx.buffersize_B);
