@@ -35,7 +35,7 @@ typedef struct {
     bigint_t y;
 } ecc_affine_point_t;
 
-typedef struct __attribute__((packed)){
+typedef union __attribute__((packed)){
     ecc_affine_point_t affine;
     ecc_chudnovsky_point_t chudnovsky;
 } ecc_combi_point_t;

@@ -40,24 +40,29 @@
 
 uint8_t ecc_chudnovsky_point_alloc(ecc_chudnovsky_point_t* p, size_t length_B){
     if(!(p->x.wordv = malloc(length_B))){
+        printf_P(PSTR("DBG: XXX <%S %s %d>\n"), PSTR(__FILE__), __func__, __LINE__);
         return 1;
     }
     if(!(p->y.wordv = malloc(length_B))){
+        printf_P(PSTR("DBG: XXX <%S %s %d>\n"), PSTR(__FILE__), __func__, __LINE__);
         free(p->x.wordv);
         return 1;
     }
     if(!(p->z1.wordv = malloc(length_B))){
+        printf_P(PSTR("DBG: XXX <%S %s %d>\n"), PSTR(__FILE__), __func__, __LINE__);
         free(p->x.wordv);
         free(p->y.wordv);
         return 1;
     }
     if(!(p->z2.wordv = malloc(length_B))){
+        printf_P(PSTR("DBG: XXX <%S %s %d>\n"), PSTR(__FILE__), __func__, __LINE__);
         free(p->x.wordv);
         free(p->y.wordv);
         free(p->z1.wordv);
         return 1;
     }
     if(!(p->z3.wordv = malloc(length_B))){
+        printf_P(PSTR("DBG: XXX <%S %s %d>\n"), PSTR(__FILE__), __func__, __LINE__);
         free(p->x.wordv);
         free(p->y.wordv);
         free(p->z1.wordv);
@@ -486,8 +491,8 @@ uint8_t ecc_chudnovsky_naf_multiplication(ecc_chudnovsky_point_t *dest,
     }
     bigint_to_naf(t, &i, k);
 
-    printf(" naf: ");
-    print_naf(t, i);
+ //   printf(" naf: ");
+ //   print_naf(t, i);
 
     --i;
     dest->y.length_W = 0;

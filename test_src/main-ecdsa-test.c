@@ -21,6 +21,8 @@
  *
 */
 
+#include <ctype.h>
+
 #include "main-test-common.h"
 
 #include "noekeon.h"
@@ -36,6 +38,7 @@
 #include "hfal_sha256.h"
 #include "hfal_sha384.h"
 #include "hfal_sha512.h"
+#include "hfal-basic.h"
 
 #include "performance_test.h"
 #include "hfal_sha1.h"
@@ -50,6 +53,91 @@ char* algo_name = "ECDSA";
 
 uint8_t prng_get_byte(void){
     return random8();
+}
+
+const hfdesc_t *hash_select(void){
+    const hfdesc_t *hashes[] = { &sha1_desc, &sha224_desc, &sha256_desc, &sha384_desc, &sha512_desc };
+    uint8_t index;
+    int selection;
+    printf_P(PSTR("Please select one of the following hash functions:\n"));
+    for(index = 0; index < sizeof(hashes) / sizeof(hashes[0]); ++index){
+        printf_P(PSTR("  %c: %S\n"), index + 'a', pgm_read_word(&(hashes[index]->name)));
+    }
+    do{
+        printf_P(PSTR("[a]: "));
+        selection = getchar();
+        putchar(selection);
+        if(selection == '\n' || selection == '\r'){
+            selection = 0;
+        }else{
+            putchar('\n');
+            selection -= 'a';
+        }
+    }while(selection > sizeof(hashes) / sizeof(hashes[0]));
+    return hashes[selection];
+}
+
+uint8_t convert_hexchar_to_value(char a){
+    if(a >= 0 && a <= 9){
+        return a - '0';
+    }
+    if(a >= 'a' && a <= 'f'){
+        return a - 'a';
+    }
+    if(a >= 'A' && a <= 'F'){
+        return a - 'A';
+    }
+    return 0;
+}
+
+
+uint8_t convert_hex_to_byte(char a, char b){
+    return (convert_hexchar_to_value(a) << 4) | convert_hexchar_to_value(b);
+}
+
+void *hash_message(hfdesc_t* hash_function){
+    uint8_t *block, *hash_value;
+    uint16_t index = 0;
+    hfgen_ctx_t ctx;
+    if(hash_function == NULL){
+        return NULL;
+    }
+    block = malloc(hfal_hash_getBlocksize(hash_function) / 8);
+    if(block == NULL){
+        return NULL;
+    }
+    hash_value = malloc(hfal_hash_getHashsize(hash_function) / 8);
+    if(hash_value == NULL){
+        free(block);
+        return NULL;
+    }
+    hfal_hash_init(hash_function, &ctx);
+    for(;;){
+        int a,b;
+        a = getchar();
+        if(!isxdigit(a)){
+            hfal_hash_lastBlock(&ctx, block, index * 8);
+            break;
+        }
+        putchar(a);
+        b = getchar();
+        if(!isxdigit(b)){
+            printf_P(PSTR("*** invalid ***\n"));
+            hfal_hash_free(&ctx);
+            free(hash_value);
+            free(block);
+            return NULL;
+        }
+        putchar(b);
+        block[index++] = convert_hex_to_byte(a, b);
+        if(index == hfal_hash_getBlocksize(hash_function) / 8){
+            hfal_hash_nextBlock(&ctx, block);
+        }
+    }
+    hfal_hash_ctx2hash(hash_value, &ctx);
+    hfal_hash_free(&ctx);
+    free(block);
+    return hash_value;
 }
 
 void testrun_performance_invert_bigint(void){
@@ -450,6 +538,7 @@ void testrun_genkey(void){
     ecc_affine_point_t qa;
     uint32_t time;
     bigint_t k;
+    uint8_t r;
 
     printf_P(PSTR("\n== testing key generation ==\n"));
 
@@ -471,7 +560,7 @@ void testrun_genkey(void){
     bigint_print_hex(&k);
     startTimer(1);
     START_TIMER;
-    ecc_chudnovsky_naf_multiplication(&q, &k, &nist_curve_p192_basepoint.chudnovsky, &nist_curve_p192);
+    r = ecc_chudnovsky_naf_multiplication(&q, &k, &nist_curve_p192_basepoint.chudnovsky, &nist_curve_p192);
     STOP_TIMER;
     time = stopTimer();
     ecc_chudnovsky_to_affine_point(&qa, &q, &nist_curve_p192);
@@ -480,13 +569,13 @@ void testrun_genkey(void){
     bigint_print_hex(&qa.x);
     printf_P(PSTR("\n  Qy: "));
     bigint_print_hex(&qa.y);
-    printf_P(PSTR("\n time: %"PRIu32" cycles\n"), time);
+    printf_P(PSTR("\n time: %"PRIu32" cycles (r code: %"PRIu8")\n"), time, r);
 
     printf_P(PSTR("(d&a)  k:  "));
     bigint_print_hex(&k);
     startTimer(1);
     START_TIMER;
-    ecc_chudnovsky_double_and_add(&q, &k, &nist_curve_p192_basepoint.chudnovsky, &nist_curve_p192);
+    r = ecc_chudnovsky_double_and_add(&q, &k, &nist_curve_p192_basepoint.chudnovsky, &nist_curve_p192);
     STOP_TIMER;
     time = stopTimer();
     ecc_chudnovsky_to_affine_point(&qa, &q, &nist_curve_p192);
@@ -495,7 +584,7 @@ void testrun_genkey(void){
     bigint_print_hex(&qa.x);
     printf_P(PSTR("\n  Qy: "));
     bigint_print_hex(&qa.y);
-    printf_P(PSTR("\n time: %"PRIu32" cycles\n"), time);
+    printf_P(PSTR("\n time: %"PRIu32" cycles (r code: %"PRIu8")\n"), time, r);
     free(k.wordv);
     ecc_chudnovsky_point_free(&q);
     ecc_affine_point_free(&qa);
@@ -505,6 +594,7 @@ void testrun_genkey(void){
 #endif
 
 const uint8_t ecdsa_test_1_msg[] PROGMEM = {
+/*
     0xcf, 0x71, 0xa0, 0xe4, 0xce, 0x59, 0x43, 0x11,
     0x77, 0x88, 0x50, 0x87, 0x53, 0x78, 0xd0, 0xee,
     0xa3, 0xc0, 0x32, 0xa4, 0xbc, 0xc0, 0xdc, 0x1c,
@@ -521,6 +611,23 @@ const uint8_t ecdsa_test_1_msg[] PROGMEM = {
     0x24, 0xf0, 0x4a, 0x5d, 0x86, 0x0c, 0xb1, 0x4f,
     0x6b, 0x6e, 0x8a, 0x69, 0x73, 0xb4, 0x9f, 0xd2,
     0xa7, 0xbc, 0xeb, 0x48, 0xd7, 0x48, 0xf7, 0xeb
+*/
+    0xeb, 0xf7, 0x48, 0xd7, 0x48, 0xeb, 0xbc, 0xa7,
+    0xd2, 0x9f, 0xb4, 0x73, 0x69, 0x8a, 0x6e, 0x6b,
+    0x4f, 0xb1, 0x0c, 0x86, 0x5d, 0x4a, 0xf0, 0x24,
+    0xcc, 0x39, 0xae, 0x3d, 0xf3, 0x46, 0x4b, 0xa4,
+    0xf1, 0xd6, 0xd4, 0x0f, 0x32, 0xbf, 0x96, 0x18,
+    0xa9, 0x1b, 0xb5, 0x98, 0x6f, 0xa1, 0xa2, 0xaf,
+    0x04, 0x8a, 0x0e, 0x14, 0xdc, 0x51, 0xe5, 0x26,
+    0x7e, 0xb0, 0x5e, 0x12, 0x7d, 0x68, 0x9d, 0x0a,
+    0xc6, 0xf1, 0xa7, 0xf1, 0x56, 0xce, 0x06, 0x63,
+    0x16, 0xb9, 0x71, 0xcc, 0x7a, 0x11, 0xd0, 0xfd,
+    0x7a, 0x20, 0x93, 0xe2, 0x7c, 0xf2, 0xd0, 0x87,
+    0x27, 0xa4, 0xe6, 0x74, 0x8c, 0xc3, 0x2f, 0xd5,
+    0x9c, 0x78, 0x10, 0xc5, 0xb9, 0x01, 0x9d, 0xf2,
+    0x1c, 0xdc, 0xc0, 0xbc, 0xa4, 0x32, 0xc0, 0xa3,
+    0xee, 0xd0, 0x78, 0x53, 0x87, 0x50, 0x88, 0x77,
+    0x11, 0x43, 0x59, 0xce, 0xe4, 0xa0, 0x71, 0xcf
 };
 
 const uint8_t ecdsa_test_1_d[] PROGMEM = {
@@ -535,57 +642,199 @@ const uint8_t ecdsa_test_1_k[] PROGMEM = {
     0x83, 0x07, 0xa1, 0x43, 0x70, 0xbc, 0x0a, 0xcb
 };
 
+void hash_mem_P(const hfdesc_t* hfdesc, void* dest, const void* msg, uint16_t msg_len_b){
+    uint16_t blocksize = hfal_hash_getBlocksize(hfdesc);
+    uint8_t block[blocksize / 8];
+    hfgen_ctx_t ctx;
+    hfal_hash_init(hfdesc, &ctx);
+    while(msg_len_b > blocksize){
+        memcpy_P(block, msg, blocksize / 8);
+        msg = (uint8_t*)msg + blocksize / 8;
+        msg_len_b -= blocksize;
+        hfal_hash_nextBlock(&ctx, block);
+    }
+    memcpy_P(block, msg, (msg_len_b + 7) / 8);
+    hfal_hash_lastBlock(&ctx, block, msg_len_b);
+    hfal_hash_ctx2hash(dest,  &ctx);
+    hfal_hash_free(&ctx);
+}
+
+const uint8_t ecdsa_test_2_msg[] PROGMEM = {
+    0x66, 0xa2, 0x51, 0x3d, 0x7b, 0x60, 0x45, 0xe5,
+    0x66, 0x79, 0xb0, 0x32, 0xca, 0xd4, 0x5f, 0xb1,
+    0x82, 0x28, 0x9c, 0xa7, 0x6a, 0x88, 0xc0, 0x6d,
+    0x78, 0xc8, 0x5f, 0x3d, 0xd3, 0x80, 0x45, 0x90,
+    0x20, 0x5b, 0x73, 0xa7, 0x84, 0x24, 0x9a, 0x0a,
+    0x0c, 0x8b, 0xf2, 0xf2, 0x21, 0x45, 0xd1, 0x05,
+    0x21, 0x9b, 0x48, 0x0d, 0x74, 0x60, 0x7c, 0x02,
+    0xb8, 0xa6, 0xb6, 0xb4, 0x59, 0x25, 0x9e, 0x4f,
+    0xdf, 0xe2, 0xbd, 0xb4, 0xab, 0x22, 0x38, 0x01,
+    0x75, 0x35, 0x29, 0x1d, 0x7a, 0xc1, 0xab, 0xda,
+    0x66, 0xc4, 0xf6, 0xdc, 0xea, 0x9e, 0x5d, 0x0b,
+    0xf0, 0x5a, 0x93, 0x06, 0xf3, 0x33, 0xb0, 0x0e,
+    0x56, 0x34, 0x2f, 0x75, 0x53, 0x40, 0x21, 0x1a,
+    0xc2, 0x94, 0xac, 0x21, 0xa7, 0xc2, 0xb2, 0x67,
+    0x12, 0xb8, 0x79, 0x95, 0x1b, 0x2e, 0x23, 0xf6,
+    0x48, 0x7e, 0x4d, 0x39, 0x89, 0x9f, 0xe3, 0x74
+};
+
+const uint8_t ecdsa_test_2_d[] PROGMEM = {
+    0xeb, 0x8e, 0x9f, 0x04, 0x7d, 0xb5, 0x9a, 0x80,
+    0x34, 0x6f, 0xcd, 0xf1, 0xcc, 0x33, 0xbb, 0x78,
+    0xbe, 0xc6, 0xb8, 0x76, 0xaf, 0x9f, 0x4b, 0x69
+};
+
+const uint8_t ecdsa_test_2_k[] PROGMEM = {
+    0x8e, 0xd5, 0x00, 0x34, 0x08, 0x09, 0x60, 0x36,
+    0x2e, 0xfe, 0x16, 0xd0, 0x53, 0x37, 0xa2, 0xf5,
+    0x47, 0xfa, 0x11, 0xbc, 0xb1, 0xc2, 0xe8, 0x41
+};
+
 void test_sign1(void){
     bigint_word_t d_w[sizeof(ecdsa_test_1_d)];
-    uint8_t msg[sizeof(ecdsa_test_1_msg)];
     uint8_t rnd[sizeof(ecdsa_test_1_k)];
+    uint8_t *hash;
     bigint_t d;
+    const hfdesc_t *hash_desc;
     ecc_combi_point_t q;
     ecdsa_signature_t sign;
     ecdsa_ctx_t ctx;
+    uint8_t r;
+
+    putchar('\n');
     d.wordv = d_w;
-    memcpy_P(msg, ecdsa_test_1_msg, sizeof(ecdsa_test_1_msg));
     memcpy_P(rnd, ecdsa_test_1_k, sizeof(ecdsa_test_1_k));
     memcpy_P(d_w, ecdsa_test_1_d, sizeof(ecdsa_test_1_d) * sizeof(bigint_word_t));
     d.length_W = sizeof(ecdsa_test_1_d) / sizeof(bigint_word_t);
     d.info = 0;
     bigint_adjust(&d);
 
+    hash_desc = &sha1_desc; //hash_select();
+    hash = malloc(hfal_hash_getHashsize(hash_desc) / 8);
+    if(hash == NULL){
+        printf_P(PSTR("DBG: XXX <%S %s %d>\n"), PSTR(__FILE__), __func__, __LINE__);
+    }
+    hash_mem_P(hash_desc, hash, ecdsa_test_1_msg, sizeof(ecdsa_test_1_msg) * 8);
+    printf_P(PSTR("msg hash: "));
+    cli_hexdump(hash, hfal_hash_getHashsize(hash_desc) / 8);
+    putchar('\n');
+
     ecc_chudnovsky_point_alloc(&q.chudnovsky, nist_curve_p192_p.length_W * sizeof(bigint_word_t));
     ctx.basepoint = &nist_curve_p192_basepoint.chudnovsky;
     ctx.priv = &d;
     ctx.curve = &nist_curve_p192;
 
-    printf("\n  d:");
+    printf("\n  d:  ");
     bigint_print_hex(&d);
     printf_P(PSTR("\n  Gx: "));
     bigint_print_hex(&nist_curve_p192_basepoint.affine.x);
     printf_P(PSTR("\n  Gy: "));
     bigint_print_hex(&nist_curve_p192_basepoint.affine.y);
 
-    ecc_chudnovsky_multiplication(&q.chudnovsky, &d, &nist_curve_p192_basepoint.chudnovsky, &nist_curve_p192);
-    ecc_chudnovsky_to_affine_point(&q.affine, &q.chudnovsky, &nist_curve_p192);
+    r = ecc_chudnovsky_multiplication(&q.chudnovsky, &d, &nist_curve_p192_basepoint.chudnovsky, &nist_curve_p192);
+    if(r){
+        printf_P(PSTR("ERROR: ecc_chudnovsky_multiplication() returned: %"PRIu8"\n"), r);
+    }
+    r = ecc_chudnovsky_to_affine_point(&q.affine, &q.chudnovsky, &nist_curve_p192);
+    if(r){
+        printf_P(PSTR("ERROR: ecc_chudnovsky_to_affine_point() returned: %"PRIu8"\n"), r);
+    }
+
     printf_P(PSTR("\n  Qx: "));
     bigint_print_hex(&q.affine.x);
     printf_P(PSTR("\n  Qy: "));
     bigint_print_hex(&q.affine.y);
-
+    putchar('\n');
     ctx.pub = &q.affine;
 
     ecdsa_signature_alloc(&sign, sizeof(ecdsa_test_1_d) * sizeof(bigint_word_t));
 
-    ecdsa_sign_message(&sign, msg, sizeof(msg) * 8, &sha1_desc, &ctx, rnd);
-
-    printf_P(PSTR("\n  r: "));
+    r = ecdsa_sign_hash(&sign, hash, hfal_hash_getHashsize(hash_desc) / 8, &ctx, rnd);
+    if(r){
+        printf_P(PSTR("ERROR: ecdsa_sign_message() returned: %"PRIu8"\n"), r);
+    }
+    printf_P(PSTR("  r: "));
     bigint_print_hex(&sign.r);
-    printf_P(PSTR("\n  r: "));
+    printf_P(PSTR("\n  s: "));
     bigint_print_hex(&sign.s);
 
-
+    free(hash);
     ecdsa_signature_free(&sign);
     ecc_chudnovsky_point_free(&q.chudnovsky);
 }
 
+void test_sign2(void){
+    bigint_word_t d_w[sizeof(ecdsa_test_2_d)];
+    uint8_t rnd[sizeof(ecdsa_test_2_k)];
+    uint8_t *hash;
+    bigint_t d;
+    const hfdesc_t *hash_desc;
+    ecc_combi_point_t q;
+    ecdsa_signature_t sign;
+    ecdsa_ctx_t ctx;
+    uint8_t r;
+
+    putchar('\n');
+    d.wordv = d_w;
+    memcpy_P(rnd, ecdsa_test_2_k, sizeof(ecdsa_test_2_k));
+    memcpy_P(d_w, ecdsa_test_2_d, sizeof(ecdsa_test_2_d) * sizeof(bigint_word_t));
+    d.length_W = sizeof(ecdsa_test_2_d) / sizeof(bigint_word_t);
+    d.info = 0;
+    bigint_adjust(&d);
+
+    hash_desc = &sha224_desc; //hash_select();
+    hash = malloc(hfal_hash_getHashsize(hash_desc) / 8);
+    if(hash == NULL){
+        printf_P(PSTR("DBG: XXX <%S %s %d>\n"), PSTR(__FILE__), __func__, __LINE__);
+    }
+    hash_mem_P(hash_desc, hash, ecdsa_test_2_msg, sizeof(ecdsa_test_1_msg) * 8);
+    printf_P(PSTR("msg hash: "));
+    cli_hexdump(hash, hfal_hash_getHashsize(hash_desc) / 8);
+    putchar('\n');
+
+    ecc_chudnovsky_point_alloc(&q.chudnovsky, nist_curve_p192_p.length_W * sizeof(bigint_word_t));
+    ctx.basepoint = &nist_curve_p192_basepoint.chudnovsky;
+    ctx.priv = &d;
+    ctx.curve = &nist_curve_p192;
+
+    printf("\n  d:  ");
+    bigint_print_hex(&d);
+    printf_P(PSTR("\n  Gx: "));
+    bigint_print_hex(&nist_curve_p192_basepoint.affine.x);
+    printf_P(PSTR("\n  Gy: "));
+    bigint_print_hex(&nist_curve_p192_basepoint.affine.y);
+
+    r = ecc_chudnovsky_multiplication(&q.chudnovsky, &d, &nist_curve_p192_basepoint.chudnovsky, &nist_curve_p192);
+    if(r){
+        printf_P(PSTR("ERROR: ecc_chudnovsky_multiplication() returned: %"PRIu8"\n"), r);
+    }
+    r = ecc_chudnovsky_to_affine_point(&q.affine, &q.chudnovsky, &nist_curve_p192);
+    if(r){
+        printf_P(PSTR("ERROR: ecc_chudnovsky_to_affine_point() returned: %"PRIu8"\n"), r);
+    }
+
+    printf_P(PSTR("\n  Qx: "));
+    bigint_print_hex(&q.affine.x);
+    printf_P(PSTR("\n  Qy: "));
+    bigint_print_hex(&q.affine.y);
+    putchar('\n');
+    ctx.pub = &q.affine;
+
+    ecdsa_signature_alloc(&sign, sizeof(ecdsa_test_2_d) * sizeof(bigint_word_t));
+
+    r = ecdsa_sign_hash(&sign, hash, hfal_hash_getHashsize(hash_desc) / 8, &ctx, rnd);
+    if(r){
+        printf_P(PSTR("ERROR: ecdsa_sign_message() returned: %"PRIu8"\n"), r);
+    }
+    printf_P(PSTR("  r: "));
+    bigint_print_hex(&sign.r);
+    printf_P(PSTR("\n  s: "));
+    bigint_print_hex(&sign.s);
+
+    free(hash);
+    ecdsa_signature_free(&sign);
+    ecc_chudnovsky_point_free(&q.chudnovsky);
+}
 /*****************************************************************************
  *  main																	 *
  *****************************************************************************/
@@ -601,6 +850,7 @@ const char genkey2_str[]                 PROGMEM = "genkey2";
 const char genkey3_str[]                 PROGMEM = "genkey3";
 const char genkey_str[]                  PROGMEM = "genkey";
 const char testsign1_str[]               PROGMEM = "testsign1";
+const char testsign2_str[]               PROGMEM = "testsign2";
 const char square_str[]                  PROGMEM = "square";
 const char echo_str[]                    PROGMEM = "echo";
 
@@ -613,6 +863,7 @@ const const cmdlist_entry_t cmdlist[] PROGMEM = {
     { genkey2_str,                 NULL, testrun_genkey2                      },
     { genkey3_str,                 NULL, testrun_genkey3                      },
     { testsign1_str,               NULL, test_sign1                           },
+    { testsign2_str,               NULL, test_sign2                           },
 	{ performance_reduce_str,      NULL, testrun_performance_reduce_bigint    },
     { performance_invert_str,      NULL, testrun_performance_invert_bigint    },
     { performance_multiply_str,    NULL, testrun_performance_multiply_bigint  },
