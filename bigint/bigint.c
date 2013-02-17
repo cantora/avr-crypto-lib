@@ -683,6 +683,7 @@ void bigint_square(bigint_t* dest, const bigint_t* a){
 }
 
 /******************************************************************************/
+
 void bigint_sub_u_bitscale(bigint_t* a, const bigint_t* b, uint16_t bitscale){
 	bigint_t tmp, x;
 	bigint_word_t tmp_b[b->length_W + 1];
@@ -719,41 +720,44 @@ void bigint_reduce(bigint_t* a, const bigint_t* r){
 	if(r->length_W==0 || a->length_W==0){
 		return;
 	}
-	if((r->length_W*sizeof(bigint_word_t)<=4) && (a->length_W*sizeof(bigint_word_t)<=4)){
-		uint32_t p=0, q=0;
-		memcpy(&p, a->wordv, a->length_W*sizeof(bigint_word_t));
-		memcpy(&q, r->wordv, r->length_W*sizeof(bigint_word_t));
-		p %= q;
-		memcpy(a->wordv, &p, a->length_W*sizeof(bigint_word_t));
-		bigint_adjust(a);
-//		cli_putstr("\r\nDBG: (0) = "); bigint_print_hex(a);
-		return;
-	}
-	uint16_t shift;
-	while(a->length_W > r->length_W){
-		shift = (a->length_W - r->length_W) * 8 * sizeof(bigint_word_t) + GET_FBS(a) - rfbs - 1;
-		/*
-		if((a->wordv[a->length_W-1] & ((1LL<<GET_FBS(a)) - 1)) > r->wordv[r->length_W-1]){
-			// cli_putc('~');
-			cli_putstr("\r\n ~ [a] = ");
-			cli_hexdump_rev(&a->wordv[a->length_W-1], 4);
-			cli_putstr("  [r] = ");
-			cli_hexdump_rev(&r->wordv[r->length_W-1], 4);
-			shift += 1;
-		}
-		*/
-//		cli_putstr("\r\nDBG: (p) shift = "); cli_hexdump_rev(&shift, 2);
-//		cli_putstr(" a_len = "); cli_hexdump_rev(&a->length_W, 2);
-//		cli_putstr(" r_len = "); cli_hexdump_rev(&r->length_W, 2);
-//		uart_flush(0);
-		bigint_sub_u_bitscale(a, r, shift);
-//		cli_putstr("\r\nDBG: (1) = "); bigint_print_hex(a);
-	}
-	while((GET_FBS(a) > rfbs) && (a->length_W == r->length_W)){
-		shift = GET_FBS(a)-rfbs-1;
-//		cli_putstr("\r\nDBG: (q) shift = "); cli_hexdump_rev(&shift, 2);
-		bigint_sub_u_bitscale(a, r, shift);
-//		cli_putstr("\r\nDBG: (2) = "); bigint_print_hex(a);
+
+	if(bigint_length_b(a) + 3 > bigint_length_b(r)){
+        if((r->length_W*sizeof(bigint_word_t)<=4) && (a->length_W*sizeof(bigint_word_t)<=4)){
+            uint32_t p=0, q=0;
+            memcpy(&p, a->wordv, a->length_W*sizeof(bigint_word_t));
+            memcpy(&q, r->wordv, r->length_W*sizeof(bigint_word_t));
+            p %= q;
+            memcpy(a->wordv, &p, a->length_W*sizeof(bigint_word_t));
+            bigint_adjust(a);
+    //		cli_putstr("\r\nDBG: (0) = "); bigint_print_hex(a);
+            return;
+        }
+        uint16_t shift;
+        while(a->length_W > r->length_W){
+            shift = (a->length_W - r->length_W) * 8 * sizeof(bigint_word_t) + GET_FBS(a) - rfbs - 1;
+            /*
+            if((a->wordv[a->length_W-1] & ((1LL<<GET_FBS(a)) - 1)) > r->wordv[r->length_W-1]){
+                // cli_putc('~');
+                cli_putstr("\r\n ~ [a] = ");
+                cli_hexdump_rev(&a->wordv[a->length_W-1], 4);
+                cli_putstr("  [r] = ");
+                cli_hexdump_rev(&r->wordv[r->length_W-1], 4);
+                shift += 1;
+            }
+            */
+    //		cli_putstr("\r\nDBG: (p) shift = "); cli_hexdump_rev(&shift, 2);
+    //		cli_putstr(" a_len = "); cli_hexdump_rev(&a->length_W, 2);
+    //		cli_putstr(" r_len = "); cli_hexdump_rev(&r->length_W, 2);
+    //		uart_flush(0);
+            bigint_sub_u_bitscale(a, r, shift);
+    //		cli_putstr("\r\nDBG: (1) = "); bigint_print_hex(a);
+        }
+        while((GET_FBS(a) > rfbs) && (a->length_W == r->length_W)){
+            shift = GET_FBS(a)-rfbs-1;
+    //		cli_putstr("\r\nDBG: (q) shift = "); cli_hexdump_rev(&shift, 2);
+            bigint_sub_u_bitscale(a, r, shift);
+    //		cli_putstr("\r\nDBG: (2) = "); bigint_print_hex(a);
+        }
 	}
 	while(bigint_cmp_u(a,r)>=0){
 		bigint_sub_u(a,a,r);
@@ -768,7 +772,7 @@ void bigint_reduce(bigint_t* a, const bigint_t* r){
 
 /* calculate dest = a**exp % r */
 /* using square&multiply */
-void bigint_expmod_u(bigint_t* dest, const bigint_t* a, const bigint_t* exp, const bigint_t* r){
+void bigint_expmod_u_sam(bigint_t* dest, const bigint_t* a, const bigint_t* exp, const bigint_t* r){
 	if(a->length_W==0 || r->length_W==0){
 		return;
 	}
@@ -1031,9 +1035,11 @@ void bigint_changeendianess(bigint_t* a){
 
 
 
+/******************************************************************************/
 
-
-
+void bigint_expmod_u(bigint_t* dest, const bigint_t* a, const bigint_t* exp, const bigint_t* r){
+    bigint_expmod_u_sam(dest, a, exp, r);
+}
 
 
 
