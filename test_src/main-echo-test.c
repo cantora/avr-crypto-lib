@@ -32,10 +32,10 @@
 #include "hfal-performance.h"
 #include "hfal-test.h"
 
-char* algo_name = "Echo";
+char *algo_name = "Echo";
 
 
-const hfdesc_t* const algolist[] PROGMEM = {
+const hfdesc_t *const algolist[] PROGMEM = {
 	(hfdesc_t*)&echo224_desc,
 	(hfdesc_t*)&echo256_desc,
 	(hfdesc_t*)&echo384_desc,

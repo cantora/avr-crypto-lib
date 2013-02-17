@@ -30,16 +30,16 @@
 #include "bcal_rc6.h"
 
 #define RC6_ROUNDS 20
-char* algo_name = "RC6-32/20/16";
+char *algo_name = "RC6-32/20/16";
 
-const bcdesc_t* const algolist[] PROGMEM = {
+const bcdesc_t *const algolist[] PROGMEM = {
 	(bcdesc_t*)&rc6_desc,
 	NULL
 };
 /*****************************************************************************
  *  additional validation-functions											 *
  *****************************************************************************/
-void rc6_genctx_dummy(uint8_t* key, uint16_t keysize_b, void* ctx){
+void rc6_genctx_dummy(uint8_t *key, uint16_t keysize_b, void *ctx){
 	rc6_initl(key, keysize_b, RC6_ROUNDS, ctx);
 }
 

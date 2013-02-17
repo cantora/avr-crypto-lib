@@ -127,7 +127,7 @@ cli_hexdump2:
 	rjmp 1b
 
 /******************************************************************************/
-/* void cli_hexdump_block(const void* data, uint16_t length, uint8_t indent, uint8_t width)
+/* void cli_hexdump_block(const void *data, uint16_t length, uint8_t indent, uint8_t width)
  *   param data:     r24:r25
  *   param length:   r22:r23
  *   param indent:   r20

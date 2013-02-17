@@ -32,10 +32,10 @@
 #include "nessie_hash_test.h"
 #include "performance_test.h"
 
-char* algo_name = "JH";
+char *algo_name = "JH";
 
 
-const hfdesc_t* const algolist[] PROGMEM = {
+const hfdesc_t *const algolist[] PROGMEM = {
 	(hfdesc_t*)&jh224_desc,
 	(hfdesc_t*)&jh256_desc,
 	(hfdesc_t*)&jh384_desc,

@@ -54,7 +54,7 @@ const uint8_t g_lut[128] PROGMEM = {
         0xF3, 0x2E, 0xF3, 0x2E, 0x0C, 0xD1, 0x0C, 0x2E, 0xAC, 0x71, 0xAC, 0x71, 0x53, 0x71, 0xA3, 0xD4  };
 #endif
 
-uint8_t grain_enc(grain_ctx_t* ctx){
+uint8_t grain_enc(grain_ctx_t *ctx){
 	uint8_t s80, s0, c1, c2;
 	uint8_t i;
 	/* clock the LFSR */
@@ -137,7 +137,7 @@ uint8_t grain_enc(grain_ctx_t* ctx){
 	return (h&1);
 }
 
-uint8_t grain_getbyte(grain_ctx_t* ctx){
+uint8_t grain_getbyte(grain_ctx_t *ctx){
 	uint8_t i=0;
 	uint8_t r=0;
 	do{
@@ -166,7 +166,7 @@ uint8_t reverse_bits(uint8_t a){
 
 #endif
 
-void grain_init(const void* key, const void* iv, grain_ctx_t* ctx){
+void grain_init(const void *key, const void *iv, grain_ctx_t *ctx){
 	uint8_t i,t;
 	
 	/* load the 80bit key */

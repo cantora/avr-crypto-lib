@@ -49,27 +49,27 @@ typedef struct{
 }shabal_ctx_t;
 
 
-void shabal192_init(shabal_ctx_t* ctx);
-void shabal224_init(shabal_ctx_t* ctx);
-void shabal256_init(shabal_ctx_t* ctx);
-void shabal384_init(shabal_ctx_t* ctx);
-void shabal512_init(shabal_ctx_t* ctx);
+void shabal192_init(shabal_ctx_t *ctx);
+void shabal224_init(shabal_ctx_t *ctx);
+void shabal256_init(shabal_ctx_t *ctx);
+void shabal384_init(shabal_ctx_t *ctx);
+void shabal512_init(shabal_ctx_t *ctx);
 
-void shabal_nextBlock(shabal_ctx_t* ctx, const void* block);
-void shabal_lastBlock(shabal_ctx_t* ctx, const void* block, uint16_t length_b);
+void shabal_nextBlock(shabal_ctx_t *ctx, const void *block);
+void shabal_lastBlock(shabal_ctx_t *ctx, const void *block, uint16_t length_b);
 
-void shabal192_ctx2hash(void* dest, const shabal_ctx_t* ctx);
-void shabal224_ctx2hash(void* dest, const shabal_ctx_t* ctx);
-void shabal256_ctx2hash(void* dest, const shabal_ctx_t* ctx);
-void shabal384_ctx2hash(void* dest, const shabal_ctx_t* ctx);
-void shabal512_ctx2hash(void* dest, const shabal_ctx_t* ctx);
+void shabal192_ctx2hash(void *dest, const shabal_ctx_t *ctx);
+void shabal224_ctx2hash(void *dest, const shabal_ctx_t *ctx);
+void shabal256_ctx2hash(void *dest, const shabal_ctx_t *ctx);
+void shabal384_ctx2hash(void *dest, const shabal_ctx_t *ctx);
+void shabal512_ctx2hash(void *dest, const shabal_ctx_t *ctx);
 
-void shabal192(void* dest, void* msg, uint32_t length_b);
-void shabal224(void* dest, void* msg, uint32_t length_b);
-void shabal256(void* dest, void* msg, uint32_t length_b);
-void shabal384(void* dest, void* msg, uint32_t length_b);
-void shabal512(void* dest, void* msg, uint32_t length_b);
+void shabal192(void *dest, void *msg, uint32_t length_b);
+void shabal224(void *dest, void *msg, uint32_t length_b);
+void shabal256(void *dest, void *msg, uint32_t length_b);
+void shabal384(void *dest, void *msg, uint32_t length_b);
+void shabal512(void *dest, void *msg, uint32_t length_b);
 
-void shabal_ctx2hash(void* dest, const shabal_ctx_t* ctx, uint16_t outlength_b);
+void shabal_ctx2hash(void *dest, const shabal_ctx_t *ctx, uint16_t outlength_b);
 
 #endif /* SHABAL_H_ */

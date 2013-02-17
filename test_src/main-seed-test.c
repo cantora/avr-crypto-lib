@@ -36,16 +36,16 @@
 #include "bcal-nessie.h"
 #include "bcal_seed.h"
 
-char* algo_name = "Seed";
+char *algo_name = "Seed";
 
-const bcdesc_t* const algolist[] PROGMEM = {
+const bcdesc_t *const algolist[] PROGMEM = {
 	(bcdesc_t*)&seed_desc,
 	NULL
 };
 /*****************************************************************************
  *  additional validation-functions                                          *
  *****************************************************************************/
-void seed_genctx_dummy(uint8_t* key, uint16_t keysize, void* ctx){
+void seed_genctx_dummy(uint8_t *key, uint16_t keysize, void *ctx){
 	seed_init(key, ctx);
 }
 
@@ -62,7 +62,7 @@ void testrun_performance_seed(void){
  *  self tests                                                               *
  *****************************************************************************/
 
-void testencrypt(uint8_t* block, uint8_t* key){
+void testencrypt(uint8_t *block, uint8_t *key){
 	seed_ctx_t ctx;
 	cli_putstr("\r\n==testy-encrypt==\r\n key:   ");
 	cli_hexdump(key,16);
@@ -74,7 +74,7 @@ void testencrypt(uint8_t* block, uint8_t* key){
 	cli_hexdump(block,16);
 }
 
-void testdecrypt(uint8_t* block, uint8_t* key){
+void testdecrypt(uint8_t *block, uint8_t *key){
 	seed_ctx_t ctx;
 	cli_putstr("\r\n==testy-decrypt==\r\n key:   ");
 	cli_hexdump(key,16);

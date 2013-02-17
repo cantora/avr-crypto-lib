@@ -90,7 +90,7 @@ typedef struct {
 } bcdesc_t; /* blockcipher descriptor type */
 
 typedef struct{
-	bcdesc_t* desc_ptr;
+	bcdesc_t *desc_ptr;
 	uint16_t  keysize;
 	void*     ctx;
 } bcgen_ctx_t;

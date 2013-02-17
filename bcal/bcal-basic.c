@@ -24,8 +24,8 @@
 #include "blockcipher_descriptor.h"
 #include "keysize_descriptor.h"
 
-uint8_t bcal_cipher_init(const bcdesc_t* cipher_descriptor,
-                         const void* key, uint16_t keysize_b, bcgen_ctx_t* ctx){
+uint8_t bcal_cipher_init(const bcdesc_t *cipher_descriptor,
+                         const void *key, uint16_t keysize_b, bcgen_ctx_t *ctx){
 	if(!is_valid_keysize_P((PGM_VOID_P)pgm_read_word(&(cipher_descriptor->valid_keysize_desc)),
 	                       keysize_b)){
 		return 1;
@@ -52,7 +52,7 @@ uint8_t bcal_cipher_init(const bcdesc_t* cipher_descriptor,
 	return 0;
 }
 
-void bcal_cipher_free(bcgen_ctx_t* ctx){
+void bcal_cipher_free(bcgen_ctx_t *ctx){
 	if(!ctx)
 		return;
 	bc_free_fpt free_fpt;
@@ -62,7 +62,7 @@ void bcal_cipher_free(bcgen_ctx_t* ctx){
 	free(ctx->ctx);
 }
 
-void bcal_cipher_enc(void* block, const bcgen_ctx_t* ctx){
+void bcal_cipher_enc(void *block, const bcgen_ctx_t *ctx){
 	bc_enc_fpt enc_fpt;
 	enc_fpt.encvoid = (void_fpt)pgm_read_word(&(ctx->desc_ptr->enc.encvoid));
 	if(!enc_fpt.encvoid){
@@ -73,7 +73,7 @@ void bcal_cipher_enc(void* block, const bcgen_ctx_t* ctx){
 	
 }
 
-void bcal_cipher_dec(void* block, const bcgen_ctx_t* ctx){
+void bcal_cipher_dec(void *block, const bcgen_ctx_t *ctx){
 	bc_dec_fpt dec_fpt;
 	dec_fpt.decvoid = (void_fpt)pgm_read_word(&(ctx->desc_ptr->dec.decvoid));
 	if(!dec_fpt.decvoid){
@@ -83,11 +83,11 @@ void bcal_cipher_dec(void* block, const bcgen_ctx_t* ctx){
 	dec_fpt.dec1(block, (ctx->ctx));
 }
 
-uint16_t bcal_cipher_getBlocksize_b(const bcdesc_t* desc){
+uint16_t bcal_cipher_getBlocksize_b(const bcdesc_t *desc){
 	return pgm_read_word(&(desc->blocksize_b));
 }
 
-PGM_VOID_P bcal_cipher_getKeysizeDesc(const bcdesc_t* desc){
+PGM_VOID_P bcal_cipher_getKeysizeDesc(const bcdesc_t *desc){
 	return (PGM_VOID_P)pgm_read_word(&(desc->valid_keysize_desc));
 }
 

@@ -31,12 +31,12 @@
 #include "scal-basic.h"
 #include "scal-nessie.h"
 
-char* algo_name = "Arcfour";
+char *algo_name = "Arcfour";
 
 /*****************************************************************************
  *  additional validation-functions											 *
  *****************************************************************************/
-void arcfour_genctx_dummy(uint8_t* key, uint16_t keysize, void* ctx){
+void arcfour_genctx_dummy(uint8_t *key, uint16_t keysize, void *ctx){
 	arcfour_init(key, (uint8_t)((keysize+7)/8), ctx);
 }
 

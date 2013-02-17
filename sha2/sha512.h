@@ -32,10 +32,10 @@ typedef sha2_large_common_ctx_t sha512_ctx_t;
 
 
 void sha512_init(sha512_ctx_t *ctx);
-void sha512_nextBlock (sha512_ctx_t* ctx, const void* block);
-void sha512_lastBlock(sha512_ctx_t* ctx, const void* block, uint16_t length_b);
-void sha512_ctx2hash(void* dest, const sha512_ctx_t* ctx);
-void sha512(void* dest, const void* msg, uint32_t length_b);
+void sha512_nextBlock (sha512_ctx_t *ctx, const void *block);
+void sha512_lastBlock(sha512_ctx_t *ctx, const void *block, uint16_t length_b);
+void sha512_ctx2hash(void *dest, const sha512_ctx_t *ctx);
+void sha512(void *dest, const void *msg, uint32_t length_b);
 
 
 #endif /* SHA512_H_ */

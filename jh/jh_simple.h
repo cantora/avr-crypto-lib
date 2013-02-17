@@ -37,22 +37,22 @@ typedef struct {
 } jh_ctx_t;
 
 
-void jh_init(uint16_t hashlen_b, jh_ctx_t* ctx);
-void jh_nextBlock(jh_ctx_t* ctx, void* block);
-void jh_lastBlock(jh_ctx_t* ctx, void* block, uint16_t length_b);
-void jh_ctx2hash(void* dest, uint16_t length_b, jh_ctx_t* ctx);
+void jh_init(uint16_t hashlen_b, jh_ctx_t *ctx);
+void jh_nextBlock(jh_ctx_t *ctx, void *block);
+void jh_lastBlock(jh_ctx_t *ctx, void *block, uint16_t length_b);
+void jh_ctx2hash(void *dest, uint16_t length_b, jh_ctx_t *ctx);
 
-void jh224_init(jh_ctx_t* ctx);
-void jh224_ctx2hash(void* dest, jh_ctx_t* ctx);
+void jh224_init(jh_ctx_t *ctx);
+void jh224_ctx2hash(void *dest, jh_ctx_t *ctx);
 
-void jh256_init(jh_ctx_t* ctx);
-void jh256_ctx2hash(void* dest, jh_ctx_t* ctx);
+void jh256_init(jh_ctx_t *ctx);
+void jh256_ctx2hash(void *dest, jh_ctx_t *ctx);
 
-void jh384_init(jh_ctx_t* ctx);
-void jh384_ctx2hash(void* dest, jh_ctx_t* ctx);
+void jh384_init(jh_ctx_t *ctx);
+void jh384_ctx2hash(void *dest, jh_ctx_t *ctx);
 
-void jh512_init(jh_ctx_t* ctx);
-void jh512_ctx2hash(void* dest, jh_ctx_t* ctx);
+void jh512_init(jh_ctx_t *ctx);
+void jh512_ctx2hash(void *dest, jh_ctx_t *ctx);
 
 
 #endif /* JH_SIMPLE_H_ */

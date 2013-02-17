@@ -43,15 +43,15 @@ typedef uint8_t(*rand_func_ptr_t)(void);
 #define ECDSA_SIGNATURE_OK 1
 #define ECDSA_SIGNATURE_FAIL 0
 
-uint8_t ecdsa_sign_bigint(ecdsa_signature_t* s, const bigint_t* m,
-                          const ecdsa_ctx_t* ctx, const bigint_t* k);
-uint8_t ecdsa_sign_message(ecdsa_signature_t* s, const void* m, uint16_t m_len_b,
-                           const hfdesc_t* hash_desc, const ecdsa_ctx_t* ctx,
+uint8_t ecdsa_sign_bigint(ecdsa_signature_t *s, const bigint_t *m,
+                          const ecdsa_ctx_t *ctx, const bigint_t *k);
+uint8_t ecdsa_sign_message(ecdsa_signature_t *s, const void *m, uint16_t m_len_b,
+                           const hfdesc_t *hash_desc, const ecdsa_ctx_t *ctx,
                            const void *rand_in);
-uint8_t ecdsa_verify_bigint(const ecdsa_signature_t* s, const bigint_t* m,
-                            const ecdsa_ctx_t* ctx);
-uint8_t ecdsa_verify_message(const ecdsa_signature_t* s, const void* m, uint16_t m_len_b,
-                             const hfdesc_t* hash_desc, const ecdsa_ctx_t* ctx);
+uint8_t ecdsa_verify_bigint(const ecdsa_signature_t *s, const bigint_t *m,
+                            const ecdsa_ctx_t *ctx);
+uint8_t ecdsa_verify_message(const ecdsa_signature_t *s, const void *m, uint16_t m_len_b,
+                             const hfdesc_t *hash_desc, const ecdsa_ctx_t *ctx);
 
 
 #endif /* ECDSA_H_ */

@@ -32,7 +32,7 @@
 #include "shacal2_enc.h"
 
 
-void shacal2_enc(void* buffer, void* key, uint16_t keysize_b){
+void shacal2_enc(void *buffer, void *key, uint16_t keysize_b){
 	uint8_t i;
 	sha256_ctx_t ctx, t_ctx;
 	memcpy(ctx.h, buffer, SHACAL2_BLOCKSIZE_B);

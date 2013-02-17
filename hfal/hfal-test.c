@@ -31,7 +31,7 @@
 #include <stdint.h>
 #include <avr/pgmspace.h>
 
-void hfal_test(const hfdesc_t* hd, void* msg, uint32_t length_b){
+void hfal_test(const hfdesc_t *hd, void *msg, uint32_t length_b){
 	if(pgm_read_byte(&(hd->type))!=HFDESC_TYPE_HASHFUNCTION)
 		return;
 	uint16_t dlen = (pgm_read_word(&(hd->hashsize_b))+7)/8;

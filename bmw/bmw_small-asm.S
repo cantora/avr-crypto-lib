@@ -510,7 +510,7 @@ const_lut:
 	.long 0x9555554c, 0x9aaaaaa1, 0x9ffffff6, 0xa555554b
 
 /*******************************************************************************
-* uint32_t addelment(uint8_t j, const uint32_t* m, const uint32_t* h){
+* uint32_t addelment(uint8_t j, const uint32_t *m, const uint32_t *h){
 * 	uint32_t r;
 *	r  = pgm_read_dword(k_lut+j);
 *	r += rotl_addel(((uint32_t*)m)[j&0xf], j+0);
@@ -625,7 +625,7 @@ addelement:
 	ret
 
 /*******************************************************************************
-* uint32_t bmw_small_expand1(uint8_t j, const void* m, const void* h, const uint32_t* q){
+* uint32_t bmw_small_expand1(uint8_t j, const void *m, const void *h, const uint32_t *q){
 *	uint32_t(*s[])(uint32_t) = {bmw_small_s1, bmw_small_s2, bmw_small_s3, bmw_small_s0};
 *	uint32_t r;
 *	uint8_t i;
@@ -708,7 +708,7 @@ expand1_exit:
 	ret
 
 /*******************************************************************************
-* uint32_t bmw_small_expand2(uint8_t j, const void* m, const void* h, const uint32_t* q){
+* uint32_t bmw_small_expand2(uint8_t j, const void *m, const void *h, const uint32_t *q){
 *	uint32_t(*rf[])(uint32_t) = {bmw_small_r1, bmw_small_r2, bmw_small_r3,
 *	                             bmw_small_r4, bmw_small_r5, bmw_small_r6,
 *							     bmw_small_r7};
@@ -781,7 +781,7 @@ bmw_small_expand2:
 	rjmp expand1_exit
 
 /*******************************************************************************
-* void bmw_small_f1(uint32_t* q, const void* m, const void* h){
+* void bmw_small_f1(uint32_t *q, const void *m, const void *h){
 *	uint8_t i;
 *	q[16] = bmw_small_expand1(0, m, h, q);
 *	q[17] = bmw_small_expand1(1, m, h, q);
@@ -849,7 +849,7 @@ bmw_small_f1:
 * uint16_t hack_table[5]   PROGMEM = { 0x0311, 0xDDB3, 0x2A79, 0x07AA, 0x51C2 };
 * uint8_t  offset_table[5] PROGMEM = { 4+16, 6+16, 9+16, 12+16, 13+16 };
 *
-* void bmw_small_f0(uint32_t* h, const void* m, uint32_t* q){
+* void bmw_small_f0(uint32_t *h, const void *m, uint32_t *q){
 *	uint16_t hack_reg;
 *	uint8_t c,i,j;
 *	uint32_t(*s[])(uint32_t)={ bmw_small_s0, bmw_small_s1, bmw_small_s2,
@@ -1109,7 +1109,7 @@ bmw_small_f0:
     ret
 
 /*******************************************************************************
-* void bmw_small_f2(uint32_t* h, const uint32_t* q, const void* m){
+* void bmw_small_f2(uint32_t *h, const uint32_t *q, const void *m){
 *	uint32_t xl=0, xh;
 *	uint8_t i;
 *	for(i=16;i<24;++i){
@@ -1699,7 +1699,7 @@ cli_putchar:
 #endif
 
 /*******************************************************************************
-* void bmw_small_nextBlock(bmw_small_ctx_t* ctx, const void* block){
+* void bmw_small_nextBlock(bmw_small_ctx_t *ctx, const void *block){
 *	uint32_t q[32];
 *	dump_x(block, 16, 'M');
 *	bmw_small_f0(ctx->h, block, q);
@@ -1769,7 +1769,7 @@ bmw256_nextBlock:
 
 
 /*******************************************************************************
-* void bmw224_init(bmw224_ctx_t* ctx){
+* void bmw224_init(bmw224_ctx_t *ctx){
 *	uint8_t i;
 *	ctx->h[0] = 0x00010203;
 *	for(i=1; i<16; ++i){
@@ -1821,7 +1821,7 @@ bmw256_init:
 	rjmp bmw_small_init
 
 /*******************************************************************************
-* void bmw_small_lastBlock(bmw_small_ctx_t* ctx, const void* block, uint16_t length_b){
+* void bmw_small_lastBlock(bmw_small_ctx_t *ctx, const void *block, uint16_t length_b){
 *	struct {
 *		uint8_t  buffer[64];
 *		uint32_t ctr;
@@ -2041,7 +2041,7 @@ bmw256_lastBlock:
 	ret
 
 /*******************************************************************************
-* void bmw224_ctx2hash(void* dest, const bmw224_ctx_t* ctx){
+* void bmw224_ctx2hash(void *dest, const bmw224_ctx_t *ctx){
 *	memcpy(dest, &(ctx->h[9]), 224/8);
 * }
 *
@@ -2057,7 +2057,7 @@ bmw224_ctx2hash:
 	rjmp 1f
 
 /*******************************************************************************
-* void bmw256_ctx2hash(void* dest, const bmw256_ctx_t* ctx){
+* void bmw256_ctx2hash(void *dest, const bmw256_ctx_t *ctx){
 *	memcpy(dest, &(ctx->h[8]), 256/8);
 * }
 *
@@ -2078,7 +2078,7 @@ bmw256_ctx2hash:
 	ret
 
 /*******************************************************************************
-* void bmw256(void* dest, const void* msg, uint32_t length_b){
+* void bmw256(void *dest, const void *msg, uint32_t length_b){
 *	bmw_small_ctx_t ctx;
 *	bmw256_init(&ctx);
 *	while(length_b>=BMW_SMALL_BLOCKSIZE){
@@ -2111,7 +2111,7 @@ bmw256:
 	rjmp bmw_small_all
 
 /*******************************************************************************
-* void bmw224(void* dest, const void* msg, uint32_t length_b){
+* void bmw224(void *dest, const void *msg, uint32_t length_b){
 *	bmw_small_ctx_t ctx;
 *	bmw224_init(&ctx);
 *	while(length_b>=BMW_SMALL_BLOCKSIZE){

@@ -40,9 +40,9 @@
 #include "bcal-performance.h"
 #include "bcal-nessie.h"
 
-const char* algo_name = "AES";
+const char *algo_name = "AES";
 
-const bcdesc_t* const const algolist[] PROGMEM = {
+const bcdesc_t *const const algolist[] PROGMEM = {
 	(bcdesc_t*)&aes128_desc,
 	(bcdesc_t*)&aes192_desc,
 	(bcdesc_t*)&aes256_desc,

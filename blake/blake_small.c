@@ -51,7 +51,7 @@ const uint32_t blake_c[] PROGMEM = {
 						    ((0x00ff0000&(a))>>8)| \
 						    (a)>>24 )
 static
-void blake_small_expand(uint32_t* v, const blake_small_ctx_t* ctx){
+void blake_small_expand(uint32_t *v, const blake_small_ctx_t *ctx){
 	uint8_t i;
 	memcpy(v, ctx->h, 8*4);
 	for(i=0; i<8; ++i){
@@ -62,7 +62,7 @@ void blake_small_expand(uint32_t* v, const blake_small_ctx_t* ctx){
 }
 
 static
-void blake_small_changeendian(void* dest, const void* src){
+void blake_small_changeendian(void *dest, const void *src){
 	uint8_t i;
 	for(i=0; i<16; ++i){
 		((uint32_t*)dest)[i] = CHANGE_ENDIAN32(((uint32_t*)src)[i]);
@@ -70,7 +70,7 @@ void blake_small_changeendian(void* dest, const void* src){
 }
 
 static
-void blake_small_compress(uint32_t* v,const void* m){
+void blake_small_compress(uint32_t *v,const void *m){
 	uint8_t r,i;
 	uint8_t a,b,c,d, s0, s1, sigma_idx=0;
 	uint32_t lv[4];
@@ -109,14 +109,14 @@ void blake_small_compress(uint32_t* v,const void* m){
 }
 
 static
-void blake_small_collapse(blake_small_ctx_t* ctx, uint32_t* v){
+void blake_small_collapse(blake_small_ctx_t *ctx, uint32_t *v){
 	uint8_t i;
 	for(i=0; i<8; ++i){
 		ctx->h[i] ^= ctx->s[i%4] ^ v[i] ^ v[8+i];
 	}
 }
 
-void blake_small_nextBlock(blake_small_ctx_t* ctx, const void* msg){
+void blake_small_nextBlock(blake_small_ctx_t *ctx, const void *msg){
 	uint32_t v[16];
 	uint32_t m[16];
 	union {
@@ -135,7 +135,7 @@ void blake_small_nextBlock(blake_small_ctx_t* ctx, const void* msg){
 	blake_small_collapse(ctx, v);
 }
 
-void blake_small_lastBlock(blake_small_ctx_t* ctx, const void* msg, uint16_t length_b){
+void blake_small_lastBlock(blake_small_ctx_t *ctx, const void *msg, uint16_t length_b){
 	while(length_b>=BLAKE_SMALL_BLOCKSIZE){
 		blake_small_nextBlock(ctx, msg);
 		msg = (uint8_t*)msg + BLAKE_SMALL_BLOCKSIZE_B;
@@ -189,7 +189,7 @@ const uint32_t blake256_iv[] PROGMEM = {
 	0x1F83D9ABL, 0x5BE0CD19
 };
 
-void blake256_init(blake256_ctx_t* ctx){
+void blake256_init(blake256_ctx_t *ctx){
 	uint8_t i;
 	for(i=0; i<8; ++i){
 		ctx->h[i] = pgm_read_dword(&(blake256_iv[i]));
@@ -206,7 +206,7 @@ const uint32_t blake224_iv[] PROGMEM = {
 	0x64F98FA7, 0xBEFA4FA4
 };
 
-void blake224_init(blake224_ctx_t* ctx){
+void blake224_init(blake224_ctx_t *ctx){
 	uint8_t i;
 	for(i=0; i<8; ++i){
 		ctx->h[i] = pgm_read_dword(&(blake224_iv[i]));
@@ -216,37 +216,37 @@ void blake224_init(blake224_ctx_t* ctx){
 	ctx->appendone = 0;
 }
 
-void blake256_ctx2hash(void* dest, const blake256_ctx_t* ctx){
+void blake256_ctx2hash(void *dest, const blake256_ctx_t *ctx){
 	uint8_t i;
 	for(i=0; i<8; ++i){
 		((uint32_t*)dest)[i] = CHANGE_ENDIAN32(ctx->h[i]);
 	}
 }
 
-void blake224_ctx2hash(void* dest, const blake224_ctx_t* ctx){
+void blake224_ctx2hash(void *dest, const blake224_ctx_t *ctx){
 	uint8_t i;
 	for(i=0; i<7; ++i){
 		((uint32_t*)dest)[i] = CHANGE_ENDIAN32(ctx->h[i]);
 	}
 }
 
-void blake256_nextBlock(blake256_ctx_t* ctx, const void* block){
+void blake256_nextBlock(blake256_ctx_t *ctx, const void *block){
 	blake_small_nextBlock(ctx, block);
 }
 
-void blake224_nextBlock(blake224_ctx_t* ctx, const void* block){
+void blake224_nextBlock(blake224_ctx_t *ctx, const void *block){
 	blake_small_nextBlock(ctx, block);
 }
 
-void blake256_lastBlock(blake256_ctx_t* ctx, const void* block, uint16_t length_b){
+void blake256_lastBlock(blake256_ctx_t *ctx, const void *block, uint16_t length_b){
 	blake_small_lastBlock(ctx, block, length_b);
 }
 
-void blake224_lastBlock(blake224_ctx_t* ctx, const void* block, uint16_t length_b){
+void blake224_lastBlock(blake224_ctx_t *ctx, const void *block, uint16_t length_b){
 	blake_small_lastBlock(ctx, block, length_b);
 }
 
-void blake256(void* dest, const void* msg, uint32_t length_b){
+void blake256(void *dest, const void *msg, uint32_t length_b){
 	blake_small_ctx_t ctx;
 	blake256_init(&ctx);
 	while(length_b>=BLAKE_SMALL_BLOCKSIZE){
@@ -258,7 +258,7 @@ void blake256(void* dest, const void* msg, uint32_t length_b){
 	blake256_ctx2hash(dest, &ctx);
 }
 
-void blake224(void* dest, const void* msg, uint32_t length_b){
+void blake224(void *dest, const void *msg, uint32_t length_b){
 	blake_small_ctx_t ctx;
 	blake224_init(&ctx);
 	while(length_b>=BLAKE_SMALL_BLOCKSIZE){

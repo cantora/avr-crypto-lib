@@ -47,9 +47,9 @@ typedef uint8_t md5_hash_t[MD5_HASH_BYTES];
 
  
 void md5_init(md5_ctx_t *s);
-void md5_nextBlock(md5_ctx_t *state, const void* block);
-void md5_lastBlock(md5_ctx_t *state, const void* block, uint16_t length);
-void md5_ctx2hash(md5_hash_t* dest, const md5_ctx_t* state);
-void md5(md5_hash_t* dest, const void* msg, uint32_t length_b);
+void md5_nextBlock(md5_ctx_t *state, const void *block);
+void md5_lastBlock(md5_ctx_t *state, const void *block, uint16_t length);
+void md5_ctx2hash(md5_hash_t *dest, const md5_ctx_t *state);
+void md5(md5_hash_t *dest, const void *msg, uint32_t length_b);
 
 #endif /*MD5_H_*/

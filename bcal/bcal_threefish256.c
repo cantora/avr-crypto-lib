@@ -36,7 +36,7 @@ const char threefish256_str[]   PROGMEM = "Threefish-256";
 const uint8_t threefish256_keysize_desc[] PROGMEM = { KS_TYPE_LIST, 1, KS_INT(256),
                                                 KS_TYPE_TERMINATOR    };
 
-static void threefish256_dummy_init(void* key, void* ctx){
+static void threefish256_dummy_init(void *key, void *ctx){
 	threefish256_init(key, NULL, ctx);
 }
 

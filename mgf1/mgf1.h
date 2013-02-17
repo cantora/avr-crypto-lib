@@ -24,13 +24,13 @@
 #include "hfal-basic.h"
 
 typedef struct {
-	const hfdesc_t* hashfunction;
+	const hfdesc_t *hashfunction;
 } mgf1_parameter_t;
 
 /*
  * MGF1 as defined in PKCS #1 v2.1 B.2.1
  */
 
-void mgf1(void* dest, const void* seed, uint16_t seed_len_B, uint16_t out_length_B, const mgf1_parameter_t* p);
+void mgf1(void *dest, const void *seed, uint16_t seed_len_B, uint16_t out_length_B, const mgf1_parameter_t *p);
 
 #endif /* MGF1_H_ */

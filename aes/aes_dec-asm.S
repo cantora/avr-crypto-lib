@@ -65,7 +65,7 @@ aes128_dec:
 
 
 /*
-  void aes_decrypt_core(aes_cipher_state_t* state, const aes_genctx_t* ks, uint8_t rounds)
+  void aes_decrypt_core(aes_cipher_state_t *state, const aes_genctx_t *ks, uint8_t rounds)
 */
 T0= 2
 T1= 3

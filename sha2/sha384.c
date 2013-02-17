@@ -25,11 +25,11 @@
 #include "sha384.h"
 
 
-void sha384_nextBlock (sha384_ctx_t* ctx, const void* block){
+void sha384_nextBlock (sha384_ctx_t *ctx, const void *block){
 	sha2_large_common_nextBlock(ctx, block);
 }
 
-void sha384_lastBlock(sha384_ctx_t* ctx, const void* block, uint16_t length_b){
+void sha384_lastBlock(sha384_ctx_t *ctx, const void *block, uint16_t length_b){
 	sha2_large_common_lastBlock(ctx, block, length_b);
 }
 
@@ -40,12 +40,12 @@ uint64_t sha384_init_values[8] PROGMEM = {
 };
 
 
-void sha384_init(sha384_ctx_t* ctx){
+void sha384_init(sha384_ctx_t *ctx){
 	ctx->length = 0;
 	memcpy_P(ctx->h, sha384_init_values, 8*8);
 }
 
-void sha384_ctx2hash(void* dest, const sha384_ctx_t* ctx){
+void sha384_ctx2hash(void *dest, const sha384_ctx_t *ctx){
 	uint8_t i=6, j, *s = (uint8_t*)(ctx->h);
 	do{
 		j=7;
@@ -58,7 +58,7 @@ void sha384_ctx2hash(void* dest, const sha384_ctx_t* ctx){
 }
 
 
-void sha384(void* dest, const void* msg, uint32_t length_b){
+void sha384(void *dest, const void *msg, uint32_t length_b){
 	sha384_ctx_t ctx;
 	sha384_init(&ctx);
 	while(length_b >= 1024){

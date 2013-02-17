@@ -21,10 +21,10 @@
 
 #include <stdint.h>
 
-typedef void (*nessie_mac_init_fpt)(void* ctx, const void* key, uint16_t keysize_b);
-typedef void (*nessie_mac_next_fpt)(void* ctx, const void* buffer);
-typedef void (*nessie_mac_last_fpt)(void* ctx, const void* buffer, uint16_t size_b);
-typedef void (*nessie_mac_conv_fpt)(void* buffer, void* ctx);
+typedef void (*nessie_mac_init_fpt)(void *ctx, const void *key, uint16_t keysize_b);
+typedef void (*nessie_mac_next_fpt)(void *ctx, const void *buffer);
+typedef void (*nessie_mac_last_fpt)(void *ctx, const void *buffer, uint16_t size_b);
+typedef void (*nessie_mac_conv_fpt)(void *buffer, void *ctx);
 
 
 typedef struct nessie_mac_ctx_st{
@@ -32,7 +32,7 @@ typedef struct nessie_mac_ctx_st{
 	uint16_t keysize_b;
 	uint16_t blocksize_B;
 	uint16_t ctx_size_B;
-	char* name; 
+	char *name; 
 	nessie_mac_init_fpt mac_init;
 	nessie_mac_next_fpt mac_next;
 	nessie_mac_last_fpt mac_last;

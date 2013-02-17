@@ -24,9 +24,9 @@
 #include "streamcipher_descriptor.h"
 #include "keysize_descriptor.h"
 
-uint8_t scal_cipher_init(const scdesc_t* cipher_descriptor,
-                         const void* key, uint16_t keysize_b,
-                         const void* iv,  uint16_t ivsize_b, scgen_ctx_t* ctx){
+uint8_t scal_cipher_init(const scdesc_t *cipher_descriptor,
+                         const void *key, uint16_t keysize_b,
+                         const void *iv,  uint16_t ivsize_b, scgen_ctx_t *ctx){
 	ctx->buffer = NULL;
 	ctx->ctx = NULL;
 
@@ -79,7 +79,7 @@ uint8_t scal_cipher_init(const scdesc_t* cipher_descriptor,
 }
 
 
-void scal_cipher_free(scgen_ctx_t* ctx){
+void scal_cipher_free(scgen_ctx_t *ctx){
 	if(ctx->buffer){
 		free(ctx->buffer);
 	}
@@ -88,7 +88,7 @@ void scal_cipher_free(scgen_ctx_t* ctx){
 	}
 }
 
-uint8_t scal_cipher_gen_byte(scgen_ctx_t* ctx){
+uint8_t scal_cipher_gen_byte(scgen_ctx_t *ctx){
 	uint8_t flags;
 	uint16_t blocksize_b;
 	void_fpt gen_fpt;
@@ -125,7 +125,7 @@ uint8_t scal_cipher_gen_byte(scgen_ctx_t* ctx){
 	}
 }
 
-void scal_cipher_gen_block(void* block, scgen_ctx_t* ctx){
+void scal_cipher_gen_block(void *block, scgen_ctx_t *ctx){
 	uint8_t flags;
 	void_fpt gen_fpt;
 	flags = pgm_read_byte(&(ctx->desc_ptr->flags));
@@ -137,7 +137,7 @@ void scal_cipher_gen_block(void* block, scgen_ctx_t* ctx){
 	}
 }
 
-void scal_cipher_gen_fillblock(void* block, uint16_t blocksize_B, scgen_ctx_t* ctx){
+void scal_cipher_gen_fillblock(void *block, uint16_t blocksize_B, scgen_ctx_t *ctx){
 	while(blocksize_B){
 		*((uint8_t*)block) = scal_cipher_gen_byte(ctx);
 		block = (uint8_t*)block + 1;
@@ -145,17 +145,17 @@ void scal_cipher_gen_fillblock(void* block, uint16_t blocksize_B, scgen_ctx_t* c
 	}
 }
 
-uint16_t scal_cipher_getBlocksize_b(const scdesc_t* desc){
+uint16_t scal_cipher_getBlocksize_b(const scdesc_t *desc){
 	uint16_t blocksize_b;
 	blocksize_b = pgm_read_word(&(desc->gensize_b));
 	return blocksize_b;
 }
 
-PGM_VOID_P scal_cipher_getKeysizeDesc(const scdesc_t* desc){
+PGM_VOID_P scal_cipher_getKeysizeDesc(const scdesc_t *desc){
 	return (PGM_VOID_P)pgm_read_word(&(desc->valid_keysize_desc));
 }
 
-PGM_VOID_P scal_cipher_getIVsizeDesc(const scdesc_t* desc){
+PGM_VOID_P scal_cipher_getIVsizeDesc(const scdesc_t *desc){
 	return (PGM_VOID_P)pgm_read_word(&(desc->valid_ivsize_desc));
 }
 

@@ -33,7 +33,7 @@
 #include "aes_enc.h"
 #include <avr/pgmspace.h>
 
-void aes_shiftcol(void* data, uint8_t shift){
+void aes_shiftcol(void *data, uint8_t shift){
 	uint8_t tmp[4];
 	tmp[0] = ((uint8_t*)data)[ 0];
 	tmp[1] = ((uint8_t*)data)[ 4];
@@ -50,7 +50,7 @@ void aes_shiftcol(void* data, uint8_t shift){
 #define GF256MUL_3(a) (gf256mul(3, (a), 0x1b))
 
 static
-void aes_enc_round(aes_cipher_state_t* state, const aes_roundkey_t* k){
+void aes_enc_round(aes_cipher_state_t *state, const aes_roundkey_t *k){
 	uint8_t tmp[16], t;
 	uint8_t i;
 	/* subBytes */
@@ -90,7 +90,7 @@ void aes_enc_round(aes_cipher_state_t* state, const aes_roundkey_t* k){
 
 
 static
-void aes_enc_lastround(aes_cipher_state_t* state,const aes_roundkey_t* k){
+void aes_enc_lastround(aes_cipher_state_t *state,const aes_roundkey_t *k){
 	uint8_t i;
 	/* subBytes */
 	for(i=0; i<16; ++i){
@@ -106,7 +106,7 @@ void aes_enc_lastround(aes_cipher_state_t* state,const aes_roundkey_t* k){
 	}
 }
 
-void aes_encrypt_core(aes_cipher_state_t* state, const aes_genctx_t* ks, uint8_t rounds){
+void aes_encrypt_core(aes_cipher_state_t *state, const aes_genctx_t *ks, uint8_t rounds){
 	uint8_t i;
 	for(i=0; i<16; ++i){
 		state->s[i] ^= ks->key[0].ks[i];

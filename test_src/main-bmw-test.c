@@ -35,10 +35,10 @@
 #include "hfal-test.h"
 #include "performance_test.h"
 
-char* algo_name = "BlueMidnightWish";
+char *algo_name = "BlueMidnightWish";
 
 
-const hfdesc_t* const algolist[] PROGMEM = {
+const hfdesc_t *const algolist[] PROGMEM = {
 	(hfdesc_t*)&bmw224_desc,
 	(hfdesc_t*)&bmw256_desc,
 	(hfdesc_t*)&bmw384_desc,
@@ -58,18 +58,18 @@ void testrun_nessie_bmw(void){
 	hfal_nessie_multiple(algolist);
 }
 
-void bmw224_test(void* msg, uint32_t length_b){
+void bmw224_test(void *msg, uint32_t length_b){
 	hfal_test(&bmw224_desc, msg, length_b);
 }
 
-void bmw256_test(void* msg, uint32_t length_b){
+void bmw256_test(void *msg, uint32_t length_b){
 	hfal_test(&bmw256_desc, msg, length_b);
 }
-void bmw384_test(void* msg, uint32_t length_b){
+void bmw384_test(void *msg, uint32_t length_b){
 	hfal_test(&bmw384_desc, msg, length_b);
 }
 
-void bmw512_test(void* msg, uint32_t length_b){
+void bmw512_test(void *msg, uint32_t length_b){
 	hfal_test(&bmw512_desc, msg, length_b);
 }
 
@@ -102,8 +102,8 @@ void test507(void){
 }
 
 void testrun_stdtest_bmw(void){
-	char* msg0 = "abc";
-	char* msg1 = "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq";
+	char *msg0 = "abc";
+	char *msg1 = "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq";
 	bmw224_test(msg0, strlen(msg0)*8);
 	bmw224_test(msg1, strlen(msg1)*8);
 	bmw256_test(msg0, strlen(msg0)*8);
@@ -114,18 +114,18 @@ void testrun_stdtest_bmw(void){
 	bmw512_test(msg1, strlen(msg1)*8);
 }
 
-void bmw256_short_test(void* msg, uint32_t length_b){
+void bmw256_short_test(void *msg, uint32_t length_b){
 	bmw256_test("abc", 3*8);
 }
 
 
 void testshort(void){
-	char* msg0 = "abc";
+	char *msg0 = "abc";
 	bmw224_test(msg0, strlen(msg0)*8);
 }
 
 void testlshort(void){
-	char* msg0 = "abc";
+	char *msg0 = "abc";
 	bmw384_test(msg0, strlen(msg0)*8);
 }
 

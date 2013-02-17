@@ -43,23 +43,23 @@
  */
 #define ENTROPIUM_RANDOMBLOCK_SIZE 32 /* bytes */
  
-/** \fn void entropium_addEntropy(unsigned length_b, const void* data)
+/** \fn void entropium_addEntropy(unsigned length_b, const void *data)
  * \brief add entropy to the prng
  * 
  * This function adds data to the internal entropy pool
  * \param length_b length of the data block in bits
  * \param data pointer to the data
  */
-void entropium_addEntropy(unsigned length_b, const void* data); 
+void entropium_addEntropy(unsigned length_b, const void *data); 
 
-/** \fn void entropium_getRandomBlock(void* b)
+/** \fn void entropium_getRandomBlock(void *b)
  * \brief generate a fixed size block of random data 
  * 
  * This function writes 32 bytes of random extracted from the entropy pool
  * in the supplied buffer.
  * \param b buffer where the random data gets written
  */
-void entropium_getRandomBlock(void* b);
+void entropium_getRandomBlock(void *b);
 
 /** \fn uint8_t entropium_getRandomByte(void)
  * \brief get a single byte of random data
@@ -70,7 +70,7 @@ void entropium_getRandomBlock(void* b);
  */ 
 uint8_t entropium_getRandomByte(void);
 
-/** \fn void entropium_fillBlockRandom(void* block, unsigned length_B)
+/** \fn void entropium_fillBlockRandom(void *block, unsigned length_B)
  * \brief get a block of random data
  * 
  * This function writes random data extracted from the entropy pool in the 
@@ -79,6 +79,6 @@ uint8_t entropium_getRandomByte(void);
  * \param block pointer to the buffer where the random data goes
  * \param length_B number of bytes to be written to the buffer
  */
-void entropium_fillBlockRandom(void* block, unsigned length_B);
+void entropium_fillBlockRandom(void *block, unsigned length_B);
 
 #endif /*PRNG_H_*/

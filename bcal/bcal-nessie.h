@@ -30,8 +30,8 @@
 
 #include "blockcipher_descriptor.h"
 
-void bcal_nessie(const bcdesc_t* bcd);
-void bcal_nessie_multiple(const bcdesc_t* const* bcd_list);
+void bcal_nessie(const bcdesc_t *bcd);
+void bcal_nessie_multiple(const bcdesc_t *const *bcd_list);
 
 
 #endif /* BCALNESSIE_H_ */

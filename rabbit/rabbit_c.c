@@ -27,7 +27,7 @@
 #endif
 
 /*
-void dump_ctx(rabbit_ctx_t* ctx){
+void dump_ctx(rabbit_ctx_t *ctx){
 	uint8_t i=0;
 	cli_putstr_P(PSTR("\r\n --- ctx dump ---\r\n  b = "));
 	cli_hexdump_byte(ctx->carry);
@@ -62,7 +62,7 @@ const uint32_t c_const[8] PROGMEM = {
 };
 
 static
-void gen_g(uint32_t* dest, rabbit_ctx_t* ctx){
+void gen_g(uint32_t *dest, rabbit_ctx_t *ctx){
 	uint8_t i=0;
 	uint64_t a;
 	uint32_t t, *x, *c;
@@ -76,7 +76,7 @@ void gen_g(uint32_t* dest, rabbit_ctx_t* ctx){
 }
 
 static
-void update_c(rabbit_ctx_t* ctx){
+void update_c(rabbit_ctx_t *ctx){
 	uint8_t i=0;
 	uint64_t a;
 	uint32_t *c;
@@ -97,7 +97,7 @@ void update_c(rabbit_ctx_t* ctx){
 #define ROT8(a)  (((a)<< 8) | ((a)>>24))
 
 static
-void step(rabbit_ctx_t* ctx){
+void step(rabbit_ctx_t *ctx){
 	uint32_t g[8];
 	uint8_t i=0;
 	update_c(ctx);
@@ -111,7 +111,7 @@ void step(rabbit_ctx_t* ctx){
 }
 
 static
-void keysetup(rabbit_ctx_t* ctx, const void* key){
+void keysetup(rabbit_ctx_t *ctx, const void *key){
 	uint16_t *x, *c;
 	uint8_t i=0;
 	x = (uint16_t*)(ctx->x);
@@ -139,7 +139,7 @@ void keysetup(rabbit_ctx_t* ctx, const void* key){
 }
 
 static
-void ivsetup(rabbit_ctx_t* ctx, const void* iv){
+void ivsetup(rabbit_ctx_t *ctx, const void *iv){
 	uint8_t i;
 	uint32_t t;
 	union __attribute__((packed)){
@@ -173,7 +173,7 @@ void ivsetup(rabbit_ctx_t* ctx, const void* iv){
 }
 
 static
-void extract(rabbit_ctx_t* ctx){
+void extract(rabbit_ctx_t *ctx){
 	int8_t i=0;
 	uint8_t *t;
 	uint16_t v;
@@ -204,9 +204,9 @@ void extract(rabbit_ctx_t* ctx){
 
 static const uint8_t key80_pad[] PROGMEM = { 0xDE, 0x05, 0x6E, 0xAC, 0x8A, 0x11 };
 
-void rabbit_init(const void* key, uint16_t keysize_b,
-                  const void* iv,
-                  rabbit_ctx_t* ctx){
+void rabbit_init(const void *key, uint16_t keysize_b,
+                  const void *iv,
+                  rabbit_ctx_t *ctx){
 	uint8_t t_key[16];
 	if(keysize_b==80){
 		memcpy(t_key, key, 10);
@@ -232,7 +232,7 @@ void rabbit_init(const void* key, uint16_t keysize_b,
 	ctx->buffer_idx = 16;
 }
 
-uint8_t rabbit_gen(rabbit_ctx_t* ctx){
+uint8_t rabbit_gen(rabbit_ctx_t *ctx){
 	if(ctx->buffer_idx==16){
 		step(ctx);
 		extract(ctx);

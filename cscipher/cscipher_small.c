@@ -95,7 +95,7 @@ static uint16_t m_inv(uint16_t a){
 }
 
 
-void cscipher_enc(void* buffer, const cscipher_ctx_t* ctx){
+void cscipher_enc(void *buffer, const cscipher_ctx_t *ctx){
 	uint8_t i,j,k;
 	uint8_t tmp[8];
 	for(i=0; i<8; ++i){
@@ -123,7 +123,7 @@ void cscipher_enc(void* buffer, const cscipher_ctx_t* ctx){
 	memxor(buffer, ctx->keys[8], 8);
 }
 
-void cscipher_dec(void* buffer, const cscipher_ctx_t* ctx){
+void cscipher_dec(void *buffer, const cscipher_ctx_t *ctx){
 	uint8_t i=7,j,k;
 	uint8_t tmp[8];
 	memxor(buffer, ctx->keys[8], 8);
@@ -146,7 +146,7 @@ void cscipher_dec(void* buffer, const cscipher_ctx_t* ctx){
 	}while(i--);
 }
 
-void cscipher_init(const void* key, cscipher_ctx_t* ctx){
+void cscipher_init(const void *key, cscipher_ctx_t *ctx){
 	uint8_t tmp_key[16], tmp[8];
 	uint8_t i,j,k,t=0;
 	memcpy(tmp_key, key, 16);

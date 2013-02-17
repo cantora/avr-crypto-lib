@@ -29,9 +29,9 @@
 #include "bcal-performance.h"
 #include "bcal-nessie.h"
 
-char* algo_name = "Camellia";
+char *algo_name = "Camellia";
 
-const bcdesc_t* const algolist[] PROGMEM = {
+const bcdesc_t *const algolist[] PROGMEM = {
 	(bcdesc_t*)&camellia128_desc,
 	NULL
 };
@@ -61,7 +61,7 @@ const uint8_t test_keys[] PROGMEM = {
 	0xEF, 0xCD, 0xAB, 0x89, 0x67, 0x45, 0x23, 0x01, 0x10, 0x32, 0x54, 0x76, 0x98, 0xBA, 0xDC, 0xFE
 };
 
-void hexdump128(void* data){
+void hexdump128(void *data){
 	uint8_t i;
 	for(i=0; i<16; ++i){
 		cli_hexdump(data, 1);

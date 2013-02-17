@@ -33,7 +33,7 @@
 #include "present80.h"
 
 static
-void key_update(uint8_t* buffer, uint8_t round){
+void key_update(uint8_t *buffer, uint8_t round){
 	uint8_t j;
 	union __attribute__((packed)){
 		uint8_t   v8[2];
@@ -63,7 +63,7 @@ void key_update(uint8_t* buffer, uint8_t round){
 }
 
 static
-void key_update_inv(uint8_t* buffer, uint8_t round){
+void key_update_inv(uint8_t *buffer, uint8_t round){
 	uint8_t j;
 	union __attribute__((packed)){
 		uint8_t   v8[2];
@@ -92,7 +92,7 @@ void key_update_inv(uint8_t* buffer, uint8_t round){
 	}while(j--);
 }
 
-void present80_init(const uint8_t* key, uint8_t keysize_b, present80_ctx_t* ctx){
+void present80_init(const uint8_t *key, uint8_t keysize_b, present80_ctx_t *ctx){
 	uint8_t i;
 	memcpy(ctx->fwd_key, key, 10);
 	memcpy(ctx->rev_key, key, 10);
@@ -101,16 +101,16 @@ void present80_init(const uint8_t* key, uint8_t keysize_b, present80_ctx_t* ctx)
 	}
 }
 
-void present80_enc(void* buffer, present80_ctx_t* ctx){
+void present80_enc(void *buffer, present80_ctx_t *ctx){
 	present_generic_enc(buffer, (uint8_t*)ctx, 10, key_update);
 }
 
-void present80_dec(void* buffer, present80_ctx_t* ctx){
+void present80_dec(void *buffer, present80_ctx_t *ctx){
 	present_generic_dec(buffer, (uint8_t*)ctx, 10, key_update_inv);
 }
 
 /*
-void present80_enc(void* buffer, present80_ctx_t* ctx){
+void present80_enc(void *buffer, present80_ctx_t *ctx){
 	uint8_t i,j,tmp[8], k[10];
 	memcpy(k, ctx->fwd_key, 10);
 	memxor(buffer, k, 8);
@@ -125,7 +125,7 @@ void present80_enc(void* buffer, present80_ctx_t* ctx){
 	}
 }
 
-void present80_dec(void* buffer, present80_ctx_t* ctx){
+void present80_dec(void *buffer, present80_ctx_t *ctx){
 	uint8_t j,tmp[8], k[10];
 	uint8_t i;
 	memcpy(k, ctx->rev_key, 10);

@@ -39,25 +39,25 @@ static const char skein512_384_str[]   PROGMEM = "Skein-512-384";
 static const char skein512_512_str[]   PROGMEM = "Skein-512-512";
 static const char skein512_1024_str[]  PROGMEM = "Skein-512-1024";
 
-void skein512_128_init(skein512_ctx_t* ctx){
+void skein512_128_init(skein512_ctx_t *ctx){
 	skein512_init(ctx, 128);
 }
-void skein512_160_init(skein512_ctx_t* ctx){
+void skein512_160_init(skein512_ctx_t *ctx){
 	skein512_init(ctx, 160);
 }
-void skein512_224_init(skein512_ctx_t* ctx){
+void skein512_224_init(skein512_ctx_t *ctx){
 	skein512_init(ctx, 224);
 }
-void skein512_256_init(skein512_ctx_t* ctx){
+void skein512_256_init(skein512_ctx_t *ctx){
 	skein512_init(ctx, 256);
 }
-void skein512_384_init(skein512_ctx_t* ctx){
+void skein512_384_init(skein512_ctx_t *ctx){
 	skein512_init(ctx, 384);
 }
-void skein512_512_init(skein512_ctx_t* ctx){
+void skein512_512_init(skein512_ctx_t *ctx){
 	skein512_init(ctx, 512);
 }
-void skein512_1024_init(skein512_ctx_t* ctx){
+void skein512_1024_init(skein512_ctx_t *ctx){
 	skein512_init(ctx, 1024);
 }
 

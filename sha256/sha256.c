@@ -111,7 +111,7 @@ uint32_t k[]={
 /**
  * block must be, 512, Bit = 64, Byte, long !!!
  */
-void sha256_nextBlock (sha256_ctx_t *state, const void* block){
+void sha256_nextBlock (sha256_ctx_t *state, const void *block){
 	uint32_t w[64];	/* this is 256, byte, large, */
 	uint8_t  i;
 	uint32_t a[8],t1,t2;
@@ -158,7 +158,7 @@ void sha256_nextBlock (sha256_ctx_t *state, const void* block){
  *  bits are big endian, meaning high bits come first.
  * 	if you have a message with bits at the end, the byte must be padded with zeros
  */
-void sha256_lastBlock(sha256_ctx_t *state, const void* block, uint16_t length){
+void sha256_lastBlock(sha256_ctx_t *state, const void *block, uint16_t length){
 	uint8_t lb[SHA256_BLOCK_BITS/8]; /* local block */
 	while(length>=SHA256_BLOCK_BITS){
 		sha256_nextBlock(state, block);
@@ -204,7 +204,7 @@ void sha256_lastBlock(sha256_ctx_t *state, const void* block, uint16_t length){
 /*
  * length in bits!
  */
-void sha256(sha256_hash_t *dest, const void* msg, uint32_t length){ /* length could be choosen longer but this is for µC */
+void sha256(sha256_hash_t *dest, const void *msg, uint32_t length){ /* length could be choosen longer but this is for µC */
 	sha256_ctx_t s;
 	sha256_init(&s);
 	while(length >= SHA256_BLOCK_BITS){

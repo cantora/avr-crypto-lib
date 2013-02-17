@@ -38,22 +38,22 @@ static const char skein256_256_str[]   PROGMEM = "Skein-256-256";
 static const char skein256_384_str[]   PROGMEM = "Skein-256-384";
 static const char skein256_512_str[]   PROGMEM = "Skein-256-512";
 
-void skein256_128_init(skein256_ctx_t* ctx){
+void skein256_128_init(skein256_ctx_t *ctx){
 	skein256_init(ctx, 128);
 }
-void skein256_160_init(skein256_ctx_t* ctx){
+void skein256_160_init(skein256_ctx_t *ctx){
 	skein256_init(ctx, 160);
 }
-void skein256_224_init(skein256_ctx_t* ctx){
+void skein256_224_init(skein256_ctx_t *ctx){
 	skein256_init(ctx, 224);
 }
-void skein256_256_init(skein256_ctx_t* ctx){
+void skein256_256_init(skein256_ctx_t *ctx){
 	skein256_init(ctx, 256);
 }
-void skein256_384_init(skein256_ctx_t* ctx){
+void skein256_384_init(skein256_ctx_t *ctx){
 	skein256_init(ctx, 384);
 }
-void skein256_512_init(skein256_ctx_t* ctx){
+void skein256_512_init(skein256_ctx_t *ctx){
 	skein256_init(ctx, 512);
 }
 

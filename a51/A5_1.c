@@ -39,7 +39,7 @@ uint8_t a5_1_clock_core(a5_1_ctx_t *c, uint8_t clockoverride);
  * length is length of key in bits!
  */
 
-void a5_1_init(a5_1_ctx_t *c, void* key, uint8_t keylength_b, void* iv, uint8_t ivlength_b){
+void a5_1_init(a5_1_ctx_t *c, void *key, uint8_t keylength_b, void *iv, uint8_t ivlength_b){
 	uint8_t i,t;
 	memset(c->r1, 0, 3);
 	memset(c->r2, 0, 3);
@@ -65,7 +65,7 @@ void a5_1_init(a5_1_ctx_t *c, void* key, uint8_t keylength_b, void* iv, uint8_t 
 }
 
 static
-void shiftreg(uint8_t* d){
+void shiftreg(uint8_t *d){
 	uint8_t c, c2;
 	c=d[0]>>7;
 	d[0] <<= 1;

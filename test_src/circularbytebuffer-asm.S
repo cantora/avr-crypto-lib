@@ -29,10 +29,10 @@
  typedef struct {
 	 uint8_t buffer_size;
 	 uint8_t fillcount;
-	 uint8_t* buffer;
-	 uint8_t* head;
-	 uint8_t* tail;
-	 uint8_t* top;
+	 uint8_t *buffer;
+	 uint8_t *head;
+	 uint8_t *tail;
+	 uint8_t *top;
 } circularbytebuffer_t;
 */
 
@@ -57,7 +57,7 @@
 
 /******************************************************************************/
 /*
- *	uint8_t circularbytebuffer_init(uint8_t buffersize, circularbytebuffer_t* cb){
+ *	uint8_t circularbytebuffer_init(uint8_t buffersize, circularbytebuffer_t *cb){
  *		cb->buffer_size = buffersize;
  *		cb->buffer = malloc(buffersize);
  *		cb->head = cb->tail = cb->buffer;
@@ -105,7 +105,7 @@ circularbytebuffer_init:
 
 /******************************************************************************/
 /*
- *	void circularbytebuffer_free(circularbytebuffer_t* cb){
+ *	void circularbytebuffer_free(circularbytebuffer_t *cb){
  *		free(cb->buffer);
  *	}
  *
@@ -124,7 +124,7 @@ circularbytebuffer_free:
 
 /******************************************************************************/
 /*
- *	void circularbytebuffer_init2(uint8_t buffersize, circularbytebuffer_t* cb, void* buffer){
+ *	void circularbytebuffer_init2(uint8_t buffersize, circularbytebuffer_t *cb, void *buffer){
  *		cb->buffer_size = buffersize;
  *		cb->buffer = buffer
  *		cb->head = cb->tail = cb->buffer;
@@ -157,7 +157,7 @@ circularbytebuffer_init2:
 
 /******************************************************************************/
 /*
- *	uint8_t circularbytebuffer_cnt(circularbytebuffer_t* cb){
+ *	uint8_t circularbytebuffer_cnt(circularbytebuffer_t *cb){
  *		return (cb->fillcount);
  *	}
  *
@@ -172,7 +172,7 @@ circularbytebuffer_cnt:
 	
 /******************************************************************************/
 /*
- *	uint16_t circularbytebuffer_get_lifo(circularbytebuffer_t* cb){
+ *	uint16_t circularbytebuffer_get_lifo(circularbytebuffer_t *cb){
  *		uint8_t ret;
  *		if(cb->fillcount==0)
  *			return 0xffff;
@@ -216,7 +216,7 @@ circularbytebuffer_get_lifo:
 
 /******************************************************************************/
 /*
- *	uint16_t circularbytebuffer_get_fifo(circularbytebuffer_t* cb){
+ *	uint16_t circularbytebuffer_get_fifo(circularbytebuffer_t *cb){
  *		uint8_t ret;
  *		if(cb->fillcount==0)
  *			return 0xffff;
@@ -264,7 +264,7 @@ circularbytebuffer_get_fifo:
 
 /******************************************************************************/
 /*
- *	uint8_t circularbytebuffer_append(uint8_t elem, circularbytebuffer_t* cb){
+ *	uint8_t circularbytebuffer_append(uint8_t elem, circularbytebuffer_t *cb){
  *		if(cb->fillcount==cb->buffer_size)
  *			return 1;
  *		cb->fillcount++;	
@@ -322,7 +322,7 @@ circularbytebuffer_append:
 
 /******************************************************************************/
 /*
- *	uint8_t circularbytebuffer_push(uint8_t elem, circularbytebuffer_t* cb){
+ *	uint8_t circularbytebuffer_push(uint8_t elem, circularbytebuffer_t *cb){
  *		if(cb->fillcount==cb->buffer_size)
  *			return 1;
  *		cb->fillcount++;	

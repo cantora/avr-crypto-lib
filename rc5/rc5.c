@@ -37,7 +37,7 @@
 #define ROTL32(v,n) (((v)<<(n))|((v)>>(32-(n))))
 #define ROTR32(v,n) (((v)>>(n))|((v)<<(32-(n))))
 
-void rc5_enc(void* buffer, const rc5_ctx_t* ctx){
+void rc5_enc(void *buffer, const rc5_ctx_t *ctx){
 	uint8_t i;
 	A += ctx->s[0];
 	B += ctx->s[1];
@@ -47,7 +47,7 @@ void rc5_enc(void* buffer, const rc5_ctx_t* ctx){
 	} 
 }
 
-void rc5_dec(void* buffer, const rc5_ctx_t* ctx){
+void rc5_dec(void *buffer, const rc5_ctx_t *ctx){
 	uint8_t i;
 	for(i=ctx->rounds; i>0; --i){
 		B = ROTR32(B - ctx->s[i*2+1], A&31) ^ A;
@@ -64,7 +64,7 @@ Q32 = 10011110001101110111100110111001 = 9e3779b9
 #define Q32 0x9e3779b9
 
 
-void rc5_init(void* key, uint16_t keysize_b, uint8_t rounds, rc5_ctx_t* ctx){
+void rc5_init(void *key, uint16_t keysize_b, uint8_t rounds, rc5_ctx_t *ctx){
 	uint16_t c,n,m,j,i,t;
 	uint32_t a,b,l[(keysize_b+31)/32];
 	ctx->rounds = rounds;
@@ -91,7 +91,7 @@ void rc5_init(void* key, uint16_t keysize_b, uint8_t rounds, rc5_ctx_t* ctx){
 	}
 }
 
-void rc5_free(rc5_ctx_t* ctx){
+void rc5_free(rc5_ctx_t *ctx){
 	if(ctx->s)
 		free(ctx->s);
 }

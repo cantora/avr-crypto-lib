@@ -34,13 +34,13 @@ typedef struct{
 } bcal_ofb_ctx_t;
 
 
-uint8_t bcal_ofb_init(const bcdesc_t* desc, const void* key, uint16_t keysize_b, bcal_ofb_ctx_t* ctx);
-void bcal_ofb_free(bcal_ofb_ctx_t* ctx);
-void bcal_ofb_loadIV(const void* iv, bcal_ofb_ctx_t* ctx);
-void bcal_ofb_encNext(void* block, bcal_ofb_ctx_t* ctx);
-void bcal_ofb_decNext(void* block, bcal_ofb_ctx_t* ctx);
-void bcal_ofb_encMsg(const void* iv, void* msg, uint32_t msg_len_b, bcal_ofb_ctx_t* ctx);
-void bcal_ofb_decMsg(const void* iv, void* msg, uint32_t msg_len_b, bcal_ofb_ctx_t* ctx);
+uint8_t bcal_ofb_init(const bcdesc_t *desc, const void *key, uint16_t keysize_b, bcal_ofb_ctx_t *ctx);
+void bcal_ofb_free(bcal_ofb_ctx_t *ctx);
+void bcal_ofb_loadIV(const void *iv, bcal_ofb_ctx_t *ctx);
+void bcal_ofb_encNext(void *block, bcal_ofb_ctx_t *ctx);
+void bcal_ofb_decNext(void *block, bcal_ofb_ctx_t *ctx);
+void bcal_ofb_encMsg(const void *iv, void *msg, uint32_t msg_len_b, bcal_ofb_ctx_t *ctx);
+void bcal_ofb_decMsg(const void *iv, void *msg, uint32_t msg_len_b, bcal_ofb_ctx_t *ctx);
 
 
 #endif /* BCALOFB_H_ */

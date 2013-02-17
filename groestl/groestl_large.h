@@ -44,22 +44,22 @@ typedef struct {
 typedef groestl_large_ctx_t groestl384_ctx_t;
 typedef groestl_large_ctx_t groestl512_ctx_t;
 
-void groestl384_init(groestl384_ctx_t* ctx);
-void groestl512_init(groestl512_ctx_t* ctx);
+void groestl384_init(groestl384_ctx_t *ctx);
+void groestl512_init(groestl512_ctx_t *ctx);
 
-void groestl_large_nextBlock(groestl_large_ctx_t* ctx, const void* block);
-void groestl_large_lastBlock(groestl_large_ctx_t* ctx, const void* block, uint16_t length_b);
+void groestl_large_nextBlock(groestl_large_ctx_t *ctx, const void *block);
+void groestl_large_lastBlock(groestl_large_ctx_t *ctx, const void *block, uint16_t length_b);
 
-void groestl384_nextBlock(groestl384_ctx_t* ctx, const void* block);
-void groestl384_lastBlock(groestl384_ctx_t* ctx, const void* block, uint16_t length_b);
+void groestl384_nextBlock(groestl384_ctx_t *ctx, const void *block);
+void groestl384_lastBlock(groestl384_ctx_t *ctx, const void *block, uint16_t length_b);
 
-void groestl512_nextBlock(groestl512_ctx_t* ctx, const void* block);
-void groestl512_lastBlock(groestl512_ctx_t* ctx, const void* block, uint16_t length_b);
+void groestl512_nextBlock(groestl512_ctx_t *ctx, const void *block);
+void groestl512_lastBlock(groestl512_ctx_t *ctx, const void *block, uint16_t length_b);
 
-void groestl384_ctx2hash(void* dest, const groestl384_ctx_t* ctx);
-void groestl512_ctx2hash(void* dest, const groestl512_ctx_t* ctx);
+void groestl384_ctx2hash(void *dest, const groestl384_ctx_t *ctx);
+void groestl512_ctx2hash(void *dest, const groestl512_ctx_t *ctx);
 
-void groestl384(void* dest, const void* msg, uint32_t length_b);
-void groestl512(void* dest, const void* msg, uint32_t length_b);
+void groestl384(void *dest, const void *msg, uint32_t length_b);
+void groestl512(void *dest, const void *msg, uint32_t length_b);
 
 #endif /* GROESTL_GROESTL_H_ */

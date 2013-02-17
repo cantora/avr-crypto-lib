@@ -27,7 +27,7 @@
 
 /******************************************************************************/
 /*
-void skein256_init(skein256_ctx_t* ctx, uint16_t outsize_b){
+void skein256_init(skein256_ctx_t *ctx, uint16_t outsize_b){
 	skein_config_t conf;
 	uint8_t null[UBI256_BLOCKSIZE_B];
 	memset(null, 0, UBI256_BLOCKSIZE_B);
@@ -118,7 +118,7 @@ skein256_lastBlock:
 
 /******************************************************************************/
 /*
-void skein256_ctx2hash(void* dest, skein256_ctx_t* ctx){
+void skein256_ctx2hash(void *dest, skein256_ctx_t *ctx){
 	ubi256_ctx_t uctx;
 	uint16_t outsize_b;
 
@@ -267,7 +267,7 @@ skein256_ctx2hash:
 
 /******************************************************************************/
 /*
-void skein256(void* dest, uint16_t outlength_b, const void* msg, uint32_t length_b){
+void skein256(void *dest, uint16_t outlength_b, const void *msg, uint32_t length_b){
 	skein256_ctx_t ctx;
 	skein256_init(&ctx, outlength_b);
 	while(length_b>SKEIN256_BLOCKSIZE){

@@ -31,6 +31,6 @@
 #include "hashfunction_descriptor.h"
 #include <stdint.h>
 
-void hfal_test(const hfdesc_t* hd, void* msg, uint32_t length_b);
+void hfal_test(const hfdesc_t *hd, void *msg, uint32_t length_b);
 
 #endif /* HFAL_TEST_H_ */

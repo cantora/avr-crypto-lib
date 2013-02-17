@@ -32,20 +32,20 @@
 #include "nessie_bc_test.h"
 #include "performance_test.h"
 
-char* algo_name = "Shabea";
+char *algo_name = "Shabea";
 
 /*****************************************************************************
  *  additional validation-functions                                          *
  *****************************************************************************/
-void shabea_genctx_dummy(uint8_t* key, uint16_t keysize_b, void* ctx){
+void shabea_genctx_dummy(uint8_t *key, uint16_t keysize_b, void *ctx){
 	memcpy(ctx, key, (keysize_b+7)/8);
 }
 
-void shabea_enc_dummy(void* buffer, void* ctx){
+void shabea_enc_dummy(void *buffer, void *ctx){
 	shabea256(buffer, ctx, 256, 1, 16);
 }
 
-void shabea_dec_dummy(void* buffer, void* ctx){
+void shabea_dec_dummy(void *buffer, void *ctx){
 	shabea256(buffer, ctx, 256, 0, 16);
 }
 
@@ -96,7 +96,7 @@ void testrun_performance_shabea(void){
  *  self tests																 *
  *****************************************************************************/
 
-void testencrypt(uint8_t* block, uint8_t* key){
+void testencrypt(uint8_t *block, uint8_t *key){
 	cli_putstr("\r\n==testy-encrypt==\r\n key: ");
 	cli_hexdump(key,16);
 	cli_putstr("\r\n plain: ");
@@ -106,7 +106,7 @@ void testencrypt(uint8_t* block, uint8_t* key){
 	cli_hexdump(block,32);
 }
 
-void testdecrypt(uint8_t* block, uint8_t* key){
+void testdecrypt(uint8_t *block, uint8_t *key){
 
 	cli_putstr("\r\n==testy-decrypt==\r\n key: ");
 	cli_hexdump(key,16);

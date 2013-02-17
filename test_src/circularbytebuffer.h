@@ -40,10 +40,10 @@
  typedef struct {
 	 uint8_t buffer_size; /**< holds the amount of bytes which may be stored in the buffer */
 	 uint8_t fillcount; /**< holds the amount of bytes actually stored in the buffer */
-	 uint8_t* buffer; /**< pointer to the actual  buffer */
-	 uint8_t* head; /**< pointer to the head of the buffer */
-	 uint8_t* tail; /**< pointer to the tail of the buffer */
-	 uint8_t* top; /**< pointer to the last free address in the buffer */
+	 uint8_t *buffer; /**< pointer to the actual  buffer */
+	 uint8_t *head; /**< pointer to the head of the buffer */
+	 uint8_t *tail; /**< pointer to the tail of the buffer */
+	 uint8_t *top; /**< pointer to the last free address in the buffer */
 } circularbytebuffer_t;
 
 
@@ -55,7 +55,7 @@
  * \param buffersize size of the buffer to allocate
  * \param cb buffer context to be initialized
  */
-uint8_t circularbytebuffer_init(uint8_t buffersize, circularbytebuffer_t* cb);
+uint8_t circularbytebuffer_init(uint8_t buffersize, circularbytebuffer_t *cb);
 #endif
 #if CIRCULARBYTEBUFFER_NO_INIT2==0
 /** \brief buffer initialisation without automatic allocation
@@ -66,18 +66,18 @@ uint8_t circularbytebuffer_init(uint8_t buffersize, circularbytebuffer_t* cb);
  * \param cb buffer context to be initialized
  * \param buffer buffer for the storage of data (you are responisble for allocation and freeing)
  */
-void    circularbytebuffer_init2(uint8_t buffersize, circularbytebuffer_t* cb, void* buffer);
+void    circularbytebuffer_init2(uint8_t buffersize, circularbytebuffer_t *cb, void *buffer);
 #endif
 /** \brief
  *
  *
  */
-uint16_t circularbytebuffer_get_lifo(circularbytebuffer_t* cb);
-uint16_t circularbytebuffer_get_fifo(circularbytebuffer_t* cb);
-uint8_t circularbytebuffer_append(uint8_t, circularbytebuffer_t* cb);
-uint8_t circularbytebuffer_push(uint8_t, circularbytebuffer_t* cb);
-uint8_t circularbytebuffer_cnt(circularbytebuffer_t* cb);
-void circularbytebuffer_free(circularbytebuffer_t* cb);
+uint16_t circularbytebuffer_get_lifo(circularbytebuffer_t *cb);
+uint16_t circularbytebuffer_get_fifo(circularbytebuffer_t *cb);
+uint8_t circularbytebuffer_append(uint8_t, circularbytebuffer_t *cb);
+uint8_t circularbytebuffer_push(uint8_t, circularbytebuffer_t *cb);
+uint8_t circularbytebuffer_cnt(circularbytebuffer_t *cb);
+void circularbytebuffer_free(circularbytebuffer_t *cb);
 
 /*@}*/
 #endif /* CIRCULARBYTEBUFFER_H_ */

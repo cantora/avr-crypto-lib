@@ -31,7 +31,7 @@
 
 #include <stdint.h>
 
-/** \fn void skipjack_enc(void* block, void* key)
+/** \fn void skipjack_enc(void *block, void *key)
  * \brief skipjack encryption function
  * 
  * This function encrypts a block of plaintext with the Skipjac encryption
@@ -40,9 +40,9 @@
  * \param block pointer to the 64 bit (8 byte) block to encrypt
  * \param key   pointer to the 80 bit (10 byte) key 
  */
-void skipjack_enc(void* block, void* key);
+void skipjack_enc(void *block, void *key);
 
-/** \fn void skipjack_dec(void* block, void* key)
+/** \fn void skipjack_dec(void *block, void *key)
  * \brief skipjack decryption function
  * 
  * This function decrypts a block of ciphertext encrypted with the Skipjac
@@ -51,6 +51,6 @@ void skipjack_enc(void* block, void* key);
  * \param block pointer to the 64 bit (8 byte) block to decrypt
  * \param key   pointer to the 80 bit (10 byte) key 
  */
-void skipjack_dec(void* block, void* key);
+void skipjack_dec(void *block, void *key);
 
 #endif /*SKIPJACK_H_*/

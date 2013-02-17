@@ -25,7 +25,7 @@
 #include "memxor.h"
 
 
-static uint8_t left_shift_be_block(void* block, uint8_t blocksize_B){
+static uint8_t left_shift_be_block(void *block, uint8_t blocksize_B){
 	uint8_t c1=0, c2;
 	do{
 		--blocksize_B;
@@ -40,7 +40,7 @@ static uint8_t left_shift_be_block(void* block, uint8_t blocksize_B){
 static const uint8_t const_128 = 0x87;
 static const uint8_t const_64  = 0x1b;
 
-uint8_t bcal_cmac_init(const bcdesc_t* desc, const void* key, uint16_t keysize_b, bcal_cmac_ctx_t* ctx){
+uint8_t bcal_cmac_init(const bcdesc_t *desc, const void *key, uint16_t keysize_b, bcal_cmac_ctx_t *ctx){
 	uint8_t r;
 	ctx->desc = (bcdesc_t*)desc;
 	ctx->blocksize_B = bcal_cipher_getBlocksize_b(desc)/8;
@@ -87,14 +87,14 @@ uint8_t bcal_cmac_init(const bcdesc_t* desc, const void* key, uint16_t keysize_b
 	return 0;
 }
 
-void bcal_cmac_free(bcal_cmac_ctx_t* ctx){
+void bcal_cmac_free(bcal_cmac_ctx_t *ctx){
 	free(ctx->accu);
 	free(ctx->k1);
 	free(ctx->k2);
 	bcal_cipher_free(&(ctx->cctx));
 }
 
-void bcal_cmac_nextBlock (bcal_cmac_ctx_t* ctx, const void* block){
+void bcal_cmac_nextBlock (bcal_cmac_ctx_t *ctx, const void *block){
 	if(ctx->last_set){
 		memxor(ctx->accu, ctx->lastblock, ctx->blocksize_B);
 		bcal_cipher_enc(ctx->accu, &(ctx->cctx));
@@ -104,7 +104,7 @@ void bcal_cmac_nextBlock (bcal_cmac_ctx_t* ctx, const void* block){
 }
 
 
-void bcal_cmac_lastBlock(bcal_cmac_ctx_t* ctx, const void* block, uint16_t length_b){
+void bcal_cmac_lastBlock(bcal_cmac_ctx_t *ctx, const void *block, uint16_t length_b){
 	uint16_t blocksize_b;
 	blocksize_b = ctx->blocksize_B*8;
 	while(length_b>=blocksize_b){
@@ -131,7 +131,7 @@ void bcal_cmac_lastBlock(bcal_cmac_ctx_t* ctx, const void* block, uint16_t lengt
 	bcal_cipher_enc(ctx->accu, &(ctx->cctx));
 }
 
-void bcal_cmac_ctx2mac(void* dest, uint16_t length_b, const bcal_cmac_ctx_t* ctx){
+void bcal_cmac_ctx2mac(void *dest, uint16_t length_b, const bcal_cmac_ctx_t *ctx){
 	memcpy(dest, ctx->accu, length_b/8);
 	if(length_b&7){
 		((uint8_t*)dest)[length_b/8] &= 0xff>>(length_b&7);
@@ -139,7 +139,7 @@ void bcal_cmac_ctx2mac(void* dest, uint16_t length_b, const bcal_cmac_ctx_t* ctx
 	}
 }
 
-void bcal_cmac(void* dest, uint16_t out_length_b, const void* block, uint32_t length_b, bcal_cmac_ctx_t* ctx){
+void bcal_cmac(void *dest, uint16_t out_length_b, const void *block, uint32_t length_b, bcal_cmac_ctx_t *ctx){
 	uint16_t blocksize_b;
 	blocksize_b = ctx->blocksize_B*8;
 	while(length_b>blocksize_b){

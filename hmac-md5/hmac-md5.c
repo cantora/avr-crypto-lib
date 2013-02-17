@@ -39,7 +39,7 @@
 
 #ifndef HMAC_SHORTONLY
 
-void hmac_md5_init(hmac_md5_ctx_t *s, void* key, uint16_t keylength_b){
+void hmac_md5_init(hmac_md5_ctx_t *s, void *key, uint16_t keylength_b){
 	uint8_t buffer[MD5_BLOCK_BYTES];
 	uint8_t i;
 	
@@ -67,15 +67,15 @@ void hmac_md5_init(hmac_md5_ctx_t *s, void* key, uint16_t keylength_b){
 #endif
 }
 
-void hmac_md5_nextBlock(hmac_md5_ctx_t *s, const void* block){
+void hmac_md5_nextBlock(hmac_md5_ctx_t *s, const void *block){
 	md5_nextBlock(&(s->a), block);
 }
 
-void hmac_md5_lastBlock(hmac_md5_ctx_t *s, const void* block, uint16_t length_b){
+void hmac_md5_lastBlock(hmac_md5_ctx_t *s, const void *block, uint16_t length_b){
 	md5_lastBlock(&(s->a), block, length_b);
 }
 
-void hmac_md5_final(void* dest, hmac_md5_ctx_t *s){
+void hmac_md5_final(void *dest, hmac_md5_ctx_t *s){
 	md5_ctx2hash((md5_hash_t*)dest, &(s->a));
 	md5_lastBlock(&(s->b), dest, MD5_HASH_BITS);
 	md5_ctx2hash((md5_hash_t*)dest, &(s->b));
@@ -92,7 +92,7 @@ void hmac_md5_lastBlock()
  * keylength in bits!
  * message length in bits!
  */
-void hmac_md5(void* dest, void* key, uint16_t keylength_b, void* msg, uint32_t msglength_b){ /* a one-shot*/
+void hmac_md5(void *dest, void *key, uint16_t keylength_b, void *msg, uint32_t msglength_b){ /* a one-shot*/
 	md5_ctx_t s;
 	uint8_t i;
 	uint8_t buffer[MD5_BLOCK_BYTES];

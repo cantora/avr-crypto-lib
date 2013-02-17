@@ -67,12 +67,12 @@ void sha224_init(sha224_ctx_t *state){
 }
 
 /*************************************************************************/
-void sha224_nextBlock (sha224_ctx_t *state, const void* block){
+void sha224_nextBlock (sha224_ctx_t *state, const void *block){
 	sha2_small_common_nextBlock(state, block);
 }
 
 /*************************************************************************/
-void sha224_lastBlock (sha224_ctx_t *state, const void* block, uint16_t length_b){
+void sha224_lastBlock (sha224_ctx_t *state, const void *block, uint16_t length_b){
 	sha2_small_common_lastBlock(state, block, length_b);
 }
 /*************************************************************************/
@@ -91,7 +91,7 @@ void sha224_lastBlock (sha224_ctx_t *state, const void* block, uint16_t length_b
 /*
  * length in bits!
  */
-void sha224(void* dest, const void* msg, uint32_t length_b){ /* length could be choosen longer but this is for µC */
+void sha224(void *dest, const void *msg, uint32_t length_b){ /* length could be choosen longer but this is for µC */
 	sha224_ctx_t s;
 	sha224_init(&s);
 	while(length_b >= SHA224_BLOCK_BITS){
@@ -107,7 +107,7 @@ void sha224(void* dest, const void* msg, uint32_t length_b){ /* length could be 
 
 /*************************************************************************/
 
-void sha224_ctx2hash(void* dest, const sha224_ctx_t *state){
+void sha224_ctx2hash(void *dest, const sha224_ctx_t *state){
 #if defined LITTLE_ENDIAN
 	uint8_t i, j, *s=(uint8_t*)(state->h);
 	i=7;

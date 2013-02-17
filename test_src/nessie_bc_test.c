@@ -36,12 +36,12 @@ void nessie_bc_init(void){
 	memset(&nessie_bc_ctx, 0, sizeof(nessie_bc_ctx_t));	
 }
 static
-void nessie_bc_free(void* ctx){
+void nessie_bc_free(void *ctx){
 	if(nessie_bc_ctx.cipher_free)
 		nessie_bc_ctx.cipher_free(ctx);
 }
 
-void nessie_bc_enc(uint8_t* key, uint8_t* pt){
+void nessie_bc_enc(uint8_t *key, uint8_t *pt){
 	uint8_t ctx[nessie_bc_ctx.ctx_size_B];
 	uint8_t buffer[nessie_bc_ctx.blocksize_B];
 	uint16_t i;
@@ -76,7 +76,7 @@ void nessie_bc_enc(uint8_t* key, uint8_t* pt){
 	nessie_bc_free(ctx);
 }
 
-void nessie_bc_dec(uint8_t* key, uint8_t* ct){
+void nessie_bc_dec(uint8_t *key, uint8_t *ct){
 	uint8_t ctx[nessie_bc_ctx.ctx_size_B];
 	uint8_t buffer[nessie_bc_ctx.blocksize_B];
 	

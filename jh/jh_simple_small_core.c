@@ -50,7 +50,7 @@ uint8_t jh_l(uint8_t v, uint8_t w){
 }
 
 static
-void jh_round(uint8_t* a, const uint8_t* rc){
+void jh_round(uint8_t *a, const uint8_t *rc){
 	uint8_t b[128];
 	uint8_t i,r=0,x,y;
 	for(i=0; i<128; ++i){
@@ -79,7 +79,7 @@ void jh_round(uint8_t* a, const uint8_t* rc){
 }
 
 static
-void jh_next_round_const(uint8_t* a){
+void jh_next_round_const(uint8_t *a){
 	uint8_t b[32];
 	uint8_t i,x,y;
 	for(i=0; i<32; ++i){
@@ -138,7 +138,7 @@ void degroup(uint8_t *a){
 	memcpy(a,b,128);
 }
 
-void jh_encrypt(uint8_t* a){
+void jh_encrypt(uint8_t *a){
 	uint8_t i;
 	uint8_t rc[32];
 	/* grouping */

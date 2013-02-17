@@ -28,7 +28,7 @@ typedef struct{
 	uint8_t ks[16];
 } aes_roundkey_t;
 
-void aes_enc_round(aes_cipher_state_t* state, const aes_roundkey_t* k);
+void aes_enc_round(aes_cipher_state_t *state, const aes_roundkey_t *k);
 
 
 #endif /* AES_ENC_ROUND_H_ */

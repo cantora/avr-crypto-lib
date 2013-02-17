@@ -24,18 +24,18 @@
 #include "hashfunction_descriptor.h"
 
 typedef struct {
-	hfdesc_t* desc;
+	hfdesc_t *desc;
 	void*     ctx;
 	void*     finctx;
 } hfhmacgen_ctx_t;
 
-uint8_t hfal_hmac_init(const hfdesc_t* hash_descriptor, hfhmacgen_ctx_t* ctx, const void* key, uint16_t keylength_b);
-void hfal_hmac_nextBlock(hfhmacgen_ctx_t* ctx, const void* block);
-void hfal_hmac_lastBlock(hfhmacgen_ctx_t* ctx, const void* block, uint16_t length_b);
-void hfal_hmac_ctx2mac(void* dest, hfhmacgen_ctx_t* ctx);
-void hfal_hmac_free(hfhmacgen_ctx_t* ctx);
-void hfal_hmac_mem(const hfdesc_t* hash_descriptor, const void* key, uint16_t keylength_b, void* dest, const void* msg, uint32_t length_b);
-uint16_t hfal_hmac_getBlocksize(const hfdesc_t* hash_descriptor);
-uint16_t hfal_hmac_getMACsize(const hfdesc_t* hash_descriptor);
+uint8_t hfal_hmac_init(const hfdesc_t *hash_descriptor, hfhmacgen_ctx_t *ctx, const void *key, uint16_t keylength_b);
+void hfal_hmac_nextBlock(hfhmacgen_ctx_t *ctx, const void *block);
+void hfal_hmac_lastBlock(hfhmacgen_ctx_t *ctx, const void *block, uint16_t length_b);
+void hfal_hmac_ctx2mac(void *dest, hfhmacgen_ctx_t *ctx);
+void hfal_hmac_free(hfhmacgen_ctx_t *ctx);
+void hfal_hmac_mem(const hfdesc_t *hash_descriptor, const void *key, uint16_t keylength_b, void *dest, const void *msg, uint32_t length_b);
+uint16_t hfal_hmac_getBlocksize(const hfdesc_t *hash_descriptor);
+uint16_t hfal_hmac_getMACsize(const hfdesc_t *hash_descriptor);
 
 #endif /* HFAL_HMAC_H_ */

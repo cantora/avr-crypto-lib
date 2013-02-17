@@ -27,7 +27,7 @@
 #define SHACAL2_KEYSIZE SHA256_BLOCK_BITS
 #define SHACAL2_KEYSIZE_B ((SHACAL2_KEYSIZE+7)/8)
 
-void shacal2_enc(void* buffer, void* key, uint16_t keysize_b);
+void shacal2_enc(void *buffer, void *key, uint16_t keysize_b);
 
 
 #endif /*SHACAL2_ENC_H_*/

@@ -34,7 +34,7 @@
 
 #define DEBUG 1
 
-const char* algo_name = "RSAES-PKCS1V15";
+const char *algo_name = "RSAES-PKCS1V15";
 
 #define BIGINT_CEIL(x) ((((x) + sizeof(bigint_word_t) - 1) / sizeof(bigint_word_t)) *  sizeof(bigint_word_t))
 #define BIGINT_OFF(x) ((sizeof(bigint_word_t) - (x) % sizeof(bigint_word_t)) % sizeof(bigint_word_t))
@@ -174,7 +174,7 @@ uint8_t convert_nibble(uint8_t c){
 
 const char *block_ignore_string=" \t\r\n,;";
 #define BUFFER_LIMIT 120
-uint16_t read_os(void* dst, uint16_t length, const char* ignore_string){
+uint16_t read_os(void *dst, uint16_t length, const char *ignore_string){
 	uint16_t counter = 0;
 	uint16_t c;
 	uint8_t v, tmp = 0, idx = 0;
@@ -207,7 +207,7 @@ uint16_t read_os(void* dst, uint16_t length, const char* ignore_string){
 	return counter;
 }
 
-uint16_t own_atou(const char* str){
+uint16_t own_atou(const char *str){
 	uint16_t r=0;
 	while(*str && *str >= '0' && *str <= '9'){
 		r *= 10;
@@ -216,7 +216,7 @@ uint16_t own_atou(const char* str){
 	return r;
 }
 
-uint8_t read_bigint(bigint_t* a, char* prompt){
+uint8_t read_bigint(bigint_t *a, char *prompt){
 	uint16_t read_length, actual_length;
 	uint8_t off;
 	uint8_t *buffer;
@@ -308,7 +308,7 @@ uint8_t read_key_conv(void){
 	return r;
 }
 
-uint8_t load_bigint_from_os(bigint_t* a, PGM_VOID_P os, uint16_t length_B){
+uint8_t load_bigint_from_os(bigint_t *a, PGM_VOID_P os, uint16_t length_B){
 	a->length_W = BIGINT_CEIL(length_B) / sizeof(bigint_word_t);
 	a->wordv = malloc(BIGINT_CEIL(length_B));
 	if(!a->wordv){
@@ -521,7 +521,7 @@ void load_priv_crt_mono(void){
 	}
 }
 
-uint8_t load_bigint_from_os(bigint_t* a, PGM_VOID_P os, uint16_t length_B){
+uint8_t load_bigint_from_os(bigint_t *a, PGM_VOID_P os, uint16_t length_B){
 	a->length_W = BIGINT_CEIL(length_B) / sizeof(bigint_word_t);
 	a->wordv = malloc(BIGINT_CEIL(length_B));
 	if(!a->wordv){

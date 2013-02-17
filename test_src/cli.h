@@ -45,7 +45,7 @@ typedef struct {
 	PGM_P        cmd_name;      /* string containing the function name */
 	PGM_P        cmd_param_str; /* param descriptor string */
 	void_fpt     cmd_function;  /* function pointer */
-	cmdoption_t* options;
+	cmdoption_t *options;
 } cmdlist_entry_t;
 
 extern cli_rx_fpt cli_rx;
@@ -57,17 +57,17 @@ extern uint8_t cli_echo;
 void cli_putc(char c);
 uint16_t cli_getc(void);
 uint16_t cli_getc_cecho(void);
-uint8_t cli_getsn(char* s, size_t n);
-uint8_t cli_getsn_cecho(char* s, uint16_t n);
-void cli_putstr(const char* s);
+uint8_t cli_getsn(char *s, size_t n);
+uint8_t cli_getsn_cecho(char *s, uint16_t n);
+void cli_putstr(const char *s);
 void cli_putstr_P(PGM_P s);
 void cli_hexdump_byte(uint8_t byte);
-void cli_hexdump(const void* data, size_t length);
-void cli_hexdump_rev(const void* data, size_t length);
-void cli_hexdump2(const void* data, size_t length);
-void cli_hexdump_block(const void* data, size_t length, uint8_t indent, uint8_t width);
+void cli_hexdump(const void *data, size_t length);
+void cli_hexdump_rev(const void *data, size_t length);
+void cli_hexdump2(const void *data, size_t length);
+void cli_hexdump_block(const void *data, size_t length, uint8_t indent, uint8_t width);
 
-void echo_ctrl(char* s);
+void echo_ctrl(char *s);
 int8_t cmd_interface(PGM_VOID_P cmd_desc);
 
 

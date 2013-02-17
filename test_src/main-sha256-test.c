@@ -35,9 +35,9 @@
 
 #include "dump.h"
 
-char* algo_name = "SHA-256";
+char *algo_name = "SHA-256";
 
-const hfdesc_t* const algolist[] PROGMEM = {
+const hfdesc_t *const algolist[] PROGMEM = {
 	(hfdesc_t*)&sha256_desc,
 	NULL
 };

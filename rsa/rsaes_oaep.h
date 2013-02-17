@@ -24,31 +24,31 @@
 #include "mgf1.h"
 
 
-void mgf1(void* dest, const void* seed, uint16_t seed_len_B, uint16_t out_length_B, const mgf1_parameter_t* p);
+void mgf1(void *dest, const void *seed, uint16_t seed_len_B, uint16_t out_length_B, const mgf1_parameter_t *p);
 
 
 typedef struct {
-	void (*mgf)(void* dst, const void* seed, uint16_t slen_B, uint16_t dstlen_B, const mgf1_parameter_t* p);
-	const hfdesc_t* hf;
-	mgf1_parameter_t* mgf_parameter;
+	void (*mgf)(void *dst, const void *seed, uint16_t slen_B, uint16_t dstlen_B, const mgf1_parameter_t *p);
+	const hfdesc_t *hf;
+	mgf1_parameter_t *mgf_parameter;
 } rsa_oaep_parameter_t;
 
 typedef struct {
 	uint16_t length_b;
-	const void* label;
+	const void *label;
 } rsa_label_t;
 
 extern rsa_oaep_parameter_t rsa_oaep_default_parameter;
 extern rsa_label_t rsa_oaep_default_label;
 
-uint8_t rsa_encrypt_oaep(void* dest, uint16_t* out_length,
-		              const void* src, uint16_t length_B,
-		              rsa_publickey_t* key, const rsa_oaep_parameter_t *p,
-		              const rsa_label_t* label, const void* seed);
+uint8_t rsa_encrypt_oaep(void *dest, uint16_t *out_length,
+		              const void *src, uint16_t length_B,
+		              rsa_publickey_t *key, const rsa_oaep_parameter_t *p,
+		              const rsa_label_t *label, const void *seed);
 
-uint8_t rsa_decrypt_oaep(void* dest, uint16_t* out_length,
-		              const void* src, uint16_t length_B,
-		              rsa_privatekey_t* key, const rsa_oaep_parameter_t *p,
-		              const rsa_label_t* label, void* seed);
+uint8_t rsa_decrypt_oaep(void *dest, uint16_t *out_length,
+		              const void *src, uint16_t length_B,
+		              rsa_privatekey_t *key, const rsa_oaep_parameter_t *p,
+		              const rsa_label_t *label, void *seed);
 
 #endif /* RSA_OAEP_H_ */

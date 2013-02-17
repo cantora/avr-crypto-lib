@@ -72,19 +72,19 @@ typedef struct{
 } threefish1024_ctx_t;
 
 
-void threefish_mix(void* data, uint8_t rot);
-void threefish_invmix(void* data, uint8_t rot);
+void threefish_mix(void *data, uint8_t rot);
+void threefish_invmix(void *data, uint8_t rot);
 
-void threefish256_init(const void* key, const void* tweak, threefish256_ctx_t* ctx);
-void threefish512_init(const void* key, const void* tweak, threefish512_ctx_t* ctx);
-void threefish1024_init(const void* key, const void* tweak, threefish1024_ctx_t* ctx);
+void threefish256_init(const void *key, const void *tweak, threefish256_ctx_t *ctx);
+void threefish512_init(const void *key, const void *tweak, threefish512_ctx_t *ctx);
+void threefish1024_init(const void *key, const void *tweak, threefish1024_ctx_t *ctx);
 
-void threefish256_enc(void* data, const threefish256_ctx_t* ctx);
-void threefish512_enc(void* data, const threefish512_ctx_t* ctx);
-void threefish1024_enc(void* data, const threefish1024_ctx_t* ctx);
+void threefish256_enc(void *data, const threefish256_ctx_t *ctx);
+void threefish512_enc(void *data, const threefish512_ctx_t *ctx);
+void threefish1024_enc(void *data, const threefish1024_ctx_t *ctx);
 
-void threefish256_dec(void* data, const threefish256_ctx_t* ctx);
-void threefish512_dec(void* data, const threefish512_ctx_t* ctx);
-void threefish1024_dec(void* data, const threefish1024_ctx_t* ctx);
+void threefish256_dec(void *data, const threefish256_ctx_t *ctx);
+void threefish512_dec(void *data, const threefish512_ctx_t *ctx);
+void threefish1024_dec(void *data, const threefish1024_ctx_t *ctx);
 
 #endif /* THREEFISH_H_ */

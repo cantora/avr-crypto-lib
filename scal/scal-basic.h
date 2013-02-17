@@ -26,16 +26,16 @@
 #include "keysize_descriptor.h"
 #include <avr/pgmspace.h>
 
-uint8_t scal_cipher_init(const scdesc_t* cipher_descriptor,
-                         const void* key, uint16_t keysize_b,
-                         const void* iv,  uint16_t ivsize_b, scgen_ctx_t* ctx);
-void scal_cipher_free(scgen_ctx_t* ctx);
-uint8_t scal_cipher_gen_byte(scgen_ctx_t* ctx);
-void scal_cipher_gen_block(void* block, scgen_ctx_t* ctx);
-void scal_cipher_gen_fillblock(void* block, uint16_t blocksize_B, scgen_ctx_t* ctx);
-uint16_t scal_cipher_getBlocksize_b(const scdesc_t* desc);
-PGM_VOID_P scal_cipher_getKeysizeDesc(const scdesc_t* desc);
-PGM_VOID_P scal_cipher_getIVsizeDesc(const scdesc_t* desc);
+uint8_t scal_cipher_init(const scdesc_t *cipher_descriptor,
+                         const void *key, uint16_t keysize_b,
+                         const void *iv,  uint16_t ivsize_b, scgen_ctx_t *ctx);
+void scal_cipher_free(scgen_ctx_t *ctx);
+uint8_t scal_cipher_gen_byte(scgen_ctx_t *ctx);
+void scal_cipher_gen_block(void *block, scgen_ctx_t *ctx);
+void scal_cipher_gen_fillblock(void *block, uint16_t blocksize_B, scgen_ctx_t *ctx);
+uint16_t scal_cipher_getBlocksize_b(const scdesc_t *desc);
+PGM_VOID_P scal_cipher_getKeysizeDesc(const scdesc_t *desc);
+PGM_VOID_P scal_cipher_getIVsizeDesc(const scdesc_t *desc);
 
 
 #endif /* SCAL_BASIC_H_ */

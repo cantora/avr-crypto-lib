@@ -24,9 +24,9 @@ typedef struct {
 	uint8_t keys[9][8];
 } cscipher_ctx_t;
 
-void cscipher_enc(void* buffer, const cscipher_ctx_t* ctx);
-void cscipher_dec(void* buffer, const cscipher_ctx_t* ctx);
-void cscipher_init(const void* key, cscipher_ctx_t* ctx);
+void cscipher_enc(void *buffer, const cscipher_ctx_t *ctx);
+void cscipher_dec(void *buffer, const cscipher_ctx_t *ctx);
+void cscipher_init(const void *key, cscipher_ctx_t *ctx);
 
 
 #endif /* CSCIPHER_H_ */

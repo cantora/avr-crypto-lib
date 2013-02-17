@@ -20,7 +20,7 @@
 #include "main-test-common.h"
 
 static
-int std_stream_put(char c, FILE* f){
+int std_stream_put(char c, FILE *f){
     static uint8_t did_r = 0;
     if(!did_r && c == '\n'){
         uart0_putc('\r');
@@ -31,7 +31,7 @@ int std_stream_put(char c, FILE* f){
 }
 
 static
-int std_stream_get(FILE* f){
+int std_stream_get(FILE *f){
     return (int)uart0_getc();
 }
 
@@ -42,7 +42,7 @@ void main_setup(void){
 	fdevopen(std_stream_put, std_stream_get);
 }
 
-void welcome_msg(const char* algoname){
+void welcome_msg(const char *algoname){
 /*
     cli_putstr_P(PSTR("\r\n\r\nAVR-Crypto-Lib VS ("));
 	cli_putstr(algoname);

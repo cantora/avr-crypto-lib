@@ -29,7 +29,7 @@
 #include "performance_test.h"
 #include "stack_measuring.h"
 
-char* algo_name = "MQQ160-sign";
+char *algo_name = "MQQ160-sign";
 
 
 /*****************************************************************************

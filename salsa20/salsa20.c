@@ -26,7 +26,7 @@
 #define ROTL32(a,n) (((a)<<(n))|((a)>>(32-(n))))
 
 static
-void quaterround(uint32_t* a, uint32_t* b, uint32_t* c, uint32_t* d){
+void quaterround(uint32_t *a, uint32_t *b, uint32_t *c, uint32_t *d){
 	*b ^= ROTL32(*a + *d,  7);
 	*c ^= ROTL32(*b + *a,  9);
 	*d ^= ROTL32(*c + *b, 13);
@@ -34,7 +34,7 @@ void quaterround(uint32_t* a, uint32_t* b, uint32_t* c, uint32_t* d){
 }
 
 static
-void rowround(uint32_t* a){
+void rowround(uint32_t *a){
 	quaterround(a+ 0, a+ 1, a+ 2, a+ 3);
 	quaterround(a+ 5, a+ 6, a+ 7, a+ 4);
 	quaterround(a+10, a+11, a+ 8, a+ 9);
@@ -42,7 +42,7 @@ void rowround(uint32_t* a){
 }
 
 static
-void columnround(uint32_t* a){
+void columnround(uint32_t *a){
 	quaterround(a+ 0, a+ 4, a+ 8, a+12);
 	quaterround(a+ 5, a+ 9, a+13, a+ 1);
 	quaterround(a+10, a+14, a+ 2, a+ 6);
@@ -50,14 +50,14 @@ void columnround(uint32_t* a){
 }
 
 static
-void doubleround(uint32_t* a){
+void doubleround(uint32_t *a){
 	columnround(a);
 	rowround(a);
 
 }
 
 
-void salsa20_hash(uint32_t* a){
+void salsa20_hash(uint32_t *a){
 	uint8_t i;
 	uint32_t b[16];
 	memcpy(b, a, 64);
@@ -72,7 +72,7 @@ void salsa20_hash(uint32_t* a){
 const uint8_t sigma[] PROGMEM = {'e','x','p','a','n','d',' ','3','2','-','b','y','t','e',' ','k'};
 const uint8_t theta[] PROGMEM = {'e','x','p','a','n','d',' ','1','6','-','b','y','t','e',' ','k'};
 
-void salsa_k32(uint32_t* dest, const uint32_t* k, const uint32_t* n){
+void salsa_k32(uint32_t *dest, const uint32_t *k, const uint32_t *n){
 	memcpy_P(dest+ 0, sigma+ 0, 4);
 	memcpy(  dest+ 4, k+ 0, 16);
 	memcpy_P(dest+20, sigma+ 4, 4);
@@ -83,7 +83,7 @@ void salsa_k32(uint32_t* dest, const uint32_t* k, const uint32_t* n){
 	salsa20_hash(dest);
 }
 
-void salsa_k16(uint32_t* dest, const uint32_t* k, const uint32_t* n){
+void salsa_k16(uint32_t *dest, const uint32_t *k, const uint32_t *n){
 	memcpy_P(dest+ 0, theta+ 0, 4);
 	memcpy(  dest+ 4, k+ 0, 16);
 	memcpy_P(dest+20, theta+ 4, 4);
@@ -94,14 +94,14 @@ void salsa_k16(uint32_t* dest, const uint32_t* k, const uint32_t* n){
 	salsa20_hash(dest);
 }
 
-void salsa20_genBlock256(void* dest, const void* k, const void* iv, uint64_t i){
+void salsa20_genBlock256(void *dest, const void *k, const void *iv, uint64_t i){
 	uint32_t n[4];
 	memcpy(n, iv, 8);
 	memcpy(n+8, &i, 8);
 	salsa_k32((uint32_t*)dest, (uint32_t*)k, n);
 }
 
-void salsa20_genBlock128(void* dest, const void* k, const void* iv, uint64_t i){
+void salsa20_genBlock128(void *dest, const void *k, const void *iv, uint64_t i){
 	uint32_t n[4];
 	memcpy(n, iv, 8);
 	memcpy(n+8, &i, 8);
@@ -109,7 +109,7 @@ void salsa20_genBlock128(void* dest, const void* k, const void* iv, uint64_t i){
 }
 
 
-void salsa20_init(void* key, uint16_t keylength_b, void* iv, salsa20_ctx_t* ctx){
+void salsa20_init(void *key, uint16_t keylength_b, void *iv, salsa20_ctx_t *ctx){
 	if(keylength_b==256){
 		memcpy_P((ctx->a.v8+ 0), sigma+ 0, 4);
 		memcpy_P((ctx->a.v8+20), sigma+ 4, 4);
@@ -131,7 +131,7 @@ void salsa20_init(void* key, uint16_t keylength_b, void* iv, salsa20_ctx_t* ctx)
 	ctx->buffer_idx=64;
 }
 
-uint8_t salsa20_gen(salsa20_ctx_t* ctx){
+uint8_t salsa20_gen(salsa20_ctx_t *ctx){
 	if(ctx->buffer_idx==64){
 		memcpy(ctx->buffer, ctx->a.v8, 64);
 		salsa20_hash((uint32_t*)(ctx->buffer));

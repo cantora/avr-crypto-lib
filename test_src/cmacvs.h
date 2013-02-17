@@ -34,7 +34,7 @@ extern bcdesc_t*  cmacvs_algo;
 extern bcdesc_t** cmacvs_algolist;
 
 void cmacvs_listalgos(void);
-void cmacvs_setalgo(char* param);
+void cmacvs_setalgo(char *param);
 void cmacvs_test1(void);
 void cmacvs_test2(void);
 

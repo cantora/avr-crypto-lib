@@ -28,7 +28,7 @@
 /*
 #define X0 (((uint64_t*)data)[0])
 #define X1 (((uint64_t*)data)[1])
-void threefish_invmix(void* data, uint8_t rot){
+void threefish_invmix(void *data, uint8_t rot){
 	uint64_t x;
 	x = X1;
 	x ^= X0;

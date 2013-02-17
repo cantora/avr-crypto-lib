@@ -55,7 +55,7 @@ void printvalue(unsigned long v){
 }
 */
 
-void bcal_performance(const bcdesc_t* bcd){
+void bcal_performance(const bcdesc_t *bcd){
 	bcdesc_t bc;
 	memcpy_P(&bc, bcd, sizeof(bcdesc_t));
 	uint8_t ctx[bc.ctxsize_B];
@@ -136,7 +136,7 @@ void bcal_performance(const bcdesc_t* bcd){
 	}
 }
 
-void bcal_stacksize(const bcdesc_t* bcd){
+void bcal_stacksize(const bcdesc_t *bcd){
 	bcdesc_t bc;
 	stack_measuring_ctx_t smctx;
 	memcpy_P(&bc, bcd, sizeof(bcdesc_t));
@@ -205,8 +205,8 @@ void bcal_stacksize(const bcdesc_t* bcd){
 	}
 }
 
-void bcal_performance_multiple(const bcdesc_t* const* bcd_list){
-	const bcdesc_t* bcd;
+void bcal_performance_multiple(const bcdesc_t *const *bcd_list){
+	const bcdesc_t *bcd;
 	for(;;){
 		bcd = (void*)pgm_read_word(bcd_list);
 		if(!bcd){

@@ -21,7 +21,7 @@
 
 /******************************************************************************/
 /*
-	uint16_t stridentcnt_P(char* a, PGM_P b){
+	uint16_t stridentcnt_P(char *a, PGM_P b){
 		uint16_t i=0;
 		char c;
 		for(;;){
@@ -55,7 +55,7 @@ stridentcnt_P:
 
 /******************************************************************************/
 /*
-	uint16_t firstword_length(char* s){
+	uint16_t firstword_length(char *s){
 		uint16_t ret=0;
 		while(isgraph(*s++))
 			ret++;
@@ -91,10 +91,10 @@ firstword_length:
 
 /******************************************************************************/
 /*
-	char* strstrip(char* str){
+	char *strstrip(char *str){
 		if(!str)
 			return str;
-		char* endptr;
+		char *endptr;
 		while(*str && (*str==' ' || *str=='\t'))
 			++str;
 		endptr=str;

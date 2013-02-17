@@ -30,7 +30,7 @@
 
 #include "performance_test.h"
 
-char* algo_name = "BigInt";
+char *algo_name = "BigInt";
 
 /*****************************************************************************
  *  additional validation-functions											 *

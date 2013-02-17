@@ -42,7 +42,7 @@
  */
 typedef uint8_t noekeon_ctx_t[16];
 
-/** \fn void noekeon_enc(void* buffer, const void* key)
+/** \fn void noekeon_enc(void *buffer, const void *key)
  * \brief noekeon encrytion funtion
  * 
  * This function encrypts a block (64 bit = 8 byte) with the noekeon encrytion
@@ -53,9 +53,9 @@ typedef uint8_t noekeon_ctx_t[16];
  * \param key    pointer to either the key (128 bit = 16 byte; direct mode) or 
  * to the context (indirect mode)
  */
-void noekeon_enc(void* buffer, const void* key);
+void noekeon_enc(void *buffer, const void *key);
 
-/** \fn void noekeon_dec(void* buffer, const void* key)
+/** \fn void noekeon_dec(void *buffer, const void *key)
  * \brief noekeon encrytion funtion
  * 
  * This function decrypts a block (64 bit = 8 byte) encrypted with the noekeon 
@@ -67,10 +67,10 @@ void noekeon_enc(void* buffer, const void* key);
  * \param key    pointer to either the key (128 bit = 16 byte; direct mode) or 
  * to the context (indirect mode)
  */
-void noekeon_dec(void* buffer, const void* key);
+void noekeon_dec(void *buffer, const void *key);
 
 
-/** \fn void noekeon_init(const void* key, noekeon_ctx_t* ctx)
+/** \fn void noekeon_init(const void *key, noekeon_ctx_t *ctx)
  * \brief noekeon context generation function for indirect mode
  * 
  * This function generates a context from the supplied key for using
@@ -80,6 +80,6 @@ void noekeon_dec(void* buffer, const void* key);
  * \param ctx pointer to the context to fill with key material 
  * to the context (indirect mode)
  */
-void noekeon_init(const void* key, noekeon_ctx_t* ctx);
+void noekeon_init(const void *key, noekeon_ctx_t *ctx);
 
 #endif /*NOEKEON_H_*/

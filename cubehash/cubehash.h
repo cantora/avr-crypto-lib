@@ -37,21 +37,21 @@ typedef struct {
 	uint8_t blocksize_B;
 } cubehash_ctx_t;
 
-void cubehash_init(uint8_t r, uint8_t b, uint16_t h, cubehash_ctx_t* ctx);
-void cubehash_nextBlock(cubehash_ctx_t* ctx, void* block);
-void cubehash_lastBlock(cubehash_ctx_t* ctx, void* block, uint16_t length_b);
-void cubehash_ctx2hash(void* dest, uint16_t length_b, cubehash_ctx_t* ctx);
+void cubehash_init(uint8_t r, uint8_t b, uint16_t h, cubehash_ctx_t *ctx);
+void cubehash_nextBlock(cubehash_ctx_t *ctx, void *block);
+void cubehash_lastBlock(cubehash_ctx_t *ctx, void *block, uint16_t length_b);
+void cubehash_ctx2hash(void *dest, uint16_t length_b, cubehash_ctx_t *ctx);
 
-void cubehash224_init(cubehash_ctx_t* ctx);
-void cubehash224_ctx2hash(void* dest, cubehash_ctx_t* ctx);
+void cubehash224_init(cubehash_ctx_t *ctx);
+void cubehash224_ctx2hash(void *dest, cubehash_ctx_t *ctx);
 
-void cubehash256_init(cubehash_ctx_t* ctx);
-void cubehash256_ctx2hash(void* dest, cubehash_ctx_t* ctx);
+void cubehash256_init(cubehash_ctx_t *ctx);
+void cubehash256_ctx2hash(void *dest, cubehash_ctx_t *ctx);
 
-void cubehash384_init(cubehash_ctx_t* ctx);
-void cubehash384_ctx2hash(void* dest, cubehash_ctx_t* ctx);
+void cubehash384_init(cubehash_ctx_t *ctx);
+void cubehash384_ctx2hash(void *dest, cubehash_ctx_t *ctx);
 
-void cubehash512_init(cubehash_ctx_t* ctx);
-void cubehash512_ctx2hash(void* dest, cubehash_ctx_t* ctx);
+void cubehash512_init(cubehash_ctx_t *ctx);
+void cubehash512_ctx2hash(void *dest, cubehash_ctx_t *ctx);
 
 #endif /* CUBEHASH_H_ */

@@ -25,7 +25,7 @@
 #include "aes_dec.h"
 #include <avr/pgmspace.h>
 
-void aes_invshiftrow(void* data, uint8_t shift){
+void aes_invshiftrow(void *data, uint8_t shift){
 	uint8_t tmp[4];
 	tmp[0] = ((uint8_t*)data)[(4+0-shift)&3];
 	tmp[1] = ((uint8_t*)data)[(4+1-shift)&3];
@@ -34,7 +34,7 @@ void aes_invshiftrow(void* data, uint8_t shift){
 	memcpy(data, tmp, 4);
 }
 
-void aes_invshiftcol(void* data, uint8_t shift){
+void aes_invshiftcol(void *data, uint8_t shift){
 	uint8_t tmp[4];
 	tmp[0] = ((uint8_t*)data)[ 0];
 	tmp[1] = ((uint8_t*)data)[ 4];
@@ -46,7 +46,7 @@ void aes_invshiftcol(void* data, uint8_t shift){
 	((uint8_t*)data)[12] = tmp[(4-shift+3)&3];
 }
 static
-void aes_dec_round(aes_cipher_state_t* state, const aes_roundkey_t* k){
+void aes_dec_round(aes_cipher_state_t *state, const aes_roundkey_t *k){
 	uint8_t tmp[16];
 	uint8_t i;
 	uint8_t t,u,v,w;
@@ -102,7 +102,7 @@ void aes_dec_round(aes_cipher_state_t* state, const aes_roundkey_t* k){
 
 
 static
-void aes_dec_firstround(aes_cipher_state_t* state, const aes_roundkey_t* k){
+void aes_dec_firstround(aes_cipher_state_t *state, const aes_roundkey_t *k){
 	uint8_t i;
 	/* keyAdd */
 	for(i=0; i<16; ++i){
@@ -118,7 +118,7 @@ void aes_dec_firstround(aes_cipher_state_t* state, const aes_roundkey_t* k){
 	}
 }
 
-void aes_decrypt_core(aes_cipher_state_t* state, const aes_genctx_t* ks, uint8_t rounds){
+void aes_decrypt_core(aes_cipher_state_t *state, const aes_genctx_t *ks, uint8_t rounds){
 	uint8_t i;
 	aes_dec_firstround(state, &(ks->key[i=rounds]));
 	for(;rounds>1;--rounds){

@@ -49,14 +49,14 @@ typedef uint8_t(*rand_func_ptr_t)(void);
 #define DSA_SIGNATURE_OK 1
 #define DSA_SIGNATURE_FAIL 0
 
-uint8_t dsa_sign_bigint(dsa_signature_t* s, const bigint_t* m,
-		                const dsa_ctx_t* ctx, const bigint_t* k);
-uint8_t dsa_sign_message(dsa_signature_t* s, const void* m, uint16_t m_len_b,
-		                const hfdesc_t* hash_desc, const dsa_ctx_t* ctx,
+uint8_t dsa_sign_bigint(dsa_signature_t *s, const bigint_t *m,
+		                const dsa_ctx_t *ctx, const bigint_t *k);
+uint8_t dsa_sign_message(dsa_signature_t *s, const void *m, uint16_t m_len_b,
+		                const hfdesc_t *hash_desc, const dsa_ctx_t *ctx,
 		                const rand_func_ptr_t rand_in);
-uint8_t dsa_verify_bigint(const dsa_signature_t* s, const bigint_t* m,
-		                  const dsa_ctx_t* ctx);
-uint8_t dsa_verify_message(const dsa_signature_t* s, const void* m, uint16_t m_len_b,
-						  const hfdesc_t* hash_desc, const dsa_ctx_t* ctx);
+uint8_t dsa_verify_bigint(const dsa_signature_t *s, const bigint_t *m,
+		                  const dsa_ctx_t *ctx);
+uint8_t dsa_verify_message(const dsa_signature_t *s, const void *m, uint16_t m_len_b,
+						  const hfdesc_t *hash_desc, const dsa_ctx_t *ctx);
 
 #endif /* DSA_H_ */

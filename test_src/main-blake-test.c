@@ -34,9 +34,9 @@
 #include "nessie_hash_test.h"
 #include "performance_test.h"
 
-char* algo_name = "Blake";
+char *algo_name = "Blake";
 
-const hfdesc_t* const algolist[] PROGMEM = {
+const hfdesc_t *const algolist[] PROGMEM = {
 	(hfdesc_t*)&blake224_desc,
 	(hfdesc_t*)&blake256_desc,
 	(hfdesc_t*)&blake384_desc,
@@ -51,19 +51,19 @@ const hfdesc_t* const algolist[] PROGMEM = {
 void testrun_nessie_blake(void){
 	hfal_nessie_multiple(algolist);
 }
-void blake224_test(void* msg, uint32_t length_b){
+void blake224_test(void *msg, uint32_t length_b){
 	hfal_test(&blake224_desc, msg, length_b);
 }
 
-void blake256_test(void* msg, uint32_t length_b){
+void blake256_test(void *msg, uint32_t length_b){
 	hfal_test(&blake256_desc, msg, length_b);
 }
 
-void blake384_test(void* msg, uint32_t length_b){
+void blake384_test(void *msg, uint32_t length_b){
 	hfal_test(&blake384_desc, msg, length_b);
 }
 
-void blake512_test(void* msg, uint32_t length_b){
+void blake512_test(void *msg, uint32_t length_b){
 	hfal_test(&blake512_desc, msg, length_b);
 }
 void testrun_stdtest_blake(void){

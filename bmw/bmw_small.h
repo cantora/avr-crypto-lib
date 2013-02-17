@@ -44,22 +44,22 @@ typedef struct {
 typedef bmw_small_ctx_t bmw224_ctx_t;
 typedef bmw_small_ctx_t bmw256_ctx_t;
 
-void bmw224_init(bmw224_ctx_t* ctx);
-void bmw256_init(bmw256_ctx_t* ctx);
+void bmw224_init(bmw224_ctx_t *ctx);
+void bmw256_init(bmw256_ctx_t *ctx);
 
-void bmw_small_nextBlock(bmw_small_ctx_t* ctx, const void* block);
-void bmw_small_lastBlock(bmw_small_ctx_t* ctx, const void* block, uint16_t length_b);
+void bmw_small_nextBlock(bmw_small_ctx_t *ctx, const void *block);
+void bmw_small_lastBlock(bmw_small_ctx_t *ctx, const void *block, uint16_t length_b);
 
-void bmw224_nextBlock(bmw224_ctx_t* ctx, const void* block);
-void bmw224_lastBlock(bmw224_ctx_t* ctx, const void* block, uint16_t length_b);
+void bmw224_nextBlock(bmw224_ctx_t *ctx, const void *block);
+void bmw224_lastBlock(bmw224_ctx_t *ctx, const void *block, uint16_t length_b);
 
-void bmw256_nextBlock(bmw256_ctx_t* ctx, const void* block);
-void bmw256_lastBlock(bmw256_ctx_t* ctx, const void* block, uint16_t length_b);
+void bmw256_nextBlock(bmw256_ctx_t *ctx, const void *block);
+void bmw256_lastBlock(bmw256_ctx_t *ctx, const void *block, uint16_t length_b);
 
-void bmw224_ctx2hash(void* dest, const bmw224_ctx_t* ctx);
-void bmw256_ctx2hash(void* dest, const bmw256_ctx_t* ctx);
+void bmw224_ctx2hash(void *dest, const bmw224_ctx_t *ctx);
+void bmw256_ctx2hash(void *dest, const bmw256_ctx_t *ctx);
 
-void bmw224(void* dest, const void* msg, uint32_t length_b);
-void bmw256(void* dest, const void* msg, uint32_t length_b);
+void bmw224(void *dest, const void *msg, uint32_t length_b);
+void bmw256(void *dest, const void *msg, uint32_t length_b);
 
 #endif /* BMW_SMALL_H_ */

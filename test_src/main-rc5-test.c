@@ -30,9 +30,9 @@
 #include "bcal_rc5.h"
 
 #define RC5_ROUNDS 12
-char* algo_name = "RC5-32/12/16";
+char *algo_name = "RC5-32/12/16";
 
-const bcdesc_t* const algolist[] PROGMEM = {
+const bcdesc_t *const algolist[] PROGMEM = {
 	(bcdesc_t*)&rc5_desc,
 	NULL
 };
@@ -40,7 +40,7 @@ const bcdesc_t* const algolist[] PROGMEM = {
 /*****************************************************************************
  *  additional validation-functions											 *
  *****************************************************************************/
-void rc5_genctx_dummy(uint8_t* key, uint16_t keysize_b, void* ctx){
+void rc5_genctx_dummy(uint8_t *key, uint16_t keysize_b, void *ctx){
 	rc5_init(key, keysize_b, RC5_ROUNDS, ctx);
 }
 

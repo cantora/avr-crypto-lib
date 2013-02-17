@@ -38,7 +38,7 @@ nessie_stream_ctx_t nessie_stream_ctx;
 
 
 static 
-void nessie_gen_block(void* ctx, uint8_t* block){
+void nessie_gen_block(void *ctx, uint8_t *block){
 	uint16_t i;
 	for(i=0; i<BLOCKSIZE_B; ++i){
 		block[i] = nessie_stream_ctx.cipher_enc(ctx);
@@ -46,7 +46,7 @@ void nessie_gen_block(void* ctx, uint8_t* block){
 }
 
 static
-void nessie_stream_enc(uint8_t* key){
+void nessie_stream_enc(uint8_t *key){
 	uint8_t ctx[nessie_stream_ctx.ctx_size_B];
 	uint8_t buffer[BLOCKSIZE_B];
 	uint8_t xorbuffer[BLOCKSIZE_B];
@@ -90,7 +90,7 @@ void nessie_stream_enc(uint8_t* key){
 
 
 static
-void nessie_stream_enc_large(uint8_t* key){
+void nessie_stream_enc_large(uint8_t *key){
 	uint8_t ctx[nessie_stream_ctx.ctx_size_B];
 	uint8_t buffer[BLOCKSIZE_B];
 	uint8_t xorbuffer[BLOCKSIZE_B];

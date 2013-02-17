@@ -46,7 +46,7 @@ uint8_t random8(void){
 	return sr[i];
 }
 
-void random_block(void* dest){
+void random_block(void *dest){
 	i=0;
 	noekeon_enc(random_state, random_key);
 	memcpy(dest, random_state, 16);
@@ -56,11 +56,11 @@ void srandom32(uint32_t seed){
 	memcpy(random_key, &seed, 4);
 }
 
-void random_seed(const void* buffer){
+void random_seed(const void *buffer){
 	memcpy(random_key, buffer, 16);
 }
 
-void random_add(const void* buffer){
+void random_add(const void *buffer){
 	memxor(random_key, buffer, 16);
 }
 

@@ -45,7 +45,7 @@
 #include "base64_enc.h"
 #include "base64_dec.h"
 
-char* algo_name = "ECDSA";
+char *algo_name = "ECDSA";
 
 /*****************************************************************************
  *  additional validation-functions											 *
@@ -95,7 +95,7 @@ uint8_t convert_hex_to_byte(char a, char b){
     return (convert_hexchar_to_value(a) << 4) | convert_hexchar_to_value(b);
 }
 
-void *hash_message(hfdesc_t* hash_function){
+void *hash_message(hfdesc_t *hash_function){
     uint8_t *block, *hash_value;
     uint16_t index = 0;
     hfgen_ctx_t ctx;
@@ -642,7 +642,7 @@ const uint8_t ecdsa_test_1_k[] PROGMEM = {
     0x83, 0x07, 0xa1, 0x43, 0x70, 0xbc, 0x0a, 0xcb
 };
 
-void hash_mem_P(const hfdesc_t* hfdesc, void* dest, const void* msg, uint16_t msg_len_b){
+void hash_mem_P(const hfdesc_t *hfdesc, void *dest, const void *msg, uint16_t msg_len_b){
     uint16_t blocksize = hfal_hash_getBlocksize(hfdesc);
     uint8_t block[blocksize / 8];
     hfgen_ctx_t ctx;

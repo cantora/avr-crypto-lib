@@ -26,6 +26,6 @@
 #define SHACAL1_KEYSIZE 512
 #define SHACAL1_KEYSIZE_B ((SHACAL1_KEYSIZE+7)/8)
 
-void shacal1_enc(void* buffer, void* key, uint16_t keysize_b);
+void shacal1_enc(void *buffer, void *key, uint16_t keysize_b);
 
 #endif /*SHACAL1_ENC_H_*/

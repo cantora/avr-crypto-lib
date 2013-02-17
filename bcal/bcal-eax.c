@@ -26,7 +26,7 @@
 #include "bcal-eax.h"
 #include "memxor.h"
 
-uint8_t bcal_eax_init(const bcdesc_t* desc, const void* key, uint16_t keysize_b, bcal_eax_ctx_t* ctx){
+uint8_t bcal_eax_init(const bcdesc_t *desc, const void *key, uint16_t keysize_b, bcal_eax_ctx_t *ctx){
 	uint8_t r;
 	ctx->blocksize_B = (bcal_cipher_getBlocksize_b(desc)+7)/8;
 	ctx->nonce = malloc(ctx->blocksize_B);
@@ -60,7 +60,7 @@ uint8_t bcal_eax_init(const bcdesc_t* desc, const void* key, uint16_t keysize_b,
 	return 0;
 }
 
-void bcal_eax_free(bcal_eax_ctx_t* ctx){
+void bcal_eax_free(bcal_eax_ctx_t *ctx){
 	bcal_ctr_free(&(ctx->cipher));
 	bcal_cmac_free(&(ctx->ctag));
 	bcal_cmac_free(&(ctx->htag));
@@ -68,42 +68,42 @@ void bcal_eax_free(bcal_eax_ctx_t* ctx){
 	free(ctx->nonce);
 }
 
-void bcal_eax_loadNonce(const void* nonce, uint16_t length_b, bcal_eax_ctx_t* ctx){
+void bcal_eax_loadNonce(const void *nonce, uint16_t length_b, bcal_eax_ctx_t *ctx){
 	bcal_cmac_lastBlock(&(ctx->ntag), nonce, length_b);
 	bcal_cmac_ctx2mac(ctx->nonce, ctx->blocksize_B*8, &(ctx->ntag));
 	bcal_ctr_loadIV(ctx->nonce, &(ctx->cipher));
 }
 
-void bcal_eax_addNextHeader(const void* header, bcal_eax_ctx_t* ctx){
+void bcal_eax_addNextHeader(const void *header, bcal_eax_ctx_t *ctx){
 	bcal_cmac_nextBlock(&(ctx->htag), header);
 }
 
-void bcal_eax_addLastHeader(const void* header, uint16_t length_b, bcal_eax_ctx_t* ctx){
+void bcal_eax_addLastHeader(const void *header, uint16_t length_b, bcal_eax_ctx_t *ctx){
 	bcal_cmac_lastBlock(&(ctx->htag), header, length_b);
 	ctx->header_set = 1;
 }
 
-void bcal_eax_encNextBlock(void* block, bcal_eax_ctx_t* ctx){
+void bcal_eax_encNextBlock(void *block, bcal_eax_ctx_t *ctx){
 	bcal_ctr_encNext(block, &(ctx->cipher));
 	bcal_cmac_nextBlock(&(ctx->ctag), block);
 }
 
-void bcal_eax_encLastBlock(void* block, uint16_t length_b, bcal_eax_ctx_t* ctx){
+void bcal_eax_encLastBlock(void *block, uint16_t length_b, bcal_eax_ctx_t *ctx){
 	bcal_ctr_encMsg(NULL, block, length_b, &(ctx->cipher));
 	bcal_cmac_lastBlock(&(ctx->ctag), block, length_b);
 }
 
-void bcal_eax_decNextBlock(void* block, bcal_eax_ctx_t* ctx){
+void bcal_eax_decNextBlock(void *block, bcal_eax_ctx_t *ctx){
 	bcal_cmac_nextBlock(&(ctx->ctag), block);
 	bcal_ctr_decNext(block, &(ctx->cipher));
 }
 
-void bcal_eax_decLastBlock(void* block, uint16_t length_b, bcal_eax_ctx_t* ctx){
+void bcal_eax_decLastBlock(void *block, uint16_t length_b, bcal_eax_ctx_t *ctx){
 	bcal_cmac_lastBlock(&(ctx->ctag), block, length_b);
 	bcal_ctr_decMsg(NULL, block, length_b, &(ctx->cipher));
 }
 
-void bcal_eax_ctx2tag(void* dest, uint16_t length_b, bcal_eax_ctx_t* ctx){
+void bcal_eax_ctx2tag(void *dest, uint16_t length_b, bcal_eax_ctx_t *ctx){
 	uint8_t tmp[ctx->blocksize_B];
 	if(ctx->header_set==0){
 		bcal_cmac_lastBlock(&(ctx->htag), NULL, 0);

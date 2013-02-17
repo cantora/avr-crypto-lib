@@ -37,12 +37,12 @@ const uint8_t tdes_keysize_desc[] PROGMEM = { KS_TYPE_LIST, 1, KS_INT(192),
                                                 KS_TYPE_TERMINATOR    };
 
 static
-void tdes_dummy_enc(void* block, void* key){
+void tdes_dummy_enc(void *block, void *key){
 	tdes_enc(block, block, key);
 }
 
 static
-void tdes_dummy_dec(void* block, void* key){
+void tdes_dummy_dec(void *block, void *key){
 	tdes_dec(block, block, key);
 }
 

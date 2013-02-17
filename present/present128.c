@@ -33,7 +33,7 @@
 #include "present128.h"
 
 static
-void key_update_128(uint8_t* buffer, uint8_t round){
+void key_update_128(uint8_t *buffer, uint8_t round){
 	uint8_t j;
 	uint8_t t8;
 	union __attribute__((packed)){
@@ -63,7 +63,7 @@ void key_update_128(uint8_t* buffer, uint8_t round){
 
 
 static
-void key_update_128_inv(uint8_t* buffer, uint8_t round){
+void key_update_128_inv(uint8_t *buffer, uint8_t round){
 	uint8_t j;
 	uint8_t t8;
 	union __attribute__((packed)){
@@ -93,7 +93,7 @@ void key_update_128_inv(uint8_t* buffer, uint8_t round){
 	}while(j--);
 }
 
-void present128_init(const uint8_t* key, uint8_t keysize_b, present128_ctx_t* ctx){
+void present128_init(const uint8_t *key, uint8_t keysize_b, present128_ctx_t *ctx){
 	uint8_t i;
 	memcpy(ctx->fwd_key, key, 16);
 	memcpy(ctx->rev_key, key, 16);
@@ -102,16 +102,16 @@ void present128_init(const uint8_t* key, uint8_t keysize_b, present128_ctx_t* ct
 	}
 }
 
-void present128_enc(void* buffer, present128_ctx_t* ctx){
+void present128_enc(void *buffer, present128_ctx_t *ctx){
 	present_generic_enc(buffer, (uint8_t*)ctx, 16, key_update_128);
 }
 
-void present128_dec(void* buffer, present128_ctx_t* ctx){
+void present128_dec(void *buffer, present128_ctx_t *ctx){
 	present_generic_dec(buffer, (uint8_t*)ctx, 16, key_update_128_inv);
 }
 
 /*
-void present128_enc(void* buffer, present128_ctx_t* ctx){
+void present128_enc(void *buffer, present128_ctx_t *ctx){
 	uint8_t i,j,tmp[8], k[16];
 	memcpy(k, ctx->fwd_key, 16);
 	memxor(buffer, k, 8);
@@ -126,7 +126,7 @@ void present128_enc(void* buffer, present128_ctx_t* ctx){
 	}
 }
 
-void present128_dec(void* buffer, present128_ctx_t* ctx){
+void present128_dec(void *buffer, present128_ctx_t *ctx){
 	uint8_t j,tmp[8], k[16];
 	uint8_t i;
 	memcpy(k, ctx->rev_key, 16);

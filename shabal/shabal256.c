@@ -47,7 +47,7 @@ const uint32_t shabal256_iv[] PROGMEM = {
 	0xBC968828, 0xE6E00BF7, 0xBA839E55, 0x9B491C60
 };
 
-void shabal256_init(shabal_ctx_t* ctx){
+void shabal256_init(shabal_ctx_t *ctx){
 	uint8_t i;
 	ctx->b = ctx->b_buffer;
 	ctx->c = ctx->c_buffer;
@@ -63,11 +63,11 @@ void shabal256_init(shabal_ctx_t* ctx){
 	}
 }
 
-void shabal256_ctx2hash(void* dest, const shabal_ctx_t* ctx){
+void shabal256_ctx2hash(void *dest, const shabal_ctx_t *ctx){
 	shabal_ctx2hash(dest, ctx, 256);
 }
 
-void shabal256(void* dest, void* msg, uint32_t length_b){
+void shabal256(void *dest, void *msg, uint32_t length_b){
 	shabal_ctx_t ctx;
 	shabal256_init(&ctx);
 	while(length_b>=SHABAL_BLOCKSIZE){

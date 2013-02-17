@@ -36,7 +36,7 @@ int print_header =  1,
     print_align  =  1,
     print_prefix =  1;
 
-char* fmt_strings[]={"%d", "%3d",
+char *fmt_strings[]={"%d", "%3d",
                      "%X", "%2.2X",
                      "%o", "%3o",
                      "%d", "%3d",
@@ -65,7 +65,7 @@ int main(int argc, char** argv){
 	int i,j;
 	int c;
 	int option_index=0;
-	char* fmt=NULL;
+	char *fmt=NULL;
 	static struct option long_options[] =
              {
                /* These options set a flag. */
@@ -98,7 +98,7 @@ int main(int argc, char** argv){
 	unsigned long ul_reducer=0x00, max=0xff, min=0x00;
 	uint8_t reducer, a;
 	char** eptr;
-	FILE* of = stdout;
+	FILE *of = stdout;
 	while(c!=-1){
 		c = getopt_long(argc, argv,"cCbBdh8aApPr:l:u:f:", 
 		                long_options, &option_index);

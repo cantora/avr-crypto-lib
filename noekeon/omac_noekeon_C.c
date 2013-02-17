@@ -5,23 +5,23 @@
 #include <stdint.h>
 
 
-void omac_noekeon_init(omac_noekeon_ctx_t* ctx){
+void omac_noekeon_init(omac_noekeon_ctx_t *ctx){
 	memset(ctx, 0, 16);
 }
 
 
-void omac_noekeon_tweak(uint8_t t, const void* key, omac_noekeon_ctx_t* ctx){
+void omac_noekeon_tweak(uint8_t t, const void *key, omac_noekeon_ctx_t *ctx){
 	*ctx[15] = t;
 	noekeon_enc(ctx, key);
 }
 
-void omac_noekeon_next(const void* buffer, const void* key, omac_noekeon_ctx_t* ctx){
+void omac_noekeon_next(const void *buffer, const void *key, omac_noekeon_ctx_t *ctx){
 	memxor(ctx, buffer, 16);
 	noekeon_enc(ctx, key);
 }
 
 static
-void omac_noekeon_comppad(uint8_t* pad, const void* key, uint8_t length_b){
+void omac_noekeon_comppad(uint8_t *pad, const void *key, uint8_t length_b){
 	uint8_t c1,c2,r,j;
 	memset(pad, 0, 16);
 	noekeon_enc(pad, key);
@@ -42,7 +42,7 @@ void omac_noekeon_comppad(uint8_t* pad, const void* key, uint8_t length_b){
 	}
 }
 
-void omac_noekeon_last(const void* buffer, uint8_t length_b, const void* key, omac_noekeon_ctx_t* ctx){
+void omac_noekeon_last(const void *buffer, uint8_t length_b, const void *key, omac_noekeon_ctx_t *ctx){
 	while(length_b>128){
 		omac_noekeon_next(buffer, key, ctx);
 		buffer = (uint8_t*)buffer +16;
@@ -55,8 +55,8 @@ void omac_noekeon_last(const void* buffer, uint8_t length_b, const void* key, om
 }
 
 
-void omac_noekeon(void* dest, const void* msg, uint16_t msglength_b,
-                  const void* key, uint8_t t){
+void omac_noekeon(void *dest, const void *msg, uint16_t msglength_b,
+                  const void *key, uint8_t t){
 	omac_noekeon_init(dest);
 	if(t!=0xff)
 		omac_noekeon_tweak(t,key,dest);

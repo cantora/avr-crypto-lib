@@ -20,6 +20,6 @@
 #ifndef DSA_KEY_BLOB_H_
 #define DSA_KEY_BLOB_H_
 
-void load_dsa_key_blob(dsa_ctx_t* ctx);
+void load_dsa_key_blob(dsa_ctx_t *ctx);
 
 #endif /* DSA_KEY_BLOB_H_ */

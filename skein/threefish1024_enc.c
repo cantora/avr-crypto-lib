@@ -33,7 +33,7 @@
 #define X(a) (((uint64_t*)data)[(a)])
 
 static
-void permute_16(void* data){
+void permute_16(void *data){
 	uint64_t t;
 	t = X(1);
 	X(1) = X(9);
@@ -61,7 +61,7 @@ void permute_16(void* data){
 #define K(s) (((uint64_t*)key)[(s)])
 #define T(s) (((uint64_t*)tweak)[(s)])
 
-void threefish1024_init(const void* key, const void* tweak, threefish1024_ctx_t* ctx){
+void threefish1024_init(const void *key, const void *tweak, threefish1024_ctx_t *ctx){
 	memcpy(ctx->k, key, 16*8);
 	if(tweak){
 		memcpy(ctx->t, tweak, 2*8);
@@ -77,7 +77,7 @@ void threefish1024_init(const void* key, const void* tweak, threefish1024_ctx_t*
 }
 
 static
-void add_key_16(void* data, const threefish1024_ctx_t* ctx, uint8_t s){
+void add_key_16(void *data, const threefish1024_ctx_t *ctx, uint8_t s){
 	uint8_t i;
 	for(i=0; i<13; ++i){
 		X(i) += ctx->k[(s+i)%17];
@@ -87,7 +87,7 @@ void add_key_16(void* data, const threefish1024_ctx_t* ctx, uint8_t s){
 	X(15) += ctx->k[(s+15)%17] + s;
 }
 
-void threefish1024_enc(void* data, const threefish1024_ctx_t* ctx){
+void threefish1024_enc(void *data, const threefish1024_ctx_t *ctx){
 	uint8_t i=0,s=0;
 	/* old constans, changed at round 2 of the SHA-3 contest
 	uint8_t r0[8] = {55, 25, 33, 34, 28, 17, 58, 47};

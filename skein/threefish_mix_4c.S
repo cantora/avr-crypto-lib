@@ -29,7 +29,7 @@
 #define B0 (((uint64_t*)data)[0])
 #define B1 (((uint64_t*)data)[1])
 static
-void mix(void* data, uint8_t rot){
+void mix(void *data, uint8_t rot){
 	uint64_t x;
 	x = B1;
 	B0 += x;

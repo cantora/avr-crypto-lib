@@ -30,7 +30,7 @@
 
 #include "performance_test.h"
 
-char* algo_name = "Base64";
+char *algo_name = "Base64";
 
 /*****************************************************************************
  *  additional validation-functions											 *

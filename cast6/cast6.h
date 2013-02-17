@@ -13,9 +13,9 @@ typedef struct cast6_ctx_st{
 
 
 
-void cast6_enc(void* buffer, const cast6_ctx_t* ctx);
-void cast6_dec(void* buffer, const cast6_ctx_t* ctx);
-void cast6_init(const void* key, uint16_t keysize_b, cast6_ctx_t* ctx);
+void cast6_enc(void *buffer, const cast6_ctx_t *ctx);
+void cast6_dec(void *buffer, const cast6_ctx_t *ctx);
+void cast6_init(const void *key, uint16_t keysize_b, cast6_ctx_t *ctx);
 
 
 #endif /*CAST6_H_*/

@@ -27,7 +27,7 @@
  */
 
 /*
- * void memxor(void* dest, const void* src, uint16_t n);
+ * void memxor(void *dest, const void *src, uint16_t n);
  */
  /*
   * param dest is passed in r24:r25

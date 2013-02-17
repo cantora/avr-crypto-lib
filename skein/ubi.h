@@ -78,20 +78,20 @@ typedef struct{
 	uint8_t g[128];
 }ubi1024_ctx_t;
 
-void ubi256_init(ubi256_ctx_t* ctx, const void* g, uint8_t type);
-void ubi256_nextBlock(ubi256_ctx_t* ctx, const void* block);
-void ubi256_lastBlock(ubi256_ctx_t* ctx, const void* block, uint16_t length_b);
-void ubi256_ctx2hash(void* dest, const ubi256_ctx_t* ctx);
+void ubi256_init(ubi256_ctx_t *ctx, const void *g, uint8_t type);
+void ubi256_nextBlock(ubi256_ctx_t *ctx, const void *block);
+void ubi256_lastBlock(ubi256_ctx_t *ctx, const void *block, uint16_t length_b);
+void ubi256_ctx2hash(void *dest, const ubi256_ctx_t *ctx);
 
-void ubi512_init(ubi512_ctx_t* ctx, const void* g, uint8_t type);
-void ubi512_nextBlock(ubi512_ctx_t* ctx, const void* block);
-void ubi512_lastBlock(ubi512_ctx_t* ctx, const void* block, uint16_t length_b);
-void ubi512_ctx2hash(void* dest, const ubi512_ctx_t* ctx);
+void ubi512_init(ubi512_ctx_t *ctx, const void *g, uint8_t type);
+void ubi512_nextBlock(ubi512_ctx_t *ctx, const void *block);
+void ubi512_lastBlock(ubi512_ctx_t *ctx, const void *block, uint16_t length_b);
+void ubi512_ctx2hash(void *dest, const ubi512_ctx_t *ctx);
 
-void ubi1024_init(ubi1024_ctx_t* ctx, const void* g, uint8_t type);
-void ubi1024_nextBlock(ubi1024_ctx_t* ctx, const void* block);
-void ubi1024_lastBlock(ubi1024_ctx_t* ctx, const void* block, uint16_t length_b);
-void ubi1024_ctx2hash(void* dest, const ubi1024_ctx_t* ctx);
+void ubi1024_init(ubi1024_ctx_t *ctx, const void *g, uint8_t type);
+void ubi1024_nextBlock(ubi1024_ctx_t *ctx, const void *block);
+void ubi1024_lastBlock(ubi1024_ctx_t *ctx, const void *block, uint16_t length_b);
+void ubi1024_ctx2hash(void *dest, const ubi1024_ctx_t *ctx);
 
 typedef struct{
 	char     schema[4];

@@ -45,7 +45,7 @@ shabal192_iv:
 
 /******************************************************************************/
 /*
-void shabal192_init(shabal_ctx_t* ctx){
+void shabal192_init(shabal_ctx_t *ctx){
 	uint8_t i;
 	ctx->b = ctx->b_buffer;
 	ctx->c = ctx->c_buffer;
@@ -121,7 +121,7 @@ shabal192_ctx2hash:
 	
 /******************************************************************************/
 /*
-void shabal192(void* dest, void* msg, uint32_t length_b){
+void shabal192(void *dest, void *msg, uint32_t length_b){
 	shabal_ctx_t ctx;
 	shabal192_init(&ctx);
 	while(length_b>=SHABAL_BLOCKSIZE){

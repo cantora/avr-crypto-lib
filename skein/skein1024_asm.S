@@ -27,7 +27,7 @@
 
 /******************************************************************************/
 /*
-void skein1024_init(skein1024_ctx_t* ctx, uint16_t outsize_b){
+void skein1024_init(skein1024_ctx_t *ctx, uint16_t outsize_b){
 	skein_config_t conf;
 	uint8_t null[UBI1024_BLOCKSIZE_B];
 	memset(null, 0, UBI1024_BLOCKSIZE_B);
@@ -119,7 +119,7 @@ skein1024_lastBlock:
 
 /******************************************************************************/
 /*
-void skein1024_ctx2hash(void* dest, skein1024_ctx_t* ctx){
+void skein1024_ctx2hash(void *dest, skein1024_ctx_t *ctx){
 	ubi1024_ctx_t uctx;
 	uint16_t outsize_b;
 	
@@ -282,7 +282,7 @@ skein1024_ctx2hash:
 
 /******************************************************************************/
 /*
-void skein1024(void* dest, uint16_t outlength_b, const void* msg, uint32_t length_b){
+void skein1024(void *dest, uint16_t outlength_b, const void *msg, uint32_t length_b){
 	skein1024_ctx_t ctx;
 	skein1024_init(&ctx, outlength_b);
 	while(length_b>SKEIN1024_BLOCKSIZE){

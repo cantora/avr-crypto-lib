@@ -66,9 +66,9 @@ typedef uint32_t md5_func_t(uint32_t, uint32_t, uint32_t);
 #define ROTL32(x,n) (((x)<<(n)) | ((x)>>(32-(n))))  
 
 static
-void md5_core(uint32_t* a, void* block, uint8_t as, uint8_t s, uint8_t i, uint8_t fi){
+void md5_core(uint32_t *a, void *block, uint8_t as, uint8_t s, uint8_t i, uint8_t fi){
 	uint32_t t;
-	md5_func_t* funcs[]={md5_F, md5_G, md5_H, md5_I};
+	md5_func_t *funcs[]={md5_F, md5_G, md5_H, md5_I};
 	as &= 0x3;
 	/* a = b + ((a + F(b,c,d) + X[k] + T[i]) <<< s). */
 #ifdef DEBUG
@@ -85,7 +85,7 @@ void md5_core(uint32_t* a, void* block, uint8_t as, uint8_t s, uint8_t i, uint8_
 	a[as]=a[(as+1)&3] + ROTL32(t, s);
 }
 
-void md5_nextBlock(md5_ctx_t *state, const void* block){
+void md5_nextBlock(md5_ctx_t *state, const void *block){
 	uint32_t	a[4];
 	uint8_t		m,n,i=0;
 	/* this requires other mixed sboxes */
@@ -137,7 +137,7 @@ void md5_nextBlock(md5_ctx_t *state, const void* block){
 	state->counter++;
 }
 
-void md5_lastBlock(md5_ctx_t *state, const void* block, uint16_t length_b){
+void md5_lastBlock(md5_ctx_t *state, const void *block, uint16_t length_b){
 	uint16_t l;
 	union {
 		uint8_t   v8[64];
@@ -170,11 +170,11 @@ void md5_lastBlock(md5_ctx_t *state, const void* block, uint16_t length_b){
 	md5_nextBlock(state, buffer.v8);
 }
 
-void md5_ctx2hash(md5_hash_t* dest, const md5_ctx_t* state){
+void md5_ctx2hash(md5_hash_t *dest, const md5_ctx_t *state){
 	memcpy(dest, state->a, MD5_HASH_BYTES);
 }
 
-void md5(md5_hash_t* dest, const void* msg, uint32_t length_b){
+void md5(md5_hash_t *dest, const void *msg, uint32_t length_b){
 	md5_ctx_t ctx;
 	md5_init(&ctx);
 	while(length_b>=MD5_BLOCK_BITS){

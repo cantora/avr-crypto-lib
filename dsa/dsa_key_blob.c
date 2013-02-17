@@ -270,7 +270,7 @@ static const uint8_t dsa_key_blob[] PROGMEM = {
 };
 #endif
 
-void load_dsa_key_blob(dsa_ctx_t* ctx){
+void load_dsa_key_blob(dsa_ctx_t *ctx){
 	if(ctx->priv.wordv){
 		free(ctx->priv.wordv);
 	}

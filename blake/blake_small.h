@@ -46,22 +46,22 @@ typedef struct {
 typedef blake_small_ctx_t blake224_ctx_t;
 typedef blake_small_ctx_t blake256_ctx_t;
 
-void blake224_init(blake224_ctx_t* ctx);
-void blake256_init(blake256_ctx_t* ctx);
+void blake224_init(blake224_ctx_t *ctx);
+void blake256_init(blake256_ctx_t *ctx);
 
-void blake_small_nextBlock(blake_small_ctx_t* ctx, const void* block);
-void blake_small_lastBlock(blake_small_ctx_t* ctx, const void* block, uint16_t length_b);
+void blake_small_nextBlock(blake_small_ctx_t *ctx, const void *block);
+void blake_small_lastBlock(blake_small_ctx_t *ctx, const void *block, uint16_t length_b);
 
-void blake224_nextBlock(blake224_ctx_t* ctx, const void* block);
-void blake224_lastBlock(blake224_ctx_t* ctx, const void* block, uint16_t length_b);
+void blake224_nextBlock(blake224_ctx_t *ctx, const void *block);
+void blake224_lastBlock(blake224_ctx_t *ctx, const void *block, uint16_t length_b);
 
-void blake256_nextBlock(blake256_ctx_t* ctx, const void* block);
-void blake256_lastBlock(blake256_ctx_t* ctx, const void* block, uint16_t length_b);
+void blake256_nextBlock(blake256_ctx_t *ctx, const void *block);
+void blake256_lastBlock(blake256_ctx_t *ctx, const void *block, uint16_t length_b);
 
-void blake224_ctx2hash(void* dest, const blake224_ctx_t* ctx);
-void blake256_ctx2hash(void* dest, const blake256_ctx_t* ctx);
+void blake224_ctx2hash(void *dest, const blake224_ctx_t *ctx);
+void blake256_ctx2hash(void *dest, const blake256_ctx_t *ctx);
 
-void blake224(void* dest, const void* msg, uint32_t length_b);
-void blake256(void* dest, const void* msg, uint32_t length_b);
+void blake224(void *dest, const void *msg, uint32_t length_b);
+void blake256(void *dest, const void *msg, uint32_t length_b);
 
 #endif /* BLAKE_SMALL_H_ */

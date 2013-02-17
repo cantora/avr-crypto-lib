@@ -26,9 +26,9 @@ typedef struct {
 	uint8_t k[9][8];
 }khazad_ctx_t;
 
-void khazad_enc(void* buffer, const khazad_ctx_t* ctx);
-void khazad_dec(void* buffer, const khazad_ctx_t* ctx);
-void khazad_init(const void* key, khazad_ctx_t* ctx);
+void khazad_enc(void *buffer, const khazad_ctx_t *ctx);
+void khazad_dec(void *buffer, const khazad_ctx_t *ctx);
+void khazad_init(const void *key, khazad_ctx_t *ctx);
 uint8_t khazad_sbox(uint8_t);
 
 #endif /* KHAZAD_H_ */

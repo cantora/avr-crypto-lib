@@ -40,7 +40,7 @@ A7 = 21
 #define K(s) (((uint64_t*)key)[(s)])
 #define T(s) (((uint64_t*)tweak)[(s)])
 
-void threefish256_init(void* key, void* tweak, threefish256_ctx_t* ctx){
+void threefish256_init(void *key, void *tweak, threefish256_ctx_t *ctx){
 	memcpy(ctx->k, key, 4*8);
 	memcpy(ctx->t, tweak, 2*8);
 	uint8_t i;
@@ -180,19 +180,19 @@ threefish256_init:
 /******************************************************************************/
 /*
 #define X(a) (((uint64_t*)data)[(a)])
-void permute_4(void* data){
+void permute_4(void *data){
 	uint64_t t;
 	t = X(1);
 	X(1) = X(3);
 	X(3) = t;
 }
-void add_key_4(void* data, threefish256_ctx_t* ctx, uint8_t s){ / * s: 0..19 * /
+void add_key_4(void *data, threefish256_ctx_t *ctx, uint8_t s){ / * s: 0..19 * /
 	X(0) += ctx->k[(s+0)%5];
 	X(1) += ctx->k[(s+1)%5] + ctx->t[s%3];
 	X(2) += ctx->k[(s+2)%5] + ctx->t[(s+1)%3];
 	X(3) += ctx->k[(s+3)%5] + s;
 }
-void threefish256_enc(void* data, threefish256_ctx_t* ctx){
+void threefish256_enc(void *data, threefish256_ctx_t *ctx){
 	uint8_t i=0,s=0;
 	uint8_t r0[8] = { 5, 36, 13, 58, 26, 53, 11, 59};
 	uint8_t r1[8] = {56, 28, 46, 44, 20, 35, 42, 50};

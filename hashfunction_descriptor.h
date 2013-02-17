@@ -50,7 +50,7 @@ typedef struct {
 } hfdesc_t; /* hashfunction descriptor type */
 
 typedef struct{
-	hfdesc_t* desc_ptr;
+	hfdesc_t *desc_ptr;
 	void*     ctx;
 } hfgen_ctx_t;
 

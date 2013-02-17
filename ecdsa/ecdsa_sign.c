@@ -31,7 +31,7 @@
 #include "bigint_io.h"
 
 
-uint8_t ecdsa_signature_alloc(ecdsa_signature_t* s, size_t length_B){
+uint8_t ecdsa_signature_alloc(ecdsa_signature_t *s, size_t length_B){
     if(!(s->r.wordv = malloc(length_B))){
         printf_P(PSTR("DBG: XXX <%S %s %d>\n"), PSTR(__FILE__), __func__, __LINE__);
         return 1;
@@ -46,13 +46,13 @@ uint8_t ecdsa_signature_alloc(ecdsa_signature_t* s, size_t length_B){
     return 0;
 }
 
-void ecdsa_signature_free(ecdsa_signature_t* s){
+void ecdsa_signature_free(ecdsa_signature_t *s){
     free(s->r.wordv);
     free(s->s.wordv);
 }
 
-uint8_t ecdsa_sign_bigint(ecdsa_signature_t* s, const bigint_t* m,
-                          const ecdsa_ctx_t* ctx, const bigint_t* k){
+uint8_t ecdsa_sign_bigint(ecdsa_signature_t *s, const bigint_t *m,
+                          const ecdsa_ctx_t *ctx, const bigint_t *k){
 
     bigint_t t;
     ecc_combi_point_t q;
@@ -111,8 +111,8 @@ uint8_t ecdsa_sign_bigint(ecdsa_signature_t* s, const bigint_t* m,
     return 0;
 }
 
-uint8_t ecdsa_sign_hash(ecdsa_signature_t* s, const void* hash,
-                           size_t hash_len_B, const ecdsa_ctx_t* ctx,
+uint8_t ecdsa_sign_hash(ecdsa_signature_t *s, const void *hash,
+                           size_t hash_len_B, const ecdsa_ctx_t *ctx,
                            const void *rand_in){
     bigint_t m_int;
     bigint_t r_int;
@@ -169,8 +169,8 @@ uint8_t ecdsa_sign_hash(ecdsa_signature_t* s, const void* hash,
     return r;
 }
 
-uint8_t ecdsa_sign_message(ecdsa_signature_t* s, const void* m, uint16_t m_len_b,
-                       const hfdesc_t* hash_desc, const ecdsa_ctx_t* ctx,
+uint8_t ecdsa_sign_message(ecdsa_signature_t *s, const void *m, uint16_t m_len_b,
+                       const hfdesc_t *hash_desc, const ecdsa_ctx_t *ctx,
                        const void *rand_in){
 
     uint8_t *hash;

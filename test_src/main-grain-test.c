@@ -29,17 +29,17 @@
 #include "scal-nessie.h"
 #include "performance_test.h"
 
-char* algo_name = "Grain";
+char *algo_name = "Grain";
 
 /*****************************************************************************
  *  additional validation-functions                                          *
  *****************************************************************************/
-void grain_genctx_dummy(uint8_t* key, uint16_t keysize_b, void* ctx){
+void grain_genctx_dummy(uint8_t *key, uint16_t keysize_b, void *ctx){
 	uint8_t iv[8]={0};
 	grain_init(key, &iv, ctx);
 }
 
-uint8_t grain_getbyte_dummy(grain_ctx_t* ctx){
+uint8_t grain_getbyte_dummy(grain_ctx_t *ctx){
 	uint8_t i,ret=0;
 	for(i=0; i<8; ++i){
 		ret<<=1;
@@ -48,7 +48,7 @@ uint8_t grain_getbyte_dummy(grain_ctx_t* ctx){
 	return ret;
 }
 
-uint8_t grain_getbyte_dummy_rev(grain_ctx_t* ctx){
+uint8_t grain_getbyte_dummy_rev(grain_ctx_t *ctx){
 	uint8_t i,ret=0;
 	for(i=0; i<8; ++i){
 		ret >>= 1;

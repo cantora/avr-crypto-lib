@@ -56,7 +56,7 @@ hfdesc_t** shavs_algolist=NULL;
 void shavs_listalgos(void){
 	char option = 'a';
 
-	hfdesc_t* t;
+	hfdesc_t *t;
 	uint8_t i=0;
 	fputs_P(PSTR("\nthe following algorithms are available:\n"), shavs_out_file);
 	while(option <= 'z' && (t = (hfdesc_t*)pgm_read_word(&(shavs_algolist[i])))){
@@ -66,7 +66,7 @@ void shavs_listalgos(void){
 	}
 }
 
-void shavs_setalgo(char* param){
+void shavs_setalgo(char *param){
 	param = strstrip(param);
 	if(param[1]=='\0'){ /* single letter specified */
 		uint8_t i, option = param[0] - 'a';
@@ -83,7 +83,7 @@ void shavs_setalgo(char* param){
 		}
 		shavs_algo=(hfdesc_t*)pgm_read_word(&(shavs_algolist[option]));
 	} else { /* name specifyed */
-		hfdesc_t* t=NULL;
+		hfdesc_t *t=NULL;
 		uint8_t i=0;
 		while((t=(hfdesc_t*)pgm_read_word(&(shavs_algolist[i]))) &&
 		       strcasecmp_P(param, (void*)pgm_read_word(&(t->name))))
@@ -104,7 +104,7 @@ typedef struct {
 	uint16_t buffersize_B;
 	uint32_t blocks;
 	hfgen_ctx_t ctx;
-	uint8_t* buffer;
+	uint8_t *buffer;
 	uint8_t  in_byte;
 } shavs_ctx_t;
 
@@ -143,7 +143,7 @@ uint8_t buffer_add(char c){
 }
 
 static
-uint32_t my_strtoul(const char* str){
+uint32_t my_strtoul(const char *str){
 	uint32_t r=0;
 	while(*str && (*str<'0' || *str>'9')){
 		str++;
@@ -162,7 +162,7 @@ uint32_t my_strtoul(const char* str){
 int32_t getLength(void){
 	uint32_t len=0;
 	char lenstr[21];
-	char* len2;
+	char *len2;
 	for(;;){
 		memset(lenstr, 0, 21);
 		cli_getsn_cecho(lenstr, 20);

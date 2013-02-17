@@ -58,7 +58,7 @@ typedef struct {
 } a5_1_ctx_t;
  
 
-void		a5_1_init(a5_1_ctx_t *c, void* key, uint8_t keylength_b, void* iv, uint8_t ivlength_b);
+void		a5_1_init(a5_1_ctx_t *c, void *key, uint8_t keylength_b, void *iv, uint8_t ivlength_b);
 uint8_t		a5_1_clock(a5_1_ctx_t *c);
 uint8_t 	a5_1_gen(a5_1_ctx_t *c);
 

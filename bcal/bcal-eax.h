@@ -37,17 +37,17 @@ typedef struct{
 	uint8_t         header_set;
 } bcal_eax_ctx_t;
 
-uint8_t bcal_eax_init(const bcdesc_t* desc, const void* key, uint16_t keysize_b, bcal_eax_ctx_t* ctx);
-void bcal_eax_free(bcal_eax_ctx_t* ctx);
-void bcal_eax_loadNonce(const void* nonce, uint16_t length_b, bcal_eax_ctx_t* ctx);
-void bcal_eax_addNextHeader(const void* header, bcal_eax_ctx_t* ctx);
-void bcal_eax_addLastHeader(const void* header, uint16_t length_b, bcal_eax_ctx_t* ctx);
-void bcal_eax_encNextBlock(void* block, bcal_eax_ctx_t* ctx);
-void bcal_eax_encLastBlock(void* block, uint16_t length_b, bcal_eax_ctx_t* ctx);
-void bcal_eax_decNextBlock(void* block, bcal_eax_ctx_t* ctx);
-void bcal_eax_decLastBlock(void* block, uint16_t length_b, bcal_eax_ctx_t* ctx);
-void bcal_eax_ctx2tag(void* dest, uint16_t length_b, bcal_eax_ctx_t* ctx);
-//void bcal_eax(void* dest, uint16_t out_length_b, const void* block, uint32_t length_b, bcal_eax_ctx_t* ctx);
+uint8_t bcal_eax_init(const bcdesc_t *desc, const void *key, uint16_t keysize_b, bcal_eax_ctx_t *ctx);
+void bcal_eax_free(bcal_eax_ctx_t *ctx);
+void bcal_eax_loadNonce(const void *nonce, uint16_t length_b, bcal_eax_ctx_t *ctx);
+void bcal_eax_addNextHeader(const void *header, bcal_eax_ctx_t *ctx);
+void bcal_eax_addLastHeader(const void *header, uint16_t length_b, bcal_eax_ctx_t *ctx);
+void bcal_eax_encNextBlock(void *block, bcal_eax_ctx_t *ctx);
+void bcal_eax_encLastBlock(void *block, uint16_t length_b, bcal_eax_ctx_t *ctx);
+void bcal_eax_decNextBlock(void *block, bcal_eax_ctx_t *ctx);
+void bcal_eax_decLastBlock(void *block, uint16_t length_b, bcal_eax_ctx_t *ctx);
+void bcal_eax_ctx2tag(void *dest, uint16_t length_b, bcal_eax_ctx_t *ctx);
+//void bcal_eax(void *dest, uint16_t out_length_b, const void *block, uint32_t length_b, bcal_eax_ctx_t *ctx);
 
 #endif /* BCALEAX_H_ */
 

@@ -89,7 +89,7 @@ uint64_t pgm_read_uint64_t_P(const uint64_t * p){
 #define SIGMA_a(x) (rotr64((x),  1) ^ rotr64((x),  8) ^ ((x)>>7))
 #define SIGMA_b(x) (rotr64((x), 19) ^ rotl64((x),  3) ^ ((x)>>6))
 
-void sha2_large_common_nextBlock(sha2_large_common_ctx_t* ctx, const void* block){
+void sha2_large_common_nextBlock(sha2_large_common_ctx_t *ctx, const void *block){
 	uint64_t w[16], wx;
 	uint64_t a[8];
 	uint64_t t1, t2;
@@ -122,7 +122,7 @@ void sha2_large_common_nextBlock(sha2_large_common_ctx_t* ctx, const void* block
 	ctx->length += 1;
 }
 
-void sha2_large_common_lastBlock(sha2_large_common_ctx_t* ctx, const void* block, uint16_t length_b){
+void sha2_large_common_lastBlock(sha2_large_common_ctx_t *ctx, const void *block, uint16_t length_b){
 	while(length_b >= 1024){
 		sha2_large_common_nextBlock(ctx, block);
 		block = (uint8_t*)block + 1024/8;

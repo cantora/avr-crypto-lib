@@ -26,9 +26,9 @@
 #include <avr/pgmspace.h>
 
 
-void(*bcal_nessie_dummy_init_fpt)(const void* key, void* ctx)=NULL;
+void(*bcal_nessie_dummy_init_fpt)(const void *key, void *ctx)=NULL;
 
-void bcal_nessie_dummy_init(const void* key, uint16_t keysize, void* ctx){
+void bcal_nessie_dummy_init(const void *key, uint16_t keysize, void *ctx){
 	if(bcal_nessie_dummy_init_fpt){
 		bcal_nessie_dummy_init_fpt(key, ctx);
 	}else{
@@ -36,7 +36,7 @@ void bcal_nessie_dummy_init(const void* key, uint16_t keysize, void* ctx){
 	}
 }
 
-void bcal_nessie(const bcdesc_t* bcd){
+void bcal_nessie(const bcdesc_t *bcd){
 	if(pgm_read_byte(&(bcd->type))!=BCDESC_TYPE_BLOCKCIPHER)
 		return;
 	char name[1+strlen_P((void*)pgm_read_word(&(bcd->name)))];
@@ -69,8 +69,8 @@ void bcal_nessie(const bcdesc_t* bcd){
 
 }
 
-void bcal_nessie_multiple(const bcdesc_t* const* bcd_list){
-	const bcdesc_t* bcd;
+void bcal_nessie_multiple(const bcdesc_t *const *bcd_list){
+	const bcdesc_t *bcd;
 	for(;;){
 		bcd = (void*)pgm_read_word(bcd_list);
 		if(!bcd)

@@ -112,7 +112,7 @@ void one_in512_hash(uint16_t pos){
 	uint8_t hash[(nessie_hash_ctx.hashsize_b+7)/8];
 	uint8_t block[nessie_hash_ctx.blocksize_B];
 	uint16_t n=512;
-	char* tab[8] = { "80", "40", "20", "10",
+	char *tab[8] = { "80", "40", "20", "10",
 	                 "08", "04", "02", "01" };
 
 	pos&=511;
@@ -184,7 +184,7 @@ void nessie_hash_run(void){
 	
 	nessie_print_header(nessie_hash_ctx.name, 0, 0, nessie_hash_ctx.hashsize_b, 0, 0);
 	/* test set 1 */
-	const char* challange_dbz= PSTR(
+	const char *challange_dbz= PSTR(
 		  "\0"
 		"\"\" (empty string)\0"
 		  "a\0"

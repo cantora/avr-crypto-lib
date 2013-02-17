@@ -100,7 +100,7 @@ typedef struct {
 } scdesc_t; /* streamcipher descriptor type */
 
 typedef struct{
-	const scdesc_t* desc_ptr;
+	const scdesc_t *desc_ptr;
 	uint16_t        keysize;
 	uint16_t        ivsize;
 	uint16_t        index;

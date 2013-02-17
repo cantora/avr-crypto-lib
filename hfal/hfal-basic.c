@@ -22,7 +22,7 @@
 #include "hfal-basic.h"
 #include <stdlib.h>
 
-uint8_t hfal_hash_init(const hfdesc_t* hash_descriptor, hfgen_ctx_t* ctx){
+uint8_t hfal_hash_init(const hfdesc_t *hash_descriptor, hfgen_ctx_t *ctx){
 	hf_init_fpt f;
 	uint16_t tmp;
 	ctx->desc_ptr = (hfdesc_t*)hash_descriptor;
@@ -34,37 +34,37 @@ uint8_t hfal_hash_init(const hfdesc_t* hash_descriptor, hfgen_ctx_t* ctx){
 	return 0;
 }
 
-void hfal_hash_nextBlock(hfgen_ctx_t* ctx, const void* block){
+void hfal_hash_nextBlock(hfgen_ctx_t *ctx, const void *block){
 	hf_nextBlock_fpt f;
-	hfdesc_t* x=(ctx->desc_ptr);
+	hfdesc_t *x=(ctx->desc_ptr);
 	f =(hf_nextBlock_fpt)pgm_read_word(&(x->nextBlock));
 	f(ctx->ctx, block);
 }
 
-void hfal_hash_lastBlock(hfgen_ctx_t* ctx, const void* block, uint16_t length_b){
+void hfal_hash_lastBlock(hfgen_ctx_t *ctx, const void *block, uint16_t length_b){
 	hf_lastBlock_fpt f;
-	hfdesc_t* x=ctx->desc_ptr;
+	hfdesc_t *x=ctx->desc_ptr;
 	f =(hf_lastBlock_fpt)pgm_read_word(&(x->lastBlock));
 	f(ctx->ctx, block, length_b);
 }
 
-void hfal_hash_ctx2hash(void* dest, hfgen_ctx_t* ctx){
+void hfal_hash_ctx2hash(void *dest, hfgen_ctx_t *ctx){
 	hf_ctx2hash_fpt f;
-	hfdesc_t* x=ctx->desc_ptr;
+	hfdesc_t *x=ctx->desc_ptr;
 	f =(hf_ctx2hash_fpt)pgm_read_word(&(x->ctx2hash));
 	f(dest, ctx->ctx);
 }
 
-void hfal_hash_free(hfgen_ctx_t* ctx){
+void hfal_hash_free(hfgen_ctx_t *ctx){
 	hf_free_fpt f;
-	hfdesc_t* x=ctx->desc_ptr;
+	hfdesc_t *x=ctx->desc_ptr;
 	f =(hf_free_fpt)pgm_read_word(&(x->free));
 	if(f)
 		f(ctx->ctx);
 	free(ctx->ctx);
 }
 
-void hfal_hash_mem(const hfdesc_t* hash_descriptor, void* dest, const void* msg, uint32_t length_b){
+void hfal_hash_mem(const hfdesc_t *hash_descriptor, void *dest, const void *msg, uint32_t length_b){
 	void_fpt f;
 	f = (void_fpt)pgm_read_word(&(hash_descriptor->mem));
 	if(f){
@@ -89,19 +89,19 @@ void hfal_hash_mem(const hfdesc_t* hash_descriptor, void* dest, const void* msg,
 	}
 }
 
-uint16_t hfal_hash_getBlocksize(const hfdesc_t* hash_descriptor){
+uint16_t hfal_hash_getBlocksize(const hfdesc_t *hash_descriptor){
 	uint16_t ret;
 	ret = pgm_read_word(&(hash_descriptor->blocksize_b));
 	return ret;
 }
 
-uint16_t hfal_hash_getHashsize(const hfdesc_t* hash_descriptor){
+uint16_t hfal_hash_getHashsize(const hfdesc_t *hash_descriptor){
 	uint16_t ret;
 	ret = pgm_read_word(&(hash_descriptor->hashsize_b));
 	return ret;
 }
 
-uint16_t hfal_hash_getCtxsize_B(const hfdesc_t* hash_descriptor){
+uint16_t hfal_hash_getCtxsize_B(const hfdesc_t *hash_descriptor){
 	uint16_t ret;
 	ret = pgm_read_word(&(hash_descriptor->ctxsize_B));
 	return ret;

@@ -23,6 +23,6 @@
 
 #include <stdint.h>
 
-void base64enc(char* dest, const void* src, uint16_t length);
+void base64enc(char *dest, const void *src, uint16_t length);
 
 #endif /*BASE64_ENC_H_*/

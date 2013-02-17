@@ -57,13 +57,13 @@ void nessie_send_alive_a(uint16_t i);
 #endif
 */
 
-void nessie_set_output_stream(FILE* out_stream);
+void nessie_set_output_stream(FILE *out_stream);
 
-void nessie_print_block(uint8_t* block, uint16_t blocksize_bit);
-void nessie_print_item(const char* name, uint8_t* buffer, uint16_t size_B);
+void nessie_print_block(uint8_t *block, uint16_t blocksize_bit);
+void nessie_print_item(const char *name, uint8_t *buffer, uint16_t size_B);
 void nessie_print_set_vector(uint8_t set, uint16_t vector);
 void nessie_print_setheader(uint8_t set);
-void nessie_print_header(const char* name,
+void nessie_print_header(const char *name,
                          uint16_t keysize_b, 
                          uint16_t blocksize_b,
                          uint16_t hashsize_b, 

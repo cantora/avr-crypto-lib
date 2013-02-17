@@ -30,7 +30,7 @@
 
 #define X0 (((uint64_t*)data)[0])
 #define X1 (((uint64_t*)data)[1])
-void threefish_mix(void* data, uint8_t rot){
+void threefish_mix(void *data, uint8_t rot){
 	uint64_t x;
 	x = X1;
 	X0 += x;

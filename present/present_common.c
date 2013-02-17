@@ -50,7 +50,7 @@ uint8_t present_sbox_inv(uint8_t b){
 	return (pgm_read_byte(&sb[b >> 4]) << 4) | pgm_read_byte(&sb[b & 0xf]);
 }
 
-void present_p(uint8_t* o, uint8_t* i){
+void present_p(uint8_t *o, uint8_t *i){
 	uint8_t m,n=0,idx=0;
 	for(m=0; m<64; ++m){
 		o[idx] <<= 1;
@@ -67,7 +67,7 @@ void present_p(uint8_t* o, uint8_t* i){
 }
 
 
-void present_generic_enc(void* buffer, uint8_t* ctx, uint8_t ksize_B,
+void present_generic_enc(void *buffer, uint8_t *ctx, uint8_t ksize_B,
 	void(*update)(uint8_t*, uint8_t)){
 	uint8_t i,j,tmp[8], k[ksize_B];
 	memcpy(k, ctx, ksize_B);
@@ -83,7 +83,7 @@ void present_generic_enc(void* buffer, uint8_t* ctx, uint8_t ksize_B,
 	}
 }
 
-void present_generic_dec(void* buffer, uint8_t* ctx, uint8_t ksize_B,
+void present_generic_dec(void *buffer, uint8_t *ctx, uint8_t ksize_B,
 	void(*update)(uint8_t*, uint8_t)){
 	uint8_t j,tmp[8], k[ksize_B];
 	uint8_t i;

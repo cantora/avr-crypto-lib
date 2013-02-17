@@ -46,22 +46,22 @@ typedef struct {
 typedef blake_large_ctx_t blake384_ctx_t;
 typedef blake_large_ctx_t blake512_ctx_t;
 
-void blake384_init(blake384_ctx_t* ctx);
-void blake512_init(blake512_ctx_t* ctx);
+void blake384_init(blake384_ctx_t *ctx);
+void blake512_init(blake512_ctx_t *ctx);
 
-void blake_large_nextBlock(blake_large_ctx_t* ctx, const void* block);
-void blake_large_lastBlock(blake_large_ctx_t* ctx, const void* block, uint16_t length_b);
+void blake_large_nextBlock(blake_large_ctx_t *ctx, const void *block);
+void blake_large_lastBlock(blake_large_ctx_t *ctx, const void *block, uint16_t length_b);
 
-void blake384_nextBlock(blake384_ctx_t* ctx, const void* block);
-void blake384_lastBlock(blake384_ctx_t* ctx, const void* block, uint16_t length_b);
+void blake384_nextBlock(blake384_ctx_t *ctx, const void *block);
+void blake384_lastBlock(blake384_ctx_t *ctx, const void *block, uint16_t length_b);
 
-void blake512_nextBlock(blake512_ctx_t* ctx, const void* block);
-void blake512_lastBlock(blake512_ctx_t* ctx, const void* block, uint16_t length_b);
+void blake512_nextBlock(blake512_ctx_t *ctx, const void *block);
+void blake512_lastBlock(blake512_ctx_t *ctx, const void *block, uint16_t length_b);
 
-void blake384_ctx2hash(void* dest, const blake384_ctx_t* ctx);
-void blake512_ctx2hash(void* dest, const blake512_ctx_t* ctx);
+void blake384_ctx2hash(void *dest, const blake384_ctx_t *ctx);
+void blake512_ctx2hash(void *dest, const blake512_ctx_t *ctx);
 
-void blake384(void* dest, const void* msg, uint32_t length_b);
-void blake512(void* dest, const void* msg, uint32_t length_b);
+void blake384(void *dest, const void *msg, uint32_t length_b);
+void blake512(void *dest, const void *msg, uint32_t length_b);
 
 #endif /* BLAKE_LARGE_H_ */

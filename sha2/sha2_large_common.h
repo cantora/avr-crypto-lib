@@ -26,8 +26,8 @@ typedef struct {
 } sha2_large_common_ctx_t;
 
 
-void sha2_large_common_nextBlock(sha2_large_common_ctx_t* ctx, const void* block);
-void sha2_large_common_lastBlock(sha2_large_common_ctx_t* ctx, const void* block, uint16_t length_b);
+void sha2_large_common_nextBlock(sha2_large_common_ctx_t *ctx, const void *block);
+void sha2_large_common_lastBlock(sha2_large_common_ctx_t *ctx, const void *block, uint16_t length_b);
 
 
 #endif /* SHA2_LARGE_COMMON_H_ */

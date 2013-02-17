@@ -36,12 +36,12 @@ const char des_str[]   PROGMEM = "DES";
 const uint8_t des_keysize_desc[] PROGMEM = { KS_TYPE_LIST, 1, KS_INT(64), 
                                                 KS_TYPE_TERMINATOR    };
 static
-void des_dummy_enc(void* block, void* key){
+void des_dummy_enc(void *block, void *key){
 	des_enc(block, block, key);
 }
 
 static
-void des_dummy_dec(void* block, void* key){
+void des_dummy_dec(void *block, void *key){
 	des_dec(block, block, key);
 }
 

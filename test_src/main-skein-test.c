@@ -34,9 +34,9 @@
 #include "hfal-nessie.h"
 #include "hfal-basic.h"
 
-char* algo_name = "Skein";
+char *algo_name = "Skein";
 
-const hfdesc_t* const algolist[] PROGMEM = {
+const hfdesc_t *const algolist[] PROGMEM = {
 	(hfdesc_t*)&skein256_128_desc,
 	(hfdesc_t*)&skein256_160_desc,
 	(hfdesc_t*)&skein256_224_desc,
@@ -181,7 +181,7 @@ void zeromsg_test_skein(uint16_t outsize_b){
 	cli_hexdump_block(hash, (outsize_b+7)/8, 4, 16);
 }
 
-void zeromsg_test_common(char* p){
+void zeromsg_test_common(char *p){
 	uint8_t i;
 	uint16_t s=0;
 	uint16_t sizes[]={128, 160, 224, 256, 384, 512, 1024};

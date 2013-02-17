@@ -46,7 +46,7 @@
 • Swap   x_1jkl0 with    x_1jkl1 , for each (j, k, l).
 */
 
-static void cubehash_round(cubehash_ctx_t* ctx){
+static void cubehash_round(cubehash_ctx_t *ctx){
 	uint8_t i;
 	uint32_t t, t2;
 	for(i=0; i<16; ++i){
@@ -79,7 +79,7 @@ static void cubehash_round(cubehash_ctx_t* ctx){
 	}
 }
 
-void cubehash_init(uint8_t r, uint8_t b, uint16_t h, cubehash_ctx_t* ctx){
+void cubehash_init(uint8_t r, uint8_t b, uint16_t h, cubehash_ctx_t *ctx){
 	memset(ctx->a, 0, 32*4);
 	ctx->a[0] = h/8;
 	ctx->a[1] = b;
@@ -91,7 +91,7 @@ void cubehash_init(uint8_t r, uint8_t b, uint16_t h, cubehash_ctx_t* ctx){
 	}
 }
 
-void cubehash_nextBlock(cubehash_ctx_t* ctx, void* block){
+void cubehash_nextBlock(cubehash_ctx_t *ctx, void *block){
 	uint8_t i;
 	memxor(ctx->a, block, ctx->blocksize_B);
 	for(i=0; i<ctx->rounds; ++i){
@@ -99,7 +99,7 @@ void cubehash_nextBlock(cubehash_ctx_t* ctx, void* block){
 	}
 }
 
-void cubehash_lastBlock(cubehash_ctx_t* ctx, void* block, uint16_t length_b){
+void cubehash_lastBlock(cubehash_ctx_t *ctx, void *block, uint16_t length_b){
 	while(length_b>=ctx->blocksize_B*8){
 		cubehash_nextBlock(ctx, block);
 		block = (uint8_t*)block + ctx->blocksize_B;
@@ -117,46 +117,46 @@ void cubehash_lastBlock(cubehash_ctx_t* ctx, void* block, uint16_t length_b){
 	}
 }
 
-void cubehash_ctx2hash(void* dest, uint16_t length_b, cubehash_ctx_t* ctx){
+void cubehash_ctx2hash(void *dest, uint16_t length_b, cubehash_ctx_t *ctx){
 	memcpy(dest, ctx->a, (length_b+7)/8);
 }
 
 /******************************************************************************/
 
-void cubehash224_init(cubehash_ctx_t* ctx){
+void cubehash224_init(cubehash_ctx_t *ctx){
 	cubehash_init(16, 32, 224, ctx);
 }
 
-void cubehash224_ctx2hash(void* dest, cubehash_ctx_t* ctx){
+void cubehash224_ctx2hash(void *dest, cubehash_ctx_t *ctx){
 	cubehash_ctx2hash(dest, 224, ctx);
 }
 
 /******************************************************************************/
 
-void cubehash256_init(cubehash_ctx_t* ctx){
+void cubehash256_init(cubehash_ctx_t *ctx){
 	cubehash_init(16, 32, 256, ctx);
 }
 
-void cubehash256_ctx2hash(void* dest, cubehash_ctx_t* ctx){
+void cubehash256_ctx2hash(void *dest, cubehash_ctx_t *ctx){
 	cubehash_ctx2hash(dest, 256, ctx);
 }
 
 /******************************************************************************/
 
-void cubehash384_init(cubehash_ctx_t* ctx){
+void cubehash384_init(cubehash_ctx_t *ctx){
 	cubehash_init(16, 32, 384, ctx);
 }
 
-void cubehash384_ctx2hash(void* dest, cubehash_ctx_t* ctx){
+void cubehash384_ctx2hash(void *dest, cubehash_ctx_t *ctx){
 	cubehash_ctx2hash(dest, 384, ctx);
 }
 
 /******************************************************************************/
 
-void cubehash512_init(cubehash_ctx_t* ctx){
+void cubehash512_init(cubehash_ctx_t *ctx){
 	cubehash_init(16, 32, 512, ctx);
 }
 
-void cubehash512_ctx2hash(void* dest, cubehash_ctx_t* ctx){
+void cubehash512_ctx2hash(void *dest, cubehash_ctx_t *ctx){
 	cubehash_ctx2hash(dest, 512, ctx);
 }

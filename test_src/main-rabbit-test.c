@@ -26,13 +26,13 @@
 #include "scal-basic.h"
 #include "scal-nessie.h"
 
-const char* algo_name = "Rabbit";
+const char *algo_name = "Rabbit";
 
 /*****************************************************************************
  *  additional validation-functions											 *
  *****************************************************************************/
 
-void test_vector(void* key, void* iv, const void* ref){
+void test_vector(void *key, void *iv, const void *ref){
 	rabbit_ctx_t ctx;
 	uint8_t fail=0;
 	cli_putstr_P(PSTR("\r\n testing with\r\n key:  "));

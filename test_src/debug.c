@@ -47,7 +47,7 @@
 	uart0_putc(c);
  }
 
- void debug_str(char* s){
+ void debug_str(char *s){
  	while (*s)
  		debug_char(*s++);
  }

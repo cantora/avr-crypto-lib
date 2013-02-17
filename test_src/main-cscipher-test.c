@@ -29,9 +29,9 @@
 #include "bcal-performance.h"
 #include "bcal_cscipher.h"
 
-char* algo_name = "CS-Cipher";
+char *algo_name = "CS-Cipher";
 
-const bcdesc_t* const algolist[] PROGMEM = {
+const bcdesc_t *const algolist[] PROGMEM = {
 	(bcdesc_t*)&cscipher_desc,
 	NULL
 };
@@ -40,7 +40,7 @@ const bcdesc_t* const algolist[] PROGMEM = {
  *  additional validation-functions											 *
  *****************************************************************************/
 
-void cscipher_init_dummy(const uint8_t* key, uint16_t keysize_b, void* ctx){
+void cscipher_init_dummy(const uint8_t *key, uint16_t keysize_b, void *ctx){
 	cscipher_init(key, ctx);
 }
 

@@ -39,7 +39,7 @@ uint64_t camellia_fl(uint64_t x, uint64_t k);
 /*****************************************************************************/
 uint64_t camellia_fl_inv(uint64_t y, uint64_t k);
 /*****************************************************************************/
-void change_endian(void* data, uint8_t length);
+void change_endian(void *data, uint8_t length);
 /*
 uint64_t PROGMEM camellia_sigma[6]={ / * 64 byte table * /
 	0xA09E667F3BCC908BLL,
@@ -83,7 +83,7 @@ void camellia128_ctx_dump(camellia128_ctx_t *s){
 /*****************************************************************************/
 /* extern uint64_t camellia_sigma[6]; */
 
-void camellia128_init(const void* key, camellia128_ctx_t* s){
+void camellia128_init(const void *key, camellia128_ctx_t *s){
 	uint8_t i;
 	s->kll = 0; /* ((uint64_t*)key)[0]; */
 	
@@ -113,9 +113,9 @@ void camellia128_init(const void* key, camellia128_ctx_t* s){
 }
 
 /*****************************************************************************/
-void camellia128_keyop(camellia128_ctx_t* s, int8_t q);
+void camellia128_keyop(camellia128_ctx_t *s, int8_t q);
 /*****************************************************************************/
-void camellia128_keyop_inv(camellia128_ctx_t* s, int8_t q); 
+void camellia128_keyop_inv(camellia128_ctx_t *s, int8_t q); 
 /*****************************************************************************/
 
 #define SEL_KA 1
@@ -133,12 +133,12 @@ void camellia128_keyop_inv(camellia128_ctx_t* s, int8_t q);
 #define KEY_ROL17		0x08
 #define KEY_ROL15		0x00
 
-void camellia_6rounds(const camellia128_ctx_t* s, uint64_t* bl, uint64_t* br, 
+void camellia_6rounds(const camellia128_ctx_t *s, uint64_t *bl, uint64_t *br, 
                       uint8_t roundop, uint8_t keychoice);
 /*****************************************************************************/
 
 
-void camellia128_enc(void* block, const camellia128_ctx_t* s){
+void camellia128_enc(void *block, const camellia128_ctx_t *s){
 
 	#define BL (((uint64_t*)block)[0])
 	#define BR (((uint64_t*)block)[1])
@@ -192,7 +192,7 @@ void camellia128_enc(void* block, const camellia128_ctx_t* s){
 
 /*****************************************************************************/
 
-void camellia128_dec(void* block, const camellia128_ctx_t* s){
+void camellia128_dec(void *block, const camellia128_ctx_t *s){
 
 	#define BL (((uint64_t*)block)[1])
 	#define BR (((uint64_t*)block)[0])

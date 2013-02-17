@@ -40,7 +40,7 @@
 
 #if DEBUG
  #include "cli.h"
- void dump_m(const uint8_t* m){
+ void dump_m(const uint8_t *m){
 	 uint8_t i,j;
 	 for(i=0; i<16; ++i){
 		cli_putstr_P(PSTR("\r\n"));
@@ -152,20 +152,20 @@ void groestl_large_rounds(uint8_t *m, uint8_t q){
 	}
 }
 
-void groestl384_init(groestl384_ctx_t* ctx){
+void groestl384_init(groestl384_ctx_t *ctx){
 	memset(ctx->h, 0, 16*8);
 	ctx->h[8*16-1] = (uint8_t)384;
 	ctx->h[8*16-2] = (uint8_t)(384>>8);
 	ctx->counter = 0;
 }
 
-void groestl512_init(groestl512_ctx_t* ctx){
+void groestl512_init(groestl512_ctx_t *ctx){
 	memset(ctx->h, 0, 16*8);
 	ctx->h[8*16-2] = 2;
 	ctx->counter = 0;
 }
 
-void groestl_large_nextBlock(groestl_large_ctx_t* ctx, const void* block){
+void groestl_large_nextBlock(groestl_large_ctx_t *ctx, const void *block){
 	uint8_t tmp1[128], tmp2[128];
 /*
 	for(i=0; i<8; ++i){
@@ -184,7 +184,7 @@ void groestl_large_nextBlock(groestl_large_ctx_t* ctx, const void* block){
 	ctx->counter++;
 }
 
-void groestl_large_lastBlock(groestl_large_ctx_t* ctx, const void* block, uint16_t length_b){
+void groestl_large_lastBlock(groestl_large_ctx_t *ctx, const void *block, uint16_t length_b){
 	uint8_t buffer[128];
 	while(length_b>=GROESTL_LARGE_BLOCKSIZE){
 		groestl_large_nextBlock(ctx, block);
@@ -206,7 +206,7 @@ void groestl_large_lastBlock(groestl_large_ctx_t* ctx, const void* block, uint16
 	groestl_large_nextBlock(ctx, buffer);
 }
 
-void groestl_large_ctx2hash(void* dest, const groestl_large_ctx_t* ctx, uint16_t outlength_b){
+void groestl_large_ctx2hash(void *dest, const groestl_large_ctx_t *ctx, uint16_t outlength_b){
 	uint8_t tmp[128];
 	memcpy(tmp, ctx->h, 128);
 	groestl_large_rounds(tmp, 0);
@@ -218,31 +218,31 @@ void groestl_large_ctx2hash(void* dest, const groestl_large_ctx_t* ctx, uint16_t
 	memcpy(dest, tmp+128-outlength_b/8, outlength_b/8);
 }
 
-void groestl384_ctx2hash(void* dest, const groestl384_ctx_t* ctx){
+void groestl384_ctx2hash(void *dest, const groestl384_ctx_t *ctx){
 	groestl_large_ctx2hash(dest, ctx, 384);
 }
 
-void groestl512_ctx2hash(void* dest, const groestl512_ctx_t* ctx){
+void groestl512_ctx2hash(void *dest, const groestl512_ctx_t *ctx){
 	groestl_large_ctx2hash(dest, ctx, 512);
 }
 
-void groestl384_nextBlock(groestl384_ctx_t* ctx, const void* block){
+void groestl384_nextBlock(groestl384_ctx_t *ctx, const void *block){
 	groestl_large_nextBlock(ctx, block);
 }
 
-void groestl512_nextBlock(groestl512_ctx_t* ctx, const void* block){
+void groestl512_nextBlock(groestl512_ctx_t *ctx, const void *block){
 	groestl_large_nextBlock(ctx, block);
 }
 
-void groestl384_lastBlock(groestl384_ctx_t* ctx, const void* block, uint16_t length_b){
+void groestl384_lastBlock(groestl384_ctx_t *ctx, const void *block, uint16_t length_b){
 	groestl_large_lastBlock(ctx, block, length_b);
 }
 
-void groestl512_lastBlock(groestl512_ctx_t* ctx, const void* block, uint16_t length_b){
+void groestl512_lastBlock(groestl512_ctx_t *ctx, const void *block, uint16_t length_b){
 	groestl_large_lastBlock(ctx, block, length_b);
 }
 
-void groestl384(void* dest, const void* msg, uint32_t length_b){
+void groestl384(void *dest, const void *msg, uint32_t length_b){
 	groestl_large_ctx_t ctx;
 	groestl384_init(&ctx);
 	while(length_b>=GROESTL_LARGE_BLOCKSIZE){
@@ -254,7 +254,7 @@ void groestl384(void* dest, const void* msg, uint32_t length_b){
 	groestl_large_ctx2hash(dest, &ctx, 384);
 }
 
-void groestl512(void* dest, const void* msg, uint32_t length_b){
+void groestl512(void *dest, const void *msg, uint32_t length_b){
 	groestl_large_ctx_t ctx;
 	groestl512_init(&ctx);
 	while(length_b>=GROESTL_LARGE_BLOCKSIZE){

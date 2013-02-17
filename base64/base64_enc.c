@@ -75,7 +75,7 @@ char bit6toAscii(uint8_t a){
 
 #endif
 
-void base64enc(char* dest,const void* src, uint16_t length){
+void base64enc(char *dest,const void *src, uint16_t length){
 	uint16_t i,j;
 	uint8_t a[4];
 	for(i=0; i<length/3; ++i){

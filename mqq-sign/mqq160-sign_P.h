@@ -22,6 +22,6 @@
 
 #include "mqq160-sign.h"
 
-void mqq160_sign_P(void* dest, const void* hash, const mqq160_sign_key_t* key_P);
+void mqq160_sign_P(void *dest, const void *hash, const mqq160_sign_key_t *key_P);
 
 #endif /* MQQ160SIGN_P_H_ */

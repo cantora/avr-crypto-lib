@@ -38,7 +38,7 @@
 #define putchar(a)
 #endif
 
-uint8_t ecc_chudnovsky_point_alloc(ecc_chudnovsky_point_t* p, size_t length_B){
+uint8_t ecc_chudnovsky_point_alloc(ecc_chudnovsky_point_t *p, size_t length_B){
     if(!(p->x.wordv = malloc(length_B))){
         printf_P(PSTR("DBG: XXX <%S %s %d>\n"), PSTR(__FILE__), __func__, __LINE__);
         return 1;
@@ -77,7 +77,7 @@ uint8_t ecc_chudnovsky_point_alloc(ecc_chudnovsky_point_t* p, size_t length_B){
     return 0;
 }
 
-void ecc_chudnovsky_point_free(ecc_chudnovsky_point_t* p){
+void ecc_chudnovsky_point_free(ecc_chudnovsky_point_t *p){
     free(p->x.wordv);
     free(p->y.wordv);
     free(p->z1.wordv);
@@ -378,7 +378,7 @@ uint8_t ecc_chudnovsky_point_add_sp(ecc_chudnovsky_point_t *dest,
 uint8_t ecc_chudnovsky_double_and_add(ecc_chudnovsky_point_t *dest,
                                       const bigint_t *k,
                                       const ecc_chudnovsky_point_t *p,
-                                      const ecc_curve_sp_t* curve){
+                                      const ecc_curve_sp_t *curve){
     uint16_t i;
     uint8_t s = 0;
     bigint_word_t v, t;
@@ -404,7 +404,7 @@ uint8_t ecc_chudnovsky_double_and_add(ecc_chudnovsky_point_t *dest,
     return 0;
 }
 
-uint8_t bigint_to_naf(uint8_t* dest, uint16_t *length, const bigint_t *src){
+uint8_t bigint_to_naf(uint8_t *dest, uint16_t *length, const bigint_t *src){
     if(src->length_W == 0){
         *dest = 0;
         *length = 2;
@@ -443,7 +443,7 @@ uint8_t bigint_to_naf(uint8_t* dest, uint16_t *length, const bigint_t *src){
     return 0;
 }
 
-void print_naf(uint8_t* naf, uint16_t length){
+void print_naf(uint8_t *naf, uint16_t length){
     if(!length){
         return;
     }
@@ -466,7 +466,7 @@ void print_naf(uint8_t* naf, uint16_t length){
 uint8_t ecc_chudnovsky_naf_multiplication(ecc_chudnovsky_point_t *dest,
                                           const bigint_t *k,
                                           const ecc_chudnovsky_point_t *p,
-                                          const ecc_curve_sp_t* curve){
+                                          const ecc_curve_sp_t *curve){
     if(k->length_W == 0 || p->y.length_W == 0){
         bigint_set_zero(&dest->y);
         return 0;
@@ -515,7 +515,7 @@ uint8_t ecc_chudnovsky_naf_multiplication(ecc_chudnovsky_point_t *dest,
 uint8_t ecc_chudnovsky_multiplication(ecc_chudnovsky_point_t *dest,
                                       const bigint_t *k,
                                       const ecc_chudnovsky_point_t *p,
-                                      const ecc_curve_sp_t* curve){
+                                      const ecc_curve_sp_t *curve){
     return ecc_chudnovsky_naf_multiplication(dest, k, p, curve);
 }
 
@@ -526,6 +526,6 @@ uint8_t ecc_chudnovsky_multipy_and_sum(ecc_chudnovsky_point_t *dest,
                                       const ecc_chudnovsky_point_t *p,
                                       const bigint_t *l,
                                       const ecc_chudnovsky_point_t *q,
-                                      const ecc_curve_sp_t* curve){
+                                      const ecc_curve_sp_t *curve){
     return ecc_chudnovsky_naf_multiplication(dest, k, p, curve);
 }

@@ -33,7 +33,7 @@
 #include "blake_common.h"
 
 static
-uint64_t pgm_read_qword(const void* p){
+uint64_t pgm_read_qword(const void *p){
 	union{
 		uint64_t v64;
 		uint32_t v32[2];
@@ -65,7 +65,7 @@ const uint64_t blake_c[] PROGMEM = {
 						    (a)>>24 )
 
 static
-void blake_large_expand(uint64_t* v, const blake_large_ctx_t* ctx){
+void blake_large_expand(uint64_t *v, const blake_large_ctx_t *ctx){
 	uint8_t i;
 	memcpy(v, ctx->h, 8*8);
 	for(i=0; i<8; ++i){
@@ -76,7 +76,7 @@ void blake_large_expand(uint64_t* v, const blake_large_ctx_t* ctx){
 }
 
 static
-void blake_large_changeendian(void* dest, const void* src){
+void blake_large_changeendian(void *dest, const void *src){
 	uint8_t i;
 	uint32_t tmp;
 	for(i=0; i<32; i+=2){
@@ -87,7 +87,7 @@ void blake_large_changeendian(void* dest, const void* src){
 }
 
 static
-void blake_large_compress(uint64_t* v,const void* m){
+void blake_large_compress(uint64_t *v,const void *m){
 	uint8_t r,i;
 	uint8_t a,b,c,d, s0, s1, sigma_idx=0;
 	for(r=0; r<16; ++r){
@@ -116,14 +116,14 @@ void blake_large_compress(uint64_t* v,const void* m){
 }
 
 static
-void blake_large_collapse(blake_large_ctx_t* ctx, uint64_t* v){
+void blake_large_collapse(blake_large_ctx_t *ctx, uint64_t *v){
 	uint8_t i;
 	for(i=0; i<8; ++i){
 		ctx->h[i] ^= ctx->s[i%4] ^ v[i] ^ v[8+i];
 	}
 }
 
-void blake_large_nextBlock(blake_large_ctx_t* ctx, const void* msg){
+void blake_large_nextBlock(blake_large_ctx_t *ctx, const void *msg){
 	uint64_t v[16];
 	uint64_t m[16];
 	union {
@@ -140,7 +140,7 @@ void blake_large_nextBlock(blake_large_ctx_t* ctx, const void* msg){
 	blake_large_collapse(ctx, v);
 }
 
-void blake_large_lastBlock(blake_large_ctx_t* ctx, const void* msg, uint16_t length_b){
+void blake_large_lastBlock(blake_large_ctx_t *ctx, const void *msg, uint16_t length_b){
 	while(length_b>=BLAKE_LARGE_BLOCKSIZE){
 		blake_large_nextBlock(ctx, msg);
 		msg = (uint8_t*)msg + BLAKE_LARGE_BLOCKSIZE_B;
@@ -186,7 +186,7 @@ const uint64_t blake512_iv[] PROGMEM = {
     0x1F83D9ABFB41BD6BLL, 0x5BE0CD19137E2179LL
 };
 
-void blake512_init(blake512_ctx_t* ctx){
+void blake512_init(blake512_ctx_t *ctx){
 	uint8_t i;
 	for(i=0; i<8; ++i){
 		ctx->h[i] = pgm_read_qword(&(blake512_iv[i]));
@@ -203,7 +203,7 @@ const uint64_t blake384_iv[] PROGMEM = {
     0xDB0C2E0D64F98FA7LL, 0x47B5481DBEFA4FA4LL
 };
 
-void blake384_init(blake384_ctx_t* ctx){
+void blake384_init(blake384_ctx_t *ctx){
 	uint8_t i;
 	for(i=0; i<8; ++i){
 		ctx->h[i] = pgm_read_qword(&(blake384_iv[i]));
@@ -213,7 +213,7 @@ void blake384_init(blake384_ctx_t* ctx){
 	ctx->appendone = 0;
 }
 
-void blake512_ctx2hash(void* dest, const blake512_ctx_t* ctx){
+void blake512_ctx2hash(void *dest, const blake512_ctx_t *ctx){
 	uint8_t i;
 	for(i=0; i<8; ++i){
 		((uint32_t*)dest)[2*i+0] = CHANGE_ENDIAN32((ctx->h[i])>>32);
@@ -221,7 +221,7 @@ void blake512_ctx2hash(void* dest, const blake512_ctx_t* ctx){
 	}
 }
 
-void blake384_ctx2hash(void* dest, const blake384_ctx_t* ctx){
+void blake384_ctx2hash(void *dest, const blake384_ctx_t *ctx){
 	uint8_t i;
 	for(i=0; i<6; ++i){
 		((uint32_t*)dest)[2*i+0] = CHANGE_ENDIAN32((ctx->h[i])>>32);
@@ -229,23 +229,23 @@ void blake384_ctx2hash(void* dest, const blake384_ctx_t* ctx){
 	}
 }
 
-void blake512_nextBlock(blake512_ctx_t* ctx, const void* block){
+void blake512_nextBlock(blake512_ctx_t *ctx, const void *block){
 	blake_large_nextBlock(ctx, block);
 }
 
-void blake384_nextBlock(blake384_ctx_t* ctx, const void* block){
+void blake384_nextBlock(blake384_ctx_t *ctx, const void *block){
 	blake_large_nextBlock(ctx, block);
 }
 
-void blake512_lastBlock(blake512_ctx_t* ctx, const void* block, uint16_t length_b){
+void blake512_lastBlock(blake512_ctx_t *ctx, const void *block, uint16_t length_b){
 	blake_large_lastBlock(ctx, block, length_b);
 }
 
-void blake384_lastBlock(blake384_ctx_t* ctx, const void* block, uint16_t length_b){
+void blake384_lastBlock(blake384_ctx_t *ctx, const void *block, uint16_t length_b){
 	blake_large_lastBlock(ctx, block, length_b);
 }
 
-void blake512(void* dest, const void* msg, uint32_t length_b){
+void blake512(void *dest, const void *msg, uint32_t length_b){
 	blake_large_ctx_t ctx;
 	blake512_init(&ctx);
 	while(length_b>=BLAKE_LARGE_BLOCKSIZE){
@@ -257,7 +257,7 @@ void blake512(void* dest, const void* msg, uint32_t length_b){
 	blake512_ctx2hash(dest, &ctx);
 }
 
-void blake384(void* dest, const void* msg, uint32_t length_b){
+void blake384(void *dest, const void *msg, uint32_t length_b){
 	blake_large_ctx_t ctx;
 	blake384_init(&ctx);
 	while(length_b>=BLAKE_LARGE_BLOCKSIZE){

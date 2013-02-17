@@ -17,7 +17,7 @@
 
 
 static
-uint8_t kr(uint8_t i, const cast6_ctx_t* ctx){
+uint8_t kr(uint8_t i, const cast6_ctx_t *ctx){
 	uint8_t ret;
 	ret = ctx->krx[i/2];
 	if(i&1){
@@ -31,7 +31,7 @@ uint8_t kr(uint8_t i, const cast6_ctx_t* ctx){
 }
 
 static
-void set_kr(uint8_t value, uint8_t i, cast6_ctx_t* ctx){
+void set_kr(uint8_t value, uint8_t i, cast6_ctx_t *ctx){
 	value &= 0x1F;
 	
 	(ctx->krx[i/2]) &= 0xF0>>((i&1)*4); /* clear the location where v should go */
@@ -103,7 +103,7 @@ uint32_t f3(uint32_t v, uint8_t kri, uint32_t kmi){
 #define D (((uint32_t*)buffer)[3])
 
 static
-void q(void* buffer, uint8_t i, const cast6_ctx_t* ctx){
+void q(void *buffer, uint8_t i, const cast6_ctx_t *ctx){
 	C ^= f1(D, kr(i*4+0, ctx), ctx->km[i][0]);
 	B ^= f2(C, kr(i*4+1, ctx), ctx->km[i][1]);
 	A ^= f3(B, kr(i*4+2, ctx), ctx->km[i][2]);
@@ -111,14 +111,14 @@ void q(void* buffer, uint8_t i, const cast6_ctx_t* ctx){
 }
 
 static
-void qbar(void* buffer, uint8_t i, const cast6_ctx_t* ctx){
+void qbar(void *buffer, uint8_t i, const cast6_ctx_t *ctx){
 	D ^= f1(A, kr(i*4+3, ctx), ctx->km[i][3]);
 	A ^= f3(B, kr(i*4+2, ctx), ctx->km[i][2]);
 	B ^= f2(C, kr(i*4+1, ctx), ctx->km[i][1]);
 	C ^= f1(D, kr(i*4+0, ctx), ctx->km[i][0]);
 }
 
-void cast6_enc(void* buffer, const cast6_ctx_t* ctx){
+void cast6_enc(void *buffer, const cast6_ctx_t *ctx){
 	uint8_t i;
 	for(i=0; i<32/4; ++i){
 		((uint32_t*)buffer)[i] = CHANGE_ENDIAN32(((uint32_t*)buffer)[i]);
@@ -134,7 +134,7 @@ void cast6_enc(void* buffer, const cast6_ctx_t* ctx){
 	}
 }
 
-void cast6_dec(void* buffer, const cast6_ctx_t* ctx){
+void cast6_dec(void *buffer, const cast6_ctx_t *ctx){
 	uint8_t i;
 	for(i=0; i<32/4; ++i){
 		((uint32_t*)buffer)[i] = CHANGE_ENDIAN32(((uint32_t*)buffer)[i]);
@@ -168,7 +168,7 @@ void cast6_dec(void* buffer, const cast6_ctx_t* ctx){
 /*
  * we might later make it optional to use this small thing
 static
-void w(void* buffer, uint8_t* tr, uint32_t* tm){
+void w(void *buffer, uint8_t *tr, uint32_t *tm){
 	G ^= f1(H, (tr[0]&0x0f)+(tr[5]&0x01)?0x10:0x00, tm[0]);
 	F ^= f2(G, (tr[0]>>4)  +(tr[5]&0x02)?0x10:0x00, tm[1]);
 	E ^= f3(F, (tr[1]&0x0f)+(tr[5]&0x04)?0x10:0x00, tm[2]);
@@ -180,7 +180,7 @@ void w(void* buffer, uint8_t* tr, uint32_t* tm){
 }
 */
 static
-void w(void* buffer, uint8_t* tr, uint32_t* tm){
+void w(void *buffer, uint8_t *tr, uint32_t *tm){
 	G ^= f1(H, tr[0], tm[0]);
 	F ^= f2(G, tr[1], tm[1]);
 	E ^= f3(F, tr[2], tm[2]);
@@ -192,7 +192,7 @@ void w(void* buffer, uint8_t* tr, uint32_t* tm){
 }
 
 /*
-void dump_ctx(const cast6_ctx_t* ctx){
+void dump_ctx(const cast6_ctx_t *ctx){
 	uint8_t i,t;
 	cli_putstr_P(PSTR("\r\n DBG:"));
 	for(i=0; i<12; ++i){
@@ -228,7 +228,7 @@ void dump_ctx(const cast6_ctx_t* ctx){
 #define MR 17 
 #define MM 0x6ED9EBA1
 
-void cast6_init(const void* key, uint16_t keysize_b, cast6_ctx_t* ctx){
+void cast6_init(const void *key, uint16_t keysize_b, cast6_ctx_t *ctx){
 	uint8_t  buffer[32];
 	uint8_t  cr=CR, tr[8];
 	uint32_t cm=CM, tm[8];

@@ -41,14 +41,14 @@ in the MQQ160-SIGN C Library.
 */
 
 
-void mqq_inv_affine_transformation(uint8_t* input_bytes, uint8_t* result, const mqq160_sign_key_t* key);
-uint8_t mqq_q(uint8_t i, uint8_t b1, uint8_t b2, const mqq160_sign_key_t* key);
+void mqq_inv_affine_transformation(uint8_t *input_bytes, uint8_t *result, const mqq160_sign_key_t *key);
+uint8_t mqq_q(uint8_t i, uint8_t b1, uint8_t b2, const mqq160_sign_key_t *key);
 
 
 #if 0
 static uint16_t MaskShort[8] = {0x8000, 0x4000, 0x2000, 0x1000, 0x0800, 0x0400, 0x0200, 0x0100};
 
-static uint8_t mqq_q(uint8_t i, uint8_t b1, uint8_t b2, const mqq160_sign_key_t* key){
+static uint8_t mqq_q(uint8_t i, uint8_t b1, uint8_t b2, const mqq160_sign_key_t *key){
 	uint8_t  e[9];
 	uint16_t a[8];
 	uint8_t result, column, row, k;
@@ -133,7 +133,7 @@ static uint8_t mqq_q(uint8_t i, uint8_t b1, uint8_t b2, const mqq160_sign_key_t*
 
 #endif
 
-void mqq160_sign_P(void* dest, const void* hash, const mqq160_sign_key_t* key_P){
+void mqq160_sign_P(void *dest, const void *hash, const mqq160_sign_key_t *key_P){
 	uint8_t i, r1[20], byteindex;
 	mqq160_sign_key_t key;
 

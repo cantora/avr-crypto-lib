@@ -32,9 +32,9 @@
 #include "bcal_threefish512.h"
 #include "bcal_threefish1024.h"
 
-char* algo_name = "Threefish";
+char *algo_name = "Threefish";
 
-const bcdesc_t* const algolist[] PROGMEM = {
+const bcdesc_t *const algolist[] PROGMEM = {
 	(bcdesc_t*)&threefish256_desc,
 	(bcdesc_t*)&threefish512_desc,
 	(bcdesc_t*)&threefish1024_desc,
@@ -44,7 +44,7 @@ const bcdesc_t* const algolist[] PROGMEM = {
  *  additional validation-functions											 *
  *****************************************************************************/
 
-void threefish256_dump(threefish256_ctx_t* ctx){
+void threefish256_dump(threefish256_ctx_t *ctx){
 	uint8_t i;
 	cli_putstr_P(PSTR("\r\n=== ctx dump (256) === \r\n k: "));
 	for(i=0; i<5; ++i){

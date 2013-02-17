@@ -45,7 +45,7 @@ const uint8_t rtaps[] PROGMEM = {
 };
 	
 static 
-void memxor_P(void* d, PGM_VOID_P s, uint8_t length_B){
+void memxor_P(void *d, PGM_VOID_P s, uint8_t length_B){
 	while(length_B--){
 		*((uint8_t*)d) ^= pgm_read_byte(s);
 		d = (uint8_t*)d +1;
@@ -60,7 +60,7 @@ void memxor_P(void* d, PGM_VOID_P s, uint8_t length_B){
 #define SHLX1(a) c0=((a)>>7); (a)^=(((a)<<1)|c1)
 
 static
-void clock_r(uint8_t* r, uint8_t ibit, uint8_t cbit){
+void clock_r(uint8_t *r, uint8_t ibit, uint8_t cbit){
 	uint8_t i,c0=0,c1=0; /* carry */
 	ibit ^= ((r[159/8])>>(159%8))&1; /* ibit is now the same as feedback_bit */
 	if(cbit){
@@ -204,7 +204,7 @@ const uint8_t fb1[] PROGMEM = {
 };
 
 static
-void clock_s(uint8_t* s, uint8_t ibit, uint8_t cbit){
+void clock_s(uint8_t *s, uint8_t ibit, uint8_t cbit){
 	uint8_t s0[20], s1[20];
 	uint8_t i,c=0, c2=0;
 	ibit ^= (s[19])>>7;
@@ -228,7 +228,7 @@ void clock_s(uint8_t* s, uint8_t ibit, uint8_t cbit){
 }
 
 static
-void clock_kg(uint8_t* r, uint8_t* s, uint8_t mixing, uint8_t input){
+void clock_kg(uint8_t *r, uint8_t *s, uint8_t mixing, uint8_t input){
 	uint8_t rb, sb;
 	rb = ((s[ 54/8])>>(( 54%8))) ^ ((r[106/8])>>(((106%8))));
 	sb = ((s[106/8])>>((106%8))) ^ ((r[ 53/8])>>((( 53%8))));
@@ -239,9 +239,9 @@ void clock_kg(uint8_t* r, uint8_t* s, uint8_t mixing, uint8_t input){
 	clock_s(s, input, sb);
 }
 
-void mickey128_init(void* key, uint16_t keysize_b, 
-                    void* iv,  uint16_t ivsize_b, 
-                    mickey128_ctx_t* ctx){
+void mickey128_init(void *key, uint16_t keysize_b, 
+                    void *iv,  uint16_t ivsize_b, 
+                    mickey128_ctx_t *ctx){
 	uint16_t i;
 	memset(ctx->r, 0, 20);
 	memset(ctx->s, 0, 20);
@@ -256,14 +256,14 @@ void mickey128_init(void* key, uint16_t keysize_b,
 	}                  
 } 
 
-uint8_t mickey128_getbit(mickey128_ctx_t* ctx){
+uint8_t mickey128_getbit(mickey128_ctx_t *ctx){
 	uint8_t ret;
 	ret = 1&(*(ctx->r) ^ *(ctx->s));
 	clock_kg(ctx->r, ctx->s, 0, 0);
 	return ret;
 }
 
-uint8_t mickey128_getbyte(mickey128_ctx_t* ctx){
+uint8_t mickey128_getbyte(mickey128_ctx_t *ctx){
 	uint8_t i,ret=0;
 	for(i=0; i<8; ++i){
 		ret<<=1;

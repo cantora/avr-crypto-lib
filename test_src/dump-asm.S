@@ -43,7 +43,7 @@ charisinstr_P:
 	ret
 	
 /******************************************************************************/
-/* void dump_chars(uint8_t* buffer, uint8_t len)
+/* void dump_chars(uint8_t *buffer, uint8_t len)
  *   param buffer:  r24:r25
  *   param len:     r22
  */
@@ -130,7 +130,7 @@ print_aligned:
 	ret 
 
  /*****************************************************************************/
- /* void dump(char* s)
+ /* void dump(char *s)
   *    param s: r24:r25
   */
 
@@ -354,7 +354,7 @@ suffix:
 .byte 0
 
 /******************************************************************************/
-/* void pgm_read_block(void* buffer, uint32_t addr, uint8_t length)
+/* void pgm_read_block(void *buffer, uint32_t addr, uint8_t length)
  *   param buffer:  r24:r25
  *   param addr:    r20:r23
  *   param length:  r18
@@ -390,7 +390,7 @@ pgm_read_block:
 #endif	
 	
 /******************************************************************************/
-/* void ram_read_block(void* buffer, uint32_t addr, uint8_t length)
+/* void ram_read_block(void *buffer, uint32_t addr, uint8_t length)
  *   param buffer:  r24:r25
  *   param addr:    r20:r23
  *   param length:  r18
@@ -410,7 +410,7 @@ ram_read_block:
 	ret
 
 /******************************************************************************/
-/* void ee_read_block(void* buffer, uint32_t addr, uint8_t length)
+/* void ee_read_block(void *buffer, uint32_t addr, uint8_t length)
  *   param buffer:  r24:r25
  *   param addr:    r20:r23
  *   param length:  r18

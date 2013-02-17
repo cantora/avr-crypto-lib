@@ -39,7 +39,7 @@
  * \param keysize_b length of the key in bits (valid are 128, 192 and 256)
  * \param ctx       pointer to the context where the keyschedule should be stored
  */
-void aes_init(const void* key, uint16_t keysize_b, aes_genctx_t* ctx);
+void aes_init(const void *key, uint16_t keysize_b, aes_genctx_t *ctx);
 
 /**
  * \brief initialize the keyschedule for 128 bit key
@@ -49,7 +49,7 @@ void aes_init(const void* key, uint16_t keysize_b, aes_genctx_t* ctx);
  * \param key       pointer to the key material
  * \param ctx       pointer to the context where the keyschedule should be stored
  */
-void aes128_init(const void* key, aes128_ctx_t* ctx);
+void aes128_init(const void *key, aes128_ctx_t *ctx);
 
 /**
  * \brief initialize the keyschedule for 192 bit key
@@ -59,7 +59,7 @@ void aes128_init(const void* key, aes128_ctx_t* ctx);
  * \param key       pointer to the key material
  * \param ctx       pointer to the context where the keyschedule should be stored
  */
-void aes192_init(const void* key, aes192_ctx_t* ctx);
+void aes192_init(const void *key, aes192_ctx_t *ctx);
 
 /**
  * \brief initialize the keyschedule for 256 bit key
@@ -69,7 +69,7 @@ void aes192_init(const void* key, aes192_ctx_t* ctx);
  * \param key       pointer to the key material
  * \param ctx       pointer to the context where the keyschedule should be stored
  */
-void aes256_init(const void* key, aes256_ctx_t* ctx);
+void aes256_init(const void *key, aes256_ctx_t *ctx);
 
 #endif /* AES_KEYSCHEDULE_H_ */
 

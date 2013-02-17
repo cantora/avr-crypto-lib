@@ -43,7 +43,7 @@
 #define GF256MUL_2(a) (gf256mul(2, (a), 0x1b))
 #define GF256MUL_3(a) (gf256mul(3, (a), 0x1b))
 
-static void mixcol(uint8_t* s){
+static void mixcol(uint8_t *s){
 	uint8_t t, tmp[4];
 	tmp[0] = *(s+16*0);
 	tmp[1] = *(s+16*1);
@@ -70,7 +70,7 @@ static void mixcol(uint8_t* s){
 }
 
 #if DEBUG
-static void dump_state(void* s){
+static void dump_state(void *s){
 	uint8_t row, col;
 	for(col=0; col<4; col++){
 		for(row=0; row<4; row++){
@@ -91,7 +91,7 @@ static void dump_state(void* s){
 }
 #endif
 
-static void echo_compress(uint8_t* s, uint8_t iterations, uint64_t* c, void* salt){
+static void echo_compress(uint8_t *s, uint8_t iterations, uint64_t *c, void *salt){
 	uint8_t i, j;
 	union {
 		uint8_t v8[16];
@@ -169,7 +169,7 @@ static void echo_compress(uint8_t* s, uint8_t iterations, uint64_t* c, void* sal
 
 /******************************************************************************/
 
-static void compress512(void* v, void* m, uint64_t* c, void* salt){
+static void compress512(void *v, void *m, uint64_t *c, void *salt){
 	uint8_t s[16*16];
 	uint8_t i;
 	memcpy(s, v, 16*4);           /* load v into state */
@@ -186,7 +186,7 @@ static void compress512(void* v, void* m, uint64_t* c, void* salt){
 	}
 }
 
-static void compress1024(void* v, void* m, uint64_t* c, void* salt){
+static void compress1024(void *v, void *m, uint64_t *c, void *salt){
 	uint8_t s[16*16];
 	memcpy(s, v, 16*8);           /* load v into state */
 	memcpy(s+16*8, m, 16*8);      /* load m into state */
@@ -201,12 +201,12 @@ static void compress1024(void* v, void* m, uint64_t* c, void* salt){
 
 /******************************************************************************/
 
-void echo_small_nextBlock(echo_small_ctx_t* ctx, void* block){
+void echo_small_nextBlock(echo_small_ctx_t *ctx, void *block){
 	ctx->counter += ECHO_SMALL_BLOCKSIZE;
 	compress512(ctx->v, block, &(ctx->counter), ctx->salt);
 }
 
-void echo_small_lastBlock(echo_small_ctx_t* ctx, void* block, uint16_t length_b){
+void echo_small_lastBlock(echo_small_ctx_t *ctx, void *block, uint16_t length_b){
 	while(length_b>=ECHO_SMALL_BLOCKSIZE){
 		echo_small_nextBlock(ctx, block);
 		block = (uint8_t*)block + ECHO_SMALL_BLOCKSIZE_B;
@@ -233,12 +233,12 @@ void echo_small_lastBlock(echo_small_ctx_t* ctx, void* block, uint16_t length_b)
 
 /******************************************************************************/
 
-void echo_large_nextBlock(echo_large_ctx_t* ctx, void* block){
+void echo_large_nextBlock(echo_large_ctx_t *ctx, void *block){
 	ctx->counter += ECHO_LARGE_BLOCKSIZE;
 	compress1024(ctx->v, block, &(ctx->counter), ctx->salt);
 }
 
-void echo_large_lastBlock(echo_large_ctx_t* ctx, void* block, uint16_t length_b){
+void echo_large_lastBlock(echo_large_ctx_t *ctx, void *block, uint16_t length_b){
 	while(length_b>=ECHO_LARGE_BLOCKSIZE){
 		echo_large_nextBlock(ctx, block);
 		block = (uint8_t*)block + ECHO_LARGE_BLOCKSIZE_B;
@@ -264,31 +264,31 @@ void echo_large_lastBlock(echo_large_ctx_t* ctx, void* block, uint16_t length_b)
 }
 /******************************************************************************/
 
-void echo_ctx2hash(void* dest, uint16_t length_b, echo_small_ctx_t* ctx){
+void echo_ctx2hash(void *dest, uint16_t length_b, echo_small_ctx_t *ctx){
 	memcpy(dest, ctx->v, (length_b+7)/8);
 }
 
-void echo224_ctx2hash(void* dest, echo_small_ctx_t* ctx){
+void echo224_ctx2hash(void *dest, echo_small_ctx_t *ctx){
 	memcpy(dest, ctx->v, 224/8);
 }
 
-void echo256_ctx2hash(void* dest, echo_small_ctx_t* ctx){
+void echo256_ctx2hash(void *dest, echo_small_ctx_t *ctx){
 	memcpy(dest, ctx->v, 256/8);
 }
 
 /******************************************************************************/
 
-void echo384_ctx2hash(void* dest, echo_large_ctx_t* ctx){
+void echo384_ctx2hash(void *dest, echo_large_ctx_t *ctx){
 	memcpy(dest, ctx->v, 384/8);
 }
 
-void echo512_ctx2hash(void* dest, echo_large_ctx_t* ctx){
+void echo512_ctx2hash(void *dest, echo_large_ctx_t *ctx){
 	memcpy(dest, ctx->v, 512/8);
 }
 
 /******************************************************************************/
 
-void echo224_init(echo_small_ctx_t* ctx){
+void echo224_init(echo_small_ctx_t *ctx){
 	memset(ctx->v, 0, 4*16);
 	ctx->counter = 0;
 	memset(ctx->salt, 0, 16);
@@ -299,7 +299,7 @@ void echo224_init(echo_small_ctx_t* ctx){
 	ctx->v[0+16*3] = 0xE0;
 }
 
-void echo256_init(echo_small_ctx_t* ctx){
+void echo256_init(echo_small_ctx_t *ctx){
 	memset(ctx->v, 0, 4*16);
 	ctx->counter = 0;
 	memset(ctx->salt, 0, 16);
@@ -312,7 +312,7 @@ void echo256_init(echo_small_ctx_t* ctx){
 
 /******************************************************************************/
 
-void echo384_init(echo_large_ctx_t* ctx){
+void echo384_init(echo_large_ctx_t *ctx){
 	uint8_t i;
 	memset(ctx->v, 0, 8*16);
 	ctx->counter = 0;
@@ -324,7 +324,7 @@ void echo384_init(echo_large_ctx_t* ctx){
 	}
 }
 
-void echo512_init(echo_large_ctx_t* ctx){
+void echo512_init(echo_large_ctx_t *ctx){
 	uint8_t i;
 	memset(ctx->v, 0, 8*16);
 	ctx->counter = 0;

@@ -30,9 +30,9 @@
 #include "bcal_tdes.h"
 #include "bcal_tdes2.h"
 
-char* algo_name = "TDES";
+char *algo_name = "TDES";
 
-const bcdesc_t* const algolist[] PROGMEM = {
+const bcdesc_t *const algolist[] PROGMEM = {
 	(bcdesc_t*)&tdes_desc,
 	(bcdesc_t*)&tdes2_desc,
 	NULL

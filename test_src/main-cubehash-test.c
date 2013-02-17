@@ -32,10 +32,10 @@
 #include "hfal-performance.h"
 #include "hfal-test.h"
 
-char* algo_name = "CubeHash";
+char *algo_name = "CubeHash";
 
 
-const hfdesc_t* const algolist[] PROGMEM = {
+const hfdesc_t *const algolist[] PROGMEM = {
 	(hfdesc_t*)&cubehash224_desc,
 	(hfdesc_t*)&cubehash256_desc,
 	(hfdesc_t*)&cubehash384_desc,

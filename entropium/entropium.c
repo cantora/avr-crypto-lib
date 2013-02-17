@@ -65,7 +65,7 @@ uint32_t rndCore[16];
  * 
  * we simply first "hash" rndCore, then entropy.
  */
-void entropium_addEntropy(unsigned length_b, const void* data){
+void entropium_addEntropy(unsigned length_b, const void *data){
 	sha256_ctx_t s;
 	static uint8_t offset=0; /* selects if higher or lower half gets updated */
 	sha256_init(&s);
@@ -116,7 +116,7 @@ uint8_t entropium_getRandomByte(void){
 	return block[i++];
 }
 
-void entropium_fillBlockRandom(void* block, unsigned length_B){
+void entropium_fillBlockRandom(void *block, unsigned length_B){
 	while(length_B>ENTROPIUM_RANDOMBLOCK_SIZE){
 		entropium_getRandomBlock(block);
 		block = (uint8_t*)block + ENTROPIUM_RANDOMBLOCK_SIZE;

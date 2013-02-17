@@ -27,9 +27,9 @@ typedef struct __attribute__((packed)) present128_ctx_st {
 } present128_ctx_t;
 
 
-void present128_init(const uint8_t* key, uint8_t keysize_b, present128_ctx_t* ctx);
-void present128_enc(void* buffer, present128_ctx_t* ctx);
-void present128_dec(void* buffer, present128_ctx_t* ctx);
+void present128_init(const uint8_t *key, uint8_t keysize_b, present128_ctx_t *ctx);
+void present128_enc(void *buffer, present128_ctx_t *ctx);
+void present128_dec(void *buffer, present128_ctx_t *ctx);
 
 
 #endif /*PRESENT128_H_*/

@@ -54,7 +54,7 @@ static const char stream3_n[] PROGMEM = "stream[448..511]";
 static const char streamX_n_estream[] PROGMEM = "xor-digest";
 static const char streamX_n_nessie[] PROGMEM = "stream[0..511]xored";
 
-static const char* stream_n_str[] = {
+static const char *stream_n_str[] = {
 		stream0_n,
 		stream1_n,
 		stream2_n,
@@ -68,7 +68,7 @@ static const char stream3_l[] PROGMEM = "stream[131008..131071]";
 static const char streamX_l_estream[] PROGMEM = "xor-digest";
 static const char streamX_l_nessie[] PROGMEM = "stream[0..131071]xored";
 
-static const char* stream_l_str[] = {
+static const char *stream_l_str[] = {
 		stream0_n,
 		stream1_l,
 		stream2_l,
@@ -279,7 +279,7 @@ void scal_nessie_stream_run(const scdesc_t *desc, uint16_t keysize_b, uint16_t i
 	nessie_print_footer();
 }
 
-void scal_nessie_run(const scdesc_t* desc){
+void scal_nessie_run(const scdesc_t *desc){
 	uint16_t keysizes_count, ivsizes_count,i,j;
 	uint16_t *keysizes=NULL, *ivsizes=NULL;
 	keysizes_count = get_keysizes((PGM_VOID_P)pgm_read_word(&(desc->valid_keysize_desc)), &keysizes);

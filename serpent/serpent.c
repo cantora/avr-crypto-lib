@@ -82,7 +82,7 @@ static uint32_t serpent_gen_w(uint32_t * b, uint8_t i){
 	return ret;
 } 
 
-void serpent_init(const void* key, uint16_t keysize_b, serpent_ctx_t* ctx){
+void serpent_init(const void *key, uint16_t keysize_b, serpent_ctx_t *ctx){
 	uint32_t buffer[8];
 	uint8_t i,j;
 	if(keysize_b<256){
@@ -106,7 +106,7 @@ void serpent_init(const void* key, uint16_t keysize_b, serpent_ctx_t* ctx){
 	}
 }
 
-void serpent_enc(void* buffer, const serpent_ctx_t* ctx){
+void serpent_enc(void *buffer, const serpent_ctx_t *ctx){
 	uint8_t i;
 	for(i=0; i<31; ++i){
 		memxor(buffer, ctx->k[i], 16);
@@ -119,7 +119,7 @@ void serpent_enc(void* buffer, const serpent_ctx_t* ctx){
 	memxor(buffer, ctx->k[i], 16);
 }
 
-void serpent_dec(void* buffer, const serpent_ctx_t* ctx){
+void serpent_dec(void *buffer, const serpent_ctx_t *ctx){
 	int8_t i=32;
 	
 	memxor(buffer, ctx->k[i], 16);

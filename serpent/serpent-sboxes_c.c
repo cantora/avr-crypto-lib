@@ -92,7 +92,7 @@ static void serpent_fp(uint32_t *i, uint32_t *o){
 }
 
 /******************************************************************************/
-static void sbox128x(uint8_t box, void* w){
+static void sbox128x(uint8_t box, void *w){
 	uint8_t sb[16];
 	uint8_t i,t,x;
 	box &= 0x0f;

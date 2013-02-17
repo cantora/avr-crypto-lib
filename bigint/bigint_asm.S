@@ -24,7 +24,7 @@
 
 /******************************************************************************/
 /*
-void bigint_add_scale_u(bigint_t* dest, const bigint_t* a, uint16_t scale){
+void bigint_add_scale_u(bigint_t *dest, const bigint_t *a, uint16_t scale){
 	uint16_t i,j=0;
 	uint16_t t=0;
 	if(scale>dest->length_B)

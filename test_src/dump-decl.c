@@ -36,9 +36,9 @@
  
 #define DUMP_WIDTH 16
 
-void pgm_read_block(void* buffer, uint32_t addr, uint8_t length);
-void ee_read_block(void* buffer, uint32_t addr, uint8_t length);
-void ram_read_block(void* buffer, uint32_t addr, uint8_t length);
+void pgm_read_block(void *buffer, uint32_t addr, uint8_t length);
+void ee_read_block(void *buffer, uint32_t addr, uint8_t length);
+void ram_read_block(void *buffer, uint32_t addr, uint8_t length);
 
 const char flash_trigger[]  PROGMEM = "fF";
 const char ram_trigger[]    PROGMEM = "sSrRmM";
@@ -61,4 +61,4 @@ memtype_desc_t memtype_desc[] PROGMEM = {
 	{ NULL,            NULL,            NULL        }
 };
 
-void dump(char* s);
+void dump(char *s);

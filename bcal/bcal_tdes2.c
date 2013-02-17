@@ -38,17 +38,17 @@ const uint8_t tdes2_keysize_desc[] PROGMEM = { KS_TYPE_LIST, 1, KS_INT(128),
                                                 KS_TYPE_TERMINATOR    };
 
 static
-void tdes_dummy_enc(void* block, void* key){
+void tdes_dummy_enc(void *block, void *key){
 	tdes_enc(block, block, key);
 }
 
 static
-void tdes_dummy_dec(void* block, void* key){
+void tdes_dummy_dec(void *block, void *key){
 	tdes_dec(block, block, key);
 }
 
 static
-void tdes2_init(void* key, void* ctx){
+void tdes2_init(void *key, void *ctx){
 	memcpy(ctx, key, 16);
 	memcpy((uint8_t*)ctx+16, key, 8);
 }

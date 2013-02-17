@@ -80,7 +80,7 @@ uint64_t stopTimer(void){
 	return ret;
 }
 
-void getOverhead(uint16_t* constoh, uint16_t* intoh){
+void getOverhead(uint16_t *constoh, uint16_t *intoh){
 	*constoh = const_overhead;
 	*intoh   = int_overhead;
 }

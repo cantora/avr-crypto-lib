@@ -11,7 +11,7 @@
 #include "scal-basic.h"
 #include "scal-nessie.h"
 
-char* algo_name = "Mickey128";
+char *algo_name = "Mickey128";
 
 /*****************************************************************************
  *  additional validation-functions											 *

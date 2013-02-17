@@ -109,7 +109,7 @@ uint16_t skipjack_g_inv(uint16_t g, uint8_t k, uint8_t *key){
 
 /*****************************************************************************/
 
-void skipjack_a(uint16_t* w, uint8_t k, uint8_t* key){
+void skipjack_a(uint16_t *w, uint8_t k, uint8_t *key){
 	uint16_t t;
 
 	t = w[3];
@@ -121,7 +121,7 @@ void skipjack_a(uint16_t* w, uint8_t k, uint8_t* key){
 
 /*****************************************************************************/
 
-void skipjack_a_inv(uint16_t* w, uint8_t k, uint8_t* key){
+void skipjack_a_inv(uint16_t *w, uint8_t k, uint8_t *key){
 	uint16_t t;
 	t = w[0] ^ w[1];
 	w[0] = skipjack_g_inv(w[1],k,key);
@@ -132,7 +132,7 @@ void skipjack_a_inv(uint16_t* w, uint8_t k, uint8_t* key){
 
 /*****************************************************************************/
 
-void skipjack_b(uint16_t* w, uint8_t k, uint8_t* key){
+void skipjack_b(uint16_t *w, uint8_t k, uint8_t *key){
 	uint16_t t;
 	t = w[0];
 	w[0] = w[3];
@@ -143,7 +143,7 @@ void skipjack_b(uint16_t* w, uint8_t k, uint8_t* key){
 
 /*****************************************************************************/
 
-void skipjack_b_inv(uint16_t* w, uint8_t k, uint8_t* key){
+void skipjack_b_inv(uint16_t *w, uint8_t k, uint8_t *key){
 	uint16_t t;
 	t = w[2];
 	w[2] = w[3];
@@ -158,7 +158,7 @@ void skipjack_b_inv(uint16_t* w, uint8_t k, uint8_t* key){
  * 
  */
 #if NO_FIX
-void skipjack_enc(void* block, void* key){
+void skipjack_enc(void *block, void *key){
 	uint8_t k;
 	for(k=0; k<32; ++k){
 		if(k & 0x08){
@@ -169,7 +169,7 @@ void skipjack_enc(void* block, void* key){
 	}
 }
 #else
-void skipjack_enc(void* block, void* key){
+void skipjack_enc(void *block, void *key){
 	uint8_t k;
 	uint8_t buffer[8], local_key[10];
 	for(k=0; k<8; ++k){
@@ -196,7 +196,7 @@ void skipjack_enc(void* block, void* key){
  * 
  */
 #if NO_FIX
-void skipjack_dec(void* block, void* key){
+void skipjack_dec(void *block, void *key){
 	int8_t k;
 	for(k=31; k>=0; --k){
 		if(k & 0x08){
@@ -207,7 +207,7 @@ void skipjack_dec(void* block, void* key){
 	}
 }
 #else
-void skipjack_dec(void* block, void* key){
+void skipjack_dec(void *block, void *key){
 	int8_t k;
 	uint8_t buffer[8], local_key[10];
 	for(k=0; k<8; ++k){

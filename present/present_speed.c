@@ -31,7 +31,7 @@
 #include "present_speed.h"
 
 static
-void key_update(uint8_t* buffer, uint8_t round){
+void key_update(uint8_t *buffer, uint8_t round){
 	uint8_t j;
 	union __attribute__((packed)){
 		uint8_t   v8[2];
@@ -60,7 +60,7 @@ void key_update(uint8_t* buffer, uint8_t round){
 	buffer[7] ^= round >> 1;
 }
 
-void present_init(const uint8_t* key, uint8_t keysize_b, present_ctx_t* ctx){
+void present_init(const uint8_t *key, uint8_t keysize_b, present_ctx_t *ctx){
 	uint8_t i,key_buffer[10];
 	memcpy(key_buffer, key, 10);
 	memcpy(&(ctx->k[0]), key_buffer, 8);
@@ -71,7 +71,7 @@ void present_init(const uint8_t* key, uint8_t keysize_b, present_ctx_t* ctx){
 }
 
 
-void present_enc(void* buffer, present_ctx_t* ctx){
+void present_enc(void *buffer, present_ctx_t *ctx){
 	uint8_t i,j,tmp[8];
 	for(i=0; i<31; ++i){
 		*((uint64_t*)buffer) ^= ctx->k[i];
@@ -86,7 +86,7 @@ void present_enc(void* buffer, present_ctx_t* ctx){
 }
 
 
-void present_dec(void* buffer, present_ctx_t* ctx){
+void present_dec(void *buffer, present_ctx_t *ctx){
 	uint8_t j,tmp[8];
 	uint8_t i;
 	memxor(buffer, &ctx->k[31], 8);

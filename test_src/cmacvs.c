@@ -54,7 +54,7 @@ bcdesc_t** cmacvs_algolist=NULL;
 void cmacvs_listalgos(void){
 	char option = 'a';
 
-	bcdesc_t* t;
+	bcdesc_t *t;
 	uint8_t i=0;
 	cli_putstr_P(PSTR("\r\nthe following algorithms are available:\r\n"));
 	while(option<='z' && (t=(bcdesc_t*)pgm_read_word(&(cmacvs_algolist[i])))){
@@ -68,7 +68,7 @@ void cmacvs_listalgos(void){
 	}
 }
 
-void cmacvs_setalgo(char* param){
+void cmacvs_setalgo(char *param){
 	param = strstrip(param);
 	if(param[1]=='\0'){ /* single letter specified */
 		uint8_t i,option = param[0]-'a';
@@ -85,7 +85,7 @@ void cmacvs_setalgo(char* param){
 		}
 		cmacvs_algo=(bcdesc_t*)pgm_read_word(&(cmacvs_algolist[option]));
 	} else { /* name specifyed */
-		bcdesc_t* t=NULL;
+		bcdesc_t *t=NULL;
 		uint8_t i=0;
 		while((t=(bcdesc_t*)pgm_read_word(&(cmacvs_algolist[i]))) &&
 		       strcasecmp_P(param, (void*)pgm_read_word(&(t->name))))
@@ -105,7 +105,7 @@ typedef struct {
 	uint16_t buffersize_B;
 	uint32_t blocks;
 	bcal_cmac_ctx_t ctx;
-	uint8_t* buffer;
+	uint8_t *buffer;
 	uint8_t  in_byte;
 } cmacvs_ctx_t;
 
@@ -148,7 +148,7 @@ uint8_t buffer_add(char c){
 int32_t getValue_P(PGM_P key){
 	uint32_t val=0;
 	char instr[21];
-	char* str2;
+	char *str2;
 	for(;;){
 		memset(instr, 0, 21);
 		cli_getsn_cecho(instr, 20);
@@ -173,7 +173,7 @@ int32_t getValue_P(PGM_P key){
 	return -2;
 }
 
-uint8_t getKey(void* key_buffer, uint8_t klen_B){
+uint8_t getKey(void *key_buffer, uint8_t klen_B){
 	char c;
 	uint8_t v,i=0;
 	memset(key_buffer, 0x00, klen_B);
@@ -213,7 +213,7 @@ uint8_t getKey(void* key_buffer, uint8_t klen_B){
 	return 0;
 }
 
-uint8_t getMac(void* mac_buffer, uint8_t mlen_B){
+uint8_t getMac(void *mac_buffer, uint8_t mlen_B){
 	char c;
 	uint8_t v,i=0;
 	memset(mac_buffer, 0x00, mlen_B);

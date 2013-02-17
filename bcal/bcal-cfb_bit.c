@@ -23,14 +23,14 @@
 #include "bcal-cfb_bit.h"
 #include "bcal-basic.h"
 
-static uint8_t read_bit(void* block, uint32_t index){
+static uint8_t read_bit(void *block, uint32_t index){
 	uint8_t r;
 	r=((uint8_t*)block)[index/8];
 	r=(r&(0x80>>(index&7)))?0xff:0x00;
 	return r;
 }
 
-static void write_bit(void* block, uint32_t index, uint8_t value){
+static void write_bit(void *block, uint32_t index, uint8_t value){
 	if(value){
 		/* set bit */
 		((uint8_t*)block)[index/8] |= 0x80>>(index&7);
@@ -40,7 +40,7 @@ static void write_bit(void* block, uint32_t index, uint8_t value){
 	}
 }
 
-uint8_t bcal_cfb_b_init(const bcdesc_t* desc, const void* key, uint16_t keysize_b, uint16_t size_b, bcal_cfb_b_ctx_t* ctx){
+uint8_t bcal_cfb_b_init(const bcdesc_t *desc, const void *key, uint16_t keysize_b, uint16_t size_b, bcal_cfb_b_ctx_t *ctx){
 	ctx->desc = (bcdesc_t*)desc;
 	ctx->blocksize_B = (bcal_cipher_getBlocksize_b(desc)+7)/8;
 	ctx->in_block=malloc(ctx->blocksize_B);
@@ -54,18 +54,18 @@ uint8_t bcal_cfb_b_init(const bcdesc_t* desc, const void* key, uint16_t keysize_
 	return bcal_cipher_init(desc, key, keysize_b, &(ctx->cctx));
 }
 
-void bcal_cfb_b_free(bcal_cfb_b_ctx_t* ctx){
+void bcal_cfb_b_free(bcal_cfb_b_ctx_t *ctx){
 	free(ctx->in_block);
 	bcal_cipher_free(&(ctx->cctx));
 }
 
-void bcal_cfb_b_loadIV(const void* iv, bcal_cfb_b_ctx_t* ctx){
+void bcal_cfb_b_loadIV(const void *iv, bcal_cfb_b_ctx_t *ctx){
 	if(iv){
 		memcpy(ctx->in_block, iv, ctx->blocksize_B);
 	}
 }
 
-void bcal_cfb_b_encNext(void* block, uint8_t offset, bcal_cfb_b_ctx_t* ctx){
+void bcal_cfb_b_encNext(void *block, uint8_t offset, bcal_cfb_b_ctx_t *ctx){
 	uint8_t tmp[ctx->blocksize_B];
 	offset &= 7;
 	memcpy(tmp, ctx->in_block, ctx->blocksize_B);
@@ -83,7 +83,7 @@ void bcal_cfb_b_encNext(void* block, uint8_t offset, bcal_cfb_b_ctx_t* ctx){
 	}
 }
 
-void bcal_cfb_b_decNext(void* block, uint8_t offset, bcal_cfb_b_ctx_t* ctx){
+void bcal_cfb_b_decNext(void *block, uint8_t offset, bcal_cfb_b_ctx_t *ctx){
 	uint8_t tmp[ctx->blocksize_B];
 	offset &= 7;
 	memcpy(tmp, ctx->in_block, ctx->blocksize_B);
@@ -103,7 +103,7 @@ void bcal_cfb_b_decNext(void* block, uint8_t offset, bcal_cfb_b_ctx_t* ctx){
 	}
 }
 
-void bcal_cfb_b_encMsg(const void* iv, void* msg, uint8_t offset, uint32_t msg_blocks, bcal_cfb_b_ctx_t* ctx){
+void bcal_cfb_b_encMsg(const void *iv, void *msg, uint8_t offset, uint32_t msg_blocks, bcal_cfb_b_ctx_t *ctx){
 	bcal_cfb_b_loadIV(iv, ctx);
 	uint32_t addr;
 	addr = ((uint16_t)msg)*8+offset;
@@ -115,7 +115,7 @@ void bcal_cfb_b_encMsg(const void* iv, void* msg, uint8_t offset, uint32_t msg_b
 	}
 }
 
-void bcal_cfb_b_decMsg(const void* iv, void* msg, uint8_t offset, uint32_t msg_blocks, bcal_cfb_b_ctx_t* ctx){
+void bcal_cfb_b_decMsg(const void *iv, void *msg, uint8_t offset, uint32_t msg_blocks, bcal_cfb_b_ctx_t *ctx){
 	bcal_cfb_b_loadIV(iv, ctx);
 	uint32_t addr;
 	addr = ((uint16_t)msg)*8+offset;

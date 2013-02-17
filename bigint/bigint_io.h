@@ -22,7 +22,7 @@
 
 #include "bigint.h"
 
-void    bigint_print_hex(const bigint_t* a);
-uint8_t bigint_read_hex_echo(bigint_t* a);
+void    bigint_print_hex(const bigint_t *a);
+uint8_t bigint_read_hex_echo(bigint_t *a);
 
 #endif /* BIGINT_IO_H_ */

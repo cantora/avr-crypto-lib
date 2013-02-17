@@ -23,7 +23,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-void bigint_print_hex(const bigint_t* a){
+void bigint_print_hex(const bigint_t *a){
 	if(a->length_W==0){
 		cli_putc('0');
 		return;
@@ -94,7 +94,7 @@ static uint16_t read_byte(void){
 	return (t1<<4)|t2;
 }
 
-uint8_t bigint_read_hex_echo(bigint_t* a){
+uint8_t bigint_read_hex_echo(bigint_t *a){
 	uint16_t allocated=0;
 	uint8_t  shift4=0;
 	uint16_t  t, idx = 0;

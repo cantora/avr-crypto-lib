@@ -22,6 +22,6 @@
 
 #include <stdint.h>
 
-void xchg32_array(void* a, void* b, uint8_t n);
+void xchg32_array(void *a, void *b, uint8_t n);
 
 #endif /* XCHG_H_ */

@@ -39,7 +39,7 @@ A7 = 21
 
 #define K(s) (((uint64_t*)key)[(s)])
 #define T(s) (((uint64_t*)tweak)[(s)])
-void threefish512_init(const void* key, const void* tweak, threefish512_ctx_t* ctx){
+void threefish512_init(const void *key, const void *tweak, threefish512_ctx_t *ctx){
 	memcpy(ctx->k, key, 8*8);
 	memcpy(ctx->t, tweak, 2*8);
 	uint8_t i;
@@ -178,7 +178,7 @@ threefish512_init:
 /******************************************************************************/
 /*
 #define X(a) (((uint64_t*)data)[(a)])
-void permute_8(void* data){
+void permute_8(void *data){
 	uint64_t t;
 	t = X(0);
 	X(0) = X(2);
@@ -189,7 +189,7 @@ void permute_8(void* data){
 	X(3) = X(7);
 	X(7) = t;
 }
-void add_key_8(void* data, const threefish512_ctx_t* ctx, uint8_t s){
+void add_key_8(void *data, const threefish512_ctx_t *ctx, uint8_t s){
 	uint8_t i;
 	for(i=0; i<5; ++i){
 		X(i) += ctx->k[(s+i)%9];
@@ -198,7 +198,7 @@ void add_key_8(void* data, const threefish512_ctx_t* ctx, uint8_t s){
 	X(6) += ctx->k[(s+6)%9] + ctx->t[(s+1)%3];
 	X(7) += ctx->k[(s+7)%9] + s;
 }
-void threefish512_enc(void* data, const threefish512_ctx_t* ctx){
+void threefish512_enc(void *data, const threefish512_ctx_t *ctx){
 	uint8_t i=0,s=0;
 	uint8_t r0[8] = {38, 48, 34, 26, 33, 39, 29, 33};
 	uint8_t r1[8] = {30, 20, 14, 12, 49, 27, 26, 51};

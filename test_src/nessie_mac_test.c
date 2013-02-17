@@ -50,7 +50,7 @@ const uint8_t keyproto[] PROGMEM = {
                           0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef };
 
 static
-void ascii_mac_P(PGM_P data, PGM_P desc, uint8_t* key){
+void ascii_mac_P(PGM_P data, PGM_P desc, uint8_t *key){
 	uint8_t ctx[nessie_mac_ctx.ctx_size_B];
 	uint8_t mac[MACSIZE_B];
 	uint16_t sl;
@@ -76,7 +76,7 @@ void ascii_mac_P(PGM_P data, PGM_P desc, uint8_t* key){
 // message=1 million times "a"
 
 static
-void amillion_mac(uint8_t* key){
+void amillion_mac(uint8_t *key){
 	uint8_t ctx[nessie_mac_ctx.ctx_size_B];
 	uint8_t mac[MACSIZE_B];
 	uint8_t block[nessie_mac_ctx.blocksize_B];
@@ -101,7 +101,7 @@ void amillion_mac(uint8_t* key){
 
 
 static
-void zero_mac(uint16_t n, uint8_t* key){
+void zero_mac(uint16_t n, uint8_t *key){
 	uint8_t ctx[nessie_mac_ctx.ctx_size_B];
 	uint8_t mac[MACSIZE_B];
 	uint8_t block[nessie_mac_ctx.blocksize_B];
@@ -122,12 +122,12 @@ void zero_mac(uint16_t n, uint8_t* key){
 }
 
 static
-void one_in512_mac(uint16_t pos, uint8_t* key){
+void one_in512_mac(uint16_t pos, uint8_t *key){
 	uint8_t ctx[nessie_mac_ctx.ctx_size_B];
 	uint8_t mac[MACSIZE_B];
 	uint8_t block[nessie_mac_ctx.blocksize_B];
 	uint16_t n=512;
-	char* tab[8] = { "80", "40", "20", "10",
+	char *tab[8] = { "80", "40", "20", "10",
 	                 "08", "04", "02", "01" };
 
 	pos&=511;
@@ -140,7 +140,7 @@ void one_in512_mac(uint16_t pos, uint8_t* key){
 	/* now the real stuff */
 	memset(block, 0, 512/8);
 	block[pos>>3] = 0x80>>(pos&0x7);
-	uint8_t* bp;
+	uint8_t *bp;
 	bp = block;
 	nessie_mac_ctx.mac_init(ctx, key, nessie_mac_ctx.keysize_b);
 	while(n>nessie_mac_ctx.blocksize_B*8){
@@ -194,7 +194,7 @@ void nessie_mac_run(void){
 	nessie_print_header(nessie_mac_ctx.name, nessie_mac_ctx.keysize_b, 0, 0,
 	                    nessie_mac_ctx.macsize_b, 0);
 	/* test set 1 */
-	const char* challange_dbz= PSTR(
+	const char *challange_dbz= PSTR(
 		  "\0"
 		"\"\" (empty string)\0"
 		  "a\0"

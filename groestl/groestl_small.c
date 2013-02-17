@@ -40,7 +40,7 @@
 
 #if DEBUG
  #include "cli.h"
- void dump_m(const uint8_t* m){
+ void dump_m(const uint8_t *m){
 	 uint8_t i,j;
 	 for(i=0; i<8; ++i){
 		cli_putstr_P(PSTR("\r\n"));
@@ -160,19 +160,19 @@ void groestl_small_rounds(uint8_t *m, uint8_t q){
 	}
 }
 
-void groestl224_init(groestl224_ctx_t* ctx){
+void groestl224_init(groestl224_ctx_t *ctx){
 	memset(ctx->h, 0, 8*8);
 	ctx->h[8*8-1] = 224;
 	ctx->counter = 1;
 }
 
-void groestl256_init(groestl256_ctx_t* ctx){
+void groestl256_init(groestl256_ctx_t *ctx){
 	memset(ctx->h, 0, 8*8);
 	ctx->h[8*8-2] = 1;
 	ctx->counter = 1;
 }
 
-void groestl_small_nextBlock(groestl_small_ctx_t* ctx, const void* block){
+void groestl_small_nextBlock(groestl_small_ctx_t *ctx, const void *block){
 	uint8_t tmp1[64], tmp2[64];
 /*	for(i=0; i<8; ++i){
 		for(j=0; j<8; ++j){
@@ -190,7 +190,7 @@ void groestl_small_nextBlock(groestl_small_ctx_t* ctx, const void* block){
 	ctx->counter++;
 }
 
-void groestl_small_lastBlock(groestl_small_ctx_t* ctx, const void* block, uint16_t length_b){
+void groestl_small_lastBlock(groestl_small_ctx_t *ctx, const void *block, uint16_t length_b){
 	uint8_t buffer[64];
 	while(length_b>=GROESTL_SMALL_BLOCKSIZE){
 		groestl_small_nextBlock(ctx, block);
@@ -212,7 +212,7 @@ void groestl_small_lastBlock(groestl_small_ctx_t* ctx, const void* block, uint16
 	groestl_small_nextBlock(ctx, buffer);
 }
 
-void groestl_small_ctx2hash(void* dest, const groestl_small_ctx_t* ctx, uint16_t outlength_b){
+void groestl_small_ctx2hash(void *dest, const groestl_small_ctx_t *ctx, uint16_t outlength_b){
 	uint8_t tmp[64];
 	memcpy(tmp, ctx->h, 64);
 	groestl_small_rounds(tmp, 0);
@@ -224,31 +224,31 @@ void groestl_small_ctx2hash(void* dest, const groestl_small_ctx_t* ctx, uint16_t
 	memcpy(dest, tmp+64-outlength_b/8, outlength_b/8);
 }
 
-void groestl224_ctx2hash(void* dest, const groestl224_ctx_t* ctx){
+void groestl224_ctx2hash(void *dest, const groestl224_ctx_t *ctx){
 	groestl_small_ctx2hash(dest, ctx, 224);
 }
 
-void groestl256_ctx2hash(void* dest, const groestl256_ctx_t* ctx){
+void groestl256_ctx2hash(void *dest, const groestl256_ctx_t *ctx){
 	groestl_small_ctx2hash(dest, ctx, 256);
 }
 
-void groestl224_nextBlock(groestl224_ctx_t* ctx, const void* block){
+void groestl224_nextBlock(groestl224_ctx_t *ctx, const void *block){
 	groestl_small_nextBlock(ctx, block);
 }
 
-void groestl256_nextBlock(groestl256_ctx_t* ctx, const void* block){
+void groestl256_nextBlock(groestl256_ctx_t *ctx, const void *block){
 	groestl_small_nextBlock(ctx, block);
 }
 
-void groestl224_lastBlock(groestl224_ctx_t* ctx, const void* block, uint16_t length_b){
+void groestl224_lastBlock(groestl224_ctx_t *ctx, const void *block, uint16_t length_b){
 	groestl_small_lastBlock(ctx, block, length_b);
 }
 
-void groestl256_lastBlock(groestl256_ctx_t* ctx, const void* block, uint16_t length_b){
+void groestl256_lastBlock(groestl256_ctx_t *ctx, const void *block, uint16_t length_b){
 	groestl_small_lastBlock(ctx, block, length_b);
 }
 
-void groestl224(void* dest, const void* msg, uint32_t length_b){
+void groestl224(void *dest, const void *msg, uint32_t length_b){
 	groestl_small_ctx_t ctx;
 	groestl224_init(&ctx);
 	while(length_b>=GROESTL_SMALL_BLOCKSIZE){
@@ -260,7 +260,7 @@ void groestl224(void* dest, const void* msg, uint32_t length_b){
 	groestl_small_ctx2hash(dest, &ctx, 224);
 }
 
-void groestl256(void* dest, const void* msg, uint32_t length_b){
+void groestl256(void *dest, const void *msg, uint32_t length_b){
 	groestl_small_ctx_t ctx;
 	groestl256_init(&ctx);
 	while(length_b>=GROESTL_SMALL_BLOCKSIZE){

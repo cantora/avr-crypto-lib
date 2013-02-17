@@ -36,7 +36,7 @@
 /*
 #include "cli.h" / * only for debugging * /
 
-void dump_mugi_ctx(mugi_ctx_t* ctx){
+void dump_mugi_ctx(mugi_ctx_t *ctx){
 	uint8_t i;
 	cli_putstr_P(PSTR("\r\n== MUGI CTX DUMP==\r\n a:"));
 	cli_hexdump(&(ctx->a[0]), 8);
@@ -101,7 +101,7 @@ uint64_t rotr64(uint64_t a, uint8_t i){
 
 #define T(x) (((uint8_t*)&t)[(x)])
 #define D(y) (((uint8_t*)dest)[(y)])
-static void mugi_f(uint64_t* dest, uint64_t* a, uint64_t* b){
+static void mugi_f(uint64_t *dest, uint64_t *a, uint64_t *b){
 	uint64_t t;
 	uint8_t i,x;
 	t = (*a); 
@@ -147,7 +147,7 @@ static void mugi_f(uint64_t* dest, uint64_t* a, uint64_t* b){
 } 
 
 static
-void mugi_rho(mugi_ctx_t* ctx){
+void mugi_rho(mugi_ctx_t *ctx){
 	uint64_t t,bx;
 	t = ctx->a[1];
 	ctx->a[1] = ctx->a[2];
@@ -161,7 +161,7 @@ void mugi_rho(mugi_ctx_t* ctx){
 } 
 
 static
-void mugi_rho_init(uint64_t* a){
+void mugi_rho_init(uint64_t *a){
 	uint64_t t;
 	t = a[1];
 	a[1] = a[2];
@@ -174,7 +174,7 @@ void mugi_rho_init(uint64_t* a){
 } 
 
 static
-void mugi_lambda(uint64_t* b, uint64_t *a){
+void mugi_lambda(uint64_t *b, uint64_t *a){
 	uint8_t i;
 	uint64_t t;
 	t=b[15];
@@ -186,7 +186,7 @@ void mugi_lambda(uint64_t* b, uint64_t *a){
 	b[10] ^= rotl64(b[14], 32);
 }
 
-void mugi_init(const void* key, const void* iv, mugi_ctx_t* ctx){
+void mugi_init(const void *key, const void *iv, mugi_ctx_t *ctx){
 	uint8_t i;
 	uint64_t a0;
 	memcpy(ctx->a, key, 128/8);
@@ -209,7 +209,7 @@ void mugi_init(const void* key, const void* iv, mugi_ctx_t* ctx){
 	a0=0x00;
 }
 
-uint64_t mugi_gen(mugi_ctx_t* ctx){
+uint64_t mugi_gen(mugi_ctx_t *ctx){
 	uint64_t r;
 	r=ctx->a[0];
 	mugi_rho(ctx);

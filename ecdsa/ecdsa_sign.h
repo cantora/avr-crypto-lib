@@ -25,19 +25,19 @@
 #include "ecdsa.h"
 #include "hfal-basic.h"
 
-uint8_t ecdsa_signature_alloc(ecdsa_signature_t* s, size_t length_B);
+uint8_t ecdsa_signature_alloc(ecdsa_signature_t *s, size_t length_B);
 
-void ecdsa_signature_free(ecdsa_signature_t* s);
+void ecdsa_signature_free(ecdsa_signature_t *s);
 
-uint8_t ecdsa_sign_bigint(ecdsa_signature_t* s, const bigint_t* m,
-                          const ecdsa_ctx_t* ctx, const bigint_t* k);
+uint8_t ecdsa_sign_bigint(ecdsa_signature_t *s, const bigint_t *m,
+                          const ecdsa_ctx_t *ctx, const bigint_t *k);
 
-uint8_t ecdsa_sign_hash(ecdsa_signature_t* s, const void* hash,
-                           size_t hash_len_B, const ecdsa_ctx_t* ctx,
+uint8_t ecdsa_sign_hash(ecdsa_signature_t *s, const void *hash,
+                           size_t hash_len_B, const ecdsa_ctx_t *ctx,
                            const void *rand_in);
 
-uint8_t ecdsa_sign_message(ecdsa_signature_t* s, const void* m, uint16_t m_len_b,
-                           const hfdesc_t* hash_desc, const ecdsa_ctx_t* ctx,
+uint8_t ecdsa_sign_message(ecdsa_signature_t *s, const void *m, uint16_t m_len_b,
+                           const hfdesc_t *hash_desc, const ecdsa_ctx_t *ctx,
                            const void *rand_in);
 
 #endif /* ECDSA_SIGN_H_ */

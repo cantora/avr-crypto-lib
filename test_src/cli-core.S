@@ -24,7 +24,7 @@
 /******************************************************************************/
 /* uint16_t max_cmd_length(PGM_VOID_P cmdlist){
 	uint16_t t,ret=0;
-	char* str;
+	char *str;
 	for(;;){
 		str = (char*)pgm_read_word(cmdlist);
 		cmdlist = (uint8_t*)cmdlist + CMDLIST_ENTRY_SIZE;
@@ -134,7 +134,7 @@ pecho:
 .asciz "\r\necho is o"
 
 /******************************************************************************/
-/* int8_t search_and_call(char* cmd, uint16_t maxcmdlength, PGM_VOID_P cmdlist)
+/* int8_t search_and_call(char *cmd, uint16_t maxcmdlength, PGM_VOID_P cmdlist)
  *    param cmd:          r24:r25
  *    param maxcmdlength: r22:r23
  *    param cmdlist:      r20:r21
@@ -257,7 +257,7 @@ nocommand_str:
 .asciz "\r\ncommand not found, try 'help'"
 
 /******************************************************************************/
-/* void cli_option_listing(char* buffer, PGM_VOID_P cmdlist)
+/* void cli_option_listing(char *buffer, PGM_VOID_P cmdlist)
  *   param buffer:    r24:r25
  *   param cmdlist:   r22:r23
  */

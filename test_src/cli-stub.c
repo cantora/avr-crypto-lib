@@ -40,10 +40,10 @@ cli_rx_fpt cli_rx = NULL;
 cli_tx_fpt cli_tx = NULL;
 uint8_t    cli_echo = 1;
 
-void     echo_ctrl(char* s);
+void     echo_ctrl(char *s);
 uint16_t max_cmd_length(PGM_VOID_P cmdlist);
-int8_t   search_and_call(char* cmd, uint16_t maxcmdlength, PGM_VOID_P cmdlist);
-void     cli_option_listing(char* buffer, PGM_VOID_P cmdlist);
+int8_t   search_and_call(char *cmd, uint16_t maxcmdlength, PGM_VOID_P cmdlist);
+void     cli_option_listing(char *buffer, PGM_VOID_P cmdlist);
 void     cli_auto_help(uint16_t maxcmdlength, PGM_VOID_P cmdlist);
 
 typedef void(*str_fpt)(char*);
@@ -51,10 +51,10 @@ typedef void(*str_fpt)(char*);
 #define CLI_BACKSPACE  8
 #define CLI_TABULATOR  9
 
-uint8_t cli_completion(char* buffer, uint16_t maxcmdlength, PGM_VOID_P cmdlist){
+uint8_t cli_completion(char *buffer, uint16_t maxcmdlength, PGM_VOID_P cmdlist){
 	uint8_t i=0;
 	char ref[maxcmdlength+1];
-	char* itemstr;
+	char *itemstr;
 	ref[0]='\0';
 	/* check if we are behind the first word */
 	while(buffer[i]){
@@ -85,7 +85,7 @@ int8_t cmd_interface(PGM_VOID_P cmd_desc){
 	uint16_t cli_buffer_index;
 	int8_t exit_code;
 	uint8_t completion_failed=0;
-	char* cli_buffer;
+	char *cli_buffer;
 	char c;
 	uint16_t maxcmdlength = max_cmd_length(cmd_desc);
 	cli_buffer = calloc(1,cli_buffer_size=maxcmdlength+2);

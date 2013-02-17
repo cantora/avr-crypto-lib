@@ -31,8 +31,8 @@
 
 #include "blockcipher_descriptor.h"
 
-void bcal_performance(const bcdesc_t* hd);
-void bcal_performance_multiple(const bcdesc_t* const* hd_list);
+void bcal_performance(const bcdesc_t *hd);
+void bcal_performance_multiple(const bcdesc_t *const *hd_list);
 
 
 #endif /* BCAL_PERFORMANCE_H_ */

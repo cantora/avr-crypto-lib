@@ -129,7 +129,7 @@ void cast5_init_rM(uint8_t *klo, uint8_t *khi, uint8_t offset, uint8_t *src, boo
 
 
 
-void cast5_init(const void* key, uint16_t keylength_b, cast5_ctx_t* s){
+void cast5_init(const void *key, uint16_t keylength_b, cast5_ctx_t *s){
  	 /* we migth return if the key is valid and if setup was successful */
 	uint32_t x[4], z[4];
 	#define BPX ((uint8_t*)&(x[0]))
@@ -291,10 +291,10 @@ uint32_t cast5_f3(uint32_t d, uint32_t m, uint8_t r){
 
 /******************************************************************************/
 
-void cast5_enc(void* block, const cast5_ctx_t *s){
+void cast5_enc(void *block, const cast5_ctx_t *s){
 	uint32_t l,r, x, y;
 	uint8_t i;
-	cast5_f_t* f[]={cast5_f1,cast5_f2,cast5_f3};
+	cast5_f_t *f[]={cast5_f1,cast5_f2,cast5_f3};
 	l=((uint32_t*)block)[0];
 	r=((uint32_t*)block)[1];
 //	cli_putstr("\r\n round[-1] = ");
@@ -315,10 +315,10 @@ void cast5_enc(void* block, const cast5_ctx_t *s){
 
 /******************************************************************************/
 
-void cast5_dec(void* block, const cast5_ctx_t *s){
+void cast5_dec(void *block, const cast5_ctx_t *s){
 	uint32_t l,r, x, y;
 	int8_t i, rounds;
-	cast5_f_t* f[]={cast5_f1,cast5_f2,cast5_f3};
+	cast5_f_t *f[]={cast5_f1,cast5_f2,cast5_f3};
 	l=((uint32_t*)block)[0];
 	r=((uint32_t*)block)[1];
 	rounds = (s->shortkey?12:16);

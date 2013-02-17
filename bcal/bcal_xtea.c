@@ -37,12 +37,12 @@ const uint8_t xtea_keysize_desc[] PROGMEM = { KS_TYPE_LIST, 1, KS_INT(128),
                                                 KS_TYPE_TERMINATOR    };
 
 static
-void xtea_dummy_enc(void* block, void* key){
+void xtea_dummy_enc(void *block, void *key){
 	xtea_enc(block, block, key);
 }
 
 static
-void xtea_dummy_dec(void* block, void* key){
+void xtea_dummy_dec(void *block, void *key){
 	xtea_dec(block, block, key);
 }
 

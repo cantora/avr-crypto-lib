@@ -48,7 +48,7 @@ aes128_init:
 	ldi r22, 128
 
 /* 
-void aes_init(const void* key, uint16_t keysize_b, aes_genctx_t* ctx){
+void aes_init(const void *key, uint16_t keysize_b, aes_genctx_t *ctx){
 	uint8_t hi,i,nk, next_nk;
 	uint8_t rc=1;
 	uint8_t tmp[4];

@@ -51,10 +51,10 @@ rsa_label_t rsa_oaep_default_label = {
 		0, NULL
 };
 
-uint8_t rsa_encrypt_oaep(void* dest, uint16_t* out_length,
-		              const void* src, uint16_t length_B,
-		              rsa_publickey_t* key, const rsa_oaep_parameter_t *p,
-		              const rsa_label_t* label, const void* seed){
+uint8_t rsa_encrypt_oaep(void *dest, uint16_t *out_length,
+		              const void *src, uint16_t length_B,
+		              rsa_publickey_t *key, const rsa_oaep_parameter_t *p,
+		              const rsa_label_t *label, const void *seed){
 
 	if(!p){
 		p = &rsa_oaep_default_parameter;
@@ -74,7 +74,7 @@ uint8_t rsa_encrypt_oaep(void* dest, uint16_t* out_length,
 	cli_putstr("\r\n modulus_len = ");
 	cli_hexdump_rev(&key->modulus.length_W, 2);
 #endif
-	uint8_t* buffer = (uint8_t*)dest;
+	uint8_t *buffer = (uint8_t*)dest;
 	uint8_t off;
 	/* the following needs some explanation:
 	 * off is the offset which is used for compensating the effect of
@@ -84,9 +84,9 @@ uint8_t rsa_encrypt_oaep(void* dest, uint16_t* out_length,
 			% (sizeof(bigint_word_t));
 	buffer += off;
     buffer_len -= off;
-	uint8_t* seed_buffer = buffer + 1;
+	uint8_t *seed_buffer = buffer + 1;
 	uint16_t db_len = buffer_len - hv_len - 1;
-	uint8_t* db = seed_buffer + hv_len;
+	uint8_t *db = seed_buffer + hv_len;
 	uint16_t maskbuffer_len = db_len>hv_len?db_len:hv_len;
 	uint8_t maskbuffer[maskbuffer_len];
 	bigint_t x;
@@ -140,10 +140,10 @@ uint8_t rsa_encrypt_oaep(void* dest, uint16_t* out_length,
 	return 0;
 }
 
-uint8_t rsa_decrypt_oaep(void* dest, uint16_t* out_length,
-		              const void* src, uint16_t length_B,
-		              rsa_privatekey_t* key, const rsa_oaep_parameter_t *p,
-		              const rsa_label_t* label, void* seed){
+uint8_t rsa_decrypt_oaep(void *dest, uint16_t *out_length,
+		              const void *src, uint16_t length_B,
+		              rsa_privatekey_t *key, const rsa_oaep_parameter_t *p,
+		              const rsa_label_t *label, void *seed){
 
 //	cli_putstr("\r\n -->rsa_decrypt_oaep()"); uart_flush(0);
 	if(!label){

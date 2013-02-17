@@ -35,7 +35,7 @@
 
 
 static
-void permute_inv8(void* data){
+void permute_inv8(void *data){
 	uint64_t t;
 	t = X(6);
 	X(6) = X(4);
@@ -48,7 +48,7 @@ void permute_inv8(void* data){
 }
 
 static
-void add_key_8(void* data, const threefish512_ctx_t* ctx, uint8_t s){
+void add_key_8(void *data, const threefish512_ctx_t *ctx, uint8_t s){
 	uint8_t i;
 	for(i=0; i<5; ++i){
 		X(i) -= ctx->k[(s+i)%9];
@@ -58,7 +58,7 @@ void add_key_8(void* data, const threefish512_ctx_t* ctx, uint8_t s){
 	X(7) -= ctx->k[(s+7)%9] + s;
 }
 
-void threefish512_dec(void* data, const threefish512_ctx_t* ctx){
+void threefish512_dec(void *data, const threefish512_ctx_t *ctx){
 	uint8_t i=0,s=18;
 	uint8_t r0[8] = {0x41, 0x4b, 0x59, 0x41, 0x32, 0x42, 0x60, 0x5a};
 	uint8_t r1[8] = {0x63, 0x32, 0x33, 0x61, 0x14, 0x2a, 0x24, 0x4a};

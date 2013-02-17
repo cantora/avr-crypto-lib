@@ -279,7 +279,7 @@ f0_hacktable:
 
 
 /*******************************************************************************
-* uint32_t addelment(uint8_t j, const uint32_t* m, const uint32_t* h){
+* uint32_t addelment(uint8_t j, const uint32_t *m, const uint32_t *h){
 * 	uint32_t r;
 *	r  = pgm_read_dword(k_lut+j);
 *	r += rotl_addel(((uint32_t*)m)[j&0xf], j+0);
@@ -1019,7 +1019,7 @@ bmw256_lastBlock:
 
 
 /*******************************************************************************
-* void bmw256_ctx2hash(void* dest, const bmw256_ctx_t* ctx){
+* void bmw256_ctx2hash(void *dest, const bmw256_ctx_t *ctx){
 *	memcpy(dest, &(ctx->h[8]), 256/8);
 * }
 *
@@ -1039,7 +1039,7 @@ bmw256_ctx2hash:
 	ret
 
 /*******************************************************************************
-* void bmw256(void* dest, const void* msg, uint32_t length_b){
+* void bmw256(void *dest, const void *msg, uint32_t length_b){
 *	bmw_small_ctx_t ctx;
 *	bmw256_init(&ctx);
 *	while(length_b>=BMW_SMALL_BLOCKSIZE){
@@ -1068,7 +1068,7 @@ dst1 =  11
 
 
 /*******************************************************************************
-* void bmw224(void* dest, const void* msg, uint32_t length_b){
+* void bmw224(void *dest, const void *msg, uint32_t length_b){
 *	bmw_small_ctx_t ctx;
 *	bmw224_init(&ctx);
 *	while(length_b>=BMW_SMALL_BLOCKSIZE){

@@ -28,9 +28,9 @@
 #include "bcal-nessie.h"
 #include "bcal_khazad.h"
 
-char* algo_name = "Khazad";
+char *algo_name = "Khazad";
 
-const bcdesc_t* const algolist[] PROGMEM = {
+const bcdesc_t *const algolist[] PROGMEM = {
 	(bcdesc_t*)&khazad_desc,
 	NULL
 };

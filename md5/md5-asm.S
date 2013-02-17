@@ -247,9 +247,9 @@ md5_core:
 	mov r18, r14
 ;	rjmp md5_core_asm
 /*
-void md5_core(uint32_t* a, void* block, uint8_t as, uint8_t s, uint8_t i, uint8_t fi){
+void md5_core(uint32_t *a, void *block, uint8_t as, uint8_t s, uint8_t i, uint8_t fi){
 	uint32_t t;
-	md5_func_t* funcs[]={md5_F, md5_G, md5_H, md5_I};
+	md5_func_t *funcs[]={md5_F, md5_G, md5_H, md5_I};
 	as &= 0x3;
 	/ * a = b + ((a + F(b,c,d) + X[k] + T[i]) <<< s). * /
 	t = a[as] + funcs[fi](a[(as+1)&3], a[(as+2)&3], a[(as+3)&3]) + *((uint32_t*)block) + md5_T[i] ;
@@ -452,7 +452,7 @@ md5_core_exit:
 
 ;###################################################################
 /*
-void md5_nextBlock(md5_ctx_t *state, void* block){
+void md5_nextBlock(md5_ctx_t *state, void *block){
 	uint32_t	a[4];
 	uint8_t		m,n,i=0;
 
@@ -743,7 +743,7 @@ md5_nextBlock:
 
 ;###############################################################################
 /*
-void md5_lastBlock(md5_ctx_t *state, const void* block, uint16_t length_b){
+void md5_lastBlock(md5_ctx_t *state, const void *block, uint16_t length_b){
 	uint16_t l;
 	uint8_t b[64];
 	while (length_b >= 512){

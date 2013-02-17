@@ -25,7 +25,7 @@
 #include "memxor.h"
 
 
-uint8_t bcal_cfb_B_init(const bcdesc_t* desc, const void* key, uint16_t keysize_b, uint16_t size_b, bcal_cfb_B_ctx_t* ctx){
+uint8_t bcal_cfb_B_init(const bcdesc_t *desc, const void *key, uint16_t keysize_b, uint16_t size_b, bcal_cfb_B_ctx_t *ctx){
 	ctx->desc = (bcdesc_t*)desc;
 	ctx->blocksize_B = (bcal_cipher_getBlocksize_b(desc)+7)/8;
 	ctx->in_block=malloc(ctx->blocksize_B);
@@ -39,18 +39,18 @@ uint8_t bcal_cfb_B_init(const bcdesc_t* desc, const void* key, uint16_t keysize_
 	return bcal_cipher_init(desc, key, keysize_b, &(ctx->cctx));
 }
 
-void bcal_cfb_B_free(bcal_cfb_B_ctx_t* ctx){
+void bcal_cfb_B_free(bcal_cfb_B_ctx_t *ctx){
 	free(ctx->in_block);
 	bcal_cipher_free(&(ctx->cctx));
 }
 
-void bcal_cfb_B_loadIV(const void* iv, bcal_cfb_B_ctx_t* ctx){
+void bcal_cfb_B_loadIV(const void *iv, bcal_cfb_B_ctx_t *ctx){
 	if(iv){
 		memcpy(ctx->in_block, iv, ctx->blocksize_B);
 	}
 }
 
-void bcal_cfb_B_encNext(void* block, bcal_cfb_B_ctx_t* ctx){
+void bcal_cfb_B_encNext(void *block, bcal_cfb_B_ctx_t *ctx){
 	uint8_t tmp[ctx->blocksize_B];
 	memcpy(tmp, ctx->in_block, ctx->blocksize_B);
 	bcal_cipher_enc(tmp, &(ctx->cctx));
@@ -59,7 +59,7 @@ void bcal_cfb_B_encNext(void* block, bcal_cfb_B_ctx_t* ctx){
 	memcpy(ctx->in_block+ctx->blocksize_B-ctx->size_B, block, ctx->size_B);
 }
 
-void bcal_cfb_B_decNext(void* block, bcal_cfb_B_ctx_t* ctx){
+void bcal_cfb_B_decNext(void *block, bcal_cfb_B_ctx_t *ctx){
 	uint8_t tmp[ctx->blocksize_B];
 	uint8_t xblock[ctx->size_B];
 	memcpy(xblock, block, ctx->size_B);
@@ -70,7 +70,7 @@ void bcal_cfb_B_decNext(void* block, bcal_cfb_B_ctx_t* ctx){
 	memcpy(ctx->in_block+ctx->blocksize_B-ctx->size_B, xblock, ctx->size_B);
 }
 
-void bcal_cfb_B_encMsg(const void* iv, void* msg, uint16_t msg_blocks, bcal_cfb_B_ctx_t* ctx){
+void bcal_cfb_B_encMsg(const void *iv, void *msg, uint16_t msg_blocks, bcal_cfb_B_ctx_t *ctx){
 	bcal_cfb_B_loadIV(iv, ctx);
 	while(msg_blocks--){
 		bcal_cfb_B_encNext(msg, ctx);
@@ -78,7 +78,7 @@ void bcal_cfb_B_encMsg(const void* iv, void* msg, uint16_t msg_blocks, bcal_cfb_
 	}
 }
 
-void bcal_cfb_B_decMsg(const void* iv, void* msg, uint16_t msg_blocks, bcal_cfb_B_ctx_t* ctx){
+void bcal_cfb_B_decMsg(const void *iv, void *msg, uint16_t msg_blocks, bcal_cfb_B_ctx_t *ctx){
 	bcal_cfb_B_loadIV(iv, ctx);
 		while(msg_blocks--){
 			bcal_cfb_B_decNext(msg, ctx);

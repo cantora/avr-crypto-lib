@@ -10,10 +10,10 @@ typedef struct mickey128_ctx_st{
 
 void debug_clock_r(void);
 void debug_clock_s(void);
-void mickey128_init(void* key, uint16_t keysize_b, 
-                    void* iv,  uint16_t ivsize_b, 
-                    mickey128_ctx_t* ctx);
-uint8_t mickey128_getbit(mickey128_ctx_t* ctx);
-uint8_t mickey128_getbyte(mickey128_ctx_t* ctx);
+void mickey128_init(void *key, uint16_t keysize_b, 
+                    void *iv,  uint16_t ivsize_b, 
+                    mickey128_ctx_t *ctx);
+uint8_t mickey128_getbit(mickey128_ctx_t *ctx);
+uint8_t mickey128_getbyte(mickey128_ctx_t *ctx);
 
 #endif /*MICKEY128_H_*/

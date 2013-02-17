@@ -31,9 +31,9 @@
 #include "bcal-nessie.h"
 #include "bcal_xtea.h"
 
-char* algo_name = "XTEA";
+char *algo_name = "XTEA";
 
-const bcdesc_t* const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const algolist[] PROGMEM = {
+const bcdesc_t *const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const const algolist[] PROGMEM = {
 	(bcdesc_t*)&xtea_desc,
 	NULL
 };

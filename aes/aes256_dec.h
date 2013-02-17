@@ -39,7 +39,7 @@
  * \param buffer pointer to the block to decrypt
  * \param ctx    pointer to the key schedule
  */
-void aes256_dec(void* buffer, aes256_ctx_t* ctx);
+void aes256_dec(void *buffer, aes256_ctx_t *ctx);
 
 
 

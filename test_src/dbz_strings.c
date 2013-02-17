@@ -33,7 +33,7 @@
  
 /******************************************************************************/
 
-uint8_t dbz_strcount(const char* str){
+uint8_t dbz_strcount(const char *str){
 	uint8_t ret=1;
 	if(*str=='\0' && *(str+1)=='\0')
 			return 0;
@@ -48,7 +48,7 @@ uint8_t dbz_strcount(const char* str){
 
 /******************************************************************************/
 
-void dbz_splitup(char* dbzstr, char** strings){
+void dbz_splitup(char *dbzstr, char** strings){
 	if(*dbzstr=='\0' && *(dbzstr+1)=='\0')
 		return;
 	*strings++ = dbzstr;
@@ -78,7 +78,7 @@ uint8_t dbz_strcount_P(PGM_P str){
 
 /******************************************************************************/
 
-void dbz_splitup_P(PGM_P dbzstr, PGM_P* strings){
+void dbz_splitup_P(PGM_P dbzstr, PGM_P *strings){
 	if(pgm_read_byte(dbzstr)=='\0' && pgm_read_byte(dbzstr+1)=='\0')
 		return;
 	*strings++ = dbzstr;

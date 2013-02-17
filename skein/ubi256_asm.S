@@ -27,7 +27,7 @@
 
 /******************************************************************************/
 /*
-void ubi256_init(ubi256_ctx_t* ctx, const void* g, uint8_t type){
+void ubi256_init(ubi256_ctx_t *ctx, const void *g, uint8_t type){
 	memset(ctx->tweak, 0, 15);
 	ctx->tweak[15] = 0x40+type;
 	memcpy(ctx->g, g, 32);
@@ -57,7 +57,7 @@ ubi256_init:
 
 /******************************************************************************/
 /*
-void ubi256_ctx2hash(void* dest, const ubi256_ctx_t* ctx){
+void ubi256_ctx2hash(void *dest, const ubi256_ctx_t *ctx){
 	memcpy(dest, ctx->g, UBI256_BLOCKSIZE_B);
 }
 */
@@ -79,7 +79,7 @@ ubi256_ctx2hash:
 
 /******************************************************************************/
 /*
-void ubi256_nextBlock(ubi256_ctx_t* ctx, const void* block){
+void ubi256_nextBlock(ubi256_ctx_t *ctx, const void *block){
 	threefish256_ctx_t tfctx;
 	((uint64_t*)(ctx->tweak))[0] += UBI256_BLOCKSIZE_B;
 	threefish256_init(ctx->g, ctx->tweak, &tfctx);
@@ -160,7 +160,7 @@ exit:
 
 /******************************************************************************/
 /*
-void ubi256_lastBlock(ubi256_ctx_t* ctx, const void* block, uint16_t length_b){
+void ubi256_lastBlock(ubi256_ctx_t *ctx, const void *block, uint16_t length_b){
 	threefish256_ctx_t tfctx;
 	while(length_b>UBI256_BLOCKSIZE){
 		ubi256_nextBlock(ctx, block);

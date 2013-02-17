@@ -28,6 +28,6 @@ typedef struct{
 	const uint8_t *rp5;
 } mqq160_sign_key_t;
 
-void mqq160_sign(void* dest, const void* hash, const mqq160_sign_key_t* key);
+void mqq160_sign(void *dest, const void *hash, const mqq160_sign_key_t *key);
 
 #endif /* MQQ160SIGN_H_ */

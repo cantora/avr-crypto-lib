@@ -32,7 +32,7 @@
 
 void jh_encrypt(uint8_t *a);
 
-void jh_init(uint16_t hashlen_b, jh_ctx_t* ctx){
+void jh_init(uint16_t hashlen_b, jh_ctx_t *ctx){
 	memset(ctx->a, 0, 128);
 	ctx->a[0] = hashlen_b>>8;
 	ctx->a[1] = hashlen_b&0xff;
@@ -40,14 +40,14 @@ void jh_init(uint16_t hashlen_b, jh_ctx_t* ctx){
 	ctx->block_hashed=0;
 }
 
-void jh_nextBlock(jh_ctx_t* ctx, void* block){
+void jh_nextBlock(jh_ctx_t *ctx, void *block){
 	memxor(ctx->a, block, 64);
 	jh_encrypt(ctx->a);
 	memxor(ctx->a+64, block, 64);
 	ctx->block_hashed++;
 }
 
-void jh_lastBlock(jh_ctx_t* ctx, void* block, uint16_t length_b){
+void jh_lastBlock(jh_ctx_t *ctx, void *block, uint16_t length_b){
 	while(length_b>=64*8){
 		jh_nextBlock(ctx, block);
 		block = (uint8_t*)block + 64;
@@ -77,39 +77,39 @@ void jh_lastBlock(jh_ctx_t* ctx, void* block, uint16_t length_b){
 	jh_nextBlock(ctx, buffer);
 }
 
-void jh_ctx2hash(void* dest, uint16_t length_b, jh_ctx_t* ctx){
+void jh_ctx2hash(void *dest, uint16_t length_b, jh_ctx_t *ctx){
 	memcpy(dest, ctx->a+128-(length_b+7)/8, (length_b+7)/8);
 }
 
 
-void jh224_init(jh_ctx_t* ctx){
+void jh224_init(jh_ctx_t *ctx){
 	jh_init(224, ctx);
 }
 
-void jh224_ctx2hash(void* dest, jh_ctx_t* ctx){
+void jh224_ctx2hash(void *dest, jh_ctx_t *ctx){
 	jh_ctx2hash(dest, 224, ctx);
 }
 
-void jh256_init(jh_ctx_t* ctx){
+void jh256_init(jh_ctx_t *ctx){
 	jh_init(256, ctx);
 }
 
-void jh256_ctx2hash(void* dest, jh_ctx_t* ctx){
+void jh256_ctx2hash(void *dest, jh_ctx_t *ctx){
 	jh_ctx2hash(dest, 256, ctx);
 }
 
-void jh384_init(jh_ctx_t* ctx){
+void jh384_init(jh_ctx_t *ctx){
 	jh_init(384, ctx);
 }
 
-void jh384_ctx2hash(void* dest, jh_ctx_t* ctx){
+void jh384_ctx2hash(void *dest, jh_ctx_t *ctx){
 	jh_ctx2hash(dest, 384, ctx);
 }
 
-void jh512_init(jh_ctx_t* ctx){
+void jh512_init(jh_ctx_t *ctx){
 	jh_init(512, ctx);
 }
 
-void jh512_ctx2hash(void* dest, jh_ctx_t* ctx){
+void jh512_ctx2hash(void *dest, jh_ctx_t *ctx){
 	jh_ctx2hash(dest, 512, ctx);
 }

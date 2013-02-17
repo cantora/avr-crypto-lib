@@ -30,7 +30,7 @@
 #include <stdint.h>
 #include <avr/pgmspace.h>
 
-void hfal_nessie(const hfdesc_t* hd){
+void hfal_nessie(const hfdesc_t *hd){
 	if(pgm_read_byte(&(hd->type))!=HFDESC_TYPE_HASHFUNCTION)
 		return;
 	char name[1+strlen_P((void*)pgm_read_word(&(hd->name)))];
@@ -48,8 +48,8 @@ void hfal_nessie(const hfdesc_t* hd){
 	nessie_hash_run();
 }
 
-void hfal_nessie_multiple(const hfdesc_t* const* hd_list){
-	const hfdesc_t* hd;
+void hfal_nessie_multiple(const hfdesc_t *const *hd_list){
+	const hfdesc_t *hd;
 	for(;;){
 		hd = (void*)pgm_read_word(hd_list);
 		if(!hd)

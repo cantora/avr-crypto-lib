@@ -24,7 +24,7 @@
 #include "bcal-basic.h"
 #include "blockcipher_descriptor.h"
 
-typedef void(*inc_fp_t)(void* block, uint8_t size_B);
+typedef void(*inc_fp_t)(void *block, uint8_t size_B);
 
 typedef struct{
 	bcdesc_t*    desc;
@@ -34,12 +34,12 @@ typedef struct{
 	uint8_t      blocksize_B;
 } bcal_ctr_ctx_t;
 
-uint8_t bcal_ctr_init(const bcdesc_t* desc, const void* key, uint16_t keysize_b, inc_fp_t inc_func, bcal_ctr_ctx_t* ctx);
-void bcal_ctr_free(bcal_ctr_ctx_t* ctx);
-void bcal_ctr_loadIV(const void* iv, bcal_ctr_ctx_t* ctx);
-void bcal_ctr_encNext(void* block, bcal_ctr_ctx_t* ctx);
-void bcal_ctr_decNext(void* block, bcal_ctr_ctx_t* ctx);
-void bcal_ctr_encMsg(const void* iv, void* msg, uint32_t msg_len_b, bcal_ctr_ctx_t* ctx);
-void bcal_ctr_decMsg(const void* iv, void* msg, uint32_t msg_len_b, bcal_ctr_ctx_t* ctx);
+uint8_t bcal_ctr_init(const bcdesc_t *desc, const void *key, uint16_t keysize_b, inc_fp_t inc_func, bcal_ctr_ctx_t *ctx);
+void bcal_ctr_free(bcal_ctr_ctx_t *ctx);
+void bcal_ctr_loadIV(const void *iv, bcal_ctr_ctx_t *ctx);
+void bcal_ctr_encNext(void *block, bcal_ctr_ctx_t *ctx);
+void bcal_ctr_decNext(void *block, bcal_ctr_ctx_t *ctx);
+void bcal_ctr_encMsg(const void *iv, void *msg, uint32_t msg_len_b, bcal_ctr_ctx_t *ctx);
+void bcal_ctr_decMsg(const void *iv, void *msg, uint32_t msg_len_b, bcal_ctr_ctx_t *ctx);
 
 #endif /* BCALCTR_H_ */

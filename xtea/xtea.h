@@ -42,8 +42,8 @@
  * v:	 the block to operate on (64 bit)
  * k:	 the key for en/decryption (128 bit)
  */
-void xtea_enc(void* dest, const void* v, const void* k);
-void xtea_dec(void* dest, const void* v, const void* k);
+void xtea_enc(void *dest, const void *v, const void *k);
+void xtea_dec(void *dest, const void *v, const void *k);
 
 
 #endif /*XTEA_H_*/

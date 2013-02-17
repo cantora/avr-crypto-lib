@@ -40,7 +40,7 @@
  * \param buffer pointer to the block to encrypt
  * \param ctx    pointer to the key schedule
  */
-void aes192_enc(void* buffer, aes192_ctx_t* ctx);
+void aes192_enc(void *buffer, aes192_ctx_t *ctx);
 
 
 

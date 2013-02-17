@@ -31,13 +31,13 @@ typedef struct{
 	uint8_t buffer_idx;
 } salsa20_ctx_t;
 
-void salsa20_hash(uint32_t* a);
-void salsa_k32(uint32_t* dest, const uint32_t* k, const uint32_t* n);
-void salsa_k16(uint32_t* dest, const uint32_t* k, const uint32_t* n);
-void salsa20_genBlock256(void* dest, const void* k, const void* iv, uint64_t i);
-void salsa20_genBlock128(void* dest, const void* k, const void* iv, uint64_t i);
+void salsa20_hash(uint32_t *a);
+void salsa_k32(uint32_t *dest, const uint32_t *k, const uint32_t *n);
+void salsa_k16(uint32_t *dest, const uint32_t *k, const uint32_t *n);
+void salsa20_genBlock256(void *dest, const void *k, const void *iv, uint64_t i);
+void salsa20_genBlock128(void *dest, const void *k, const void *iv, uint64_t i);
 
-void salsa20_init(void* key, uint16_t keylength_b, void* iv, salsa20_ctx_t* ctx);
-uint8_t salsa20_gen(salsa20_ctx_t* ctx);
+void salsa20_init(void *key, uint16_t keylength_b, void *iv, salsa20_ctx_t *ctx);
+uint8_t salsa20_gen(salsa20_ctx_t *ctx);
 
 #endif /* SALSA20_H_ */

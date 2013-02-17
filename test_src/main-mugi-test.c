@@ -27,7 +27,7 @@
 #include "nessie_stream_test.h"
 #include "performance_test.h"
 
-char* algo_name = "MUGI";
+char *algo_name = "MUGI";
 
 /*****************************************************************************
  *  additional validation-functions											 *

@@ -27,8 +27,8 @@ typedef struct __attribute__((packed)) present80_ctx_st {
 } present80_ctx_t;
 
 
-void present80_init(const uint8_t* key, uint8_t keysize_b, present80_ctx_t* ctx);
-void present80_enc(void* buffer, present80_ctx_t* ctx);
-void present80_dec(void* buffer, present80_ctx_t* ctx);
+void present80_init(const uint8_t *key, uint8_t keysize_b, present80_ctx_t *ctx);
+void present80_enc(void *buffer, present80_ctx_t *ctx);
+void present80_dec(void *buffer, present80_ctx_t *ctx);
 
 #endif /*PRESENT80_H_*/

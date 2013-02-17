@@ -27,7 +27,7 @@
 
 #include "avr-asm-macros.S"
 
-/* void twister_small_init(twister_state_t* ctx, uint16_t hashsize_b)*/
+/* void twister_small_init(twister_state_t *ctx, uint16_t hashsize_b)*/
 /*
  * param ctx:        r24:r25
  * param hashsize_b: r22:r23
@@ -73,7 +73,7 @@ twister_small_init:
 	ret
 #if 1 
 /*********************************************************************/
-/* void twister_small_lastBlock(twister_state_t* ctx, void* msg, uint16_t length_b) */   
+/* void twister_small_lastBlock(twister_state_t *ctx, void *msg, uint16_t length_b) */   
 /*
  * param ctx:      r24:r25
  * param msg:      r22:r23

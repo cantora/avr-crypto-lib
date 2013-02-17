@@ -28,7 +28,7 @@
 
 #include "nessie_mac_test.h"
 
-char* algo_name = "HMAC-SHA256";
+char *algo_name = "HMAC-SHA256";
 
 /*****************************************************************************
  *  additional validation-functions											 *

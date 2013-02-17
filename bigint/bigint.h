@@ -47,32 +47,32 @@ typedef struct{
 
 /******************************************************************************/
 
-void   bigint_adjust(bigint_t* a);
-uint32_t bigint_get_first_set_bit(const bigint_t* a);
-uint32_t bigint_get_last_set_bit(const bigint_t* a);
-uint16_t bigint_length_b(const bigint_t* a);
-uint16_t bigint_length_B(const bigint_t* a);
-void   bigint_copy(bigint_t* dest, const bigint_t* src);
-void   bigint_add_u(bigint_t* dest, const bigint_t* a, const bigint_t* b);
-void   bigint_add_scale_u(bigint_t* dest, const bigint_t* a, uint16_t scale);
-void   bigint_sub_u(bigint_t* dest, const bigint_t* a, const bigint_t* b);
+void   bigint_adjust(bigint_t *a);
+uint32_t bigint_get_first_set_bit(const bigint_t *a);
+uint32_t bigint_get_last_set_bit(const bigint_t *a);
+uint16_t bigint_length_b(const bigint_t *a);
+uint16_t bigint_length_B(const bigint_t *a);
+void   bigint_copy(bigint_t *dest, const bigint_t *src);
+void   bigint_add_u(bigint_t *dest, const bigint_t *a, const bigint_t *b);
+void   bigint_add_scale_u(bigint_t *dest, const bigint_t *a, uint16_t scale);
+void   bigint_sub_u(bigint_t *dest, const bigint_t *a, const bigint_t *b);
 int8_t bigint_cmp_u(const bigint_t * a, const bigint_t * b);
-void   bigint_add_s(bigint_t* dest, const bigint_t* a, const bigint_t* b);
-void   bigint_sub_s(bigint_t* dest, const bigint_t* a, const bigint_t* b);
-int8_t bigint_cmp_s(const bigint_t* a, const bigint_t* b);
-void   bigint_shiftleft(bigint_t* a, uint16_t shift);
-void   bigint_shiftright(bigint_t* a, uint16_t shift);
-void   bigint_xor(bigint_t* dest, const bigint_t* a);
-void   bigint_set_zero(bigint_t* a);
-void   bigint_mul_u(bigint_t* dest, const bigint_t* a, const bigint_t* b);
-void   bigint_mul_s(bigint_t* dest, const bigint_t* a, const bigint_t* b);
-void   bigint_square(bigint_t* dest, const bigint_t* a);
-void   bigint_sub_u_bitscale(bigint_t* a, const bigint_t* b, uint16_t bitscale);
-void   bigint_reduce(bigint_t* a, const bigint_t* r);
-void   bigint_expmod_u(bigint_t* dest, const bigint_t* a, const bigint_t* exp, const bigint_t* r);
-void   bigint_gcdext(bigint_t* gcd, bigint_t* a, bigint_t* b, const bigint_t* x, const bigint_t* y);
-void   bigint_inverse(bigint_t* dest, const bigint_t* a, const bigint_t* m);
-void   bigint_changeendianess(bigint_t* a);
+void   bigint_add_s(bigint_t *dest, const bigint_t *a, const bigint_t *b);
+void   bigint_sub_s(bigint_t *dest, const bigint_t *a, const bigint_t *b);
+int8_t bigint_cmp_s(const bigint_t *a, const bigint_t *b);
+void   bigint_shiftleft(bigint_t *a, uint16_t shift);
+void   bigint_shiftright(bigint_t *a, uint16_t shift);
+void   bigint_xor(bigint_t *dest, const bigint_t *a);
+void   bigint_set_zero(bigint_t *a);
+void   bigint_mul_u(bigint_t *dest, const bigint_t *a, const bigint_t *b);
+void   bigint_mul_s(bigint_t *dest, const bigint_t *a, const bigint_t *b);
+void   bigint_square(bigint_t *dest, const bigint_t *a);
+void   bigint_sub_u_bitscale(bigint_t *a, const bigint_t *b, uint16_t bitscale);
+void   bigint_reduce(bigint_t *a, const bigint_t *r);
+void   bigint_expmod_u(bigint_t *dest, const bigint_t *a, const bigint_t *exp, const bigint_t *r);
+void   bigint_gcdext(bigint_t *gcd, bigint_t *a, bigint_t *b, const bigint_t *x, const bigint_t *y);
+void   bigint_inverse(bigint_t *dest, const bigint_t *a, const bigint_t *m);
+void   bigint_changeendianess(bigint_t *a);
 /******************************************************************************/
 
 #endif /*BIGINT_H_*/

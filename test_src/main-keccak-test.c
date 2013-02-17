@@ -32,10 +32,10 @@
 #include "hfal-performance.h"
 #include "hfal-test.h"
 
-char* algo_name = "Keccak";
+char *algo_name = "Keccak";
 
 
-const hfdesc_t* const algolist[] PROGMEM = {
+const hfdesc_t *const algolist[] PROGMEM = {
 	(hfdesc_t*)&keccak224_desc,
 	(hfdesc_t*)&keccak256_desc,
 	(hfdesc_t*)&keccak384_desc,

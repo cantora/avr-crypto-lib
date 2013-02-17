@@ -114,7 +114,7 @@ uint16_t skipjack_g_inv(uint16_t g, uint8_t k, uint8_t *key){
 
 /*****************************************************************************/
 static
-void skipjack_a(uint16_t* w, uint8_t k, uint8_t* key){
+void skipjack_a(uint16_t *w, uint8_t k, uint8_t *key){
 	uint16_t t;
 	t = w[0];
 	w[0] = w[1];
@@ -125,7 +125,7 @@ void skipjack_a(uint16_t* w, uint8_t k, uint8_t* key){
 
 /*****************************************************************************/
 static
-void skipjack_a_inv(uint16_t* w, uint8_t k, uint8_t* key){
+void skipjack_a_inv(uint16_t *w, uint8_t k, uint8_t *key){
 	uint16_t t;
 	t = w[3] ^ w[2];
 	w[3] = skipjack_g_inv(w[2],k,key);
@@ -136,7 +136,7 @@ void skipjack_a_inv(uint16_t* w, uint8_t k, uint8_t* key){
 
 /*****************************************************************************/
 static
-void skipjack_b(uint16_t* w, uint8_t k, uint8_t* key){
+void skipjack_b(uint16_t *w, uint8_t k, uint8_t *key){
 	uint16_t t;
 	t = w[3];
 	w[3] = w[0];
@@ -147,7 +147,7 @@ void skipjack_b(uint16_t* w, uint8_t k, uint8_t* key){
 
 /*****************************************************************************/
 static
-void skipjack_b_inv(uint16_t* w, uint8_t k, uint8_t* key){
+void skipjack_b_inv(uint16_t *w, uint8_t k, uint8_t *key){
 	uint16_t t;
 	t = w[1];
 	w[1] = w[0];
@@ -161,7 +161,7 @@ void skipjack_b_inv(uint16_t* w, uint8_t k, uint8_t* key){
  * block is 64 bits (=8 bytes) in size, key is 80 bits (=10 bytes) in size.
  * 
  */
-void skipjack_enc(void* block, void* key){
+void skipjack_enc(void *block, void *key){
 	uint8_t k;
 	for(k=0; k<32; ++k){
 		if(k & 0x08){
@@ -176,7 +176,7 @@ void skipjack_enc(void* block, void* key){
  * block is 64 bits (=8 bytes) in size, key is 80 bits (=10 bytes) in size.
  * 
  */
-void skipjack_dec(void* block, void* key){
+void skipjack_dec(void *block, void *key){
 	int8_t k;
 	for(k=31; k>=0; --k){
 		if(k & 0x08){

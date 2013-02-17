@@ -30,13 +30,13 @@
 #include "memxor.h"
 #include "ubi.h"
 
-void ubi256_init(ubi256_ctx_t* ctx, const void* g, uint8_t type){
+void ubi256_init(ubi256_ctx_t *ctx, const void *g, uint8_t type){
 	memset(ctx->tweak.v8, 0, 15);
 	ctx->tweak.v8[15] = 0x40+type;
 	memcpy(ctx->g, g, 32);
 }
 
-void ubi256_nextBlock(ubi256_ctx_t* ctx, const void* block){
+void ubi256_nextBlock(ubi256_ctx_t *ctx, const void *block){
 	threefish256_ctx_t tfctx;
 	ctx->tweak.v64[0] += UBI256_BLOCKSIZE_B;
 	threefish256_init(ctx->g, ctx->tweak.v8, &tfctx);
@@ -47,7 +47,7 @@ void ubi256_nextBlock(ubi256_ctx_t* ctx, const void* block){
 } 
 
 
-void ubi256_lastBlock(ubi256_ctx_t* ctx, const void* block, uint16_t length_b){
+void ubi256_lastBlock(ubi256_ctx_t *ctx, const void *block, uint16_t length_b){
 	threefish256_ctx_t tfctx;
 	while(length_b>UBI256_BLOCKSIZE){
 		ubi256_nextBlock(ctx, block);
@@ -74,7 +74,7 @@ void ubi256_lastBlock(ubi256_ctx_t* ctx, const void* block, uint16_t length_b){
 
 } 
 
-void ubi256_ctx2hash(void* dest, const ubi256_ctx_t* ctx){
+void ubi256_ctx2hash(void *dest, const ubi256_ctx_t *ctx){
 	memcpy(dest, ctx->g, UBI256_BLOCKSIZE_B);
 }
 

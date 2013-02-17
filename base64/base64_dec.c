@@ -131,7 +131,7 @@ uint8_t ascii2bit6(uint8_t a){
 
 #endif
 
-int base64_binlength(char* str, uint8_t strict){
+int base64_binlength(char *str, uint8_t strict){
 	int l=0;
 	uint8_t term=0;
 	for(;;){
@@ -187,7 +187,7 @@ int base64_binlength(char* str, uint8_t strict){
 
 */
 
-int base64dec(void* dest, const char* b64str, uint8_t strict){
+int base64dec(void *dest, const char *b64str, uint8_t strict){
 	uint8_t buffer[4];
 	uint8_t idx=0;
 	uint8_t term=0;

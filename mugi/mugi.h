@@ -34,8 +34,8 @@ typedef struct{
 	uint64_t b[16];
 }mugi_ctx_t; /* 152 bytes in total */
 
-void mugi_init(const void* key, const void* iv, mugi_ctx_t* ctx);
-uint64_t mugi_gen(mugi_ctx_t* ctx);
+void mugi_init(const void *key, const void *iv, mugi_ctx_t *ctx);
+uint64_t mugi_gen(mugi_ctx_t *ctx);
 
 
 #endif /* MUGI_H_ */

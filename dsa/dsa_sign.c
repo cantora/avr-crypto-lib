@@ -24,8 +24,8 @@
 #include "hashfunction_descriptor.h"
 #include "hfal-basic.h"
 
-uint8_t dsa_sign_bigint(dsa_signature_t* s, const bigint_t* m,
-		                const dsa_ctx_t* ctx, const bigint_t* k){
+uint8_t dsa_sign_bigint(dsa_signature_t *s, const bigint_t *m,
+		                const dsa_ctx_t *ctx, const bigint_t *k){
 	bigint_t tmp, tmp2;
 	uint8_t tmp_b[ctx->domain.p.length_W+5], tmp2_b[ctx->domain.q.length_W+5];
 	tmp.wordv= tmp_b;
@@ -47,8 +47,8 @@ uint8_t dsa_sign_bigint(dsa_signature_t* s, const bigint_t* m,
 	return 0;
 }
 
-uint8_t dsa_sign_message(dsa_signature_t* s, const void* m, uint16_t m_len_b,
-		                const hfdesc_t* hash_desc, const dsa_ctx_t* ctx,
+uint8_t dsa_sign_message(dsa_signature_t *s, const void *m, uint16_t m_len_b,
+		                const hfdesc_t *hash_desc, const dsa_ctx_t *ctx,
 		                const rand_func_ptr_t rand_in){
 	bigint_t z, k;
 	uint8_t i, n_B = ctx->domain.q.length_W;

@@ -33,7 +33,7 @@
 #define X(a) (((uint64_t*)data)[(a)])
 
 static
-void permute_inv16(void* data){
+void permute_inv16(void *data){
 	uint64_t t;
 	t = X(15);
 	X(15) = X(7);
@@ -56,7 +56,7 @@ void permute_inv16(void* data){
 }
 
 static
-void add_key_16(void* data, const threefish1024_ctx_t* ctx, uint8_t s){
+void add_key_16(void *data, const threefish1024_ctx_t *ctx, uint8_t s){
 	uint8_t i;
 	for(i=0; i<13; ++i){
 		X(i) -= ctx->k[(s+i)%17];
@@ -66,7 +66,7 @@ void add_key_16(void* data, const threefish1024_ctx_t* ctx, uint8_t s){
 	X(15) -= ctx->k[(s+15)%17] + s;
 }
 
-void threefish1024_dec(void* data, const threefish1024_ctx_t* ctx){
+void threefish1024_dec(void *data, const threefish1024_ctx_t *ctx){
 	uint8_t i=0,s=20;
 	/* old round constants
 	uint8_t r0[8] = {47, 58, 17, 28, 34, 33, 25, 55};

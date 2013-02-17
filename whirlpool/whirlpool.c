@@ -111,7 +111,7 @@ static const uint8_t sbox[256] PROGMEM = {
 
 #endif
 
-static void gamma_1(uint8_t* a){
+static void gamma_1(uint8_t *a){
 	uint8_t i;
 	for(i=0; i<64; ++i){
 		*a = whirlpool_sbox(*a);
@@ -119,7 +119,7 @@ static void gamma_1(uint8_t* a){
 	}
 }
 
-static void pi(uint8_t* a){
+static void pi(uint8_t *a){
 	uint8_t b[8];
 	uint8_t i,j;
 	for(i=1; i<8; ++i){
@@ -144,7 +144,7 @@ static const uint8_t theta_matrix[8] PROGMEM = {
 
 #define POLYNOM 0x1D
 
-static void theta(uint8_t* a){
+static void theta(uint8_t *a){
 	uint8_t b[8], c, accu;
 	uint8_t i,j,k;
 	for(i=0; i<8; ++i){
@@ -160,7 +160,7 @@ static void theta(uint8_t* a){
 	}
 }
 
-static void w_round(uint8_t* a, const uint8_t* k){
+static void w_round(uint8_t *a, const uint8_t *k){
 	gamma_1(a);
 #if DEBUG
 	cli_putstr_P(PSTR("\r\n pre-pi:"));
@@ -179,7 +179,7 @@ static void w_round(uint8_t* a, const uint8_t* k){
 	memxor(a, k, 64);
 }
 
-static void w_enc(uint8_t *a, const uint8_t* k){
+static void w_enc(uint8_t *a, const uint8_t *k){
 #if DEBUG
 	cli_putstr_P(PSTR("\r\n== w_enc ==\r\n w'_00:"));
 	cli_hexdump_block(a, 64, 4, 8);
@@ -215,12 +215,12 @@ static void w_enc(uint8_t *a, const uint8_t* k){
 	}
 }
 
-void whirlpool_init(whirlpool_ctx_t* ctx){
+void whirlpool_init(whirlpool_ctx_t *ctx){
 	memset(ctx->s, 0, 64);
 	ctx->blocks = 0;
 }
 
-void whirlpool_nextBlock(whirlpool_ctx_t* ctx, const void* block){
+void whirlpool_nextBlock(whirlpool_ctx_t *ctx, const void *block){
 	uint8_t state[64];
 	ctx->blocks += 1;
 	memcpy(state, block, 64);
@@ -229,7 +229,7 @@ void whirlpool_nextBlock(whirlpool_ctx_t* ctx, const void* block){
 	memxor((ctx->s), block, 64);
 }
 
-void whirlpool_lastBlock(whirlpool_ctx_t* ctx, const void* block, uint16_t length_b){
+void whirlpool_lastBlock(whirlpool_ctx_t *ctx, const void *block, uint16_t length_b){
 	while(length_b>=512){
 		whirlpool_nextBlock(ctx, block);
 		block = (uint8_t*)block + 64;
@@ -253,6 +253,6 @@ void whirlpool_lastBlock(whirlpool_ctx_t* ctx, const void* block, uint16_t lengt
 	whirlpool_nextBlock(ctx, buffer);
 }
 
-void whirlpool_ctx2hash(void* dest, const whirlpool_ctx_t* ctx){
+void whirlpool_ctx2hash(void *dest, const whirlpool_ctx_t *ctx){
 	memcpy(dest, (ctx->s), 64);
 }

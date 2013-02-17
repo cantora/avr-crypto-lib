@@ -85,7 +85,7 @@ const uint8_t rp5[160] PROGMEM = {
 
 const mqq160_sign_key_t testkey_P PROGMEM = {a, cc1, cc2, rp1, rp5 };
 
-void mqq_load_pgm_key(void* buffer, mqq160_sign_key_t* key, const mqq160_sign_key_t* key_P){
+void mqq_load_pgm_key(void *buffer, mqq160_sign_key_t *key, const mqq160_sign_key_t *key_P){
 	uint8_t *buf_ptr;
 	buf_ptr = buffer;
 	memcpy_P(key, key_P, sizeof(mqq160_sign_key_t));

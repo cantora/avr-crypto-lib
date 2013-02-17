@@ -38,9 +38,9 @@ typedef struct rc5_ctx_st {
 	uint32_t *s;
 }rc5_ctx_t; 
 
-void rc5_enc(void* buffer, const rc5_ctx_t* ctx);
-void rc5_dec(void* buffer, const rc5_ctx_t* ctx);
-void rc5_init(void* key, uint16_t keysize_b, uint8_t rounds, rc5_ctx_t* ctx);
-void rc5_free(rc5_ctx_t* ctx);
+void rc5_enc(void *buffer, const rc5_ctx_t *ctx);
+void rc5_dec(void *buffer, const rc5_ctx_t *ctx);
+void rc5_init(void *key, uint16_t keysize_b, uint8_t rounds, rc5_ctx_t *ctx);
+void rc5_free(rc5_ctx_t *ctx);
 
 #endif /*RC5_H_*/

@@ -26,12 +26,12 @@
 #include "A5_1.h"
 #include "nessie_stream_test.h"
 
-char* algo_name = "A5_1";
+char *algo_name = "A5_1";
 
 /*****************************************************************************
  *  additional validation-functions											 *
  *****************************************************************************/
-void a51_genctx_dummy(uint8_t* key, uint16_t keysize, void* ctx){
+void a51_genctx_dummy(uint8_t *key, uint16_t keysize, void *ctx){
 	a5_1_init(ctx,key, keysize, NULL, 0);
 }
 

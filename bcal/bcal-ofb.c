@@ -24,7 +24,7 @@
 #include "memxor.h"
 
 
-uint8_t bcal_ofb_init(const bcdesc_t* desc, const void* key, uint16_t keysize_b, bcal_ofb_ctx_t* ctx){
+uint8_t bcal_ofb_init(const bcdesc_t *desc, const void *key, uint16_t keysize_b, bcal_ofb_ctx_t *ctx){
 	ctx->desc = (bcdesc_t*)desc;
 	ctx->blocksize_B = (bcal_cipher_getBlocksize_b(desc)+7)/8;
 	ctx->in_block=malloc(ctx->blocksize_B);
@@ -34,29 +34,29 @@ uint8_t bcal_ofb_init(const bcdesc_t* desc, const void* key, uint16_t keysize_b,
 	return bcal_cipher_init(desc, key, keysize_b, &(ctx->cctx));
 }
 
-void bcal_ofb_free(bcal_ofb_ctx_t* ctx){
+void bcal_ofb_free(bcal_ofb_ctx_t *ctx){
 	free(ctx->in_block);
 	bcal_cipher_free(&(ctx->cctx));
 }
 
-void bcal_ofb_loadIV(const void* iv, bcal_ofb_ctx_t* ctx){
+void bcal_ofb_loadIV(const void *iv, bcal_ofb_ctx_t *ctx){
 	if(iv){
 		memcpy(ctx->in_block, iv, ctx->blocksize_B);
 	}
 }
 
-void bcal_ofb_encNext(void* block, bcal_ofb_ctx_t* ctx){
+void bcal_ofb_encNext(void *block, bcal_ofb_ctx_t *ctx){
 	bcal_cipher_enc(ctx->in_block , &(ctx->cctx));
 	memxor(block, ctx->in_block, ctx->blocksize_B);
 }
 
-void bcal_ofb_decNext(void* block, bcal_ofb_ctx_t* ctx){
+void bcal_ofb_decNext(void *block, bcal_ofb_ctx_t *ctx){
 	bcal_cipher_enc(ctx->in_block , &(ctx->cctx));
 	memxor(block, ctx->in_block, ctx->blocksize_B);
 }
 
 
-void bcal_ofb_encMsg(const void* iv, void* msg, uint32_t msg_len_b, bcal_ofb_ctx_t* ctx){
+void bcal_ofb_encMsg(const void *iv, void *msg, uint32_t msg_len_b, bcal_ofb_ctx_t *ctx){
 	uint16_t block_len_b;
 	block_len_b = ctx->blocksize_B*8;
 	bcal_ofb_loadIV(iv, ctx);
@@ -70,7 +70,7 @@ void bcal_ofb_encMsg(const void* iv, void* msg, uint32_t msg_len_b, bcal_ofb_ctx
 	memxor(msg, ctx->in_block, (msg_len_b+7)/8);
 }
 
-void bcal_ofb_decMsg(const void* iv, void* msg, uint32_t msg_len_b, bcal_ofb_ctx_t* ctx){
+void bcal_ofb_decMsg(const void *iv, void *msg, uint32_t msg_len_b, bcal_ofb_ctx_t *ctx){
 	bcal_ofb_encMsg(iv, msg, msg_len_b, ctx);
 }
 

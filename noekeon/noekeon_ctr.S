@@ -29,7 +29,7 @@
 .extern noekeon_enc
 
 /*
- * void noekeon_ctr_next(void* buffer, const noekeon_ctr_ctx_t* ctx); 
+ * void noekeon_ctr_next(void *buffer, const noekeon_ctr_ctx_t *ctx); 
  */
 .global noekeon_ctr_next
 /*

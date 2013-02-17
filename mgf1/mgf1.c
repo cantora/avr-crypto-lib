@@ -27,7 +27,7 @@
  */
 
 
-void mgf1_short_seed(void* dest, const void* seed, uint8_t seed_len_B, uint16_t out_length_B, const mgf1_parameter_t* p){
+void mgf1_short_seed(void *dest, const void *seed, uint8_t seed_len_B, uint16_t out_length_B, const mgf1_parameter_t *p){
 	uint8_t buffer[seed_len_B+4];
 	uint32_t counter=1;
 	uint8_t hv_len = hfal_hash_getHashsize(p->hashfunction)/8;
@@ -50,6 +50,6 @@ void mgf1_short_seed(void* dest, const void* seed, uint8_t seed_len_B, uint16_t 
 	}
 }
 
-void mgf1(void* dest, const void* seed, uint16_t seed_len_B, uint16_t out_length_B, const mgf1_parameter_t* p){
+void mgf1(void *dest, const void *seed, uint16_t seed_len_B, uint16_t out_length_B, const mgf1_parameter_t *p){
 	mgf1_short_seed(dest, seed, seed_len_B, out_length_B, p);
 }

@@ -29,9 +29,9 @@
 #include "bcal-nessie.h"
 #include "bcal_cast5.h"
 
-char* algo_name = "cast-128 (cast5)";
+char *algo_name = "cast-128 (cast5)";
 
-const bcdesc_t* const algolist[] PROGMEM = {
+const bcdesc_t *const algolist[] PROGMEM = {
 	(bcdesc_t*)&cast5_desc,
 	NULL
 };

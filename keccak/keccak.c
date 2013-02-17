@@ -47,7 +47,7 @@ void keccak_dump_state(uint64_t a[5][5]){
 	}
 }
 
-void keccak_dump_ctx(keccak_ctx_t* ctx){
+void keccak_dump_ctx(keccak_ctx_t *ctx){
 	keccak_dump_state(ctx->a);
 	cli_putstr_P(PSTR("\r\nDBG: r: "));
 	cli_hexdump_rev(&(ctx->r), 2);
@@ -160,7 +160,7 @@ void keccak_round(uint64_t *a, uint8_t rci){
 #endif
 }
 
-void keccak_f1600(void* a){
+void keccak_f1600(void *a){
 	uint8_t i = 0;
 	do {
 #if DEBUG
@@ -172,12 +172,12 @@ void keccak_f1600(void* a){
 	} while (++i < 24);
 }
 
-void keccak_nextBlock(keccak_ctx_t* ctx, const void* block){
+void keccak_nextBlock(keccak_ctx_t *ctx, const void *block){
 	memxor(ctx->a, block, ctx->bs);
 	keccak_f1600(ctx->a);
 }
 
-void keccak_lastBlock(keccak_ctx_t* ctx, const void* block, uint16_t length_b){
+void keccak_lastBlock(keccak_ctx_t *ctx, const void *block, uint16_t length_b){
     uint8_t length_B;
     uint8_t t;
     while(length_b >= ctx->r){
@@ -203,7 +203,7 @@ void keccak_lastBlock(keccak_ctx_t* ctx, const void* block, uint16_t length_b){
     keccak_f1600(ctx->a);
 }
 
-void keccak_ctx2hash(void* dest, uint16_t length_b, keccak_ctx_t* ctx){
+void keccak_ctx2hash(void *dest, uint16_t length_b, keccak_ctx_t *ctx){
 	while(length_b >= ctx->r){
 		memcpy(dest, ctx->a, ctx->bs);
 		dest = (uint8_t*)dest + ctx->bs;
@@ -213,19 +213,19 @@ void keccak_ctx2hash(void* dest, uint16_t length_b, keccak_ctx_t* ctx){
 	memcpy(dest, ctx->a, (length_b+7)/8);
 }
 
-void keccak224_ctx2hash(void* dest, keccak_ctx_t* ctx){
+void keccak224_ctx2hash(void *dest, keccak_ctx_t *ctx){
 	keccak_ctx2hash(dest, 224, ctx);
 }
 
-void keccak256_ctx2hash(void* dest, keccak_ctx_t* ctx){
+void keccak256_ctx2hash(void *dest, keccak_ctx_t *ctx){
 	keccak_ctx2hash(dest, 256, ctx);
 }
 
-void keccak384_ctx2hash(void* dest, keccak_ctx_t* ctx){
+void keccak384_ctx2hash(void *dest, keccak_ctx_t *ctx){
 	keccak_ctx2hash(dest, 384, ctx);
 }
 
-void keccak512_ctx2hash(void* dest, keccak_ctx_t* ctx){
+void keccak512_ctx2hash(void *dest, keccak_ctx_t *ctx){
 	keccak_ctx2hash(dest, 512, ctx);
 }
 
@@ -235,24 +235,24 @@ void keccak512_ctx2hash(void* dest, keccak_ctx_t* ctx){
   3. SHA3-384: ⌊Keccak[r =  832, c =  768, d = 48]⌋384
   4. SHA3-512: ⌊Keccak[r =  576, c = 1024, d = 64]⌋512
 */
-void keccak_init(uint16_t r, keccak_ctx_t* ctx){
+void keccak_init(uint16_t r, keccak_ctx_t *ctx){
 	memset(ctx->a, 0x00, 5 * 5 * 8);
 	ctx->r = r;
 	ctx->bs = (uint8_t)(r / 8);
 }
 
-void keccak224_init(keccak_ctx_t* ctx){
+void keccak224_init(keccak_ctx_t *ctx){
 	keccak_init(1152, ctx);
 }
 
-void keccak256_init(keccak_ctx_t* ctx){
+void keccak256_init(keccak_ctx_t *ctx){
 	keccak_init(1088, ctx);
 }
 
-void keccak384_init(keccak_ctx_t* ctx){
+void keccak384_init(keccak_ctx_t *ctx){
 	keccak_init( 832, ctx);
 }
 
-void keccak512_init(keccak_ctx_t* ctx){
+void keccak512_init(keccak_ctx_t *ctx){
 	keccak_init( 576, ctx);
 }

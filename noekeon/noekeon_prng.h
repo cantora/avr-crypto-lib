@@ -30,10 +30,10 @@
 #include <stdint.h>
 
 uint8_t random8(void);
-void random_block(void* dest);
+void random_block(void *dest);
 void srandom32(uint32_t seed);
-void random_seed(const void* buffer);
-void random_add(const void* buffer);
+void random_seed(const void *buffer);
+void random_add(const void *buffer);
 
 #endif /* PRNG_H_*/
 

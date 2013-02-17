@@ -532,7 +532,7 @@ serpent_gen_w:
 	ret
 
 /*
- * void serpent_init(const void* key, uint16_t keysize_b, serpent_ctx_t* ctx)
+ * void serpent_init(const void *key, uint16_t keysize_b, serpent_ctx_t *ctx)
  */
 /*
  * param key     is passed in r24:r25
@@ -634,7 +634,7 @@ serpent_init:
 	ret
 
 /*
- * void serpent_enc(void* buffer, const serpent_ctx_t* ctx){
+ * void serpent_enc(void *buffer, const serpent_ctx_t *ctx){
  */
 /*
  * param buffer is passed in r24:r25
@@ -685,7 +685,7 @@ serpent_enc:
 	rjmp memxor
 
 /*
- * void serpent_dec(void* buffer, const serpent_ctx_t* ctx){
+ * void serpent_dec(void *buffer, const serpent_ctx_t *ctx){
  */
 /*
  * param buffer is passed in r24:r25

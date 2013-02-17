@@ -31,9 +31,9 @@
 #include "bcal_present80.h"
 #include "bcal_present128.h"
 
-char* algo_name = "Present";
+char *algo_name = "Present";
 
-const bcdesc_t* const algolist[] PROGMEM = {
+const bcdesc_t *const algolist[] PROGMEM = {
 	(bcdesc_t*)&present80_desc,
 	(bcdesc_t*)&present128_desc,
 	NULL
@@ -45,7 +45,7 @@ void testrun_nessie_present(void){
 	bcal_nessie_multiple(algolist);
 }
 
-void testrun_selfenc(uint8_t* key, uint8_t* buffer){
+void testrun_selfenc(uint8_t *key, uint8_t *buffer){
 
 	present80_ctx_t ctx;
 	cli_putstr_P(PSTR("\r\nkey   : "));
@@ -62,7 +62,7 @@ void testrun_selfenc(uint8_t* key, uint8_t* buffer){
 	cli_putstr_P(PSTR("\r\n"));
 }
 
-void testrun_selfenc_128(uint8_t* key, uint8_t* buffer){
+void testrun_selfenc_128(uint8_t *key, uint8_t *buffer){
 
 	present128_ctx_t ctx;
 	cli_putstr_P(PSTR("\r\nkey   : "));
@@ -78,7 +78,7 @@ void testrun_selfenc_128(uint8_t* key, uint8_t* buffer){
 	cli_hexdump(buffer, 8);
 	cli_putstr_P(PSTR("\r\n"));
 }
-// void present_key_test(const uint8_t* key);
+// void present_key_test(const uint8_t *key);
 
 
 void testrun_self_present(void){

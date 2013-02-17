@@ -18,7 +18,7 @@
 */
 
 /*
-void bigint_adjust(bigint_t* a){
+void bigint_adjust(bigint_t *a){
 	while(a->length_B!=0 && a->wordv[a->length_B-1]==0){
 		a->length_B--;
 	}
@@ -76,7 +76,7 @@ bigint_adjust_ret:
 	ret
 
 /*
-void bigint_copy(bigint_t* dest, const bigint_t* src){
+void bigint_copy(bigint_t *dest, const bigint_t *src){
 	memcpy(dest->wordv, src->wordv, src->length_B);
 	dest->length_B = src->length_B;
 	dest->info = src->info;

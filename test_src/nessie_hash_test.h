@@ -21,17 +21,17 @@
 
 #include <stdint.h>
 
-typedef void (*nessie_hash_init_fpt)(void* ctx);
-typedef void (*nessie_hash_next_fpt)(void* ctx, const void* buffer);
-typedef void (*nessie_hash_last_fpt)(void* ctx, const void* buffer, uint16_t size_b);
-typedef void (*nessie_hash_conv_fpt)(void* buffer, void* ctx);
+typedef void (*nessie_hash_init_fpt)(void *ctx);
+typedef void (*nessie_hash_next_fpt)(void *ctx, const void *buffer);
+typedef void (*nessie_hash_last_fpt)(void *ctx, const void *buffer, uint16_t size_b);
+typedef void (*nessie_hash_conv_fpt)(void *buffer, void *ctx);
 
 
 typedef struct nessie_hash_ctx_st{
 	uint16_t hashsize_b;
 	uint16_t blocksize_B;
 	uint16_t ctx_size_B;
-	char* name; 
+	char *name; 
 	nessie_hash_init_fpt hash_init;
 	nessie_hash_next_fpt hash_next;
 	nessie_hash_last_fpt hash_last;

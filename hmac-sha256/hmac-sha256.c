@@ -39,7 +39,7 @@
 
 #ifndef HMAC_SHA256_SHORTONLY
 
-void hmac_sha256_init(hmac_sha256_ctx_t *s, const void* key, uint16_t keylength_b){
+void hmac_sha256_init(hmac_sha256_ctx_t *s, const void *key, uint16_t keylength_b){
 	uint8_t buffer[HMAC_SHA256_BLOCK_BYTES];
 	uint8_t i;
 	
@@ -68,11 +68,11 @@ void hmac_sha256_init(hmac_sha256_ctx_t *s, const void* key, uint16_t keylength_
 #endif
 }
 
-void hmac_sha256_nextBlock(hmac_sha256_ctx_t *s, const void* block){
+void hmac_sha256_nextBlock(hmac_sha256_ctx_t *s, const void *block){
 	sha256_nextBlock(&(s->a), block);
 }
 
-void hmac_sha256_lastBlock(hmac_sha256_ctx_t *s, const void* block, uint16_t length_b){
+void hmac_sha256_lastBlock(hmac_sha256_ctx_t *s, const void *block, uint16_t length_b){
 /*	while(length_b>=SHA256_BLOCK_BITS){
 		sha256_nextBlock(&(s->a), block);
 		block = (uint8_t*)block + SHA256_BLOCK_BYTES;
@@ -81,7 +81,7 @@ void hmac_sha256_lastBlock(hmac_sha256_ctx_t *s, const void* block, uint16_t len
 */	sha256_lastBlock(&(s->a), block, length_b);
 }
 
-void hmac_sha256_final(void* dest, hmac_sha256_ctx_t *s){
+void hmac_sha256_final(void *dest, hmac_sha256_ctx_t *s){
 	sha256_ctx2hash((sha256_hash_t*)dest, &(s->a));
 	sha256_lastBlock(&(s->b), dest, SHA256_HASH_BITS);
 	sha256_ctx2hash((sha256_hash_t*)dest, &(s->b));			
@@ -93,7 +93,7 @@ void hmac_sha256_final(void* dest, hmac_sha256_ctx_t *s){
  * keylength in bits!
  * message length in bits!
  */
-void hmac_sha256(void* dest, const void* key, uint16_t keylength_b, const void* msg, uint32_t msglength_b){ /* a one-shot*/
+void hmac_sha256(void *dest, const void *key, uint16_t keylength_b, const void *msg, uint32_t msglength_b){ /* a one-shot*/
 	sha256_ctx_t s;
 	uint8_t i;
 	uint8_t buffer[HMAC_SHA256_BLOCK_BYTES];

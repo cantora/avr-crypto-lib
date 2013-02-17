@@ -37,9 +37,9 @@
 #include "hfal-test.h"
 #include "shavs.h"
 
-char* algo_name = "TWISTER";
+char *algo_name = "TWISTER";
 
-const hfdesc_t* const algolist[] PROGMEM = {
+const hfdesc_t *const algolist[] PROGMEM = {
 	(hfdesc_t*)&twister224_desc,
 	(hfdesc_t*)&twister256_desc,
 	(hfdesc_t*)&twister384_desc,
@@ -60,27 +60,27 @@ void testrun_nessie_twister(void){
  *
  *****************************************************************************/
 
-void test_twister224( void* msg, uint32_t length_b){
+void test_twister224( void *msg, uint32_t length_b){
 	hfal_test(&twister224_desc, msg, length_b);
 }
 
-void test_twister256( void* msg, uint32_t length_b){
+void test_twister256( void *msg, uint32_t length_b){
 	hfal_test(&twister256_desc, msg, length_b);
 }
 
-void test_twister384( void* msg, uint32_t length_b){
+void test_twister384( void *msg, uint32_t length_b){
 	hfal_test(&twister384_desc, msg, length_b);
 }
 
-void test_twister512( void* msg, uint32_t length_b){
+void test_twister512( void *msg, uint32_t length_b){
 	hfal_test(&twister512_desc, msg, length_b);
 }
 
 void testrun_twister(void){
-	const hfdesc_t* desc[4] = { &twister224_desc, &twister256_desc,
+	const hfdesc_t *desc[4] = { &twister224_desc, &twister256_desc,
 	                            &twister384_desc, &twister512_desc };
 	uint8_t i,j; 
-	char* testv[]={
+	char *testv[]={
 		"", 
 		"a", 
 		"abc", 

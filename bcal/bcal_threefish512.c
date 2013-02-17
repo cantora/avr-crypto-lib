@@ -36,7 +36,7 @@ const char threefish512_str[]   PROGMEM = "Threefish-512";
 const uint8_t threefish512_keysize_desc[] PROGMEM = { KS_TYPE_LIST, 1, KS_INT(512),
                                                 KS_TYPE_TERMINATOR    };
 
-static void threefish512_dummy_init(void* key, void* ctx){
+static void threefish512_dummy_init(void *key, void *ctx){
 	threefish512_init(key, NULL, ctx);
 }
 

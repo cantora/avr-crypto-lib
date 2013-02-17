@@ -40,7 +40,7 @@
  * \param buffer pointer to the block to encrypt
  * \param ctx    pointer to the key schedule
  */
-void aes128_enc(void* buffer, aes128_ctx_t* ctx);
+void aes128_enc(void *buffer, aes128_ctx_t *ctx);
 
 
 

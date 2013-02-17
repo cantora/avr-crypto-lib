@@ -30,7 +30,7 @@
 #include "cli.h"
 #endif
 
-void rsa_enc(bigint_t* data, const rsa_publickey_t* key){
+void rsa_enc(bigint_t *data, const rsa_publickey_t *key){
 /*
 	cli_putstr_P(PSTR("\r\n -->rsa_enc()\r\n m = "));
 	bigint_print_hex(data);
@@ -50,7 +50,7 @@ h = (m1 - m2) * qinv % p
 m = m2 + q * h
 */
 
-uint8_t rsa_dec_crt_mono(bigint_t* data, const rsa_privatekey_t* key){
+uint8_t rsa_dec_crt_mono(bigint_t *data, const rsa_privatekey_t *key){
 	bigint_t m1, m2;
 	m1.wordv = malloc((key->components[0].length_W /* + 1 */) * sizeof(bigint_word_t));
 	m2.wordv = malloc((key->components[1].length_W /* + 1 */) * sizeof(bigint_word_t));
@@ -160,7 +160,7 @@ uint8_t rsa_dec_crt_mono(bigint_t* data, const rsa_privatekey_t* key){
 	return 0;
 }
 
-uint8_t rsa_dec(bigint_t* data, const rsa_privatekey_t* key){
+uint8_t rsa_dec(bigint_t *data, const rsa_privatekey_t *key){
 	if(key->n == 1){
 		bigint_expmod_u(data, data, &(key->components[0]), &key->modulus);
 		return 0;
@@ -178,7 +178,7 @@ uint8_t rsa_dec(bigint_t* data, const rsa_privatekey_t* key){
 	return 2;
 }
 
-void rsa_os2ip(bigint_t* dest, const void* data, uint32_t length_B){
+void rsa_os2ip(bigint_t *dest, const void *data, uint32_t length_B){
 #if BIGINT_WORD_SIZE == 8
 	if(data){
 		memcpy(dest->wordv, data, length_B);
@@ -214,7 +214,7 @@ void rsa_os2ip(bigint_t* dest, const void* data, uint32_t length_B){
 	bigint_adjust(dest);
 }
 
-void rsa_i2osp(void* dest, bigint_t* src, uint16_t* out_length_B){
+void rsa_i2osp(void *dest, bigint_t *src, uint16_t *out_length_B){
 #if BIGINT_WORD_SIZE == 8
 	if(dest){
 		uint8_t *e = src->wordv + src->length_W;

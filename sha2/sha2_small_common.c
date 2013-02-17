@@ -75,7 +75,7 @@ uint32_t k[] PROGMEM = {
 /**
  * block must be, 512, Bit = 64, Byte, long !!!
  */
-void sha2_small_common_nextBlock (sha2_small_common_ctx_t *state, const void* block){
+void sha2_small_common_nextBlock (sha2_small_common_ctx_t *state, const void *block){
 	uint32_t w[16], wx;
 	uint8_t  i;
 	uint32_t a[8],t1,t2;
@@ -120,7 +120,7 @@ void sha2_small_common_nextBlock (sha2_small_common_ctx_t *state, const void* bl
 }
 
 
-void sha2_small_common_lastBlock(sha2_small_common_ctx_t *state, const void* block, uint16_t length_b){
+void sha2_small_common_lastBlock(sha2_small_common_ctx_t *state, const void *block, uint16_t length_b){
 	uint8_t lb[512/8]; /* local block */
 	uint64_t len;
 	while(length_b>=512){

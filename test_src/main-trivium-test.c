@@ -29,7 +29,7 @@
 #include "scal-nessie.h"
 #include "performance_test.h"
 
-char* algo_name = "Trivium";
+char *algo_name = "Trivium";
 
 /*****************************************************************************
  *  additional validation-functions											 *

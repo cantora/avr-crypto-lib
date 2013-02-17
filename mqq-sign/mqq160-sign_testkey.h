@@ -37,6 +37,6 @@ RP1[] and RP5[] of 160 uint8_ts.
 */
 extern const mqq160_sign_key_t testkey_P;
 
-void mqq_load_pgm_key(void* buffer, mqq160_sign_key_t* key, const mqq160_sign_key_t* key_P);
+void mqq_load_pgm_key(void *buffer, mqq160_sign_key_t *key, const mqq160_sign_key_t *key_P);
 
 #endif /* MQQ160SIGN_TESTKEY_H_ */

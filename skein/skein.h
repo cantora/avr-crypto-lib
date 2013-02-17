@@ -45,32 +45,32 @@ typedef struct{
 	 ubi256_ctx_t ubictx;
 }skein256_ctx_t;
 
-void skein256_init(skein256_ctx_t* ctx, uint16_t outsize_b);
-void skein256_nextBlock(skein256_ctx_t* ctx, const void* block);
-void skein256_lastBlock(skein256_ctx_t* ctx, const void* block, uint16_t length_b);
-void skein256_ctx2hash(void* dest, skein256_ctx_t* ctx);
-void skein256(void* dest, uint16_t outlength_b, const void* msg, uint32_t length_b);
+void skein256_init(skein256_ctx_t *ctx, uint16_t outsize_b);
+void skein256_nextBlock(skein256_ctx_t *ctx, const void *block);
+void skein256_lastBlock(skein256_ctx_t *ctx, const void *block, uint16_t length_b);
+void skein256_ctx2hash(void *dest, skein256_ctx_t *ctx);
+void skein256(void *dest, uint16_t outlength_b, const void *msg, uint32_t length_b);
 
 typedef struct{
 	 uint16_t outsize_b;
 	 ubi512_ctx_t ubictx;
 }skein512_ctx_t;
 
-void skein512_init(skein512_ctx_t* ctx, uint16_t outsize_b);
-void skein512_nextBlock(skein512_ctx_t* ctx, const void* block);
-void skein512_lastBlock(skein512_ctx_t* ctx, const void* block, uint16_t length_b);
-void skein512_ctx2hash(void* dest, skein512_ctx_t* ctx);
-void skein512(void* dest, uint16_t outlength_b, const void* msg, uint32_t length_b);
+void skein512_init(skein512_ctx_t *ctx, uint16_t outsize_b);
+void skein512_nextBlock(skein512_ctx_t *ctx, const void *block);
+void skein512_lastBlock(skein512_ctx_t *ctx, const void *block, uint16_t length_b);
+void skein512_ctx2hash(void *dest, skein512_ctx_t *ctx);
+void skein512(void *dest, uint16_t outlength_b, const void *msg, uint32_t length_b);
 
 typedef struct{
 	 uint16_t outsize_b;
 	 ubi1024_ctx_t ubictx;
 }skein1024_ctx_t;
 
-void skein1024_init(skein1024_ctx_t* ctx, uint16_t outsize_b);
-void skein1024_nextBlock(skein1024_ctx_t* ctx, const void* block);
-void skein1024_lastBlock(skein1024_ctx_t* ctx, const void* block, uint16_t length_b);
-void skein1024_ctx2hash(void* dest, skein1024_ctx_t* ctx);
-void skein1024(void* dest, uint16_t outlength_b, const void* msg, uint32_t length_b);
+void skein1024_init(skein1024_ctx_t *ctx, uint16_t outsize_b);
+void skein1024_nextBlock(skein1024_ctx_t *ctx, const void *block);
+void skein1024_lastBlock(skein1024_ctx_t *ctx, const void *block, uint16_t length_b);
+void skein1024_ctx2hash(void *dest, skein1024_ctx_t *ctx);
+void skein1024(void *dest, uint16_t outlength_b, const void *msg, uint32_t length_b);
 
 #endif /* SKEIN_H_ */

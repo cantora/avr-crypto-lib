@@ -40,9 +40,9 @@
 #include "sha512.h"
 #include "hfal_sha512.h"
 
-const char* algo_name = "SHA-2";
+const char *algo_name = "SHA-2";
 
-const hfdesc_t* const algolist[] PROGMEM = {
+const hfdesc_t *const algolist[] PROGMEM = {
 	(hfdesc_t*)&sha224_desc,
 	(hfdesc_t*)&sha256_desc,
 	(hfdesc_t*)&sha384_desc,

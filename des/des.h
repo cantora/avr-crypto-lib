@@ -31,17 +31,17 @@
  * Also we only implement the three key mode  */
 
 /** \def tdea_enc
- * \brief defining an alias for void tdes_enc(void* out, const void* in, const void* key)
+ * \brief defining an alias for void tdes_enc(void *out, const void *in, const void *key)
  */
 
 /** \def tdea_dec
- * \brief defining an alias for void tdes_dec(void* out, const void* in, const void* key)
+ * \brief defining an alias for void tdes_dec(void *out, const void *in, const void *key)
  */
 
 #define tdea_enc tdes_enc
 #define tdea_dec tdes_dec
 
-/** \fn void des_enc(void* out, const void* in, const void* key)
+/** \fn void des_enc(void *out, const void *in, const void *key)
  * \brief encrypt a block with DES
  * 
  * This function encrypts a block of 64 bits (8 bytes) with the DES algorithm.
@@ -53,9 +53,9 @@
  * \param in  pointer to the block (64 bit = 8 byte) where the plaintext is read from
  * \param key pointer to the key (64 bit = 8 byte)
  */
-void des_enc(void* out, const void* in, const void* key);
+void des_enc(void *out, const void *in, const void *key);
 
-/** \fn void des_dec(void* out, const void* in, const void* key)
+/** \fn void des_dec(void *out, const void *in, const void *key)
  * \brief decrypt a block with DES
  * 
  * This function decrypts a block of 64 bits (8 bytes) with the DES algorithm.
@@ -67,9 +67,9 @@ void des_enc(void* out, const void* in, const void* key);
  * \param in  pointer to the block (64 bit = 8 byte) where the ciphertext is read from
  * \param key pointer to the key (64 bit = 8 byte)
  */
-void des_dec(void* out, const void* in, const void* key);
+void des_dec(void *out, const void *in, const void *key);
 
-/** \fn void tdes_enc(void* out, const void* in, const void* key)
+/** \fn void tdes_enc(void *out, const void *in, const void *key)
  * \brief encrypt a block with Tripple-DES
  * 
  * This function encrypts a block of 64 bits (8 bytes) with the Tripple-DES (EDE)
@@ -81,9 +81,9 @@ void des_dec(void* out, const void* in, const void* key);
  * \param in  pointer to the block (64 bit = 8 byte) where the plaintext is read from
  * \param key pointer to the key (192 bit = 24 byte)
  */
-void tdes_enc(void* out, const void* in, const void* key);
+void tdes_enc(void *out, const void *in, const void *key);
 
-/** \fn void tdes_dec(void* out, const void* in, const void* key)
+/** \fn void tdes_dec(void *out, const void *in, const void *key)
  * \brief decrypt a block with Tripple-DES
  * 
  * This function decrypts a block of 64 bits (8 bytes) with the Tripple-DES (EDE)
@@ -95,6 +95,6 @@ void tdes_enc(void* out, const void* in, const void* key);
  * \param in  pointer to the block (64 bit = 8 byte) where the ciphertext is read from
  * \param key pointer to the key (192 bit = 24 byte)
  */
- void tdes_dec(void* out, const void* in, const void* key);
+ void tdes_dec(void *out, const void *in, const void *key);
 
 #endif /*DES_H_*/

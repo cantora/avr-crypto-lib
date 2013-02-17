@@ -27,6 +27,6 @@ void scal_nessie_set_estream(uint8_t v);
 uint8_t scal_nessie_get_estream(void);
 
 void scal_nessie_stream_run(const scdesc_t *desc, uint16_t keysize_b, uint16_t ivsize_b);
-void scal_nessie_run(const scdesc_t* desc);
+void scal_nessie_run(const scdesc_t *desc);
 
 #endif /* SCALNESSIE_H_ */

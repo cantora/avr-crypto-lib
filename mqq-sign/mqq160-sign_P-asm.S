@@ -28,7 +28,7 @@
 #include "avr-asm-macros.S"
 
 #if 0
-static void mqq_inv_affine_transformation(uint8_t* input_bytes, uint8_t* result, const mqq160_sign_key_t* key){
+static void mqq_inv_affine_transformation(uint8_t *input_bytes, uint8_t *result, const mqq160_sign_key_t *key){
 	/* The matrix SInv is given as two permutations of 160 elements. */
 	uint8_t j, byteindex, bitindex, bitindex_d, byteindex_d, rp1, rp5;
 	uint8_t *r1_ptr, *r5_ptr;

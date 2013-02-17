@@ -67,7 +67,7 @@ typedef struct {
  * \brief SHA-256 hash value type
  * 
  * A variable of this type may hold the hash value produced by the
- * sha256_ctx2hash(sha256_hash_t* dest, const sha256_ctx_t* state) function.
+ * sha256_ctx2hash(sha256_hash_t *dest, const sha256_ctx_t *state) function.
  */
 typedef uint8_t sha256_hash_t[SHA256_HASH_BYTES];
 
@@ -79,7 +79,7 @@ typedef uint8_t sha256_hash_t[SHA256_HASH_BYTES];
  */
 void sha256_init(sha256_ctx_t *state);
 
-/** \fn void sha256_nextBlock (sha256_ctx_t* state, const void* block)
+/** \fn void sha256_nextBlock (sha256_ctx_t *state, const void *block)
  * \brief update the context with a given block
  * 
  * This function updates the SHA-256 hash context by processing the given block
@@ -87,9 +87,9 @@ void sha256_init(sha256_ctx_t *state);
  * \param state pointer to the SHA-256 hash context
  * \param block pointer to the block of fixed length (512 bit = 64 byte)
  */
-void sha256_nextBlock (sha256_ctx_t* state, const void* block);
+void sha256_nextBlock (sha256_ctx_t *state, const void *block);
 
-/** \fn void sha256_lastBlock(sha256_ctx_t* state, const void* block, uint16_t length_b)
+/** \fn void sha256_lastBlock(sha256_ctx_t *state, const void *block, uint16_t length_b)
  * \brief finalize the context with the given block 
  * 
  * This function finalizes the SHA-256 hash context by processing the given block
@@ -98,17 +98,17 @@ void sha256_nextBlock (sha256_ctx_t* state, const void* block);
  * \param block pointer to the block of fixed length (512 bit = 64 byte)
  * \param length_b the length of the block in bits
  */
-void sha256_lastBlock(sha256_ctx_t* state, const void* block, uint16_t length_b);
+void sha256_lastBlock(sha256_ctx_t *state, const void *block, uint16_t length_b);
 
-/** \fn void sha256_ctx2hash(sha256_hash_t* dest, const sha256_ctx_t* state)
+/** \fn void sha256_ctx2hash(sha256_hash_t *dest, const sha256_ctx_t *state)
  * \brief convert the hash state into the hash value
  * This function reads the context and writes the hash value to the destination
  * \param dest pointer to the location where the hash value should be written
  * \param state pointer to the SHA-256 hash context
  */
-void sha256_ctx2hash(sha256_hash_t* dest, const sha256_ctx_t* state);
+void sha256_ctx2hash(sha256_hash_t *dest, const sha256_ctx_t *state);
 
-/** \fn void sha256(sha256_hash_t* dest, const void* msg, uint32_t length_b)
+/** \fn void sha256(sha256_hash_t *dest, const void *msg, uint32_t length_b)
  * \brief simple SHA-256 hashing function for direct hashing
  * 
  * This function automaticaly hashes a given message of arbitary length with
@@ -117,6 +117,6 @@ void sha256_ctx2hash(sha256_hash_t* dest, const sha256_ctx_t* state);
  * \param msg pointer to the message thats going to be hashed
  * \param length_b length of the message in bits
  */
-void sha256(sha256_hash_t* dest, const void* msg, uint32_t length_b);
+void sha256(sha256_hash_t *dest, const void *msg, uint32_t length_b);
 
 #endif /*SHA256_H_*/

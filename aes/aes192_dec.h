@@ -39,7 +39,7 @@
  * \param buffer pointer to the block to decrypt
  * \param ctx    pointer to the key schedule
  */
-void aes192_dec(void* buffer, aes192_ctx_t* ctx);
+void aes192_dec(void *buffer, aes192_ctx_t *ctx);
 
 
 

@@ -49,7 +49,7 @@ void printvalue(unsigned long v){
 	cli_putstr(str);
 }
 
-void hfal_performance(const hfdesc_t* hd){
+void hfal_performance(const hfdesc_t *hd){
 	hfdesc_t hf;
 	memcpy_P(&hf, hd, sizeof(hfdesc_t));
 	uint8_t ctx[hf.ctxsize_B];
@@ -131,7 +131,7 @@ void hfal_performance(const hfdesc_t* hd){
 	}
 }
 
-void hfal_stacksize(const hfdesc_t* hd){
+void hfal_stacksize(const hfdesc_t *hd){
 	hfdesc_t hf;
 	stack_measuring_ctx_t smctx;
 	memcpy_P(&hf, hd, sizeof(hfdesc_t));
@@ -203,8 +203,8 @@ void hfal_stacksize(const hfdesc_t* hd){
 	}
 }
 
-void hfal_performance_multiple(const hfdesc_t* const* hd_list){
-	const hfdesc_t* hd;
+void hfal_performance_multiple(const hfdesc_t *const *hd_list){
+	const hfdesc_t *hd;
 	for(;;){
 		hd = (void*)pgm_read_word(hd_list);
 		if(!hd){

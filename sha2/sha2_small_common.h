@@ -25,7 +25,7 @@ typedef struct {
 	uint32_t length;
 } sha2_small_common_ctx_t;
 
-void sha2_small_common_nextBlock(sha2_small_common_ctx_t* state, const void* block);
-void sha2_small_common_lastBlock(sha2_small_common_ctx_t* state, const void* block, uint16_t length_b);
+void sha2_small_common_nextBlock(sha2_small_common_ctx_t *state, const void *block);
+void sha2_small_common_lastBlock(sha2_small_common_ctx_t *state, const void *block, uint16_t length_b);
 
 #endif /* SHA2_SMALL_COMMON_H_ */

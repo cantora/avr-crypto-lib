@@ -438,7 +438,7 @@ twister_ctx2hash:
 
 
 /*********************************************************************/
-/* void twister_small_nextBlock(twister_state_t* ctx, void* msg) */   
+/* void twister_small_nextBlock(twister_state_t *ctx, void *msg) */   
 /*
  * param ctx: r24:r25
  * param msg: r22:r23

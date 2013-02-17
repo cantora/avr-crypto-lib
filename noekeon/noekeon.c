@@ -39,7 +39,7 @@
 #define RC_POS 0
 
 static
-void gamma_1(uint32_t* a){
+void gamma_1(uint32_t *a){
 	uint32_t tmp;
 	
 	a[1] ^= ~((a[3]) | (a[2]));
@@ -56,21 +56,21 @@ void gamma_1(uint32_t* a){
 #define ROTR32(a,n) (((a)>>n)|((a)<<(32-n)))
 
 static
-void pi1(uint32_t* a){
+void pi1(uint32_t *a){
 	a[1] = ROTL32(a[1], 1);
 	a[2] = ROTL32(a[2], 5);
 	a[3] = ROTL32(a[3], 2);
 }
 
 static
-void pi2(uint32_t* a){
+void pi2(uint32_t *a){
 	a[1] = ROTR32(a[1], 1);
 	a[2] = ROTR32(a[2], 5);
 	a[3] = ROTR32(a[3], 2);
 }
 
 static
-void theta(const uint32_t* k, uint32_t* a){
+void theta(const uint32_t *k, uint32_t *a){
 	uint32_t temp;
 
 	temp = a[0] ^ a[2]; temp ^= ROTR32(temp, 8) ^ ROTL32(temp, 8);
@@ -89,7 +89,7 @@ void theta(const uint32_t* k, uint32_t* a){
 }
 
 static 
-void noekeon_round(uint32_t* key, uint32_t* state, uint8_t const1, uint8_t const2){
+void noekeon_round(uint32_t *key, uint32_t *state, uint8_t const1, uint8_t const2){
 	((uint8_t*)state)[RC_POS] ^= const1;
 	theta(key, state);
 	((uint8_t*)state)[RC_POS] ^= const2;
@@ -114,7 +114,7 @@ const uint8_t rc_tab[]
 */
 
 static
-void changendian32(void* a){
+void changendian32(void *a){
 	((uint8_t*)a)[0] ^= ((uint8_t*)a)[3];
 	((uint8_t*)a)[3] ^= ((uint8_t*)a)[0];
 	((uint8_t*)a)[0] ^= ((uint8_t*)a)[3];
@@ -125,7 +125,7 @@ void changendian32(void* a){
 }
 
 static
-void changendian(void* a){
+void changendian(void *a){
 	changendian32((uint32_t*)(&(((uint32_t*)a)[0])));
 	changendian32((uint32_t*)(&(((uint32_t*)a)[1])));
 	changendian32((uint32_t*)(&(((uint32_t*)a)[2])));
@@ -134,7 +134,7 @@ void changendian(void* a){
 
 /******************************************************************************/
 
-void noekeon_enc(void* buffer, const void* key){
+void noekeon_enc(void *buffer, const void *key){
 	uint8_t rc=0x80;
 	uint8_t keyb[16];
 	int8_t i;
@@ -158,7 +158,7 @@ void noekeon_enc(void* buffer, const void* key){
 }
 
 
-void noekeon_dec(void* buffer, const void* key){
+void noekeon_dec(void *buffer, const void *key){
 	uint8_t rc;
 	int8_t i;
 	uint8_t nullv[16];
@@ -189,7 +189,7 @@ void noekeon_dec(void* buffer, const void* key){
 	changendian(buffer);
 }
 
-void noekeon_init(const void* key, noekeon_ctx_t* ctx){
+void noekeon_init(const void *key, noekeon_ctx_t *ctx){
 	uint8_t nullv[16];
 	
 	memset(nullv, 0, 16);

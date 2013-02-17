@@ -33,10 +33,10 @@ typedef sha2_large_common_ctx_t sha384_ctx_t;
 
 
 void sha384_init(sha384_ctx_t *ctx);
-void sha384_nextBlock (sha384_ctx_t* ctx, const void* block);
-void sha384_lastBlock(sha384_ctx_t* ctx, const void* block, uint16_t length_b);
-void sha384_ctx2hash(void* dest, const sha384_ctx_t* ctx);
-void sha384(void* dest, const void* msg, uint32_t length_b);
+void sha384_nextBlock (sha384_ctx_t *ctx, const void *block);
+void sha384_lastBlock(sha384_ctx_t *ctx, const void *block, uint16_t length_b);
+void sha384_ctx2hash(void *dest, const sha384_ctx_t *ctx);
+void sha384(void *dest, const void *msg, uint32_t length_b);
 
 
 #endif /* SHA384_H_ */

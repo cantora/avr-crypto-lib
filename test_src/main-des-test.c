@@ -31,9 +31,9 @@
 #include "bcal_tdes.h"
 #include "bcal_tdes2.h"
 
-char* algo_name = "DES";
+char *algo_name = "DES";
 
-const bcdesc_t* const algolist[] PROGMEM = {
+const bcdesc_t *const algolist[] PROGMEM = {
 	(bcdesc_t*)&des_desc,
 	(bcdesc_t*)&tdes2_desc,
 	(bcdesc_t*)&tdes_desc,
@@ -43,12 +43,12 @@ const bcdesc_t* const algolist[] PROGMEM = {
  *  additional validation-functions											 *
  *****************************************************************************/
 
-void testrun_nessie_des(const char* param){
+void testrun_nessie_des(const char *param){
 	if(!param){
 		bcal_nessie_multiple(algolist);
 	}else{
 		uint8_t i=0;
-		bcdesc_t* ptr;
+		bcdesc_t *ptr;
 		for(;;){
 			ptr = (bcdesc_t*)pgm_read_word(&algolist[i++]);
 			if(ptr == NULL){

@@ -33,9 +33,9 @@
 #include "hfal_sha1.h"
 #include "dump.h"
 
-char* algo_name = "SHA-1";
+char *algo_name = "SHA-1";
 
-const hfdesc_t* const algolist[] PROGMEM = {
+const hfdesc_t *const algolist[] PROGMEM = {
 	(hfdesc_t*)&sha1_desc,
 	NULL
 };

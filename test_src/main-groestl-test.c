@@ -34,10 +34,10 @@
 #include "nessie_hash_test.h"
 #include "performance_test.h"
 
-char* algo_name = "Groestl";
+char *algo_name = "Groestl";
 
 
-const hfdesc_t* const algolist[] PROGMEM = {
+const hfdesc_t *const algolist[] PROGMEM = {
 	(hfdesc_t*)&groestl224_desc,
 	(hfdesc_t*)&groestl256_desc,
 	(hfdesc_t*)&groestl384_desc,
@@ -52,19 +52,19 @@ const hfdesc_t* const algolist[] PROGMEM = {
 void testrun_nessie_groestl(void){
 	hfal_nessie_multiple(algolist);
 }
-void groestl224_test(void* msg, uint32_t length_b){
+void groestl224_test(void *msg, uint32_t length_b){
 	hfal_test(&groestl224_desc, msg, length_b);
 }
 
-void groestl256_test(void* msg, uint32_t length_b){
+void groestl256_test(void *msg, uint32_t length_b){
 	hfal_test(&groestl256_desc, msg, length_b);
 }
 
-void groestl384_test(void* msg, uint32_t length_b){
+void groestl384_test(void *msg, uint32_t length_b){
 	hfal_test(&groestl384_desc, msg, length_b);
 }
 
-void groestl512_test(void* msg, uint32_t length_b){
+void groestl512_test(void *msg, uint32_t length_b){
 	hfal_test(&groestl512_desc, msg, length_b);
 }
 

@@ -29,9 +29,9 @@
 #include "bcal-performance.h"
 #include "bcal_noekeon.h"
 
-char* algo_name = "Noekeon";
+char *algo_name = "Noekeon";
 
-const bcdesc_t* const algolist[] PROGMEM = {
+const bcdesc_t *const algolist[] PROGMEM = {
 	(bcdesc_t*)&noekeon_direct_desc,
 	(bcdesc_t*)&noekeon_indirect_desc,
 	NULL
@@ -45,7 +45,7 @@ void testrun_nessie_noekeon(void){
 }
 
 
-void testrun_stdtest_rundirect(void* data, void* key){
+void testrun_stdtest_rundirect(void *data, void *key){
 	cli_putstr_P(PSTR("\r\n                     "));
 	cli_putstr_P(PSTR("k = "));
 	cli_hexdump(key,16);
@@ -64,7 +64,7 @@ void testrun_stdtest_rundirect(void* data, void* key){
 	cli_putstr_P(PSTR("\r\n"));
 }
 
-void testrun_stdtest_runindirect(void* data, void* key){
+void testrun_stdtest_runindirect(void *data, void *key){
 	noekeon_ctx_t ctx;
 	cli_putstr_P(PSTR("\r\n                     "));
 	cli_putstr_P(PSTR("k = "));

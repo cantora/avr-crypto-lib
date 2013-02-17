@@ -41,15 +41,15 @@ typedef union __attribute__((packed)){
 } ecc_combi_point_t;
 
 typedef struct {
-    bigint_t* p;
-    bigint_t* b;
+    bigint_t *p;
+    bigint_t *b;
     int (*reduce_p)(bigint_t*);
 } ecc_curve_sp_t;
 
 
-uint8_t ecc_chudnovsky_point_alloc(ecc_chudnovsky_point_t* p, size_t length_B);
+uint8_t ecc_chudnovsky_point_alloc(ecc_chudnovsky_point_t *p, size_t length_B);
 
-void ecc_chudnovsky_point_free(ecc_chudnovsky_point_t* p);
+void ecc_chudnovsky_point_free(ecc_chudnovsky_point_t *p);
 
 void ecc_chudnovsky_point_print(const ecc_chudnovsky_point_t *p);
 
@@ -71,15 +71,15 @@ uint8_t ecc_chudnovsky_point_add_sp(ecc_chudnovsky_point_t *dest,
 uint8_t ecc_chudnovsky_double_and_add(ecc_chudnovsky_point_t *dest,
                                       const bigint_t *k,
                                       const ecc_chudnovsky_point_t *p,
-                                      const ecc_curve_sp_t* curve);
-uint8_t bigint_to_naf(uint8_t* dest, uint16_t *length, const bigint_t *src);
+                                      const ecc_curve_sp_t *curve);
+uint8_t bigint_to_naf(uint8_t *dest, uint16_t *length, const bigint_t *src);
 uint8_t ecc_chudnovsky_naf_multiplication(ecc_chudnovsky_point_t *dest,
                                           const bigint_t *k,
                                           const ecc_chudnovsky_point_t *p,
-                                          const ecc_curve_sp_t* curve);
+                                          const ecc_curve_sp_t *curve);
 uint8_t ecc_chudnovsky_multiplication(ecc_chudnovsky_point_t *dest,
                                       const bigint_t *k,
                                       const ecc_chudnovsky_point_t *p,
-                                      const ecc_curve_sp_t* curve);
+                                      const ecc_curve_sp_t *curve);
 
 #endif /* ECC_H_ */

@@ -61,7 +61,7 @@
 #define GET_SIGN(a) ((a)->info&BIGINT_NEG_MASK)
 
 /******************************************************************************/
-void bigint_adjust(bigint_t* a){
+void bigint_adjust(bigint_t *a){
 	while(a->length_W!=0 && a->wordv[a->length_W-1]==0){
 		a->length_W--;
 	}
@@ -81,7 +81,7 @@ void bigint_adjust(bigint_t* a){
 
 /******************************************************************************/
 
-uint16_t bigint_length_b(const bigint_t* a){
+uint16_t bigint_length_b(const bigint_t *a){
 	if(!a->length_W || a->length_W==0){
 		return 0;
 	}
@@ -90,13 +90,13 @@ uint16_t bigint_length_b(const bigint_t* a){
 
 /******************************************************************************/
 
-uint16_t bigint_length_B(const bigint_t* a){
+uint16_t bigint_length_B(const bigint_t *a){
 	return a->length_W * sizeof(bigint_word_t);
 }
 
 /******************************************************************************/
 
-uint32_t bigint_get_first_set_bit(const bigint_t* a){
+uint32_t bigint_get_first_set_bit(const bigint_t *a){
 	if(a->length_W==0){
 		return (uint32_t)(-1);
 	}
@@ -106,7 +106,7 @@ uint32_t bigint_get_first_set_bit(const bigint_t* a){
 
 /******************************************************************************/
 
-uint32_t bigint_get_last_set_bit(const bigint_t* a){
+uint32_t bigint_get_last_set_bit(const bigint_t *a){
 	uint32_t r=0;
 	uint8_t b=0;
 	bigint_word_t x=1;
@@ -128,7 +128,7 @@ uint32_t bigint_get_last_set_bit(const bigint_t* a){
 
 /******************************************************************************/
 
-void bigint_copy(bigint_t* dest, const bigint_t* src){
+void bigint_copy(bigint_t *dest, const bigint_t *src){
     if(dest->wordv != src->wordv){
 	    memcpy(dest->wordv, src->wordv, src->length_W * sizeof(bigint_word_t));
     }
@@ -139,7 +139,7 @@ void bigint_copy(bigint_t* dest, const bigint_t* src){
 /******************************************************************************/
 
 /* this should be implemented in assembly */
-void bigint_add_u(bigint_t* dest, const bigint_t* a, const bigint_t* b){
+void bigint_add_u(bigint_t *dest, const bigint_t *a, const bigint_t *b){
 	uint16_t i;
 	bigint_wordplus_t t = 0LL;
 	if(a->length_W < b->length_W){
@@ -167,7 +167,7 @@ void bigint_add_u(bigint_t* dest, const bigint_t* a, const bigint_t* b){
 /******************************************************************************/
 
 /* this should be implemented in assembly */
-void bigint_add_scale_u(bigint_t* dest, const bigint_t* a, uint16_t scale){
+void bigint_add_scale_u(bigint_t *dest, const bigint_t *a, uint16_t scale){
 	if(a->length_W == 0){
 		return;
 	}
@@ -218,7 +218,7 @@ void bigint_add_scale_u(bigint_t* dest, const bigint_t* a, uint16_t scale){
 /******************************************************************************/
 
 /* this should be implemented in assembly */
-void bigint_sub_u(bigint_t* dest, const bigint_t* a, const bigint_t* b){
+void bigint_sub_u(bigint_t *dest, const bigint_t *a, const bigint_t *b){
 	int8_t borrow=0;
 	int8_t  r;
 	bigint_wordplus_signed_t t=0LL;
@@ -263,7 +263,7 @@ void bigint_sub_u(bigint_t* dest, const bigint_t* a, const bigint_t* b){
 
 /******************************************************************************/
 
-int8_t bigint_cmp_u(const bigint_t* a, const bigint_t* b){
+int8_t bigint_cmp_u(const bigint_t *a, const bigint_t *b){
 	if(a->length_W > b->length_W){
 		return 1;
 	}
@@ -289,7 +289,7 @@ int8_t bigint_cmp_u(const bigint_t* a, const bigint_t* b){
 
 /******************************************************************************/
 
-void bigint_add_s(bigint_t* dest, const bigint_t* a, const bigint_t* b){
+void bigint_add_s(bigint_t *dest, const bigint_t *a, const bigint_t *b){
 	uint8_t s;
 	s  = GET_SIGN(a)?2:0;
 	s |= GET_SIGN(b)?1:0;
@@ -315,7 +315,7 @@ void bigint_add_s(bigint_t* dest, const bigint_t* a, const bigint_t* b){
 
 /******************************************************************************/
 
-void bigint_sub_s(bigint_t* dest, const bigint_t* a, const bigint_t* b){
+void bigint_sub_s(bigint_t *dest, const bigint_t *a, const bigint_t *b){
 	uint8_t s;
 	s  = GET_SIGN(a)?2:0;
 	s |= GET_SIGN(b)?1:0;
@@ -342,7 +342,7 @@ void bigint_sub_s(bigint_t* dest, const bigint_t* a, const bigint_t* b){
 
 /******************************************************************************/
 
-int8_t bigint_cmp_s(const bigint_t* a, const bigint_t* b){
+int8_t bigint_cmp_s(const bigint_t *a, const bigint_t *b){
 	uint8_t s;
 	if(a->length_W==0 && b->length_W==0){
 		return 0;
@@ -370,7 +370,7 @@ int8_t bigint_cmp_s(const bigint_t* a, const bigint_t* b){
 
 /******************************************************************************/
 
-void bigint_shiftleft(bigint_t* a, uint16_t shift){
+void bigint_shiftleft(bigint_t *a, uint16_t shift){
 	uint16_t byteshift, words_to_shift;
 	int16_t i;
 	uint8_t bitshift;
@@ -408,7 +408,7 @@ void bigint_shiftleft(bigint_t* a, uint16_t shift){
 
 /******************************************************************************/
 
-void bigint_shiftright(bigint_t* a, uint16_t shift){
+void bigint_shiftright(bigint_t *a, uint16_t shift){
 	uint16_t byteshift;
 	uint16_t i;
 	uint8_t bitshift;
@@ -445,7 +445,7 @@ void bigint_shiftright(bigint_t* a, uint16_t shift){
 
 /******************************************************************************/
 
-void bigint_xor(bigint_t* dest, const bigint_t* a){
+void bigint_xor(bigint_t *dest, const bigint_t *a){
 	uint16_t i;
 	for(i=0; i<a->length_W; ++i){
 		dest->wordv[i] ^= a->wordv[i];
@@ -455,7 +455,7 @@ void bigint_xor(bigint_t* dest, const bigint_t* a){
 
 /******************************************************************************/
 
-void bigint_set_zero(bigint_t* a){
+void bigint_set_zero(bigint_t *a){
 	a->length_W=0;
 }
 
@@ -463,7 +463,7 @@ void bigint_set_zero(bigint_t* a){
 
 /* using the Karatsuba-Algorithm */
 /* x*y = (xh*yh)*b**2n + ((xh+xl)*(yh+yl) - xh*yh - xl*yl)*b**n + yh*yl */
-void bigint_mul_u(bigint_t* dest, const bigint_t* a, const bigint_t* b){
+void bigint_mul_u(bigint_t *dest, const bigint_t *a, const bigint_t *b){
 	if(a->length_W == 0 || b->length_W == 0){
 		bigint_set_zero(dest);
 		return;
@@ -564,7 +564,7 @@ void bigint_mul_u(bigint_t* dest, const bigint_t* a, const bigint_t* b){
 
 /******************************************************************************/
 
-void bigint_mul_s(bigint_t* dest, const bigint_t* a, const bigint_t* b){
+void bigint_mul_s(bigint_t *dest, const bigint_t *a, const bigint_t *b){
 	uint8_t s;
 	s  = GET_SIGN(a)?2:0;
 	s |= GET_SIGN(b)?1:0;
@@ -599,7 +599,7 @@ unsigned square_depth = 0;
 
 /* square */
 /* (xh*b^n+xl)^2 = xh^2*b^2n + 2*xh*xl*b^n + xl^2 */
-void bigint_square(bigint_t* dest, const bigint_t* a){
+void bigint_square(bigint_t *dest, const bigint_t *a){
 	if(a->length_W * sizeof(bigint_word_t) <= 4){
 		uint64_t r = 0;
 		memcpy(&r, a->wordv, a->length_W * sizeof(bigint_word_t));
@@ -684,7 +684,7 @@ void bigint_square(bigint_t* dest, const bigint_t* a){
 
 /******************************************************************************/
 
-void bigint_sub_u_bitscale(bigint_t* a, const bigint_t* b, uint16_t bitscale){
+void bigint_sub_u_bitscale(bigint_t *a, const bigint_t *b, uint16_t bitscale){
 	bigint_t tmp, x;
 	bigint_word_t tmp_b[b->length_W + 1];
 	const uint16_t word_shift = bitscale / BIGINT_WORD_SIZE;
@@ -711,7 +711,7 @@ void bigint_sub_u_bitscale(bigint_t* a, const bigint_t* b, uint16_t bitscale){
 
 /******************************************************************************/
 
-void bigint_reduce(bigint_t* a, const bigint_t* r){
+void bigint_reduce(bigint_t *a, const bigint_t *r){
 //	bigint_adjust((bigint_t*)r);
 	uint8_t rfbs = GET_FBS(r);
 #if DEBUG
@@ -772,7 +772,7 @@ void bigint_reduce(bigint_t* a, const bigint_t* r){
 
 /* calculate dest = a**exp % r */
 /* using square&multiply */
-void bigint_expmod_u_sam(bigint_t* dest, const bigint_t* a, const bigint_t* exp, const bigint_t* r){
+void bigint_expmod_u_sam(bigint_t *dest, const bigint_t *a, const bigint_t *exp, const bigint_t *r){
 	if(a->length_W==0 || r->length_W==0){
 		return;
 	}
@@ -835,7 +835,7 @@ void bigint_expmod_u_sam(bigint_t* dest, const bigint_t* a, const bigint_t* exp,
 #define printf_P(...)
 #endif
 /* gcd <-- gcd(x,y) a*x+b*y=gcd */
-void bigint_gcdext(bigint_t* gcd, bigint_t* a, bigint_t* b, const bigint_t* x, const bigint_t* y){
+void bigint_gcdext(bigint_t *gcd, bigint_t *a, bigint_t *b, const bigint_t *x, const bigint_t *y){
 	 uint16_t i = 0;
 	 printf_P(PSTR("\nDBG: gcdext( "));
 	 bigint_print_hex(x);
@@ -1009,7 +1009,7 @@ void bigint_gcdext(bigint_t* gcd, bigint_t* a, bigint_t* b, const bigint_t* x, c
 
 /******************************************************************************/
 
-void bigint_inverse(bigint_t* dest, const bigint_t* a, const bigint_t* m){
+void bigint_inverse(bigint_t *dest, const bigint_t *a, const bigint_t *m){
 	bigint_gcdext(NULL, dest, NULL, a, m);
 	while(dest->info&BIGINT_NEG_MASK){
 		bigint_add_s(dest, dest, m);
@@ -1018,7 +1018,7 @@ void bigint_inverse(bigint_t* dest, const bigint_t* a, const bigint_t* m){
 
 /******************************************************************************/
 
-void bigint_changeendianess(bigint_t* a){
+void bigint_changeendianess(bigint_t *a){
 	uint8_t t, *p, *q;
 	p = (uint8_t*)(a->wordv);
 	q = p + a->length_W * sizeof(bigint_word_t) - 1;
@@ -1037,7 +1037,7 @@ void bigint_changeendianess(bigint_t* a){
 
 /******************************************************************************/
 
-void bigint_expmod_u(bigint_t* dest, const bigint_t* a, const bigint_t* exp, const bigint_t* r){
+void bigint_expmod_u(bigint_t *dest, const bigint_t *a, const bigint_t *exp, const bigint_t *r){
     bigint_expmod_u_sam(dest, a, exp, r);
 }
 

@@ -30,13 +30,13 @@
 #include "memxor.h"
 #include "ubi.h"
 
-void ubi512_init(ubi512_ctx_t* ctx, const void* g, uint8_t type){
+void ubi512_init(ubi512_ctx_t *ctx, const void *g, uint8_t type){
 	memset(ctx->tweak.v8, 0, 15);
 	ctx->tweak.v8[15] = 0x40+type;
 	memcpy(ctx->g, g, UBI512_BLOCKSIZE_B);
 }
 
-void ubi512_nextBlock(ubi512_ctx_t* ctx, const void* block){
+void ubi512_nextBlock(ubi512_ctx_t *ctx, const void *block){
 	threefish512_ctx_t tfctx;
 	ctx->tweak.v64[0] += UBI512_BLOCKSIZE_B;
 	threefish512_init(ctx->g, ctx->tweak.v8, &tfctx);
@@ -47,7 +47,7 @@ void ubi512_nextBlock(ubi512_ctx_t* ctx, const void* block){
 } 
 
 
-void ubi512_lastBlock(ubi512_ctx_t* ctx, const void* block, uint16_t length_b){
+void ubi512_lastBlock(ubi512_ctx_t *ctx, const void *block, uint16_t length_b){
 	threefish512_ctx_t tfctx;
 	while(length_b>UBI512_BLOCKSIZE){
 		ubi512_nextBlock(ctx, block);
@@ -70,7 +70,7 @@ void ubi512_lastBlock(ubi512_ctx_t* ctx, const void* block, uint16_t length_b){
 	}
 } 
 
-void ubi512_ctx2hash(void* dest, const ubi512_ctx_t* ctx){
+void ubi512_ctx2hash(void *dest, const ubi512_ctx_t *ctx){
 	memcpy(dest, ctx->g, UBI512_BLOCKSIZE_B);
 }
 

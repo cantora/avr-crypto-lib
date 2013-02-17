@@ -7,7 +7,7 @@
 
 /*********************************************************************/
 
-void twister_small_init(twister_state_t* ctx, uint16_t hashsize_b){
+void twister_small_init(twister_state_t *ctx, uint16_t hashsize_b){
 	memset(ctx->s, 0, 64);
 	ctx->counter=0xffffffffffffffffLL;
 	ctx->s[0][7] = hashsize_b>>8;
@@ -17,7 +17,7 @@ void twister_small_init(twister_state_t* ctx, uint16_t hashsize_b){
 
 /*********************************************************************/
 
-void twister_small_nextBlock(twister_state_t* ctx, const void* msg){
+void twister_small_nextBlock(twister_state_t *ctx, const void *msg){
 	uint8_t tmp[8][8];
 	/* round 1 */
 	memcpy(tmp, ctx->s, 64);
@@ -51,7 +51,7 @@ void twister_small_nextBlock(twister_state_t* ctx, const void* msg){
 
 /*********************************************************************/
 
-void twister_small_lastBlock(twister_state_t* ctx, const void* msg, uint16_t length_b){
+void twister_small_lastBlock(twister_state_t *ctx, const void *msg, uint16_t length_b){
 	uint8_t tmp[64];	
 	while(length_b>=512){
 		twister_small_nextBlock(ctx, msg);
@@ -70,7 +70,7 @@ void twister_small_lastBlock(twister_state_t* ctx, const void* msg, uint16_t len
 
 /*********************************************************************/
 
-void twister_small_ctx2hash(void* dest, twister_state_t* ctx, uint16_t hashsize_b){
+void twister_small_ctx2hash(void *dest, twister_state_t *ctx, uint16_t hashsize_b){
 	twister_ctx2hash(dest, ctx, hashsize_b);
 }
 
@@ -79,31 +79,31 @@ void twister_small_ctx2hash(void* dest, twister_state_t* ctx, uint16_t hashsize_
 
 #ifndef NO_TWISTER_256
 
-void twister256_init(twister256_ctx_t* ctx){
+void twister256_init(twister256_ctx_t *ctx){
 	twister_small_init(ctx, 256);
 }
 
 /*********************************************************************/
 
-void twister256_nextBlock(twister256_ctx_t* ctx, const void* msg){
+void twister256_nextBlock(twister256_ctx_t *ctx, const void *msg){
 	twister_small_nextBlock(ctx, msg);
 }
 
 /*********************************************************************/
 
-void twister256_lastBlock(twister256_ctx_t* ctx, const void* msg, uint16_t length_b){
+void twister256_lastBlock(twister256_ctx_t *ctx, const void *msg, uint16_t length_b){
 	twister_small_lastBlock(ctx, msg, length_b);
 }
 
 /*********************************************************************/
 
-void twister256_ctx2hash(void* dest, twister256_ctx_t* ctx){
+void twister256_ctx2hash(void *dest, twister256_ctx_t *ctx){
 	twister_ctx2hash(dest, ctx, 256);
 }
 
 /*********************************************************************/
 
-void twister256(void* dest, const void* msg, uint32_t msg_length_b){
+void twister256(void *dest, const void *msg, uint32_t msg_length_b){
 	twister_state_t ctx;
 	twister_small_init(&ctx, 256);
 	while(msg_length_b >=512){
@@ -124,31 +124,31 @@ void twister256(void* dest, const void* msg, uint32_t msg_length_b){
 
 #ifndef NO_TWISTER_224
 
-void twister224_init(twister224_ctx_t* ctx){
+void twister224_init(twister224_ctx_t *ctx){
 	twister_small_init(ctx, 224);
 }
 
 /*********************************************************************/
 
-void twister224_nextBlock(twister224_ctx_t* ctx, const void* msg){
+void twister224_nextBlock(twister224_ctx_t *ctx, const void *msg){
 	twister_small_nextBlock(ctx, msg);
 }
 
 /*********************************************************************/
 
-void twister224_lastBlock(twister224_ctx_t* ctx, const void* msg, uint16_t length_b){
+void twister224_lastBlock(twister224_ctx_t *ctx, const void *msg, uint16_t length_b){
 	twister_small_lastBlock(ctx, msg, length_b);
 }
 
 /*********************************************************************/
 
-void twister224_ctx2hash(void* dest, twister224_ctx_t* ctx){
+void twister224_ctx2hash(void *dest, twister224_ctx_t *ctx){
 	twister_ctx2hash(dest, ctx, 224);
 }
 
 /*********************************************************************/
 
-void twister224(void* dest, const void* msg, uint32_t msg_length_b){
+void twister224(void *dest, const void *msg, uint32_t msg_length_b){
 	twister_state_t ctx;
 	twister_small_init(&ctx, 224);
 	while(msg_length_b >=512){

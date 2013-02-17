@@ -646,9 +646,9 @@ change_endian:
 #define KEY_ROL17		0x08
 #define KEY_ROL15		0x00
 /*
-void camellia_6rounds(camellia128_ctx_t* s, uint64_t* bl, uint64_t* br, uint8_t roundop, uint8_t keychoice){
+void camellia_6rounds(camellia128_ctx_t *s, uint64_t *bl, uint64_t *br, uint8_t roundop, uint8_t keychoice){
 	uint8_t i;
-	uint64_t* k[4];
+	uint64_t *k[4];
 	k[0] = &(s->kll);
 	k[1] = &(s->klr);
 	k[2] = &(s->kal);
@@ -827,7 +827,7 @@ main_loop:
 	
 ;##############################################################################
 /*	
-void camellia128_init(camellia128_ctx_t* s, uint8_t* key){
+void camellia128_init(camellia128_ctx_t *s, uint8_t *key){
 	uint8_t i;
 	s->kll = 0; //((uint64_t*)key)[0];
 	

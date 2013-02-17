@@ -28,9 +28,9 @@ typedef struct {
 } whirlpool_ctx_t;
 
 
-void whirlpool_init(whirlpool_ctx_t* ctx);
-void whirlpool_nextBlock(whirlpool_ctx_t* ctx,const void* block);
-void whirlpool_lastBlock(whirlpool_ctx_t* ctx, const void* block, uint16_t length_b);
-void whirlpool_ctx2hash(void* dest, const whirlpool_ctx_t* ctx);
+void whirlpool_init(whirlpool_ctx_t *ctx);
+void whirlpool_nextBlock(whirlpool_ctx_t *ctx,const void *block);
+void whirlpool_lastBlock(whirlpool_ctx_t *ctx, const void *block, uint16_t length_b);
+void whirlpool_ctx2hash(void *dest, const whirlpool_ctx_t *ctx);
 
 #endif /* WIRLPOOL_H_ */

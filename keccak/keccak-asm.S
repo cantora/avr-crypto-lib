@@ -440,8 +440,8 @@ keccak_f1600:
 
    -- or --
 
-	const uint8_t* rot_code = (const uint8_t*)keccak_rotate_codes;
-    const uint8_t* idx_idx = (const uint8_t*)rho_pi_idx_table;
+	const uint8_t *rot_code = (const uint8_t*)keccak_rotate_codes;
+    const uint8_t *idx_idx = (const uint8_t*)rho_pi_idx_table;
     uint64_t *a_tmp = (uint64_t*)a;
 	for(i = 0; i < 25; ++i){
 		    *((uint64_t*)(((uint8_t*)b) + pgm_read_byte(idx_idx++))) =
@@ -657,7 +657,7 @@ keccak256_ctx2hash:
 	.endfunc
 
 /*
-void keccak_ctx2hash(void* dest, uint16_t length_b, keccak_ctx_t* ctx){
+void keccak_ctx2hash(void *dest, uint16_t length_b, keccak_ctx_t *ctx){
 	while(length_b>=ctx->r){
 		memcpy(dest, ctx->a, ctx->bs);
 		dest = (uint8_t*)dest + ctx->bs;
@@ -758,7 +758,7 @@ keccak256_init:
 	ldi r25, hi8(1088)
 	.endfunc
 /*
-void keccak_init(uint16_t r, keccak_ctx_t* ctx){
+void keccak_init(uint16_t r, keccak_ctx_t *ctx){
 	memset(ctx->a, 0x00, 5 * 5 * 8);
 	ctx->r = r;
 	ctx->bs = (uint8_t)(r / 8);
@@ -787,7 +787,7 @@ keccak_init_1:
 	.endfunc
 
 /*
-void keccak_lastBlock(keccak_ctx_t* ctx, const void* block, uint16_t length_b){
+void keccak_lastBlock(keccak_ctx_t *ctx, const void *block, uint16_t length_b){
     uint8_t length_B;
     uint8_t t;
     while(length_b >= ctx->r){

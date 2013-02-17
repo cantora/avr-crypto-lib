@@ -66,12 +66,12 @@ void sha256_init(sha256_ctx_t *state){
 }
 
 /*************************************************************************/
-void sha256_nextBlock (sha256_ctx_t *state, const void* block){
+void sha256_nextBlock (sha256_ctx_t *state, const void *block){
 	sha2_small_common_nextBlock(state, block);
 }
 
 /*************************************************************************/
-void sha256_lastBlock (sha256_ctx_t *state, const void* block, uint16_t length_b){
+void sha256_lastBlock (sha256_ctx_t *state, const void *block, uint16_t length_b){
 	sha2_small_common_lastBlock(state, block, length_b);
 }
 /*************************************************************************/
@@ -90,7 +90,7 @@ void sha256_lastBlock (sha256_ctx_t *state, const void* block, uint16_t length_b
 /*
  * length in bits!
  */
-void sha256(void* dest, const void* msg, uint32_t length_b){ /* length could be choosen longer but this is for µC */
+void sha256(void *dest, const void *msg, uint32_t length_b){ /* length could be choosen longer but this is for µC */
 	sha256_ctx_t s;
 	sha256_init(&s);
 	while(length_b >= SHA256_BLOCK_BITS){
@@ -106,7 +106,7 @@ void sha256(void* dest, const void* msg, uint32_t length_b){ /* length could be 
 
 /*************************************************************************/
 
-void sha256_ctx2hash(void* dest, const sha256_ctx_t *state){
+void sha256_ctx2hash(void *dest, const sha256_ctx_t *state){
 #if defined LITTLE_ENDIAN
 	uint8_t i, j, *s=(uint8_t*)(state->h);
 	i=8;

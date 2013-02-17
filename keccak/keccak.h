@@ -38,19 +38,19 @@ typedef struct{
 } keccak_ctx_t;
 
 
-void keccak_init(uint16_t r, keccak_ctx_t* ctx);
-void keccak224_init(keccak_ctx_t* ctx);
-void keccak256_init(keccak_ctx_t* ctx);
-void keccak384_init(keccak_ctx_t* ctx);
-void keccak512_init(keccak_ctx_t* ctx);
+void keccak_init(uint16_t r, keccak_ctx_t *ctx);
+void keccak224_init(keccak_ctx_t *ctx);
+void keccak256_init(keccak_ctx_t *ctx);
+void keccak384_init(keccak_ctx_t *ctx);
+void keccak512_init(keccak_ctx_t *ctx);
 
-void keccak_nextBlock(keccak_ctx_t* ctx, const void* block);
-void keccak_lastBlock(keccak_ctx_t* ctx, const void* block, uint16_t length_b);
+void keccak_nextBlock(keccak_ctx_t *ctx, const void *block);
+void keccak_lastBlock(keccak_ctx_t *ctx, const void *block, uint16_t length_b);
 
-void keccak_ctx2hash(void* dest, uint16_t length_b, keccak_ctx_t* ctx);
-void keccak224_ctx2hash(void* dest, keccak_ctx_t* ctx);
-void keccak256_ctx2hash(void* dest, keccak_ctx_t* ctx);
-void keccak384_ctx2hash(void* dest, keccak_ctx_t* ctx);
-void keccak512_ctx2hash(void* dest, keccak_ctx_t* ctx);
+void keccak_ctx2hash(void *dest, uint16_t length_b, keccak_ctx_t *ctx);
+void keccak224_ctx2hash(void *dest, keccak_ctx_t *ctx);
+void keccak256_ctx2hash(void *dest, keccak_ctx_t *ctx);
+void keccak384_ctx2hash(void *dest, keccak_ctx_t *ctx);
+void keccak512_ctx2hash(void *dest, keccak_ctx_t *ctx);
 
 #endif /* KECCAK_H_ */

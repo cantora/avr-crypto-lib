@@ -29,9 +29,9 @@
 #include "hfal_md5.h"
 #include "hfal-performance.h"
 
-char* algo_name = "MD5";
+char *algo_name = "MD5";
 
-const hfdesc_t* const algolist[] PROGMEM = {
+const hfdesc_t *const algolist[] PROGMEM = {
 	(hfdesc_t*)&md5_desc,
 	NULL
 };
@@ -40,7 +40,7 @@ const hfdesc_t* const algolist[] PROGMEM = {
  *  additional validation-functions											 *
  *****************************************************************************/
 
-void md5_ctx2hash_dummy(void* buffer, void* ctx){
+void md5_ctx2hash_dummy(void *buffer, void *ctx){
 	memcpy(buffer, ctx, 16);
 }
 
@@ -77,7 +77,7 @@ void testrun_nessie_md5(void){
 
 void testrun_md5(void){
 	md5_hash_t hash;
-	char* testv[]={
+	char *testv[]={
 		"", 
 		"a", 
 		"abc", 

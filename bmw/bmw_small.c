@@ -56,7 +56,7 @@
 #if DEBUG
  #include "cli.h"
 
- void ctx_dump(const bmw_small_ctx_t* ctx){
+ void ctx_dump(const bmw_small_ctx_t *ctx){
  	uint8_t i;
 	cli_putstr_P(PSTR("\r\n==== ctx dump ===="));
 	for(i=0; i<16;++i){
@@ -69,7 +69,7 @@
 	cli_hexdump(&(ctx->counter), 4);
  }
 
- void dump_x(const uint32_t* q, uint8_t elements, char x){
+ void dump_x(const uint32_t *q, uint8_t elements, char x){
 	uint8_t i;
  	cli_putstr_P(PSTR("\r\n==== "));
 	cli_putc(x);
@@ -212,7 +212,7 @@ const uint32_t k_lut[] PROGMEM = {
 	0xa555554bL };
 
 static
-uint32_t bmw_small_expand1(uint8_t j, const uint32_t* q, const void* m, const void* h){
+uint32_t bmw_small_expand1(uint8_t j, const uint32_t *q, const void *m, const void *h){
 	uint32_t(*s[])(uint32_t) = {bmw_small_s1, bmw_small_s2, bmw_small_s3, bmw_small_s0};
 	uint32_t r;
 	uint8_t i;
@@ -237,7 +237,7 @@ uint32_t bmw_small_expand1(uint8_t j, const uint32_t* q, const void* m, const vo
 }
 
 static
-uint32_t bmw_small_expand2(uint8_t j, const uint32_t* q, const void* m, const void* h){
+uint32_t bmw_small_expand2(uint8_t j, const uint32_t *q, const void *m, const void *h){
 	uint32_t(*rf[])(uint32_t) = {bmw_small_r1, bmw_small_r2, bmw_small_r3,
 	                             bmw_small_r4, bmw_small_r5, bmw_small_r6,
 							     bmw_small_r7};
@@ -277,7 +277,7 @@ static const uint16_t hack_table[5] PROGMEM = { 0x0311, 0xDDB3, 0x2A79, 0x07AA, 
 static const uint8_t  offset_table[5] PROGMEM = { 4+16, 6+16, 9+16, 12+16, 13+16 };
 
 static
-void bmw_small_f0(uint32_t* q, uint32_t* h, const void* m){
+void bmw_small_f0(uint32_t *q, uint32_t *h, const void *m){
 	uint16_t hack_reg;
 	uint8_t c,i,j;
 	uint32_t(*s[])(uint32_t)={ bmw_small_s0, bmw_small_s1, bmw_small_s2,
@@ -339,7 +339,7 @@ const uint8_t f0_lut[] PROGMEM = {
 };
 
 static
-void bmw_small_f0(uint32_t* q, uint32_t* h, const void* m){
+void bmw_small_f0(uint32_t *q, uint32_t *h, const void *m){
 	uint8_t i,j=-1,v,sign,l=0;
 	uint32_t(*s[])(uint32_t)={ bmw_small_s0, bmw_small_s1, bmw_small_s2,
 	                           bmw_small_s3, bmw_small_s4 };
@@ -381,7 +381,7 @@ void bmw_small_f0(uint32_t* q, uint32_t* h, const void* m){
 
 #if F0_HACK==0
 static
-void bmw_small_f0(uint32_t* q, uint32_t* h, const void* m){
+void bmw_small_f0(uint32_t *q, uint32_t *h, const void *m){
 	uint8_t i;
 	uint32_t(*s[])(uint32_t)={ bmw_small_s0, bmw_small_s1, bmw_small_s2,
 	                           bmw_small_s3, bmw_small_s4 };
@@ -421,7 +421,7 @@ void bmw_small_f0(uint32_t* q, uint32_t* h, const void* m){
 #endif /* F0_HACK==0 */
 
 static
-void bmw_small_f1(uint32_t* q, const void* m, const void* h){
+void bmw_small_f1(uint32_t *q, const void *m, const void *h){
 	uint8_t i;
 	q[16] = bmw_small_expand1(0, q, m, h);
 	q[17] = bmw_small_expand1(1, q, m, h);
@@ -431,7 +431,7 @@ void bmw_small_f1(uint32_t* q, const void* m, const void* h){
 }
 
 static
-void bmw_small_f2(uint32_t* h, uint32_t* q, const void* m){
+void bmw_small_f2(uint32_t *h, uint32_t *q, const void *m){
 	uint32_t xl=0, xh;
 	uint8_t i;
 	for(i=16;i<24;++i){
@@ -486,7 +486,7 @@ void bmw_small_f2(uint32_t* h, uint32_t* q, const void* m){
 
 }
 
-void bmw_small_nextBlock(bmw_small_ctx_t* ctx, const void* block){
+void bmw_small_nextBlock(bmw_small_ctx_t *ctx, const void *block){
 	uint32_t q[32];
 	dump_x(block, 16, 'M');
 	bmw_small_f0(q, ctx->h, block);
@@ -498,7 +498,7 @@ void bmw_small_nextBlock(bmw_small_ctx_t* ctx, const void* block){
 	ctx_dump(ctx);
 }
 
-void bmw_small_lastBlock(bmw_small_ctx_t* ctx, const void* block, uint16_t length_b){
+void bmw_small_lastBlock(bmw_small_ctx_t *ctx, const void *block, uint16_t length_b){
 	union {
 		uint8_t   v8[64];
 		uint32_t v32[16];
@@ -538,7 +538,7 @@ void bmw_small_lastBlock(bmw_small_ctx_t* ctx, const void* block, uint16_t lengt
 #endif
 }
 
-void bmw224_init(bmw224_ctx_t* ctx){
+void bmw224_init(bmw224_ctx_t *ctx){
 	uint8_t i;
 	ctx->h[0] = 0x00010203;
 	for(i=1; i<16; ++i){
@@ -551,7 +551,7 @@ void bmw224_init(bmw224_ctx_t* ctx){
 	ctx_dump(ctx);
 }
 
-void bmw256_init(bmw256_ctx_t* ctx){
+void bmw256_init(bmw256_ctx_t *ctx){
 	uint8_t i;
 	ctx->h[0] = 0x40414243;
 	for(i=1; i<16; ++i){
@@ -561,31 +561,31 @@ void bmw256_init(bmw256_ctx_t* ctx){
 	ctx_dump(ctx);
 }
 
-void bmw224_nextBlock(bmw224_ctx_t* ctx, const void* block){
+void bmw224_nextBlock(bmw224_ctx_t *ctx, const void *block){
 	bmw_small_nextBlock(ctx, block);
 }
 
-void bmw256_nextBlock(bmw256_ctx_t* ctx, const void* block){
+void bmw256_nextBlock(bmw256_ctx_t *ctx, const void *block){
 	bmw_small_nextBlock(ctx, block);
 }
 
-void bmw224_lastBlock(bmw224_ctx_t* ctx, const void* block, uint16_t length_b){
+void bmw224_lastBlock(bmw224_ctx_t *ctx, const void *block, uint16_t length_b){
 	bmw_small_lastBlock(ctx, block, length_b);
 }
 
-void bmw256_lastBlock(bmw256_ctx_t* ctx, const void* block, uint16_t length_b){
+void bmw256_lastBlock(bmw256_ctx_t *ctx, const void *block, uint16_t length_b){
 	bmw_small_lastBlock(ctx, block, length_b);
 }
 
-void bmw224_ctx2hash(void* dest, const bmw224_ctx_t* ctx){
+void bmw224_ctx2hash(void *dest, const bmw224_ctx_t *ctx){
 	memcpy(dest, &(ctx->h[9]), 224/8);
 }
 
-void bmw256_ctx2hash(void* dest, const bmw256_ctx_t* ctx){
+void bmw256_ctx2hash(void *dest, const bmw256_ctx_t *ctx){
 	memcpy(dest, &(ctx->h[8]), 256/8);
 }
 
-void bmw224(void* dest, const void* msg, uint32_t length_b){
+void bmw224(void *dest, const void *msg, uint32_t length_b){
 	bmw_small_ctx_t ctx;
 	bmw224_init(&ctx);
 	while(length_b>=BMW_SMALL_BLOCKSIZE){
@@ -597,7 +597,7 @@ void bmw224(void* dest, const void* msg, uint32_t length_b){
 	bmw224_ctx2hash(dest, &ctx);
 }
 
-void bmw256(void* dest, const void* msg, uint32_t length_b){
+void bmw256(void *dest, const void *msg, uint32_t length_b){
 	bmw_small_ctx_t ctx;
 	bmw256_init(&ctx);
 	while(length_b>=BMW_SMALL_BLOCKSIZE){

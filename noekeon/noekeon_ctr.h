@@ -37,6 +37,6 @@ typedef struct{
 	uint8_t key[16];
 }noekeon_ctr_ctx_t;
 
-void noekeon_ctr_next(void* buffer, const noekeon_ctr_ctx_t* ctx);
+void noekeon_ctr_next(void *buffer, const noekeon_ctr_ctx_t *ctx);
 
 #endif /*NOEKEON_CTR_H_*/

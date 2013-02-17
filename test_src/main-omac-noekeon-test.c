@@ -29,13 +29,13 @@
 #include "nessie_mac_test.h"
 #include "performance_test.h"
 
-char* algo_name = "OMAC-Noekeon";
+char *algo_name = "OMAC-Noekeon";
 
 /*****************************************************************************
  *  additional validation-functions											 *
  *****************************************************************************/
 
-void test_mac(void* key, void* data, uint16_t datalength_b){
+void test_mac(void *key, void *data, uint16_t datalength_b){
 	uint8_t mac[16];
 	cli_putstr_P(PSTR("\r\n-----------\r\n msg length (bit): 0x"));
 	cli_hexdump(((uint8_t*)&datalength_b)+1, 1);
@@ -64,16 +64,16 @@ void testrun_test_omac_noekeon(void){
 
 uint8_t stat_key[16];
 
-void omac_noekeon_next_dummy(void* ctx, const void* buffer){
+void omac_noekeon_next_dummy(void *ctx, const void *buffer){
 	omac_noekeon_next(buffer, stat_key, ctx);
 }
 
-void omac_noekeon_init_dummy(void* ctx, const void* key, uint16_t keysize_b){
+void omac_noekeon_init_dummy(void *ctx, const void *key, uint16_t keysize_b){
 	omac_noekeon_init(ctx);
 	memcpy(stat_key, key, 16);
 }
 
-void omac_noekeon_last_dummy(void* ctx, const void* buffer, uint16_t size_b){
+void omac_noekeon_last_dummy(void *ctx, const void *buffer, uint16_t size_b){
 	while(size_b>128){
 		omac_noekeon_next(buffer, stat_key, ctx);
 		size_b -= 128;
@@ -82,7 +82,7 @@ void omac_noekeon_last_dummy(void* ctx, const void* buffer, uint16_t size_b){
 	omac_noekeon_last(buffer, size_b, stat_key, ctx);
 }
 
-void omac_noekeon_conv_dummy(void* buffer, void* ctx){
+void omac_noekeon_conv_dummy(void *buffer, void *ctx){
 	memcpy(buffer, ctx, 16);
 }
 

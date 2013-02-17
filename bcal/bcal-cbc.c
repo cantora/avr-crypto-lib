@@ -23,7 +23,7 @@
 #include "bcal-basic.h"
 #include "memxor.h"
 
-uint8_t bcal_cbc_init(const bcdesc_t* desc, const void* key, uint16_t keysize_b, bcal_cbc_ctx_t* ctx){
+uint8_t bcal_cbc_init(const bcdesc_t *desc, const void *key, uint16_t keysize_b, bcal_cbc_ctx_t *ctx){
 	ctx->desc = (bcdesc_t*)desc;
 	ctx->blocksize_B = (bcal_cipher_getBlocksize_b(desc)+7)/8;
 	ctx->prev_block = malloc(ctx->blocksize_B);
@@ -34,37 +34,37 @@ uint8_t bcal_cbc_init(const bcdesc_t* desc, const void* key, uint16_t keysize_b,
 	return bcal_cipher_init(desc, key, keysize_b, &(ctx->cctx));
 }
 
-void bcal_cbc_free(bcal_cbc_ctx_t* ctx){
+void bcal_cbc_free(bcal_cbc_ctx_t *ctx){
 	bcal_cipher_free(&(ctx->cctx));
 	free(ctx->prev_block);
 }
 
 
-void bcal_cbc_loadIV(const void* iv, bcal_cbc_ctx_t* ctx){
+void bcal_cbc_loadIV(const void *iv, bcal_cbc_ctx_t *ctx){
 	if(iv){
 		memcpy(ctx->prev_block, iv, ctx->blocksize_B);
 	}
 }
 
-void bcal_cbc_encNext(void* block, bcal_cbc_ctx_t* ctx){
+void bcal_cbc_encNext(void *block, bcal_cbc_ctx_t *ctx){
 	memxor(block, ctx->prev_block, ctx->blocksize_B);
 	bcal_cipher_enc(block, &(ctx->cctx));
 	memcpy(ctx->prev_block, block, ctx->blocksize_B);
 }
 
-void bcal_cbc_decNext(void* block, bcal_cbc_ctx_t* ctx){
+void bcal_cbc_decNext(void *block, bcal_cbc_ctx_t *ctx){
 	uint8_t tmp[ctx->blocksize_B];
 	memcpy(tmp, block, ctx->blocksize_B);
 	bcal_cipher_dec(block, &(ctx->cctx));
 	memxor(block, ctx->prev_block, ctx->blocksize_B);
 	memcpy(ctx->prev_block, tmp, ctx->blocksize_B);
 }
-void bcal_cbc_decRand(void* block, const void* prev_block, bcal_cbc_ctx_t* ctx){
+void bcal_cbc_decRand(void *block, const void *prev_block, bcal_cbc_ctx_t *ctx){
 	bcal_cipher_dec(block, &(ctx->cctx));
 	memxor(block, prev_block, ctx->blocksize_B);
 }
 
-void bcal_cbc_encMsg(const void* iv, void* msg, uint16_t msg_blocks, bcal_cbc_ctx_t* ctx){
+void bcal_cbc_encMsg(const void *iv, void *msg, uint16_t msg_blocks, bcal_cbc_ctx_t *ctx){
 	bcal_cbc_loadIV(iv, ctx);
 	while(msg_blocks--){
 		bcal_cbc_encNext(msg, ctx);
@@ -72,7 +72,7 @@ void bcal_cbc_encMsg(const void* iv, void* msg, uint16_t msg_blocks, bcal_cbc_ct
 	}
 }
 
-void bcal_cbc_decMsg(const void* iv, void* msg, uint16_t msg_blocks, bcal_cbc_ctx_t* ctx){
+void bcal_cbc_decMsg(const void *iv, void *msg, uint16_t msg_blocks, bcal_cbc_ctx_t *ctx){
 	msg=(uint8_t*)msg + (msg_blocks-1)*ctx->blocksize_B;
 	while(msg_blocks > 1){
 		bcal_cbc_decRand(msg, (uint8_t*)msg-ctx->blocksize_B, ctx);

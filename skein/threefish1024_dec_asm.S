@@ -27,7 +27,7 @@
 
 /******************************************************************************/
 /*
-void permute_inv16(void* data){
+void permute_inv16(void *data){
 	uint64_t t;
 	t = X(15);
 	X(15) = X(7);
@@ -48,7 +48,7 @@ void permute_inv16(void* data){
 	X(10) = X(8);
 	X(8) = t;
 }
-void add_key_16(void* data, const threefish1024_ctx_t* ctx, uint8_t s){
+void add_key_16(void *data, const threefish1024_ctx_t *ctx, uint8_t s){
 	uint8_t i;
 	for(i=0; i<13; ++i){
 		X(i) -= ctx->k[(s+i)%17];
@@ -57,7 +57,7 @@ void add_key_16(void* data, const threefish1024_ctx_t* ctx, uint8_t s){
 	X(14) -= ctx->k[(s+14)%17] + ctx->t[(s+1)%3];
 	X(15) -= ctx->k[(s+15)%17] + s;
 }
-void threefish1024_dec(void* data, const threefish1024_ctx_t* ctx){
+void threefish1024_dec(void *data, const threefish1024_ctx_t *ctx){
 	uint8_t i=0,s=20;
 	uint8_t r0[8] = {0x69, 0x72, 0x21, 0x34, 0x42, 0x41, 0x31, 0x79};
 	uint8_t r1[8] = {0x61, 0x19, 0x1a, 0x19, 0x53, 0x10, 0x31, 0x53};

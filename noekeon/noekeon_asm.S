@@ -166,7 +166,7 @@ bigendian_rotr32_exit:
 
 /******************************************************************************/
 /*
-void theta(uint32_t* k, uint32_t* a){
+void theta(uint32_t *k, uint32_t *a){
 	uint32_t temp;
 	temp = a[0] ^ a[2]; temp ^= ROTR32(temp, 8) ^ ROTL32(temp, 8);
 	a[1] ^= temp;
@@ -583,7 +583,7 @@ pi:
 /******************************************************************************/
 	
 /*
-void noekeon_init(void* key, noekeon_ctx_t* ctx){
+void noekeon_init(void *key, noekeon_ctx_t *ctx){
 	uint8_t nullv[16];
 	
 	memset(nullv, 0, 16);

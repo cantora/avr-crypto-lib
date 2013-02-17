@@ -33,6 +33,6 @@
 #include <avr/pgmspace.h>
 
 void main_setup(void);
-void welcome_msg(const char* algoname);
+void welcome_msg(const char *algoname);
 
 #endif /* MAINTESTCOMMON_H_ */

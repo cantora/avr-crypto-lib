@@ -35,7 +35,7 @@
 
 #define nessie_out_file stdout
 
-void nessie_set_output_stream(FILE* out_stream){
+void nessie_set_output_stream(FILE *out_stream){
     nessie_out_file = out_stream;
 }
 
@@ -51,7 +51,7 @@ void nessie_send_alive_a(uint16_t i){
 }
 #endif
 
-void nessie_print_block(uint8_t* block, uint16_t blocksize_bit){
+void nessie_print_block(uint8_t *block, uint16_t blocksize_bit){
 	uint16_t i;
 	for(i=0; i<(blocksize_bit+7)/8; ++i){
 		putc(pgm_read_byte(hexdigit_tab_uc_P + ((block[i]) >>   4)), nessie_out_file);
@@ -62,7 +62,7 @@ void nessie_print_block(uint8_t* block, uint16_t blocksize_bit){
 #define SPACES 31
 #define BYTESPERLINE 16
 
-void nessie_print_item(const char* name, uint8_t* buffer, uint16_t size_B){
+void nessie_print_item(const char *name, uint8_t *buffer, uint16_t size_B){
 	uint8_t name_len;
 	uint8_t i;
 	name_len = strlen(name);
@@ -121,7 +121,7 @@ Key size: 256 bits
 Block size: 128 bits
 */
 
-void nessie_print_header(const char* name,
+void nessie_print_header(const char *name,
                          uint16_t keysize_b, 
                          uint16_t blocksize_b,
                          uint16_t hashsize_b, 

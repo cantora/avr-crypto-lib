@@ -35,7 +35,7 @@
 #include "base64_enc.h"
 #include "base64_dec.h"
 
-char* algo_name = "DSA";
+char *algo_name = "DSA";
 
 /*****************************************************************************
  *  additional validation-functions											 *
@@ -47,7 +47,7 @@ void load_fix_dsa(void){
 	load_dsa_key_blob(&dsa_ctx);
 }
 
-void dsa_print_item(bigint_t* a, PGM_P pstr){
+void dsa_print_item(bigint_t *a, PGM_P pstr){
 	uint8_t *p;
 	cli_putstr_P(PSTR("\r\n"));
 	cli_putstr_P(pstr);
@@ -68,7 +68,7 @@ void dsa_print_item(bigint_t* a, PGM_P pstr){
 	cli_hexdump(p, 1);
 }
 
-void dsa_print_signature_b64(dsa_signature_t* s){
+void dsa_print_signature_b64(dsa_signature_t *s){
 	uint16_t size_r, size_s, size_o, i,j;
 	size_r = s->r.length_W +2;
 	size_s = s->s.length_W +2;
@@ -92,7 +92,7 @@ void dsa_print_signature_b64(dsa_signature_t* s){
 	cli_putstr(b64_b);
 }
 
-void dsa_print_ctx(dsa_ctx_t* ctx){
+void dsa_print_ctx(dsa_ctx_t *ctx){
 	dsa_print_item(&(ctx->priv), PSTR("private"));
 	dsa_print_item(&(ctx->pub), PSTR("public"));
 	dsa_print_item(&(ctx->domain.p), PSTR("P"));
@@ -100,7 +100,7 @@ void dsa_print_ctx(dsa_ctx_t* ctx){
 	dsa_print_item(&(ctx->domain.g), PSTR("G"));
 }
 
-void dsa_print_signature(const dsa_signature_t* sig){
+void dsa_print_signature(const dsa_signature_t *sig){
 	cli_putstr_P(PSTR("\r\nDSA-Signature:\r\n r:"));
 	bigint_print_hex(&(sig->r));
 	cli_putstr_P(PSTR("\r\n s:"));

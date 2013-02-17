@@ -44,22 +44,22 @@ typedef struct {
 typedef bmw_large_ctx_t bmw384_ctx_t;
 typedef bmw_large_ctx_t bmw512_ctx_t;
 
-void bmw384_init(bmw384_ctx_t* ctx);
-void bmw512_init(bmw512_ctx_t* ctx);
+void bmw384_init(bmw384_ctx_t *ctx);
+void bmw512_init(bmw512_ctx_t *ctx);
 
-void bmw_large_nextBlock(bmw_large_ctx_t* ctx, const void* block);
-void bmw_large_lastBlock(bmw_large_ctx_t* ctx, const void* block, uint16_t length_b);
+void bmw_large_nextBlock(bmw_large_ctx_t *ctx, const void *block);
+void bmw_large_lastBlock(bmw_large_ctx_t *ctx, const void *block, uint16_t length_b);
 
-void bmw384_nextBlock(bmw384_ctx_t* ctx, const void* block);
-void bmw384_lastBlock(bmw384_ctx_t* ctx, const void* block, uint16_t length_b);
+void bmw384_nextBlock(bmw384_ctx_t *ctx, const void *block);
+void bmw384_lastBlock(bmw384_ctx_t *ctx, const void *block, uint16_t length_b);
 
-void bmw512_nextBlock(bmw512_ctx_t* ctx, const void* block);
-void bmw512_lastBlock(bmw512_ctx_t* ctx, const void* block, uint16_t length_b);
+void bmw512_nextBlock(bmw512_ctx_t *ctx, const void *block);
+void bmw512_lastBlock(bmw512_ctx_t *ctx, const void *block, uint16_t length_b);
 
-void bmw384_ctx2hash(void* dest, const bmw384_ctx_t* ctx);
-void bmw512_ctx2hash(void* dest, const bmw512_ctx_t* ctx);
+void bmw384_ctx2hash(void *dest, const bmw384_ctx_t *ctx);
+void bmw512_ctx2hash(void *dest, const bmw512_ctx_t *ctx);
 
-void bmw384(void* dest, const void* msg, uint32_t length_b);
-void bmw512(void* dest, const void* msg, uint32_t length_b);
+void bmw384(void *dest, const void *msg, uint32_t length_b);
+void bmw512(void *dest, const void *msg, uint32_t length_b);
 
 #endif /* BMW_LARGE_H_ */

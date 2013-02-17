@@ -31,7 +31,7 @@
 #include "sha1.h"
 #include "shacal1_enc.h"
 
-void shacal1_enc(void* buffer, void* key, uint16_t keysize_b){
+void shacal1_enc(void *buffer, void *key, uint16_t keysize_b){
 	sha1_ctx_t ctx, t_ctx;
 	uint8_t i;
 	memcpy(t_ctx.h, buffer, SHA1_HASH_BITS/8);

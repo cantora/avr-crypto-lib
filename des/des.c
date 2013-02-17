@@ -269,7 +269,7 @@ uint8_t substitute(uint8_t a, uint8_t * sbp){
 
 /******************************************************************************/
 
-uint32_t des_f(uint32_t r, uint8_t* kr){
+uint32_t des_f(uint32_t r, uint8_t *kr){
 	uint8_t i;
 	uint32_t t=0,ret;
 	uint64_t data;
@@ -297,7 +297,7 @@ uint32_t des_f(uint32_t r, uint8_t* kr){
 
 /******************************************************************************/
 
-void des_enc(void* out, const void* in, const void* key){
+void des_enc(void *out, const void *in, const void *key){
 #define R (data.v32[1])
 #define L (data.v32[0])
 
@@ -333,7 +333,7 @@ void des_enc(void* out, const void* in, const void* key){
 
 /******************************************************************************/
 
-void des_dec(void* out, const void* in, const uint8_t* key){
+void des_dec(void *out, const void *in, const uint8_t *key){
 	uint8_t kr[6],k[7];
 	union {
 		uint8_t v8[8];
@@ -368,7 +368,7 @@ void des_dec(void* out, const void* in, const uint8_t* key){
 
 /******************************************************************************/
 
-void tdes_enc(void* out, void* in, const void* key){
+void tdes_enc(void *out, void *in, const void *key){
 	des_enc(out,  in, (uint8_t*)key + 0);
 	des_dec(out, out, (uint8_t*)key + 8);
 	des_enc(out, out, (uint8_t*)key +16);
@@ -376,7 +376,7 @@ void tdes_enc(void* out, void* in, const void* key){
 
 /******************************************************************************/
 
-void tdes_dec(void* out, void* in, const uint8_t* key){
+void tdes_dec(void *out, void *in, const uint8_t *key){
 	des_dec(out,  in, (uint8_t*)key +16);
 	des_enc(out, out, (uint8_t*)key + 8);
 	des_dec(out, out, (uint8_t*)key + 0);

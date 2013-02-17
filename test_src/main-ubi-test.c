@@ -26,7 +26,7 @@
 #include "ubi.h"
 #include "performance_test.h"
 
-char* algo_name = "UBI-Threefish";
+char *algo_name = "UBI-Threefish";
 
 /*****************************************************************************
  *  additional validation-functions											 *

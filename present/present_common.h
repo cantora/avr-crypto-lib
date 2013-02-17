@@ -23,11 +23,11 @@
 
 uint8_t present_sbox(uint8_t b);
 uint8_t present_sbox_inv(uint8_t b);
-void present_p(uint8_t* o, uint8_t* i);
+void present_p(uint8_t *o, uint8_t *i);
 
-void present_generic_enc(void* buffer, uint8_t* ctx, uint8_t ksize_B,
+void present_generic_enc(void *buffer, uint8_t *ctx, uint8_t ksize_B,
 	void(*update)(uint8_t*, uint8_t));
-void present_generic_dec(void* buffer, uint8_t* ctx, uint8_t ksize_B,
+void present_generic_dec(void *buffer, uint8_t *ctx, uint8_t ksize_B,
 	void(*update)(uint8_t*, uint8_t));
 
 #endif /*PRESENT_H_*/

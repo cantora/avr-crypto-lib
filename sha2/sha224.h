@@ -65,7 +65,7 @@ typedef sha2_small_common_ctx_t sha224_ctx_t;
  */
 void sha224_init(sha224_ctx_t *state);
 
-/** \fn void sha224_nextBlock (sha224_ctx_t* state, const void* block)
+/** \fn void sha224_nextBlock (sha224_ctx_t *state, const void *block)
  * \brief update the context with a given block
  * 
  * This function updates the SHA-224 hash context by processing the given block
@@ -73,9 +73,9 @@ void sha224_init(sha224_ctx_t *state);
  * \param state pointer to the SHA-224 hash context
  * \param block pointer to the block of fixed length (512 bit = 64 byte)
  */
-void sha224_nextBlock (sha224_ctx_t* state, const void* block);
+void sha224_nextBlock (sha224_ctx_t *state, const void *block);
 
-/** \fn void sha224_lastBlock(sha224_ctx_t* state, const void* block, uint16_t length_b)
+/** \fn void sha224_lastBlock(sha224_ctx_t *state, const void *block, uint16_t length_b)
  * \brief finalize the context with the given block 
  * 
  * This function finalizes the SHA-224 hash context by processing the given block
@@ -84,17 +84,17 @@ void sha224_nextBlock (sha224_ctx_t* state, const void* block);
  * \param block pointer to the block of fixed length (512 bit = 64 byte)
  * \param length_b the length of the block in bits
  */
-void sha224_lastBlock(sha224_ctx_t* state, const void* block, uint16_t length_b);
+void sha224_lastBlock(sha224_ctx_t *state, const void *block, uint16_t length_b);
 
-/** \fn void sha224_ctx2hash(sha224_hash_t* dest, const sha224_ctx_t* state)
+/** \fn void sha224_ctx2hash(sha224_hash_t *dest, const sha224_ctx_t *state)
  * \brief convert the hash state into the hash value
  * This function reads the context and writes the hash value to the destination
  * \param dest pointer to the location where the hash value should be written
  * \param state pointer to the SHA-224 hash context
  */
-void sha224_ctx2hash(void* dest, const sha224_ctx_t* state);
+void sha224_ctx2hash(void *dest, const sha224_ctx_t *state);
 
-/** \fn void sha224(sha224_hash_t* dest, const void* msg, uint32_t length_b)
+/** \fn void sha224(sha224_hash_t *dest, const void *msg, uint32_t length_b)
  * \brief simple SHA-224 hashing function for direct hashing
  * 
  * This function automatically hashes a given message of arbitary length with
@@ -103,6 +103,6 @@ void sha224_ctx2hash(void* dest, const sha224_ctx_t* state);
  * \param msg pointer to the message thats going to be hashed
  * \param length_b length of the message in bits
  */
-void sha224(void* dest, const void* msg, uint32_t length_b);
+void sha224(void *dest, const void *msg, uint32_t length_b);
 
 #endif /*SHA224_H_*/

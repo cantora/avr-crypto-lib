@@ -33,9 +33,9 @@
 #include "nessie_hash_test.h"
 #include "performance_test.h"
 
-char* algo_name = "Shabal";
+char *algo_name = "Shabal";
 
-const hfdesc_t* const algolist[] PROGMEM = {
+const hfdesc_t *const algolist[] PROGMEM = {
 	(hfdesc_t*)&shabal192_desc,
 	(hfdesc_t*)&shabal224_desc,
 	(hfdesc_t*)&shabal256_desc,
@@ -47,23 +47,23 @@ const hfdesc_t* const algolist[] PROGMEM = {
 /*****************************************************************************
  *  additional validation-functions											 *
  *****************************************************************************/
-void testrun_stdtest_shabal192(void* msg, uint16_t size_b){
+void testrun_stdtest_shabal192(void *msg, uint16_t size_b){
 	hfal_test(&shabal192_desc, msg, size_b);
 }
 
-void testrun_stdtest_shabal224(void* msg, uint16_t size_b){
+void testrun_stdtest_shabal224(void *msg, uint16_t size_b){
 	hfal_test(&shabal224_desc, msg, size_b);
 }
 
-void testrun_stdtest_shabal256(void* msg, uint16_t size_b){
+void testrun_stdtest_shabal256(void *msg, uint16_t size_b){
 	hfal_test(&shabal256_desc, msg, size_b);
 }
 
-void testrun_stdtest_shabal384(void* msg, uint16_t size_b){
+void testrun_stdtest_shabal384(void *msg, uint16_t size_b){
 	hfal_test(&shabal384_desc, msg, size_b);
 }
 
-void testrun_stdtest_shabal512(void* msg, uint16_t size_b){
+void testrun_stdtest_shabal512(void *msg, uint16_t size_b){
 	hfal_test(&shabal512_desc, msg, size_b);
 }
 
@@ -94,9 +94,9 @@ void testshort(void){
 	testrun_stdtest_shabal192(ma, 64*8);
 }
 
-void shabal_ctx_dump(shabal_ctx_t* ctx){
+void shabal_ctx_dump(shabal_ctx_t *ctx){
 	uint8_t i;
-	void* p;
+	void *p;
 	cli_putstr_P(PSTR("\r\n=== shabal ctx dump ===\r\n  size = "));
 	i=sizeof(shabal_ctx_t);
 	if(i>=100)

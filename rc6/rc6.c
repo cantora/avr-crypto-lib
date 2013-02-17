@@ -46,12 +46,12 @@ uint32_t rotr32(uint32_t a, uint8_t n){
  	return ( (a>>n)| (a<<(32-n)) );
 }
  
-uint8_t rc6_init(void* key, uint16_t keylength_b, rc6_ctx_t *s){
+uint8_t rc6_init(void *key, uint16_t keylength_b, rc6_ctx_t *s){
  	return rc6_initl(key, keylength_b, 20, s);
 }
  
  
-uint8_t rc6_initl(void* key, uint16_t keylength_b, uint8_t rounds, rc6_ctx_t *s){
+uint8_t rc6_initl(void *key, uint16_t keylength_b, uint8_t rounds, rc6_ctx_t *s){
  	uint8_t i,j;
  	uint16_t v,p,c;
  	uint32_t a,b, l=0;
@@ -104,7 +104,7 @@ void rc6_free(rc6_ctx_t *s){
 #define C (((uint32_t*)block)[2])
 #define D (((uint32_t*)block)[3])
  
-void rc6_enc(void* block, rc6_ctx_t *s){
+void rc6_enc(void *block, rc6_ctx_t *s){
  	uint8_t i;
  	uint32_t t,u,x; /* greetings to Linux? */
  	B += s->S[0];
@@ -124,7 +124,7 @@ void rc6_enc(void* block, rc6_ctx_t *s){
  	C += s->S[2*s->rounds+3];
 }
  
-void rc6_dec(void* block, rc6_ctx_t *s){
+void rc6_dec(void *block, rc6_ctx_t *s){
  	uint8_t i;
  	uint32_t t,u,x; /* greetings to Linux? */
  

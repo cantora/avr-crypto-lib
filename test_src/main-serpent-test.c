@@ -30,9 +30,9 @@
 #include "bcal-nessie.h"
 #include "bcal_serpent.h"
 
-char* algo_name = "Serpent";
+char *algo_name = "Serpent";
 
-const bcdesc_t* const algolist[] PROGMEM = {
+const bcdesc_t *const algolist[] PROGMEM = {
 	(bcdesc_t*)&serpent_desc,
 	NULL
 };
@@ -40,7 +40,7 @@ const bcdesc_t* const algolist[] PROGMEM = {
 /*****************************************************************************
  *  additional validation-functions											 *
  *****************************************************************************/
-void serpent_genctx_dummy(uint8_t* key, uint16_t keysize, void* ctx){
+void serpent_genctx_dummy(uint8_t *key, uint16_t keysize, void *ctx){
 	serpent_init(key, keysize&0xff, ctx);
 }
 

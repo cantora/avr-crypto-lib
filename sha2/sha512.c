@@ -24,11 +24,11 @@
 #include "sha512.h"
 
 
-void sha512_nextBlock (sha512_ctx_t* ctx, const void* block){
+void sha512_nextBlock (sha512_ctx_t *ctx, const void *block){
 	sha2_large_common_nextBlock(ctx, block);
 }
 
-void sha512_lastBlock(sha512_ctx_t* ctx, const void* block, uint16_t length_b){
+void sha512_lastBlock(sha512_ctx_t *ctx, const void *block, uint16_t length_b){
 	sha2_large_common_lastBlock(ctx, block, length_b);
 }
 
@@ -39,12 +39,12 @@ uint64_t sha512_init_values[8] PROGMEM = {
 };
 
 
-void sha512_init(sha512_ctx_t* ctx){
+void sha512_init(sha512_ctx_t *ctx){
 	ctx->length = 0;
 	memcpy_P(ctx->h, sha512_init_values, 8*8);
 }
 
-void sha512_ctx2hash(void* dest, const sha512_ctx_t* ctx){
+void sha512_ctx2hash(void *dest, const sha512_ctx_t *ctx){
 	uint8_t i=8, j, *s = (uint8_t*)(ctx->h);
 	do{
 		j=7;
@@ -57,7 +57,7 @@ void sha512_ctx2hash(void* dest, const sha512_ctx_t* ctx){
 }
 
 
-void sha512(void* dest, const void* msg, uint32_t length_b){
+void sha512(void *dest, const void *msg, uint32_t length_b){
 	sha512_ctx_t ctx;
 	sha512_init(&ctx);
 	while(length_b >= 1024){

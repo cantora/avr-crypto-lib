@@ -32,7 +32,7 @@
 
 #define X(a) (((uint64_t*)data)[(a)])
 static
-void permute_4(void* data){
+void permute_4(void *data){
 	uint64_t t;
 	t = X(1);
 	X(1) = X(3);
@@ -43,14 +43,14 @@ void permute_4(void* data){
 #define T(s) (((uint64_t*)tweak)[(s)])
 
 static
-void add_key_4(void* data, const threefish256_ctx_t* ctx, uint8_t s){
+void add_key_4(void *data, const threefish256_ctx_t *ctx, uint8_t s){
 	X(0) -= ctx->k[(s+0)%5];
 	X(1) -= ctx->k[(s+1)%5] + ctx->t[s%3];
 	X(2) -= ctx->k[(s+2)%5] + ctx->t[(s+1)%3];
 	X(3) -= ctx->k[(s+3)%5] + s;
 }
 
-void threefish256_dec(void* data, const threefish256_ctx_t* ctx){
+void threefish256_dec(void *data, const threefish256_ctx_t *ctx){
 	uint8_t i=0,s=18;
 /* old constans, changed at round 2 of the SHA-3 contest
 	uint8_t r0[8] = {59, 11, 53, 26, 58, 13, 36,  5};

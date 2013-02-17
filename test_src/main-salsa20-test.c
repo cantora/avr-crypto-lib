@@ -27,7 +27,7 @@
 #include "scal-basic.h"
 #include "scal-nessie.h"
 
-char* algo_name = "Salsa20";
+char *algo_name = "Salsa20";
 
 /*****************************************************************************
  *  additional validation-functions											 *

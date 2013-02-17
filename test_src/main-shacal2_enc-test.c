@@ -27,16 +27,16 @@
 #include "nessie_bc_test.h"
 #include "performance_test.h"
 
-char* algo_name = "Shacal2 encryption only";
+char *algo_name = "Shacal2 encryption only";
 
 /*****************************************************************************
  *  additional validation-functions											 *
  *****************************************************************************/
-void shacal2_genctx_dummy(uint8_t* key, uint16_t keysize_b, void* ctx){
+void shacal2_genctx_dummy(uint8_t *key, uint16_t keysize_b, void *ctx){
 	memcpy(ctx, key, (keysize_b+7)/8);
 }
 
-void shacal2_enc_dummy(void* buffer, void* ctx){
+void shacal2_enc_dummy(void *buffer, void *ctx){
 	shacal2_enc(buffer, ctx, SHACAL2_KEYSIZE);
 }
 

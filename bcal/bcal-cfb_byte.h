@@ -34,13 +34,13 @@ typedef struct{
 } bcal_cfb_B_ctx_t;
 
 
-uint8_t bcal_cfb_B_init(const bcdesc_t* desc, const void* key, uint16_t keysize_b, uint16_t size_b, bcal_cfb_B_ctx_t* ctx);
-void bcal_cfb_B_free(bcal_cfb_B_ctx_t* ctx);
-void bcal_cfb_B_loadIV(const void* iv, bcal_cfb_B_ctx_t* ctx);
-void bcal_cfb_B_encNext(void* block, bcal_cfb_B_ctx_t* ctx);
-void bcal_cfb_B_decNext(void* block, bcal_cfb_B_ctx_t* ctx);
-void bcal_cfb_B_encMsg(const void* iv, void* msg, uint16_t msg_blocks, bcal_cfb_B_ctx_t* ctx);
-void bcal_cfb_B_decMsg(const void* iv, void* msg, uint16_t msg_blocks, bcal_cfb_B_ctx_t* ctx);
+uint8_t bcal_cfb_B_init(const bcdesc_t *desc, const void *key, uint16_t keysize_b, uint16_t size_b, bcal_cfb_B_ctx_t *ctx);
+void bcal_cfb_B_free(bcal_cfb_B_ctx_t *ctx);
+void bcal_cfb_B_loadIV(const void *iv, bcal_cfb_B_ctx_t *ctx);
+void bcal_cfb_B_encNext(void *block, bcal_cfb_B_ctx_t *ctx);
+void bcal_cfb_B_decNext(void *block, bcal_cfb_B_ctx_t *ctx);
+void bcal_cfb_B_encMsg(const void *iv, void *msg, uint16_t msg_blocks, bcal_cfb_B_ctx_t *ctx);
+void bcal_cfb_B_decMsg(const void *iv, void *msg, uint16_t msg_blocks, bcal_cfb_B_ctx_t *ctx);
 
 
 #endif /* BCALCFB_BYTE_H_ */

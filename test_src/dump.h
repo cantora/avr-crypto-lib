@@ -37,6 +37,6 @@
  
 #define DUMP_WIDTH 16
 
-void dump(char* s);
+void dump(char *s);
 
 #endif /* DUMP_H_ */

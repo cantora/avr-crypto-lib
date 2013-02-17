@@ -22,8 +22,8 @@
 #include "dsa.h"
 #include "hfal-basic.h"
 
-uint8_t dsa_verify_bigint(const dsa_signature_t* s, const bigint_t* m,
-		                  const dsa_ctx_t* ctx){
+uint8_t dsa_verify_bigint(const dsa_signature_t *s, const bigint_t *m,
+		                  const dsa_ctx_t *ctx){
 	if(s->r.length_W==0 || s->s.length_W==0){
 		return DSA_SIGNATURE_FAIL;
 	}
@@ -54,8 +54,8 @@ uint8_t dsa_verify_bigint(const dsa_signature_t* s, const bigint_t* m,
 	return DSA_SIGNATURE_FAIL;
 }
 
-uint8_t dsa_verify_message(const dsa_signature_t* s, const void* m, uint16_t m_len_b,
-						  const hfdesc_t* hash_desc, const dsa_ctx_t* ctx){
+uint8_t dsa_verify_message(const dsa_signature_t *s, const void *m, uint16_t m_len_b,
+						  const hfdesc_t *hash_desc, const dsa_ctx_t *ctx){
 	bigint_t z;
 	uint8_t n_B = ctx->domain.q.length_W;
 	uint8_t hash_value[(hfal_hash_getHashsize(hash_desc)+7)/8];

@@ -31,11 +31,11 @@ typedef struct{
 } hmac_sha1_ctx_t;
 
 
-void hmac_sha1_init(hmac_sha1_ctx_t *s, const void* key, uint16_t keylength_b);
-void hmac_sha1_nextBlock(hmac_sha1_ctx_t *s, const void* block);
-void hmac_sha1_lastBlock(hmac_sha1_ctx_t *s, const void* block, uint16_t length_b);
-void hmac_sha1_final(void* dest, hmac_sha1_ctx_t *s);
+void hmac_sha1_init(hmac_sha1_ctx_t *s, const void *key, uint16_t keylength_b);
+void hmac_sha1_nextBlock(hmac_sha1_ctx_t *s, const void *block);
+void hmac_sha1_lastBlock(hmac_sha1_ctx_t *s, const void *block, uint16_t length_b);
+void hmac_sha1_final(void *dest, hmac_sha1_ctx_t *s);
 
-void hmac_sha1(void* dest, const void* key, uint16_t keylength_b, const void* msg, uint32_t msglength_b);
+void hmac_sha1(void *dest, const void *key, uint16_t keylength_b, const void *msg, uint32_t msglength_b);
 
 #endif /*HMACSHA1_H_*/

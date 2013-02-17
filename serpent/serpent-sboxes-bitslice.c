@@ -35,7 +35,7 @@
 
 /* depth = 5,7,4,2, Total gates=18 */
 static
-void sb0(uint8_t* out, const uint8_t* in){
+void sb0(uint8_t *out, const uint8_t *in){
 // (a,b,c,d,w,x,y,z) 
 	uint8_t t01, t02, t03, t05, t06, t07, t08, t09, t11, t12, t13, t14, t15, t17;
 	t01          = in[4*1]  ^ in[4*2]; 
@@ -62,7 +62,7 @@ void sb0(uint8_t* out, const uint8_t* in){
 
 /* depth = 8,4,3,6, Total gates=19 */
 static
-void sb0_inv(uint8_t* out, const uint8_t* in){
+void sb0_inv(uint8_t *out, const uint8_t *in){
 	uint8_t t02, t03, t04, t05, t06, t08, t09, t10, t12, t13, t14, t15, t17, t18, t01;
 	t01          = in[4*2] ^ in[4*3];
 	t02          = in[4*0] | in[4*1];
@@ -89,7 +89,7 @@ void sb0_inv(uint8_t* out, const uint8_t* in){
 
 /* depth = 10,7,3,5, Total gates=18 */
 static 
-void sb1(uint8_t* out, const uint8_t* in){
+void sb1(uint8_t *out, const uint8_t *in){
 	uint8_t t02, t03, t04, t05, t06, t07, t08, t10, t11, t12, t13, t16, t17, t01;
 	t01          = in[4*0]   | in[4*3];
 	t02          = in[4*2]   ^ in[4*3];
@@ -114,7 +114,7 @@ void sb1(uint8_t* out, const uint8_t* in){
 /* InvS1:   5  8  2 14 15  6 12  3 11  4  7  9  1 13 10  0 */
 
 /* depth = 7,4,5,3, Total gates=18 */
-static void sb1_inv(uint8_t* out, const uint8_t* in){
+static void sb1_inv(uint8_t *out, const uint8_t *in){
 	uint8_t t02, t03, t04, t05, t06, t07, t08, t09, t10, t11, t14, t15, t17, t01;
 	t01          = in[4*0]   ^ in[4*1];
 	t02          = in[4*1]   | in[4*3];
@@ -139,7 +139,7 @@ static void sb1_inv(uint8_t* out, const uint8_t* in){
 /* S2:   8  6  7  9  3 12 10 15 13  1 14  4  0 11  5  2 */
 
 /* depth = 3,8,11,7, Total gates=16 */
-static void sb2(uint8_t* out, const uint8_t* in){
+static void sb2(uint8_t *out, const uint8_t *in){
 	uint8_t t02, t03, t05, t06, t07, t08, t09, t10, t12, t13, t14, t01;
 	t01          = in[4*0]   | in[4*2];
 	t02          = in[4*0]   ^ in[4*1];
@@ -162,7 +162,7 @@ static void sb2(uint8_t* out, const uint8_t* in){
 /* InvS2:  12  9 15  4 11 14  1  2  0  3  6 13  5  8 10  7 */
 
 /* depth = 3,6,8,3, Total gates=18 */
-static void sb2_inv(uint8_t* out, const uint8_t* in){
+static void sb2_inv(uint8_t *out, const uint8_t *in){
 	uint8_t t02, t03, t04, t06, t07, t08, t09, t10, t11, t12, t15, t16, t17, t01;
 	t01          = in[4*0]   ^ in[4*3];
 	t02          = in[4*2]   ^ in[4*3];
@@ -187,7 +187,7 @@ static void sb2_inv(uint8_t* out, const uint8_t* in){
 /* S3:   0 15 11  8 12  9  6  3 13  1  2  4 10  7  5 14 */
 
 /* depth = 8,3,5,5, Total gates=18 */
-static void sb3(uint8_t* out, const uint8_t* in){
+static void sb3(uint8_t *out, const uint8_t *in){
 	uint8_t t02, t03, t04, t05, t06, t07, t08, t09, t10, t11, t13, t14, t15, t01;
 	t01          = in[4*0]   ^ in[4*2];
 	t02          = in[4*0]   | in[4*3];
@@ -212,7 +212,7 @@ static void sb3(uint8_t* out, const uint8_t* in){
 /* InvS3:   0  9 10  7 11 14  6 13  3  5 12  2  4  8 15  1 */
 
 /* depth = 3,6,4,4, Total gates=17 */
-static void sb3_inv(uint8_t* out, const uint8_t* in){
+static void sb3_inv(uint8_t *out, const uint8_t *in){
 	uint8_t t02, t03, t04, t05, t06, t07, t09, t11, t12, t13, t14, t16, t01;
 	t01          = in[4*2]   | in[4*3];
 	t02          = in[4*0]   | in[4*3];
@@ -236,7 +236,7 @@ static void sb3_inv(uint8_t* out, const uint8_t* in){
 /* S4:   1 15  8  3 12  0 11  6  2  5  4 10  9 14  7 13 */
 
 /* depth = 6,7,5,3, Total gates=19 */
-static void sb4(uint8_t* out, const uint8_t* in){
+static void sb4(uint8_t *out, const uint8_t *in){
 	uint8_t t02, t03, t04, t05, t06, t08, t09, t10, t11, t12, t13, t14, t15, t16, t01;
 	t01          = in[4*0]   | in[4*1];
 	t02          = in[4*1]   | in[4*2];
@@ -262,7 +262,7 @@ static void sb4(uint8_t* out, const uint8_t* in){
 /* InvS4:   5  0  8  3 10  9  7 14  2 12 11  6  4 15 13  1 */
 
 /* depth = 6,4,7,3, Total gates=17 */
-static void sb4_inv(uint8_t* out, const uint8_t* in){
+static void sb4_inv(uint8_t *out, const uint8_t *in){
 	uint8_t t02, t03, t04, t05, t06, t07, t09, t10, t11, t12, t13, t15, t01;
 	t01          = in[4*1]   | in[4*3];
 	t02          = in[4*2]   | in[4*3];
@@ -286,7 +286,7 @@ static void sb4_inv(uint8_t* out, const uint8_t* in){
 /* S5:  15  5  2 11  4 10  9 12  0  3 14  8 13  6  7  1 */
 
 /* depth = 4,6,8,6, Total gates=17 */
-static void sb5(uint8_t* out, const uint8_t* in){
+static void sb5(uint8_t *out, const uint8_t *in){
 	uint8_t t02, t03, t04, t05, t07, t08, t09, t10, t11, t12, t13, t14, t01;
 	t01          = in[4*1]   ^ in[4*3];
 	t02          = in[4*1]   | in[4*3];
@@ -310,7 +310,7 @@ static void sb5(uint8_t* out, const uint8_t* in){
 /* InvS5:   8 15  2  9  4  1 13 14 11  6  5  3  7 12 10  0 */
 
 /* depth = 4,6,9,7, Total gates=17 */
-static void sb5_inv(uint8_t* out, const uint8_t* in){
+static void sb5_inv(uint8_t *out, const uint8_t *in){
 	uint8_t t02, t03, t04, t05, t07, t08, t09, t10, t12, t13, t15, t16, t01;
 	t01          = in[4*0]   & in[4*3];
 	t02          = in[4*2]   ^ t01;
@@ -334,7 +334,7 @@ static void sb5_inv(uint8_t* out, const uint8_t* in){
 /* S6:   7  2 12  5  8  4  6 11 14  9  1 15 13  3 10  0 */
 
 /* depth = 8,3,6,3, Total gates=19 */
-static void sb6(uint8_t* out, const uint8_t* in){
+static void sb6(uint8_t *out, const uint8_t *in){
 	uint8_t t02, t03, t04, t05, t07, t08, t09, t10, t11, t12, t13, t15, t17, t18, t01;
 	t01          = in[4*0]   & in[4*3];
 	t02          = in[4*1]   ^ in[4*2];
@@ -360,7 +360,7 @@ static void sb6(uint8_t* out, const uint8_t* in){
 /* InvS6:  15 10  1 13  5  3  6  0  4  9 14  7  2 12  8 11 */
 
 /* depth = 5,3,8,6, Total gates=19 */
-static void sb6_inv(uint8_t* out, const uint8_t* in){
+static void sb6_inv(uint8_t *out, const uint8_t *in){
 	uint8_t t02, t03, t04, t05, t06, t07, t08, t09, t12, t13, t14, t15, t16, t17, t01;
 	t01          = in[4*0]   ^ in[4*2];
 	t02          =     ~ in[4*2];
@@ -386,7 +386,7 @@ static void sb6_inv(uint8_t* out, const uint8_t* in){
 /* S7:   1 13 15  0 14  8  2 11  7  4 12 10  9  3  5  6 */
 
 /* depth = 10,7,10,4, Total gates=19 */
-static void sb7(uint8_t* out, const uint8_t* in){
+static void sb7(uint8_t *out, const uint8_t *in){
 	uint8_t t02, t03, t04, t05, t06, t08, t09, t10, t11, t13, t14, t15, t16, t17, t01;
 	t01          = in[4*0]   & in[4*2];
 	t02          =     ~ in[4*3];
@@ -412,7 +412,7 @@ static void sb7(uint8_t* out, const uint8_t* in){
 /* InvS7:   3  0  6 13  9 14 15  8  5 12 11  7 10  1  4  2 */
 
 /* depth = 9,7,3,3, Total gates=18 */
-static void sb7_inv(uint8_t* out, const uint8_t* in){
+static void sb7_inv(uint8_t *out, const uint8_t *in){
 	uint8_t t02, t03, t04, t06, t07, t08, t09, t10, t11, t13, t14, t15, t16, t01;
 	t01          = in[4*0]   & in[4*1];
 	t02          = in[4*0]   | in[4*1];

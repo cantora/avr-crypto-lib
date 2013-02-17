@@ -32,7 +32,7 @@
 #endif
 
 static
-void jh_round(uint8_t* a, uint8_t roundno){
+void jh_round(uint8_t *a, uint8_t roundno){
 	uint8_t b[128];
 	uint8_t i,r=0,u,v,x,y;
 	uint8_t *pr;
@@ -113,7 +113,7 @@ void degroup(uint8_t *a){
 	memcpy(a,b,128);
 }
 
-void jh_encrypt(uint8_t* a){
+void jh_encrypt(uint8_t *a){
 	uint8_t i;
 	/* grouping */
 #if DEBUG

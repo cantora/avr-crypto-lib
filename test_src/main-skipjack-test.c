@@ -30,16 +30,16 @@
 #include "bcal-nessie.h"
 #include "bcal_skipjack.h"
 
-char* algo_name = "Skipjack";
+char *algo_name = "Skipjack";
 
-const bcdesc_t* const algolist[] PROGMEM = {
+const bcdesc_t *const algolist[] PROGMEM = {
 	(bcdesc_t*)&skipjack_desc,
 	NULL
 };
 /*****************************************************************************
  *  additional validation-functions											 *
  *****************************************************************************/
-void skipjack_genctx_dummy(uint8_t* key, uint16_t keysize, void* ctx){
+void skipjack_genctx_dummy(uint8_t *key, uint16_t keysize, void *ctx){
 	memcpy(ctx, key, 10);
 }
 
@@ -52,7 +52,7 @@ void testrun_performance_skipjack(void){
 	bcal_performance_multiple(algolist);
 }
 
-int test_enc(const void* buffer, void* key){
+int test_enc(const void *buffer, void *key){
 	uint8_t data[8];
 	int r;
 	memcpy(data, buffer, 8);
@@ -104,7 +104,7 @@ void testrun_nist_vectors(void){
  *  self tests																 *
  *****************************************************************************/
 
-void testencrypt(uint8_t* block, uint8_t* key){
+void testencrypt(uint8_t *block, uint8_t *key){
 	cli_putstr("\r\n==testy-encrypt==\r\n key: ");
 	cli_hexdump(key,10);
 	cli_putstr("\r\n plain: ");
@@ -114,7 +114,7 @@ void testencrypt(uint8_t* block, uint8_t* key){
 	cli_hexdump(block,8);
 }
 
-void testdecrypt(uint8_t* block, uint8_t* key){
+void testdecrypt(uint8_t *block, uint8_t *key){
 	cli_putstr("\r\n==testy-decrypt==\r\n key: ");
 	cli_hexdump(key,10);
 	cli_putstr("\r\n crypt: ");

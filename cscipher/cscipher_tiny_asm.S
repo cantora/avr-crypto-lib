@@ -164,7 +164,7 @@ round_const:
 .byte	0xbf, 0x71, 0x58, 0x80, 0x9c, 0xf4, 0xf3, 0xc7
 
 /*
-void cscipher_enc(void* buffer, const cscipher_ctx_t* ctx){
+void cscipher_enc(void *buffer, const cscipher_ctx_t *ctx){
 	uint8_t i,j,k;
 	uint8_t tmp[8];
 	for(i=0; i<8; ++i){
@@ -288,7 +288,7 @@ cscipher_enc:
 	rjmp memxor
 
 /*
-void cscipher_dec(void* buffer, const cscipher_ctx_t* ctx){
+void cscipher_dec(void *buffer, const cscipher_ctx_t *ctx){
 	uint8_t i=7,j,k;
 	uint8_t tmp[8];
 	memxor(buffer, ctx->keys[8], 8);

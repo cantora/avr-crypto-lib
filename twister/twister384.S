@@ -27,7 +27,7 @@
 
 #include "avr-asm-macros.S" 
 /*********************************************************************/
-/* void twister384(void* dest, void* msg, uint32_t msg_length_b) */
+/* void twister384(void *dest, void *msg, uint32_t msg_length_b) */
 /*
  * param dest:         r24:r25
  * param msg:          r22:r23

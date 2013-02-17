@@ -43,7 +43,7 @@
 .extern noekeon_enc
 
 /*
- * void noekeon_cbc_enc(void* buffer, uint8_t block_cnt, const void* key)
+ * void noekeon_cbc_enc(void *buffer, uint8_t block_cnt, const void *key)
  */
 
 /* param buffer    is passed in r24:r25

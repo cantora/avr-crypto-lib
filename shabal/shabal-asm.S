@@ -28,7 +28,7 @@
 
 /******************************************************************************/
 /*
-void shabal_p(shabal_ctx_t* ctx, const void* m){
+void shabal_p(shabal_ctx_t *ctx, const void *m){
 	uint8_t i,j;
 	for(i=0;i<16;++i){
 		ctx->b[i] = ROTL32(ctx->b[i],17);
@@ -459,9 +459,9 @@ mod12table:
 	
 /******************************************************************************/
 /*
-void shabal_nextBlock(shabal_ctx_t* ctx, const void* block){
+void shabal_nextBlock(shabal_ctx_t *ctx, const void *block){
 	uint8_t i;
-	uint32_t* t;
+	uint32_t *t;
 	for(i=0;i<16;++i){
 		ctx->b[i] += ((uint32_t*)block)[i];
 	}
@@ -570,9 +570,9 @@ shabal_nextBlock:
 
 /******************************************************************************/
 /*
-void shabal_lastBlock(shabal_ctx_t* ctx, const void* block, uint16_t length_b){
+void shabal_lastBlock(shabal_ctx_t *ctx, const void *block, uint16_t length_b){
 	uint8_t i,j;
-	uint32_t* t;
+	uint32_t *t;
 	uint8_t buffer[64];
 	while(length_b>=SHABAL_BLOCKSIZE){
 		shabal_nextBlock(ctx, block);

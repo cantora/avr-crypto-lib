@@ -27,7 +27,7 @@
 #include "hmac-md5.h"
 #include "nessie_mac_test.h"
 
-char* algo_name = "HMAC-MD5";
+char *algo_name = "HMAC-MD5";
 
 /*****************************************************************************
  *  additional validation-functions											 *
@@ -87,7 +87,7 @@ void hmacmd5_interactive(void){
 	cli_hexdump(hmac, HMAC_MD5_BYTES);
 }
 
-void strhexdump(char* dest, void* src, uint16_t length){
+void strhexdump(char *dest, void *src, uint16_t length){
 	char table[] = { '0', '1', '2', '3', 
 	                 '4', '5', '6', '7', 
 					 '8', '9', 'a', 'b', 

@@ -33,9 +33,9 @@
 #include "hfal_whirlpool.h"
 #include "dump.h"
 
-char* algo_name = "Whirlpool";
+char *algo_name = "Whirlpool";
 
-const hfdesc_t* const algolist[] PROGMEM = {
+const hfdesc_t *const algolist[] PROGMEM = {
 	(hfdesc_t*)&whirlpool_desc,
 	NULL
 };

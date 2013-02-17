@@ -25,9 +25,9 @@
 #define IPAD 0x36
 #define OPAD 0x5C
 
-uint8_t hfal_hmac_init(const hfdesc_t* hash_descriptor, 
-                       hfhmacgen_ctx_t* ctx, 
-					   const void* key, uint16_t keylength_b){
+uint8_t hfal_hmac_init(const hfdesc_t *hash_descriptor, 
+                       hfhmacgen_ctx_t *ctx, 
+					   const void *key, uint16_t keylength_b){
 	uint16_t  bs = hfal_hash_getBlocksize();
 	uint8_t buffer[bs/8];
 	uint8_t i;
@@ -67,13 +67,13 @@ uint8_t hfal_hmac_init(const hfdesc_t* hash_descriptor,
 	memset(buffer, 0, bs/8);
 }
 					   
-void hfal_hmac_nextBlock(hfhmacgen_ctx_t* ctx, const void* block){
+void hfal_hmac_nextBlock(hfhmacgen_ctx_t *ctx, const void *block){
 	hf_nextBlock_fpt nextBlock;
 	nextBlock = pgm_read_word(&(hash_descriptor->nextBlock));
 	nextBlock(ctx->ctx, block);
 }
 
-void hfal_hmac_lastBlock(hfhmacgen_ctx_t* ctx, const void* block, uint16_t length_b){
+void hfal_hmac_lastBlock(hfhmacgen_ctx_t *ctx, const void *block, uint16_t length_b){
 	hf_lastBlock_fpt lastBlock;
 	hf_ctx2hash_fpt  ctx2hash;
 	uint16_t hs = pgm_read_word(&(hash_descriptor->hashsize_b));
@@ -85,13 +85,13 @@ void hfal_hmac_lastBlock(hfhmacgen_ctx_t* ctx, const void* block, uint16_t lengt
 	lastBlock(ctx->finctx, buffer, hs);
 }
 
-void hfal_hmac_ctx2mac(void* dest, hfhmacgen_ctx_t* ctx){
+void hfal_hmac_ctx2mac(void *dest, hfhmacgen_ctx_t *ctx){
 	hf_ctx2hash_fpt  ctx2hash;
 	ctx2hash = pgm_read_word(&(hash_descriptor->ctx2hash));
 	ctx2hash(dest, ctx->finctx);
 }
 
-void hfal_hmac_free(hfhmacgen_ctx_t* ctx){
+void hfal_hmac_free(hfhmacgen_ctx_t *ctx){
 	hf_free_fpt free_fpt;
 	free_fpt = pgm_read_word(&(hash_descriptor->free));
 	if(free_fpt){
@@ -102,7 +102,7 @@ void hfal_hmac_free(hfhmacgen_ctx_t* ctx){
 	free(ctx->finctx)
 }
 
-void hfal_hmac_mem(const hfdesc_t* hash_descriptor, const void* key, uint16_t keylength_b, void* dest, const void* msg, uint32_t length_b){
+void hfal_hmac_mem(const hfdesc_t *hash_descriptor, const void *key, uint16_t keylength_b, void *dest, const void *msg, uint32_t length_b){
 	hfhmacgen_ctx_t ctx;
 	uint16_t  bs = hfal_hash_getBlocksize();
 	hfal_hmac_init(hash_descriptor, &ctx, key, keylength_b);
@@ -116,11 +116,11 @@ void hfal_hmac_mem(const hfdesc_t* hash_descriptor, const void* key, uint16_t ke
 	hfal_free(&ctx);
 }
 
-uint16_t hfal_hmac_getBlocksize(const hfdesc_t* hash_descriptor){
+uint16_t hfal_hmac_getBlocksize(const hfdesc_t *hash_descriptor){
 	return hfal_hash_getBlocksize(hash_descriptor);
 }
 
-uint16_t hfal_hmac_getMACsize(const hfdesc_t* hash_descriptor){
+uint16_t hfal_hmac_getMACsize(const hfdesc_t *hash_descriptor){
 	return hfal_hash_getHashsize(hash_descriptor);
 }
 

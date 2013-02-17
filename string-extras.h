@@ -24,7 +24,7 @@
  * 
  */
 
-/** \fn stridentcnt_P(char* a, PGM_P b)
+/** \fn stridentcnt_P(char *a, PGM_P b)
  * \brief counts the number of identic chars
  * 
  * This function compares the supplyed strings and returns the index of the 
@@ -33,9 +33,9 @@
  * \param b pointer to string in Flash
  * \return index of the first char where \c a and \c b differ
  */
-uint16_t stridentcnt_P(char* a, PGM_P b);
+uint16_t stridentcnt_P(char *a, PGM_P b);
 
-/** \fn firstword_length(char* s)
+/** \fn firstword_length(char *s)
  * \brief compute the length of the first word in supllyed string
  * 
  * This function searches for the first whitespace in the string and returns the
@@ -43,13 +43,13 @@ uint16_t stridentcnt_P(char* a, PGM_P b);
  * \param s string
  * \return number of chars in first word
  */
-uint16_t firstword_length(char* s);
+uint16_t firstword_length(char *s);
 
-/** \fn strstrip(char* str)
+/** \fn strstrip(char *str)
  * \brief removes whitespace at the beginning and the end of a string
  * 
  * This function removes whitespaces at the end of a string.
  * \param str sting
  * \return pointer to the first non-whitespace char in string
  */
-char* strstrip(char* str);
+char *strstrip(char *str);

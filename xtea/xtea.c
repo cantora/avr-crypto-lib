@@ -25,7 +25,7 @@
  
 #include <stdint.h> 
 
-void xtea_enc(void* dest, const void* v, const void* k) {
+void xtea_enc(void *dest, const void *v, const void *k) {
     uint8_t i;
     uint32_t v0=((uint32_t*)v)[0], v1=((uint32_t*)v)[1];
     uint32_t sum=0, delta=0x9E3779B9;
@@ -37,7 +37,7 @@ void xtea_enc(void* dest, const void* v, const void* k) {
     ((uint32_t*)dest)[0]=v0; ((uint32_t*)dest)[1]=v1;
 }
 
-void xtea_dec(void* dest, const void* v, const void* k) {
+void xtea_dec(void *dest, const void *v, const void *k) {
     uint8_t i;
     uint32_t v0=((uint32_t*)v)[0], v1=((uint32_t*)v)[1];
     uint32_t sum=0xC6EF3720, delta=0x9E3779B9;

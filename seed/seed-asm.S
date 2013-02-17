@@ -222,7 +222,7 @@ seed_sbox2:
 
 /*
 static
-uint64_t f_function(const uint64_t* a, uint32_t k0, uint32_t k1){
+uint64_t f_function(const uint64_t *a, uint32_t k0, uint32_t k1){
 	uint32_t c,d;
 
 	c = *a & 0x00000000FFFFFFFFLL;

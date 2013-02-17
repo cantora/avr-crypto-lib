@@ -32,7 +32,7 @@
 
 #define G(i) ((((*ctx)[(i)/8])>>(((i)%8)))&1)
 #define S(i,v) ((*ctx)[(i)/8] = (((*ctx)[(i)/8]) & (uint8_t)~(1<<((i)%8))) | ((v)<<((i)%8)))
-uint8_t trivium_enc(trivium_ctx_t* ctx){
+uint8_t trivium_enc(trivium_ctx_t *ctx){
 	uint8_t t1,t2,t3,z;
 	
 	t1 = G(65)  ^ G(92);
@@ -77,9 +77,9 @@ static const uint8_t rev_table[16] PROGMEM = {
 	0x03, 0x0B, 0x07, 0x0F    /* 0011 1011 0111 1111 */
 };
 
-void trivium_init(const void* key, uint16_t keysize_b,
-                  const void* iv,  uint16_t ivsize_b,
-                  trivium_ctx_t* ctx){
+void trivium_init(const void *key, uint16_t keysize_b,
+                  const void *iv,  uint16_t ivsize_b,
+                  trivium_ctx_t *ctx){
 	uint16_t i;
 	uint8_t c1,c2;
 	uint8_t t1,t2;

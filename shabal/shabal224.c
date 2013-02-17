@@ -47,7 +47,7 @@ const uint32_t shabal224_iv[] PROGMEM = {
 	0x16F1AC05, 0x38BBEB56, 0x9B01DC60, 0xB1096D83
 };
 
-void shabal224_init(shabal_ctx_t* ctx){
+void shabal224_init(shabal_ctx_t *ctx){
 	uint8_t i;
 	ctx->b = ctx->b_buffer;
 	ctx->c = ctx->c_buffer;
@@ -63,11 +63,11 @@ void shabal224_init(shabal_ctx_t* ctx){
 	}
 }
 
-void shabal224_ctx2hash(void* dest, const shabal_ctx_t* ctx){
+void shabal224_ctx2hash(void *dest, const shabal_ctx_t *ctx){
 	shabal_ctx2hash(dest, ctx, 224);
 }
 
-void shabal224(void* dest, void* msg, uint32_t length_b){
+void shabal224(void *dest, void *msg, uint32_t length_b){
 	shabal_ctx_t ctx;
 	shabal224_init(&ctx);
 	while(length_b>=SHABAL_BLOCKSIZE){

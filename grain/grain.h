@@ -35,8 +35,8 @@ typedef struct gain_ctx_st{
 	uint8_t nfsr[10];
 } grain_ctx_t;
 
-uint8_t grain_getbyte(grain_ctx_t* ctx);
-uint8_t grain_enc(grain_ctx_t* ctx);
-void grain_init(const void* key, const void* iv, grain_ctx_t* ctx);
+uint8_t grain_getbyte(grain_ctx_t *ctx);
+uint8_t grain_enc(grain_ctx_t *ctx);
+void grain_init(const void *key, const void *iv, grain_ctx_t *ctx);
 
 #endif /*GRAIN_H_*/

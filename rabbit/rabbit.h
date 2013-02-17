@@ -30,12 +30,12 @@ typedef struct {
 	uint8_t  buffer_idx;
 } rabbit_ctx_t;
 
-void dump_ctx(rabbit_ctx_t* ctx);
+void dump_ctx(rabbit_ctx_t *ctx);
 
-uint8_t rabbit_gen(rabbit_ctx_t* ctx);
-void rabbit_init(const void* key, uint16_t keysize_b,
-                  const void* iv,
-                  rabbit_ctx_t* ctx);
+uint8_t rabbit_gen(rabbit_ctx_t *ctx);
+void rabbit_init(const void *key, uint16_t keysize_b,
+                  const void *iv,
+                  rabbit_ctx_t *ctx);
 
 
 #endif /* RABBIT_H_ */

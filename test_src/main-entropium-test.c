@@ -27,7 +27,7 @@
 #include "nessie_bc_test.h"
 #include "performance_test.h"
 
-char* algo_name = "Entropium";
+char *algo_name = "Entropium";
 
 /*****************************************************************************
  *  additional validation-functions											 *

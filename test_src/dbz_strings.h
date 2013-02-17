@@ -34,16 +34,16 @@
 #include <stdint.h>
 #include <avr/pgmspace.h>
 
-/** \fn uint8_t dbz_strcount(const char* str)
+/** \fn uint8_t dbz_strcount(const char *str)
  * \brief count stings in dbz-terminated string
  * 
  * Count the single zero terminated strings in a 
  * double terminated string
  * \param str pointer to the double-zero-terminated string
  */
-uint8_t dbz_strcount(const char* str);
+uint8_t dbz_strcount(const char *str);
 
-/** \fn void dbz_splitup(char* dbzstr, char** strings)
+/** \fn void dbz_splitup(char *dbzstr, char** strings)
  * \brief split up a dbz-terminated string
  * 
  * Fills an array with pointers to the single terminated string
@@ -51,7 +51,7 @@ uint8_t dbz_strcount(const char* str);
  * \param dbzstr pointer to the double-zero-terminated string
  * \param strings pointer to the array of strings (char pointers)
  */
-void dbz_splitup(char* dbzstr, char** strings);
+void dbz_splitup(char *dbzstr, char** strings);
 
 /** \fn uint8_t dbz_strcount_P(PGM_P str)
  * \brief count stings in dbz-terminated string in flash
@@ -62,7 +62,7 @@ void dbz_splitup(char* dbzstr, char** strings);
  */
 uint8_t dbz_strcount_P(PGM_P str);
 
-/** \fn void dbz_splitup_P(PGM_P dbzstr, PGM_P* strings)
+/** \fn void dbz_splitup_P(PGM_P dbzstr, PGM_P *strings)
  * \brief split up a dbz-terminated string in flash
  * 
  * Fills an array with pointers (PGM_P) to the single terminated string
@@ -70,6 +70,6 @@ uint8_t dbz_strcount_P(PGM_P str);
  * \param dbzstr  pointer to the double-zero-terminated string in flash
  * \param strings pointer to the array of strings (PGM_P)
  */
-void dbz_splitup_P(PGM_P dbzstr, PGM_P* strings);
+void dbz_splitup_P(PGM_P dbzstr, PGM_P *strings);
 
 #endif /*DBZ_STRINGS_H_*/

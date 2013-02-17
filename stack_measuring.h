@@ -28,8 +28,8 @@ typedef struct {
 	uint8_t pattern;
 } stack_measuring_ctx_t;
 
-void stack_measure_init(stack_measuring_ctx_t* ctx, uint8_t pattern);
-uint16_t stack_measure_final(const stack_measuring_ctx_t* ctx);
+void stack_measure_init(stack_measuring_ctx_t *ctx, uint8_t pattern);
+uint16_t stack_measure_final(const stack_measuring_ctx_t *ctx);
 /* for testing only
  void stack_measure_usestack(uint16_t size, uint8_t value); */
 
