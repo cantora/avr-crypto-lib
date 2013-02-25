@@ -45,8 +45,7 @@ void testrun_nessie_arcfour(void){
 }
 
 void testrun_performance_arcfour(void){
-	uint64_t t;
-	char str[16];
+	uint32_t t;
 	uint8_t key[16];
 	arcfour_ctx_t ctx;
 	
@@ -55,21 +54,16 @@ void testrun_performance_arcfour(void){
 	
 	memset(key,  0, 16);
 	
+    uart0_flush();
 	startTimer(1);
 	arcfour_init(key, 16, &ctx);
 	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tctx-gen time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);	
-	
+	printf_P(PSTR("\tctx-gen time: %10"PRIu32"\n"), t);
+	uart0_flush();
 	startTimer(1);
 	arcfour_gen(&ctx);
 	t = stopTimer();
-	cli_putstr_P(PSTR("\r\n\tencrypt time: "));
-	ultoa((unsigned long)t, str, 10);
-	cli_putstr(str);	
-	
-	cli_putstr_P(PSTR("\r\n"));	
+	printf_P(PSTR("\tencrypt time: %10"PRIu32"\n"), t);
 }
 
 

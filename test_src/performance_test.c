@@ -31,7 +31,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <avr/pgmspace.h>
-#include "cli.h"
+#include <stdio.h>
 #include "performance_test.h"
 
 
@@ -43,21 +43,20 @@
 
 static volatile uint32_t ovfcounter;
 
-static uint16_t const_overhead=0;
-static uint16_t int_overhead=0;
+static uint16_t const_overhead = 0;
+static uint16_t int_overhead = 0;
 
 ISR(TIMER1_OVF_vect){
-	ovfcounter++;
+	++ovfcounter;
 }
 
 void calibrateTimer(void){
-	volatile uint8_t i=0;
 	startTimer(1);
 	stopTimer();
 	const_overhead = TCNT1;
 	startTimer(1);
-	TCNT1=0xFFFE;
-	i++;
+	TCNT1 = 0xFFFE;
+	asm("nop");
 	stopTimer();
 	int_overhead = TCNT1;
 }
@@ -85,27 +84,12 @@ void getOverhead(uint16_t *constoh, uint16_t *intoh){
 	*intoh   = int_overhead;
 }
 
-void print_time_P(PGM_P s, uint64_t t){
-	char sv[16];
-	uint8_t c;
-	cli_putstr_P(PSTR("\r\n"));
-	cli_putstr_P(s);
-	ultoa((unsigned long)t, sv, 10);
-	for(c=strlen(sv); c<11; ++c){
-		cli_putc(' ');
-	}
-	cli_putstr(sv);
+void print_time_P(PGM_P s, uint32_t t){
+	printf_P(PSTR("%S%11"PRIu32), t);
 }
 
 void print_overhead(void){
-	char str[16];
-	cli_putstr_P(PSTR("\r\n\r\n=== benchmark ==="));
-	utoa(const_overhead, str, 10);
-	cli_putstr_P(PSTR("\r\n\tconst overhead:     "));
-	cli_putstr(str);
-	utoa(int_overhead, str, 10);
-	cli_putstr_P(PSTR("\r\n\tinterrupt overhead: "));
-	cli_putstr(str);
+	printf_P(PSTR("\n=== benchmark ===\n\tconst overhead:     %7"PRIu16"\n\tinterrupt overhead: %7"PRIu16"\n"), const_overhead, int_overhead);
 }
 
 

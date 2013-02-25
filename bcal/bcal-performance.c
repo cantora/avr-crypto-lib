@@ -69,12 +69,12 @@ void bcal_performance(const bcdesc_t *bcd){
 		return;
 	calibrateTimer();
 	print_overhead();
-	printf_P(PSTR("\n\n === %S"), bc.name);
-	printf_P(PSTR(" performance === \n"
-	              "    type:             blockcipher\n"
-	              "    keysize (bits):     %5"PRIu16"\n"), keysize);
-	printf_P(PSTR("    ctxsize (bytes):    %5"PRIu16"\n"), bc.ctxsize_B);
-	printf_P(PSTR("    blocksize (bits):   %5"PRIu16"\n"), bc.blocksize_b);
+	printf_P(PSTR("\n\n === %S performance === \n"
+	              "\ttype:             blockcipher\n"
+	              "\tkeysize (bits):     %5"PRIu16"\n"
+	              "\tctxsize (bytes):    %5"PRIu16"\n"
+	              "\tblocksize (bits):   %5"PRIu16"\n"),
+	        bc.name, keysize, bc.ctxsize_B, bc.blocksize_b);
 	uart0_flush();
 	t=0;
 	if(bc.init.init1){

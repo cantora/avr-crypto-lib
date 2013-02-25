@@ -101,7 +101,7 @@ uint8_t arcfour_gen(arcfour_ctx_t *c){
 .global arcfour_gen
 
 ;== arcfour_gen ==
-;  this function initialises the context
+; this function generates a keystream byte
 ; param1: 16-bit pointer to a ctx struct
 ;	given in r25,r24
 

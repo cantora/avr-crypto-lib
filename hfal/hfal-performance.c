@@ -25,29 +25,19 @@
  *
  */
 
-#include "hfal-performance.h"
-#include "hashfunction_descriptor.h"
-#include "stack_measuring.h"
-#include "cli.h"
-#include "performance_test.h"
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 #include <avr/pgmspace.h>
+#include "hfal-performance.h"
+#include "hashfunction_descriptor.h"
+#include "stack_measuring.h"
+#include "performance_test.h"
+#include "uart_i.h"
 
 #define PATTERN_A 0xAA
 #define PATTERN_B 0x55
-
-static
-void printvalue(unsigned long v){
-	char str[20];
-	int i;
-	ultoa(v, str, 10);
-	for(i=0; i<10-strlen(str); ++i){
-		cli_putc(' ');
-	}
-	cli_putstr(str);
-}
 
 void hfal_performance(const hfdesc_t *hd){
 	hfdesc_t hf;
@@ -55,26 +45,20 @@ void hfal_performance(const hfdesc_t *hd){
 	uint8_t ctx[hf.ctxsize_B];
 	uint8_t data[(hf.blocksize_b+7)/8];
 	uint8_t digest[(hf.hashsize_b+7)/8];
-	uint64_t t;
+	uint32_t t;
 	uint8_t i;
 
 	if(hf.type!=HFDESC_TYPE_HASHFUNCTION)
 		return;
 	calibrateTimer();
 	print_overhead();
-	cli_putstr_P(PSTR("\r\n\r\n === "));
-	cli_putstr_P(hf.name);
-	cli_putstr_P(PSTR(" performance === "
-	                  "\r\n    type:             hashfunction"
-	                  "\r\n    hashsize (bits):    "));
-	printvalue(hf.hashsize_b);
-
-	cli_putstr_P(PSTR("\r\n    ctxsize (bytes):    "));
-	printvalue(hf.ctxsize_B);
-
-	cli_putstr_P(PSTR("\r\n    blocksize (bits):   "));
-	printvalue(hf.blocksize_b);
-
+	printf_P(PSTR("\n\n === %S performance ===\n"
+	              "\ttype:             hashfunction\n"
+	              "\thashsize (bits):    %10"PRIu16"\n"
+	              "\tctxsize (bytes):    %10"PRIu16"\n"
+	              "\tblocksize (bits):   %10"PRIu16"\n"),
+	         hf.name, hf.hashsize_b, hf.ctxsize_B, hf.blocksize_b);
+	uart0_flush();
 	t=0;
 	for(i=0; i<32; ++i){
 		startTimer(0);
@@ -87,8 +71,7 @@ void hfal_performance(const hfdesc_t *hd){
 		}
 	}
 	t>>=5;
-	cli_putstr_P(PSTR("\r\n    init (cycles):      "));
-	printvalue(t);
+	printf_P(PSTR("\tinit (cycles):      %10"PRIu32"\n"), t);
 
 	t=0;
 	for(i=0; i<32; ++i){
@@ -99,8 +82,7 @@ void hfal_performance(const hfdesc_t *hd){
 		t += stopTimer();
 	}
 	t>>=5;
-	cli_putstr_P(PSTR("\r\n    nextBlock (cycles): "));
-	printvalue(t);
+	printf_P(PSTR("\tnextBlock (cycles): %10"PRIu32"\n"), t);
 
 	t=0;
 	for(i=0; i<32; ++i){
@@ -111,8 +93,7 @@ void hfal_performance(const hfdesc_t *hd){
 		t += stopTimer();
 	}
 	t>>=5;
-	cli_putstr_P(PSTR("\r\n    lastBlock (cycles): "));
-	printvalue(t);
+	printf_P(PSTR("\tlastBlock (cycles): %10"PRIu32"\n"), t);
 
 	t=0;
 	for(i=0; i<32; ++i){
@@ -123,8 +104,7 @@ void hfal_performance(const hfdesc_t *hd){
 		t += stopTimer();
 	}
 	t>>=5;
-	cli_putstr_P(PSTR("\r\n    ctx2hash (cycles):  "));
-	printvalue(t);
+	printf_P(PSTR("\tctx2hash (cycles):  %10"PRIu32"\n"), t);
 
 	if(hf.free){
 		hf.free(&ctx);
@@ -136,15 +116,13 @@ void hfal_stacksize(const hfdesc_t *hd){
 	stack_measuring_ctx_t smctx;
 	memcpy_P(&hf, hd, sizeof(hfdesc_t));
 	uint8_t ctx[hf.ctxsize_B];
-	uint8_t data[(hf.blocksize_b+7)/8];
-	uint8_t digest[(hf.hashsize_b+7)/8];
-	uint16_t t1, t2;
+	uint8_t data[(hf.blocksize_b + 7) / 8];
+	uint8_t digest[(hf.hashsize_b + 7) / 8];
+	size_t t1, t2;
 
 	if(hf.type!=HFDESC_TYPE_HASHFUNCTION)
 		return;
-	cli_putstr_P(PSTR("\r\n\r\n === "));
-	cli_putstr_P(hf.name);
-	cli_putstr_P(PSTR(" stack-usage === "));
+	printf_P(PSTR("\n === %S stack-usage ===\n"), hf.name);
 
 	cli();
 	stack_measure_init(&smctx, PATTERN_A);
@@ -155,9 +133,8 @@ void hfal_stacksize(const hfdesc_t *hd){
 	t2 = stack_measure_final(&smctx);
 	sei();
 
-	t1 = (t1>t2)?t1:t2;
-	cli_putstr_P(PSTR("\r\n    init (bytes):       "));
-	printvalue((unsigned long)t1);
+	t1 = (t1 > t2) ? t1 : t2;
+	printf_P(PSTR("\tinit (bytes):       %10"PRIu16"\n"), t1);
 
 	cli();
 	stack_measure_init(&smctx, PATTERN_A);
@@ -168,9 +145,8 @@ void hfal_stacksize(const hfdesc_t *hd){
 	t2 = stack_measure_final(&smctx);
 	sei();
 
-	t1 = (t1>t2)?t1:t2;
-	cli_putstr_P(PSTR("\r\n    nextBlock (bytes):  "));
-	printvalue((unsigned long)t1);
+	t1 = (t1 > t2) ? t1 : t2;
+	printf_P(PSTR("\tnextBlock (bytes):  %10"PRIu16"\n"), t1);
 
 	cli();
 	stack_measure_init(&smctx, PATTERN_A);
@@ -181,9 +157,8 @@ void hfal_stacksize(const hfdesc_t *hd){
 	t2 = stack_measure_final(&smctx);
 	sei();
 
-	t1 = (t1>t2)?t1:t2;
-	cli_putstr_P(PSTR("\r\n    lastBlock (bytes):  "));
-	printvalue((unsigned long)t1);
+	t1 = (t1 > t2) ? t1 : t2;
+	printf_P(PSTR("\tlastBlock (bytes):  %10"PRIu16"\n"), t1);
 
 	cli();
 	stack_measure_init(&smctx, PATTERN_A);
@@ -195,8 +170,7 @@ void hfal_stacksize(const hfdesc_t *hd){
 	sei();
 
 	t1 = (t1>t2)?t1:t2;
-	cli_putstr_P(PSTR("\r\n    ctx2hash (bytes):   "));
-	printvalue((unsigned long)t1);
+	printf_P(PSTR("\tctx2hash (bytes):   %10"PRIu16"\n"));
 
 	if(hf.free){
 		hf.free(&ctx);
@@ -208,7 +182,7 @@ void hfal_performance_multiple(const hfdesc_t *const *hd_list){
 	for(;;){
 		hd = (void*)pgm_read_word(hd_list);
 		if(!hd){
-			cli_putstr_P(PSTR("\r\n\r\n End of performance figures\r\n"));
+			puts_P(PSTR("\n End of performance figures\n"));
 			return;
 		}
 		hfal_performance(hd);
