@@ -48,7 +48,7 @@ void printvalue(unsigned long v){
 	char str[20];
 	int i;
 	ultoa(v, str, 10);
-	for(i=0; i<10-strlen(str); ++i){
+	for(i = 0; i < 10 - strlen(str); ++i){
 		cli_putc(' ');
 	}
 	cli_putstr(str);
@@ -59,9 +59,9 @@ void bcal_performance(const bcdesc_t *bcd){
 	bcdesc_t bc;
 	memcpy_P(&bc, bcd, sizeof(bcdesc_t));
 	uint8_t ctx[bc.ctxsize_B];
-	uint8_t data[(bc.blocksize_b+7)/8];
+	uint8_t data[(bc.blocksize_b + 7) / 8];
 	uint16_t keysize = get_keysize(bc.valid_keysize_desc);
-	uint8_t key[(keysize+7)/8];
+	uint8_t key[(keysize + 7) / 8];
 	uint64_t t;
 	uint8_t i;
 
@@ -76,10 +76,10 @@ void bcal_performance(const bcdesc_t *bcd){
 	              "\tblocksize (bits):   %5"PRIu16"\n"),
 	        bc.name, keysize, bc.ctxsize_B, bc.blocksize_b);
 	uart0_flush();
-	t=0;
+	t = 0;
 	if(bc.init.init1){
 		if((bc.flags & BC_INIT_TYPE) == BC_INIT_TYPE_1){
-			for(i=0; i<32; ++i){
+			for(i = 0; i < 32; ++i){
 				startTimer(1);
 				START_TIMER;
 				(bc.init.init1)(key, &ctx);
@@ -90,7 +90,7 @@ void bcal_performance(const bcdesc_t *bcd){
 				}
 			}
 		} else {
-			for(i=0; i<32; ++i){
+			for(i = 0; i < 32; ++i){
 				startTimer(1);
 				START_TIMER;
 				(bc.init.init2)(key, keysize, &ctx);
@@ -101,32 +101,32 @@ void bcal_performance(const bcdesc_t *bcd){
 				}
 			}
 		}
-		t>>=5;
+		t >>= 5;
 		printf_P(PSTR("    init (cycles):      %5"PRIu16"\n"), t);
 	}
 
     uart0_flush();
-	t=0;
-	for(i=0; i<32; ++i){
+	t = 0;
+	for(i = 0; i < 32; ++i){
 		startTimer(0);
 		START_TIMER;
 		bc.enc.enc1(data, &ctx);
 		STOP_TIMER;
 		t += stopTimer();
 	}
-	t>>=5;
+	t >>= 5;
 	printf_P(PSTR("    encrypt (cycles):   %5"PRIu16"\n"), t);
 
     uart0_flush();
-	t=0;
-	for(i=0; i<32; ++i){
+	t = 0;
+	for(i = 0; i < 32; ++i){
 		startTimer(0);
 		START_TIMER;
 		bc.dec.dec1(data, &ctx);
 		STOP_TIMER;
 		t += stopTimer();
 	}
-	t>>=5;
+	t >>= 5;
 	printf_P(PSTR("    decrypt (cycles):   %5"PRIu16"\n"), t);
     uart0_flush();
 
@@ -141,9 +141,9 @@ void bcal_stacksize(const bcdesc_t *bcd){
 	stack_measuring_ctx_t smctx;
 	memcpy_P(&bc, bcd, sizeof(bcdesc_t));
 	uint8_t ctx[bc.ctxsize_B];
-	uint8_t data[(bc.blocksize_b+7)/8];
+	uint8_t data[(bc.blocksize_b + 7) / 8];
 	uint16_t keysize = get_keysize(bc.valid_keysize_desc);
-	uint8_t key[(keysize+7)/8];
+	uint8_t key[(keysize + 7)/8];
 	uint16_t t1 = 0, t2 = 0;
 
 	if(bc.type != BCDESC_TYPE_BLOCKCIPHER)
@@ -173,7 +173,7 @@ void bcal_stacksize(const bcdesc_t *bcd){
             sei();
         }
 
-		t1 = (t1>t2)?t1:t2;
+		t1 = (t1 > t2) ? t1 : t2;
 		printf_P(PSTR("    init (bytes):       %5"PRIu16"\n"), t1);
 	}
 	cli();
@@ -185,7 +185,7 @@ void bcal_stacksize(const bcdesc_t *bcd){
 	t2 = stack_measure_final(&smctx);
 	sei();
 
-	t1 = (t1>t2)?t1:t2;
+	t1 = (t1 > t2) ? t1 : t2;
 	printf_P(PSTR("    encBlock (bytes):   %5"PRIu16"\n"), t1);
 
 	cli();
@@ -197,7 +197,7 @@ void bcal_stacksize(const bcdesc_t *bcd){
 	t2 = stack_measure_final(&smctx);
 	sei();
 
-	t1 = (t1>t2)?t1:t2;
+	t1 = (t1 > t2) ? t1 : t2;
 	printf_P(PSTR("    decBlock (bytes):   %5"PRIu16"\n"), t1);
 
 	if(bc.free){

@@ -43,12 +43,12 @@ void hfal_performance(const hfdesc_t *hd){
 	hfdesc_t hf;
 	memcpy_P(&hf, hd, sizeof(hfdesc_t));
 	uint8_t ctx[hf.ctxsize_B];
-	uint8_t data[(hf.blocksize_b+7)/8];
-	uint8_t digest[(hf.hashsize_b+7)/8];
+	uint8_t data[(hf.blocksize_b + 7) / 8];
+	uint8_t digest[(hf.hashsize_b + 7) / 8];
 	uint32_t t;
 	uint8_t i;
 
-	if(hf.type!=HFDESC_TYPE_HASHFUNCTION)
+	if(hf.type != HFDESC_TYPE_HASHFUNCTION)
 		return;
 	calibrateTimer();
 	print_overhead();
@@ -59,51 +59,51 @@ void hfal_performance(const hfdesc_t *hd){
 	              "\tblocksize (bits):   %10"PRIu16"\n"),
 	         hf.name, hf.hashsize_b, hf.ctxsize_B, hf.blocksize_b);
 	uart0_flush();
-	t=0;
-	for(i=0; i<32; ++i){
+	t = 0;
+	for(i = 0; i < 32; ++i){
 		startTimer(0);
 		START_TIMER;
 		hf.init(&ctx);
 		STOP_TIMER;
 		t += stopTimer();
-		if(i!=31 && hf.free){
+		if(i != 31 && hf.free){
 			hf.free(&ctx);
 		}
 	}
-	t>>=5;
+	t >>= 5;
 	printf_P(PSTR("\tinit (cycles):      %10"PRIu32"\n"), t);
 
-	t=0;
-	for(i=0; i<32; ++i){
+	t = 0;
+	for(i = 0; i < 32; ++i){
 		startTimer(0);
 		START_TIMER;
 		hf.nextBlock(&ctx, data);
 		STOP_TIMER;
 		t += stopTimer();
 	}
-	t>>=5;
+	t >>= 5;
 	printf_P(PSTR("\tnextBlock (cycles): %10"PRIu32"\n"), t);
 
-	t=0;
-	for(i=0; i<32; ++i){
+	t = 0;
+	for(i = 0; i < 32; ++i){
 		startTimer(0);
 		START_TIMER;
 		hf.lastBlock(&ctx, data, 0);
 		STOP_TIMER;
 		t += stopTimer();
 	}
-	t>>=5;
+	t >>= 5;
 	printf_P(PSTR("\tlastBlock (cycles): %10"PRIu32"\n"), t);
 
-	t=0;
-	for(i=0; i<32; ++i){
+	t = 0;
+	for(i = 0; i < 32; ++i){
 		startTimer(0);
 		START_TIMER;
 		hf.ctx2hash(digest, &ctx);
 		STOP_TIMER;
 		t += stopTimer();
 	}
-	t>>=5;
+	t >>= 5;
 	printf_P(PSTR("\tctx2hash (cycles):  %10"PRIu32"\n"), t);
 
 	if(hf.free){
@@ -169,7 +169,7 @@ void hfal_stacksize(const hfdesc_t *hd){
 	t2 = stack_measure_final(&smctx);
 	sei();
 
-	t1 = (t1>t2)?t1:t2;
+	t1 = (t1 > t2) ? t1 : t2;
 	printf_P(PSTR("\tctx2hash (bytes):   %10"PRIu16"\n"));
 
 	if(hf.free){
