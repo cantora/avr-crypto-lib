@@ -181,6 +181,99 @@ void test_mul_bigint(void){
 	}
 }
 
+void test_mul_mont_bigint(void){
+    bigint_t a, b, c, a_, b_, m_, res;
+    bigint_length_t s;
+    cli_putstr_P(PSTR("\r\nmul-mont test ( (a * b) % c )\r\n"));
+    for(;;){
+        cli_putstr_P(PSTR("\r\nenter a:"));
+        if(bigint_read_hex_echo(&a)){
+            cli_putstr_P(PSTR("\r\n end mul test"));
+            return;
+        }
+        cli_putstr_P(PSTR("\r\nenter b:"));
+        if(bigint_read_hex_echo(&b)){
+            free(a.wordv);
+            cli_putstr_P(PSTR("\r\n end mul test"));
+            return;
+        }
+        cli_putstr_P(PSTR("\r\nenter c:"));
+        if(bigint_read_hex_echo(&c)){
+            free(a.wordv);
+            free(b.wordv);
+            cli_putstr_P(PSTR("\r\n end mul test"));
+            return;
+        }
+        s = c.length_W;
+        cli_putstr_P(PSTR("\r\n ("));
+        bigint_print_hex(&a);
+        cli_putstr_P(PSTR(" * "));
+        bigint_print_hex(&b);
+        cli_putstr_P(PSTR(") % "));
+        bigint_print_hex(&c);
+        cli_putstr_P(PSTR(" = "));
+        bigint_word_t res_w[s], a_w_[s], b_w_[s], m_w_[s + 1];
+        res.wordv = res_w;
+        a_.wordv = a_w_;
+        b_.wordv = b_w_;
+        m_.wordv = m_w_;
+        bigint_mont_gen_m_(&m_, &c);
+        bigint_mont_trans(&a_, &a, &c);
+        bigint_mont_trans(&b_, &b, &c);
+        bigint_mont_mul(&res, &a_, &b_, &c, &m_);
+        bigint_mont_red(&res, &res, &c, &m_);
+        bigint_print_hex(&res);
+        putchar('\n');
+        free(a.wordv);
+        free(b.wordv);
+        free(c.wordv);
+    }
+}
+
+void test_mul_word_bigint(void){
+    bigint_t a, b;
+    bigint_word_t *t;
+    cli_putstr_P(PSTR("\r\nmul test\r\n"));
+    for(;;){
+        cli_putstr_P(PSTR("\r\nenter a:"));
+        if(bigint_read_hex_echo(&a)){
+            cli_putstr_P(PSTR("\r\n end mul test"));
+            return;
+        }
+        cli_putstr_P(PSTR("\r\nenter b:"));
+        if(bigint_read_hex_echo(&b)){
+            free(a.wordv);
+            cli_putstr_P(PSTR("\r\n end mul test"));
+            return;
+        }
+        cli_putstr_P(PSTR("\r\n "));
+        bigint_print_hex(&a);
+        cli_putstr_P(PSTR(" * "));
+        bigint_print_hex(&b);
+        cli_putstr_P(PSTR(" = "));
+
+        if(b.length_W > 1){
+            free(a.wordv);
+            free(b.wordv);
+            cli_putstr_P(PSTR("\r\n end mul test"));
+        }
+
+        t = realloc(a.wordv, a.length_W + 3);
+        if(t == NULL){
+            cli_putstr_P(PSTR("\n\rERROR: Out of memory!"));
+            free(a.wordv);
+            free(b.wordv);
+            continue;
+        }
+        a.wordv = t;
+        bigint_mul_word_u(&a, b.wordv[0]);
+        bigint_print_hex(&a);
+        cli_putstr_P(PSTR("\r\n"));
+        free(a.wordv);
+        free(b.wordv);
+    }
+}
+
 void test_square_bigint(void){
 	bigint_t a, c;
 	cli_putstr_P(PSTR("\r\nsquare test\r\n"));
@@ -240,7 +333,7 @@ void test_reduce_bigint(void){
 void test_expmod_bigint(void){
 	bigint_t a, b, c, d;
 	uint8_t *d_b;
-	cli_putstr_P(PSTR("\r\nreduce test\r\n"));
+	cli_putstr_P(PSTR("\r\nexpnonentiation-modulo test\r\n"));
 	for(;;){
 		cli_putstr_P(PSTR("\r\nenter a:"));
 		if(bigint_read_hex_echo(&a)){
@@ -285,6 +378,57 @@ void test_expmod_bigint(void){
 		free(d.wordv);
 
 	}
+}
+
+/* d = a**b % c */
+void test_expmod_mont_bigint(void){
+    bigint_t a, b, c, d;
+    uint8_t *d_b;
+    cli_putstr_P(PSTR("\r\nexpnonentiation-modulo-montgomory test\r\n"));
+    for(;;){
+        cli_putstr_P(PSTR("\r\nenter a:"));
+        if(bigint_read_hex_echo(&a)){
+            cli_putstr_P(PSTR("\r\n end expmod test"));
+            return;
+        }
+        cli_putstr_P(PSTR("\r\nenter b:"));
+        if(bigint_read_hex_echo(&b)){
+            free(a.wordv);
+            cli_putstr_P(PSTR("\r\n end expmod test"));
+            return;
+        }
+        cli_putstr_P(PSTR("\r\nenter c:"));
+        if(bigint_read_hex_echo(&c)){
+            free(a.wordv);
+            free(b.wordv);
+            cli_putstr_P(PSTR("\r\n end expmod test"));
+            return;
+        }
+        d_b = malloc(c.length_W);
+        if(d_b==NULL){
+            cli_putstr_P(PSTR("\n\rERROR: Out of memory!"));
+            free(a.wordv);
+            free(b.wordv);
+            free(c.wordv);
+            continue;
+        }
+        d.wordv = d_b;
+        cli_putstr_P(PSTR("\r\n "));
+        bigint_print_hex(&a);
+        cli_putstr_P(PSTR("**"));
+        bigint_print_hex(&b);
+        cli_putstr_P(PSTR(" % "));
+        bigint_print_hex(&c);
+        cli_putstr_P(PSTR(" = "));
+        bigint_expmod_u_mont_sam(&d, &a, &b, &c);
+        bigint_print_hex(&d);
+        cli_putstr_P(PSTR("\r\n"));
+        free(a.wordv);
+        free(b.wordv);
+        free(c.wordv);
+        free(d.wordv);
+
+    }
 }
 
 void test_gcdext_bigint(void){
@@ -499,9 +643,12 @@ const char echo_test_str[]        PROGMEM = "echo-test";
 const char add_test_str[]         PROGMEM = "add-test";
 const char add_scale_test_str[]   PROGMEM = "add-scale-test";
 const char mul_test_str[]         PROGMEM = "mul-test";
+const char mul_mont_test_str[]    PROGMEM = "mul-mont-test";
+const char mul_word_test_str[]    PROGMEM = "mul-word-test";
 const char square_test_str[]      PROGMEM = "square-test";
 const char reduce_test_str[]      PROGMEM = "reduce-test";
 const char expmod_test_str[]      PROGMEM = "expmod-test";
+const char expmod_mont_test_str[] PROGMEM = "expmod-mont-test";
 const char gcdext_test_str[]      PROGMEM = "gcdext-test";
 const char quick_test_str[]       PROGMEM = "quick-test";
 const char performance_str[]      PROGMEM = "performance";
@@ -511,9 +658,12 @@ const cmdlist_entry_t cmdlist[] PROGMEM = {
 	{ add_test_str,         NULL, test_add_bigint               },
 	{ add_scale_test_str,   NULL, test_add_scale_bigint         },
 	{ mul_test_str,         NULL, test_mul_bigint               },
+    { mul_mont_test_str,    NULL, test_mul_mont_bigint          },
+    { mul_word_test_str,    NULL, test_mul_word_bigint          },
 	{ square_test_str,      NULL, test_square_bigint            },
 	{ reduce_test_str,      NULL, test_reduce_bigint            },
-	{ expmod_test_str,      NULL, test_expmod_bigint            },
+    { expmod_test_str,      NULL, test_expmod_bigint            },
+    { expmod_mont_test_str, NULL, test_expmod_mont_bigint       },
 	{ gcdext_test_str,      NULL, test_gcdext_bigint            },
 	{ quick_test_str,       NULL, test_gcdext_simple            },
 	{ echo_test_str,        NULL, test_echo_bigint              },
