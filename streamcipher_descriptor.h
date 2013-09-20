@@ -61,13 +61,13 @@ typedef union{
 } sc_init_fpt;
 
 typedef union{
-	void_fpt  genvoid;
+	void_fpt    genvoid;
 	sc_gen1_fpt gen1;
 	sc_gen2_fpt gen2;
 } sc_gen_fpt;
 
 typedef union{
-	void_fpt  genravoid;
+	void_fpt      genravoid;
 	sc_genra1_fpt genra1;
 	sc_genra2_fpt genra2;
 } sc_genra_fpt;
@@ -86,23 +86,23 @@ typedef union{
 #define SCDESC_TYPE_STREAMCIPHER 0x03
 
 typedef struct {
-	uint8_t  type; /* 3==streamcipher */
-	uint8_t  flags;
-	PGM_P    name;
-	uint16_t ctxsize_B;
-	uint16_t gensize_b;
-	sc_init_fpt init;
-	sc_gen_fpt  gen;
-	sc_genra_fpt  genra;
-	sc_free_fpt free;
-	PGM_VOID_P valid_keysize_desc;
-	PGM_VOID_P valid_ivsize_desc;
+	uint8_t      type; /* 3 == streamcipher */
+	uint8_t      flags;
+	PGM_P        name;
+	size_t       ctxsize_B;
+	uint16_t     gensize_b;
+	sc_init_fpt  init;
+	sc_gen_fpt   gen;
+	sc_genra_fpt genra;
+	sc_free_fpt  free;
+	PGM_VOID_P   valid_keysize_desc;
+	PGM_VOID_P   valid_ivsize_desc;
 } scdesc_t; /* streamcipher descriptor type */
 
 typedef struct{
 	const scdesc_t *desc_ptr;
-	uint16_t        keysize;
-	uint16_t        ivsize;
+	size_t          keysize;
+	size_t          ivsize;
 	uint16_t        index;
 	uint8_t*        buffer;
 	void*           ctx;

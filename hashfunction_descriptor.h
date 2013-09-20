@@ -28,7 +28,7 @@ typedef struct {
 	/** name, flash pointer to the name string */
 	PGM_P    name;
 	/** ctxsize_B, size of the hash context in bytes */
-	uint16_t ctxsize_B;
+	size_t ctxsize_B;
 	/** blocksize_b, size of an input block in bits */
 	uint16_t blocksize_b;
 	/** hashsize_b, size of the output hash value in bits */
