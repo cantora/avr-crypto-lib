@@ -23,7 +23,7 @@
   @item keysize
   64 bit, 80 bit, 128 bit
   @item IVsize
- 64 bit
+  64 bit
 @end table
 
 @subsection Parts of a stream cipher
@@ -65,12 +65,11 @@
  parameter for not fixed IV sizes (both are omitted if the algorithm does not 
  specify IV handling, in this case a part of the key should be used as IV).
  The last parameter points to the context variable to fill.
- 
+
 @subsubsection @code{*_gen} function
  The *_gen function updates the internal state to which a pointer is given as
  parameter and returns a fixed length part of the keystream as return value.
- 
 
- 
+
 @subsection Stream cipher abstraction layer (SCAL)
 
