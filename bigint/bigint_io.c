@@ -23,39 +23,31 @@
 #include <stdlib.h>
 #include <string.h>
 
-void bigint_print_hex(const bigint_t *a){
-	if(a->length_W==0){
+void bigint_print_hex(const bigint_t *a) {
+	if (a->length_W == 0) {
 		cli_putc('0');
 		return;
 	}
-	if(a->info&BIGINT_NEG_MASK){
+	if (a->info&BIGINT_NEG_MASK) {
 		cli_putc('-');
 	}
-//	cli_putc((a->info&BIGINT_NEG_MASK)?'-':'+'); /* print sign */
-/*	if(a->wordv[a->length_W-1]<0x10){
-		cli_putc(hexdigit_tab_uc[a->wordv[a->length_W-1]]);
-		cli_hexdump_rev(a->wordv, a->length_W-1);
-	} else {
-*/
-	//	cli_hexdump_rev(a->wordv, a->length_W*sizeof(bigint_word_t));
-//	}
-	uint32_t idx;
-	uint8_t print_zero=0;
-	uint8_t *p,x,y;
-	p = (uint8_t*)&(a->wordv[a->length_W-1])+sizeof(bigint_word_t)-1;
-	for(idx = a->length_W * sizeof(bigint_word_t); idx > 0; --idx){
+	size_t idx;
+	uint8_t print_zero = 0;
+	uint8_t *p, x, y;
+	p = (uint8_t*)&(a->wordv[a->length_W - 1]) + sizeof(bigint_word_t) - 1;
+	for (idx = a->length_W * sizeof(bigint_word_t); idx > 0; --idx) {
 		x = *p >> 4;
 		y = *p & 0xf;
-		if(x!=0 || print_zero!=0){
+		if (x != 0 || print_zero != 0) {
 			cli_putc(pgm_read_byte(&hexdigit_tab_lc_P[x]));
 		}
-		if(x){
+		if (x) {
 			print_zero = 1;
 		}
-		if(y!=0 || print_zero!=0){
+		if (y != 0 || print_zero != 0) {
 			cli_putc(pgm_read_byte(&hexdigit_tab_lc_P[y]));
 		}
-		if(y){
+		if (y) {
 			print_zero = 1;
 		}
 		--p;
@@ -64,75 +56,75 @@ void bigint_print_hex(const bigint_t *a){
 
 #define BLOCKSIZE 32
 
-static uint8_t char2nibble(char c){
-	if(c>='0' && c <='9'){
-		return c-'0';
+static uint8_t char2nibble(char c) {
+	if (c >= '0' && c <= '9') {
+		return c - '0';
 	}
-	c |= 'A'^'a'; /* to lower case */
-	if(c>='a' && c <='f'){
-		return c-'a'+10;
+	c |= 'A' ^ 'a'; /* to lower case */
+	if ( c>= 'a' && c <= 'f') {
+		return c - 'a' + 10;
 	}
 	return 0xff;
 }
 
-static uint16_t read_byte(void){
+static uint16_t read_byte(void) {
 	uint8_t t1, t2;
 	char c;
 	c = cli_getc_cecho();
-	if(c=='-'){
+	if (c == '-') {
 		return 0x0500;
 	}
 	t1 = char2nibble(c);
-	if(t1 == 0xff){
+	if (t1 == 0xff) {
 		return 0x0100;
 	}
 	c = cli_getc_cecho();
 	t2 = char2nibble(c);
-	if(t2 == 0xff){
+	if (t2 == 0xff) {
 		return 0x0200|t1;
 	}
-	return (t1<<4)|t2;
+	return (t1 << 4)|t2;
 }
 
-uint8_t bigint_read_hex_echo(bigint_t *a){
-	uint16_t allocated=0;
-	uint8_t  shift4=0;
+uint8_t bigint_read_hex_echo(bigint_t *a) {
+	uint16_t allocated = 0;
+	uint8_t  shift4 = 0;
 	uint16_t  t, idx = 0;
 	a->length_W = 0;
 	a->wordv = NULL;
 	a->info = 0;
-	for(;;){
-		if(allocated - idx < 1){
+	for (;;) {
+		if (allocated - idx < 1) {
 			bigint_word_t *p;
 			p = realloc(a->wordv, allocated += BLOCKSIZE);
-			if(p==NULL){
+			if (p == NULL) {
 				cli_putstr("\r\nERROR: Out of memory!");
 				free(a->wordv);
 				return 0xff;
 			}
 			memset((uint8_t*)p + allocated - BLOCKSIZE, 0, BLOCKSIZE);
-			a->wordv=p;
+			a->wordv = p;
 		}
 		t = read_byte();
-		if(idx==0){
-			if(t&0x0400){
+		if (idx == 0) {
+			if (t & 0x0400) {
 				/* got minus */
 				a->info |= BIGINT_NEG_MASK;
 				continue;
-			}else{
-				if(t==0x0100){
+			} else {
+				if (t == 0x0100) {
 					free(a->wordv);
-					a->wordv=NULL;
+					a->wordv = NULL;
 					return 1;
 				}
 			}
 		}
-		if(t<=0x00ff){
+		if (t <= 0x00ff) {
 			((uint8_t*)(a->wordv))[idx++] = (uint8_t)t;
-		}else{
-			if(t&0x0200){
+		} else {
+			if (t & 0x0200) {
 				shift4 = 1;
-				((uint8_t*)(a->wordv))[idx++] = (uint8_t)((t&0x0f)<<4);
+				((uint8_t*)(a->wordv))[idx++] = (uint8_t)((t & 0x0f) << 4);
 			}
 			break;
 		}
@@ -140,17 +132,17 @@ uint8_t bigint_read_hex_echo(bigint_t *a){
 	/* we have to reverse the byte array */
 	uint8_t tmp;
 	uint8_t *p, *q;
-	a->length_W = (idx + sizeof(bigint_word_t)-1)/sizeof(bigint_word_t);
+	a->length_W = (idx + sizeof(bigint_word_t) - 1) / sizeof(bigint_word_t);
 	p = (uint8_t*)(a->wordv);
 	q = (uint8_t*)a->wordv + a->length_W * sizeof(bigint_word_t) - 1;
-	while(q>p){
+	while (q > p) {
 		tmp = *p;
 		*p = *q;
 		*q = tmp;
 		p++; q--;
 	}
 	bigint_adjust(a);
-	if(shift4){
+	if (shift4) {
 		bigint_shiftright(a, 4);
 	}
 	if(a->length_W == 1 && a->wordv[0] == 0){

@@ -80,7 +80,7 @@ endef
 define TargetSourceList_Template
 $(1): $(2)
 	@mkdir -p $(dir $(1)) $(DEP_DIR)
-	@echo "[cc]: $(1) <-- $(2)"
+	@echo "[lst]: $(1) <-- $(2)"
 	@$(CC) $(CFLAGS_A) $(addprefix -I./,$(3)) $(addprefix -D, $(4)) $(LIST_OPT) -c -o /dev/null $(2) > $(1)
 endef
 

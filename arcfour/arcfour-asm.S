@@ -119,7 +119,7 @@ arcfour_gen:
 	st Z+, r19		/* i,j loaded&saved; X->S[i]; Z->S[0]; r20=S[i] */
 	add r30, r19
 	adc r31, r1
-	ld r21, Z		/* X->S[i]; Z->S[j]; r20=S[i]; r21=S[j]*/
+	ld r21, Z		/* X->S[i]; Z->S[j]; r20=S[i]; r21=S[j] */
 	st Z, r20
 	st X, r21
 	add r20, r21
