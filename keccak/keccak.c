@@ -87,13 +87,27 @@ const static uint8_t rc_comp[] PROGMEM = {
 		0xf1, 0xd0, 0x21, 0x78,
 };
 
-const static uint8_t r[5][5] PROGMEM = {
-		{ ROT_CODE( 0), ROT_CODE(36), ROT_CODE( 3), ROT_CODE(41), ROT_CODE(18) },
-		{ ROT_CODE( 1), ROT_CODE(44), ROT_CODE(10), ROT_CODE(45), ROT_CODE( 2) },
-		{ ROT_CODE(62), ROT_CODE( 6), ROT_CODE(43), ROT_CODE(15), ROT_CODE(61) },
-		{ ROT_CODE(28), ROT_CODE(55), ROT_CODE(25), ROT_CODE(21), ROT_CODE(56) },
-		{ ROT_CODE(27), ROT_CODE(20), ROT_CODE(39), ROT_CODE( 8), ROT_CODE(14) }
+#define RP_IDX(i, j) ((((2 * j + 3 * i) % 5) * 5 + i) * 8)
+
+uint8_t const rho_pi_idx_table[5][5] PROGMEM = {
+        { RP_IDX(0, 0), RP_IDX(0, 1), RP_IDX(0, 2), RP_IDX(0, 3), RP_IDX(0, 4) },
+        { RP_IDX(1, 0), RP_IDX(1, 1), RP_IDX(1, 2), RP_IDX(1, 3), RP_IDX(1, 4) },
+        { RP_IDX(2, 0), RP_IDX(2, 1), RP_IDX(2, 2), RP_IDX(2, 3), RP_IDX(2, 4) },
+        { RP_IDX(3, 0), RP_IDX(3, 1), RP_IDX(3, 2), RP_IDX(3, 3), RP_IDX(3, 4) },
+        { RP_IDX(4, 0), RP_IDX(4, 1), RP_IDX(4, 2), RP_IDX(4, 3), RP_IDX(4, 4) }
 };
+
+#define ROT_BIT(a) (( (a) <= 4) ? ((a) << 1) : (0x01 | ((8 - (a)) << 1)))
+#define ROT_CODE(a) ((((a) / 8 + ((((a) % 8) > 4) ? 1 : 0)) << 4) | ROT_BIT(((a) % 8)))
+
+const uint8_t keccak_rotate_codes[5][5] PROGMEM = {
+        { ROT_CODE( 0), ROT_CODE( 1), ROT_CODE(62), ROT_CODE(28), ROT_CODE(27) },
+        { ROT_CODE(36), ROT_CODE(44), ROT_CODE( 6), ROT_CODE(55), ROT_CODE(20) },
+        { ROT_CODE( 3), ROT_CODE(10), ROT_CODE(43), ROT_CODE(25), ROT_CODE(39) },
+        { ROT_CODE(41), ROT_CODE(45), ROT_CODE(15), ROT_CODE(21), ROT_CODE( 8) },
+        { ROT_CODE(18), ROT_CODE( 2), ROT_CODE(61), ROT_CODE(56), ROT_CODE(14) }
+};
+
 
 static inline
 void keccak_round(uint64_t *a, uint8_t rci){
@@ -103,11 +117,14 @@ void keccak_round(uint64_t *a, uint8_t rci){
 			uint64_t v64;
 			uint8_t v8[8];
 		} t;
+    const uint8_t *rot_code = (const uint8_t*)keccak_rotate_codes;
+    const uint8_t *idx_idx = (const uint8_t*)rho_pi_idx_table;
+    uint64_t *a_tmp = (uint64_t*)a;
 	/* theta */
 	for(i = 0; i < 5; ++i){
 		b[i][0] = a[i] ^ a[5 + i] ^ a[10 + i] ^ a[15 + i] ^ a[20 + i];
 	}
-	for(i = 0; i < 5; ++i){
+ 	for(i = 0; i < 5; ++i){
 		t.v64 = b[(4 + i) % 5][0] ^ rotate64_1bit_left(b[(i + 1) % 5][0]);
 		for(j = 0; j < 5; ++j){
 			a[j * 5 + i] ^= t.v64;
@@ -118,11 +135,11 @@ void keccak_round(uint64_t *a, uint8_t rci){
 	keccak_dump_state(a);
 #endif
 	/* rho & pi */
-	for(i = 0; i < 5; ++i){
-		for(j = 0; j < 5; ++j){
-			b[(2 * i + 3 * j) % 5][j] = rotate64left_code(a[j * 5 +i], pgm_read_byte(&(r[i][j])));
-		}
-	}
+    for(i = 0; i < 25; ++i){
+            *((uint64_t*)(((uint8_t*)b) + pgm_read_byte(idx_idx++))) =
+                rotate64left_code(*a_tmp++, pgm_read_byte(rot_code++));
+
+    }
 #if DEBUG
 	cli_putstr_P(PSTR("\r\n--- after rho & pi ---"));
 	keccak_dump_state(a);
@@ -133,6 +150,7 @@ void keccak_round(uint64_t *a, uint8_t rci){
 			a[j * 5 + i] =  b[j][i] ^ ((~(b[j][(i + 1) % 5])) & (b[j][(i + 2) % 5]));
 		}
 	}
+
 #if DEBUG
 	cli_putstr_P(PSTR("\r\nAfter chi:"));
 	keccak_dump_state(a);

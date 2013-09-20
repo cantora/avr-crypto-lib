@@ -34,8 +34,8 @@
 /*
 typedef struct{
 	uint64_t a[5][5];
-	uint16_t r, c;
-	uint8_t  d, bs;
+	uint16_t r;
+	uint8_t  bs;
 } keccak_ctx_t;
 */
 	.struct 0
